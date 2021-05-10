@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'DB', 'parse_base_item_json', 'Edge', 'ItemBase']
 
 # Cell
 # hide
-from pyintegrators.imports import *
+from ..imports import *
 
 ALL_EDGES = "allEdges"
 SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE = "_source", "_target", "_type", "_type", "label", "sequence"
@@ -58,7 +58,7 @@ def parse_base_item_json(json):
 class Edge():
     """Edges makes a link between two `ItemBase` Items. You won't use this class a lot in practice, as edges are
     abstracted away for normal users. When items are retrieved from the database, the edges are parsed automatically.
-    When you add an edge between to items within pyintegrators, you will often use `ItemBase.add_edge`"""
+    When you add an edge between to items within pymemri, you will often use `ItemBase.add_edge`"""
     def __init__(self, source, target, _type, label=None, sequence=None, created=False, reverse=True):
         self.source   = source
         self.target   = target
