@@ -10,7 +10,7 @@ set -euETo pipefail
 # (TODO: shrink the above instruction to a single URL following documentation here
 #  https://docs.gitlab.com/ee/ci/pipelines/job_artifacts.html#access-the-latest-job-artifacts-by-url
 #  Contributions welcomed!)
-POD_URL='https://gitlab.memri.io/memri/pod/-/jobs/4102/artifacts/file/target/release/pod'
+POD_URL='https://gitlab.memri.io/memri/pod/-/jobs/4102/artifacts/raw/target/release/pod'
 
 mkdir res
 
