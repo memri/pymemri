@@ -5,7 +5,6 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"read_file": "basic.ipynb",
          "read_json": "basic.ipynb",
          "write_json": "basic.ipynb",
-         "download_file": "basic.ipynb",
          "unzip": "basic.ipynb",
          "resize": "data.photo.ipynb",
          "get_size": "data.photo.ipynb",
