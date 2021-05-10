@@ -76,7 +76,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Pyintegrators communicate with the pod via the PodClient. The PodClient requires you to provide a <a href="https://gitlab.memri.io/memri/pod/-/blob/dev/docs/HTTP_API.md#user-content-api-authentication-credentials">database key</a> and an <a href="https://gitlab.memri.io/memri/pod/-/blob/dev/docs/HTTP_API.md#user-content-api-authentication-credentials">owner key</a>. During development, you don't have to worry about these keys, you can just omit the keys when initializing the PodClient, which creates a new user by defining random keys. When you are using the app, setting the keys in the pod, and passing them when calling an integrator is handled for you by the app itself.</p>
+<p>Pymemri communicates with the pod via the <a href="/pymemri/pod.client.html#PodClient"><code>PodClient</code></a>. The PodClient requires you to provide a <a href="https://gitlab.memri.io/memri/pod/-/blob/dev/docs/HTTP_API.md#user-content-api-authentication-credentials">database key</a> and an <a href="https://gitlab.memri.io/memri/pod/-/blob/dev/docs/HTTP_API.md#user-content-api-authentication-credentials">owner key</a>. During development, you don't have to worry about these keys, you can just omit the keys when initializing the <a href="/pymemri/pod.client.html#PodClient"><code>PodClient</code></a>, which creates a new user by defining random keys. When you are using the app, setting the keys in the pod, and passing them when calling an integrator is handled for you by the app itself.</p>
 
 </div>
 </div>
@@ -122,7 +122,7 @@ nb_path: "nbs/pod.client.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now that we have access to the pod, we can create items here and upload them to the pod. All items are defined in the memri <a href="https://gitlab.memri.io/memri/schema">schema</a>. When the schema is changed it automatically generates all the class definitions for the different languages used in memri, the python schema file lives in <a href="https://gitlab.memri.io/memri/pyintegrators/-/blob/master/integrators/schema.py">schema.py</a> in the integrators package. When Initializing an Item, always make sure to use the from_data classmethod to initialize.</p>
+<p>Now that we have access to the pod, we can create items here and upload them to the pod. All items are defined in the schema of the pod. When Initializing an Item, always make sure to use the from_data classmethod to initialize.</p>
 
 </div>
 </div>
@@ -173,6 +173,40 @@ nb_path: "nbs/pod.client.ipynb"
 </pre></div>
 
     </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">email_item</span> <span class="o">=</span> <span class="n">EmailMessage</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;example content field&quot;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">email_item</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -301,7 +335,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">lastName</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
 <span class="n">item_succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">person_item</span><span class="p">)</span>
-<span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">person_item</span><span class="p">,</span> <span class="n">email_item</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">)</span>
+<span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">email_item</span><span class="p">,</span> <span class="n">person_item</span><span class="p">,</span> <span class="s2">&quot;sender&quot;</span><span class="p">)</span>
 <span class="n">edge_succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">item_succes</span> <span class="ow">and</span> <span class="n">edge_succes</span>
 </pre></div>
@@ -320,7 +354,47 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get_edges</span><span class="p">(</span><span class="n">email_item</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[{&#39;item&#39;: Person (#b3c7afa0ffae3d1f98aeb9626c5eb13f), &#39;name&#39;: &#39;sender&#39;}]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If we use the normal <code>client.get</code> (without <code>expanded=False</code>), we also get items directly connected to the Item.</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">email_from_db</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email_item</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> 
 </pre></div>
 
     </div>
@@ -337,7 +411,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">email_from_db</span><span class="o">.</span><span class="n">sender</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Person</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -361,7 +435,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can use the client to fetch data from the database. This is in particular usefull for indexers, which often use data in the database as input for their models. The simplest form  of querying the database is by querying items in the pod by their id (unique identifier).</p>
+<p>We can use the client to fetch data from the database. This is in particular useful for indexers, which often use data in the database as input for their models. The simplest form  of querying the database is by querying items in the pod by their id (unique identifier).</p>
 
 </div>
 </div>
@@ -374,26 +448,10 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">person_item</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">person_item</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>True</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -449,7 +507,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Sometimes, we might not know the ids of the items we want to fetch. We can also search by a certain property. We can use this for instance when we want to query all items from a particular type to perform some indexing on.</p>
+<p>When we don't know the ids of the items we want to fetch, we can also search by property. We can use this for instance when we want to query all items from a particular type to perform some indexing on. We can get all <code>Person</code> Items from the db by:</p>
 
 </div>
 </div>
@@ -466,7 +524,6 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 <span class="n">all_people</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Person&quot;</span><span class="p">})</span>
 
 <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Person</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">all_people</span><span class="p">])</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_people</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-
 <span class="n">all_people</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 
@@ -482,9 +539,9 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[Person (#eb31687d400b6ee921def5a1f4aafb9b),
- Person (#ba8d8cd235a1629ebd8f645bec08b52b),
- Person (#6baa3a3acc7d1f9771aa0dc78ec9549b)]</pre>
+<pre>[Person (#b3c7afa0ffae3d1f98aeb9626c5eb13f),
+ Person (#b1d6cbaec737561c5120ed109089c329),
+ Person (#7f907b7b0640dc576d9d0cc9c257b138)]</pre>
 </div>
 
 </div>
@@ -504,6 +561,13 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="File-API">File API<a class="anchor-link" href="#File-API"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To work with files, the <a href="/pymemri/pod.client.html#PodClient"><code>PodClient</code></a> has a file api. The file api works by posting a blob to the <code>upload_file</code> endpoint, and creating an Item with a property with the same sha256 as the sha used in the endpoint.</p>
+
 </div>
 </div>
 </div>
@@ -574,28 +638,11 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The file API is currently only tested for images.</p>
+<p>For photos we do this automatically using <a href="/pymemri/pod.client.html#PodClient.create"><code>PodClient.create</code></a> on a Photo and <a href="/pymemri/pod.client.html#PodClient.get_photo"><code>PodClient.get_photo</code></a>:</p>
 
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -655,7 +702,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_photo</span><span class="p">(</span><span class="n">photo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">640</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -672,7 +719,40 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>IPhoto (#8c7240eb1a14459825783bf3d9ec402f)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -685,6 +765,13 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Check-if-an-item-exists">Check if an item exists<a class="anchor-link" href="#Check-if-an-item-exists"> </a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Not supported yet by the new PodAPI</p>
+
 </div>
 </div>
 </div>
