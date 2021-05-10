@@ -11,13 +11,13 @@ from .itembase import ItemBase, Edge
 
 
 def get_constructor(_type, indexer_class=None, extra=None):
-    import pyintegrators.indexers as models
-    from pyintegrators.indexers.facerecognition.photo import IPhoto
-    from pyintegrators.indexers.indexer import IndexerBase
-    import pyintegrators.integrator_registry
+    import pymemri.indexers as models
+    from pymemri.data.photo import IPhoto
+    from pymemri.indexers.indexer import IndexerBase
+    import pymemri.integrator_registry
 
-    if _type == "Indexer" and indexer_class is not None and hasattr(pyintegrators.integrator_registry, indexer_class):
-        return getattr(pyintegrators.integrator_registry, indexer_class)
+    if _type == "Indexer" and indexer_class is not None and hasattr(pymemri.integrator_registry, indexer_class):
+        return getattr(pymemri.integrator_registry, indexer_class)
 
     classes = z = {**globals(), **locals(), **extra}
     if _type in classes:

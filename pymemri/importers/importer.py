@@ -3,7 +3,7 @@
 __all__ = ['ImporterBase']
 
 # Cell
-from pyintegrators.data.schema import *
+from ..data.schema import *
 class ImporterBase(Importer):
     def __init__(self, importerClass=None, *args, **kwargs):
         super().__init__(*args, **kwargs)

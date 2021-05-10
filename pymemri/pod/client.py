@@ -246,6 +246,7 @@ class PodClient:
             return res
 
     def get_all_items(self):
+        raise NotImplementedError()
         try:
             body = {  "databaseKey": self.database_key, "payload":None}
             result = requests.post(f"{self.base_url}/get_all_items", json=body)
@@ -302,13 +303,10 @@ class PodClient:
                 return None
             else:
                 json = result.json()
-                if json == []:
-                    return None
-                else:
-                    for d in json:
-                        d["item"] = self.item_from_json(d["item"])
+                for d in json:
+                    d["item"] = self.item_from_json(d["item"])
 #                     res =  self.item_from_json(json[0])
-                    return json
+                return json
         except requests.exceptions.RequestException as e:
             print(e)
             return None

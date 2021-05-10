@@ -1,4 +1,4 @@
-from pyintegrators.importers.email import EmailImporter
-from pyintegrators.indexers.geo.geo_indexer import GeoIndexer
-from pyintegrators.indexers.notelist.notelist_indexer import NotesListIndexer
-from pyintegrators.indexers.faceclustering.indexer import FaceClusteringIndexer
+# from pymemri.importers.email import EmailImporter
+# from pymemri.indexers.geo.geo_indexer import GeoIndexer
+# from pymemri.indexers.notelist.notelist_indexer import NotesListIndexer
+# from pymemri.indexers.faceclustering.indexer import FaceClusteringIndexer
