@@ -24,9 +24,12 @@ The last command configures git to automatically clean metadata from your notebo
 
 # Quickstart
 
-To use the pymemri `PodClient`, we first need to have a pod running. The quickest way to do this is to install from the [pod repo](https://gitlab.memri.io/memri/pod), and run `./examples.run_development.sh` from within that repo.
+To use the pymemri `PodClient`, we first need to have a pod running. The quickest way to do this is to install from the [pod repo](https://gitlab.memri.io/memri/pod), and run `./examples/run_development.sh` from within that repo.
 
 ```
+from pymemri.data.schema import *
+from pymemri.pod.client import *
+
 class Dog(Item):
     def __init__(self, name, age, id=None, deleted=None):
         super().__init__(id=id, deleted=deleted)
@@ -39,7 +42,8 @@ class Dog(Item):
         name = json.get("name", None)
         age = json.get("age", None)
         return cls(id=id,name=name,age=age)
-        
+
+client = PodClient()
 example_dog = Dog("max", 2)
 client.add_to_schema(example_dog)
 dog = Dog("bob", 3)

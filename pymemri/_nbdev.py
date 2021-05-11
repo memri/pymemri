@@ -38,6 +38,7 @@ index = {"read_file": "basic.ipynb",
          "parse_base_item_json": "itembase.ipynb",
          "Edge": "itembase.ipynb",
          "ItemBase": "itembase.ipynb",
+         "Item": "itembase.ipynb",
          "DEFAULT_POD_ADDRESS": "pod.client.ipynb",
          "POD_VERSION": "pod.client.ipynb",
          "PodClient": "pod.client.ipynb"}

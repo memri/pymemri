@@ -7,7 +7,7 @@
 #  Copyright © 2020 memri. All rights reserved.
 #
 
-from .itembase import ItemBase, Edge
+from .itembase import ItemBase, Edge, Item
 
 
 def get_constructor(_type, indexer_class=None, extra=None):
@@ -34,26 +34,26 @@ def get_constructor(_type, indexer_class=None, extra=None):
     return constructor
 
 
-# Item is the baseclass for all of the data classes.
-class Item(ItemBase):
-    def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
-                 externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
-                 changelog=None, label=None, genericAttribute=None, measure=None, sharedWith=None):
-        super().__init__(id)
-        self.dateAccessed = dateAccessed
-        self.dateCreated = dateCreated
-        self.dateModified = dateModified
-        self.deleted = deleted
-        self.externalId = externalId
-        self.itemDescription = itemDescription
-        self.starred = starred
-        self.version = version
-        self.importJson = importJson
-        self.changelog = changelog if changelog is not None else []
-        self.label = label if label is not None else []
-        self.genericAttribute = genericAttribute if genericAttribute is not None else []
-        self.measure = measure if measure is not None else []
-        self.sharedWith = sharedWith if sharedWith is not None else []
+# # Item is the baseclass for all of the data classes.
+# class Item(ItemBase):
+#     def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
+#                  externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
+#                  changelog=None, label=None, genericAttribute=None, measure=None, sharedWith=None):
+#         super().__init__(id)
+#         self.dateAccessed = dateAccessed
+#         self.dateCreated = dateCreated
+#         self.dateModified = dateModified
+#         self.deleted = deleted
+#         self.externalId = externalId
+#         self.itemDescription = itemDescription
+#         self.starred = starred
+#         self.version = version
+#         self.importJson = importJson
+#         self.changelog = changelog if changelog is not None else []
+#         self.label = label if label is not None else []
+#         self.genericAttribute = genericAttribute if genericAttribute is not None else []
+#         self.measure = measure if measure is not None else []
+#         self.sharedWith = sharedWith if sharedWith is not None else []
 
 
 # An account or subscription, for instance for some online service, or a bank account or wallet.

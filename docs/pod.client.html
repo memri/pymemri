@@ -369,7 +369,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;item&#39;: Person (#b3c7afa0ffae3d1f98aeb9626c5eb13f), &#39;name&#39;: &#39;sender&#39;}]</pre>
+<pre>[{&#39;item&#39;: Person (#347b3bc8ff2ccadfe132f5e82d770cf1), &#39;name&#39;: &#39;sender&#39;}]</pre>
 </div>
 
 </div>
@@ -512,6 +512,12 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Search">Search<a class="anchor-link" href="#Search"> </a></h2>
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -539,9 +545,9 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[Person (#b3c7afa0ffae3d1f98aeb9626c5eb13f),
- Person (#b1d6cbaec737561c5120ed109089c329),
- Person (#7f907b7b0640dc576d9d0cc9c257b138)]</pre>
+<pre>[Person (#347b3bc8ff2ccadfe132f5e82d770cf1),
+ Person (#28621efb4ecd82371126adadfd8e184c),
+ Person (#261b920e0f7aeeedc887328975167664)]</pre>
 </div>
 
 </div>
@@ -734,7 +740,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>IPhoto (#8c7240eb1a14459825783bf3d9ec402f)</pre>
+<pre>IPhoto (#5b3adb19770862451acf0a722957c503)</pre>
 </div>
 
 </div>
@@ -775,30 +781,6 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># person_item2 = Person.from_data(firstName=&quot;Eve2&quot;, externalId=&quot;gmail_1&quot;)</span>
-
-<span class="c1"># client.create_if_external_id_not_exists(person_item)</span>
-<span class="c1"># client.create_if_external_id_not_exists(person_item2)</span>
-
-<span class="c1"># existing = client.search({&quot;externalId&quot;: &quot;gmail_1&quot;})</span>
-<span class="c1"># assert len(existing) == 1</span>
-<span class="c1"># client.delete_all()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Resetting-the-db">Resetting the db<a class="anchor-link" href="#Resetting-the-db"> </a></h1>

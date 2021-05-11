@@ -31,7 +31,7 @@ nb_path: "nbs/itembase.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Any data class in pymemri inherits from <a href="/pymemri/itembase.html#ItemBase"><code>ItemBase</code></a>. As its name suggests it is a base class for items with some handy functionalities to create new items and edges, retrieve all edges to other items, and sync with the pod.</p>
+<p>Any data class in pymemri inherits from <a href="/pymemri/itembase.html#Item"><code>Item</code></a>. It is a base class for items with some handy functionalities to create new items and edges, retrieve all edges to other items, and sync with the pod.</p>
 
 </div>
 </div>
@@ -111,6 +111,38 @@ item.some_edge_type, which calls item.traverse(edgetype), which in turn calls th
 </blockquote>
 <p>Provides a base class for all items. All items in the schema inherit from this class, and it provides some
 basic functionality for consistency and to enable easier usage.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="Item" class="doc_header"><code>class</code> <code>Item</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L228" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Item</code>(<strong><code>dateAccessed</code></strong>=<em><code>None</code></em>, <strong><code>dateCreated</code></strong>=<em><code>None</code></em>, <strong><code>dateModified</code></strong>=<em><code>None</code></em>, <strong><code>deleted</code></strong>=<em><code>None</code></em>, <strong><code>externalId</code></strong>=<em><code>None</code></em>, <strong><code>itemDescription</code></strong>=<em><code>None</code></em>, <strong><code>starred</code></strong>=<em><code>None</code></em>, <strong><code>version</code></strong>=<em><code>None</code></em>, <strong><code>id</code></strong>=<em><code>None</code></em>, <strong><code>importJson</code></strong>=<em><code>None</code></em>, <strong><code>changelog</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong><code>genericAttribute</code></strong>=<em><code>None</code></em>, <strong><code>measure</code></strong>=<em><code>None</code></em>, <strong><code>sharedWith</code></strong>=<em><code>None</code></em>) :: <a href="/pymemri/itembase.html#ItemBase"><code>ItemBase</code></a></p>
+</blockquote>
+<p>Item is the baseclass for all of the data classes.</p>
 
 </div>
 
