@@ -369,7 +369,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;item&#39;: Person (#347b3bc8ff2ccadfe132f5e82d770cf1), &#39;name&#39;: &#39;sender&#39;}]</pre>
+<pre>[{&#39;item&#39;: Person (#68ccb3db65306d68be32d13099c3a170), &#39;name&#39;: &#39;sender&#39;}]</pre>
 </div>
 
 </div>
@@ -545,9 +545,9 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[Person (#347b3bc8ff2ccadfe132f5e82d770cf1),
- Person (#28621efb4ecd82371126adadfd8e184c),
- Person (#261b920e0f7aeeedc887328975167664)]</pre>
+<pre>[Person (#68ccb3db65306d68be32d13099c3a170),
+ Person (#7e7cc705e24903eefebcf226f007adab),
+ Person (#b13015c2676545870003cb2c20e5c18e)]</pre>
 </div>
 
 </div>
@@ -558,6 +558,61 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Search-last-added-items">Search last added items<a class="anchor-link" href="#Search-last-added-items"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item2</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Last Person&quot;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">person_item2</span><span class="p">);</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">search_last_added</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Person&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">firstName</span> <span class="o">==</span> <span class="s2">&quot;Last Person&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the near future, Pod will support searching by user defined properties as well. This will allow for the following. <strong>warning, this is currently not supported</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>client.search_last_added(type="Person", with_prop="ImportedBy", with_val="EmailImporter")</code></p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Uploading-&amp;-downloading-files">Uploading &amp; downloading files<a class="anchor-link" href="#Uploading-&amp;-downloading-files"> </a></h2>
