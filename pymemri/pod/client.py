@@ -380,6 +380,15 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             return None
 
+    def search_last_added(self, type=None, with_prop=None, with_val=None):
+        query = {"_limit": 1, "_sortOrder": "Desc"}
+        if type is not None:
+            query["type"] = type
+        if with_prop is not None:
+            query[f"{with_prop}=="] = with_val
+
+        return client.search(query)[0]
+
     def item_from_json(self, json):
         indexer_class = json.get("indexerClass", None)
         constructor = get_constructor(json["type"], indexer_class, extra=self.registered_classes)
