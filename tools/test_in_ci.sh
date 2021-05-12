@@ -1,16 +1,7 @@
 #!/usr/bin/env bash
 set -euETo pipefail
 
-# To update Pod URL:
-# * Check out recent pipelines in https://gitlab.memri.io/memri/pod/-/pipelines
-# * Pick a pipeline from the `dev` branch if you're developing against `dev`
-# * Go to "release" stage job artifacts
-# * Copy the URL to the Pod executable
-#
-# (TODO: shrink the above instruction to a single URL following documentation here
-#  https://docs.gitlab.com/ee/ci/pipelines/job_artifacts.html#access-the-latest-job-artifacts-by-url
-#  Contributions welcomed!)
-POD_URL='https://gitlab.memri.io/memri/pod/-/jobs/4102/artifacts/raw/target/release/pod'
+POD_URL='https://gitlab.memri.io/memri/pod/uploads/fbdc70cd34b8c1a8dfb0acd50c4b7a84/pod-from-docker-v0.2.1-101-gba23ee2'
 
 mkdir res
 
