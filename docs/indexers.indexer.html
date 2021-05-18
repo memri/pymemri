@@ -2,11 +2,13 @@
 
 title: Indexer
 
+
 keywords: fastai
 sidebar: home_sidebar
 
 
 
+nb_path: "nbs/indexers.indexer.ipynb"
 ---
 <!--
 
@@ -38,13 +40,6 @@ sidebar: home_sidebar
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -54,8 +49,7 @@ sidebar: home_sidebar
 <div class="output_markdown rendered_html output_subarea ">
 <h2 id="IndexerBase" class="doc_header"><code>class</code> <code>IndexerBase</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/indexers/indexer.py#L20" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IndexerBase</code>(<strong><code>indexerClass</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <code>Indexer</code></p>
 </blockquote>
-<p>Provides a base class for all items. All items in the schema inherit from this class, and it provides some
-basic functionality for consistency and to enable easier usage.</p>
+<p>Item is the baseclass for all of the data classes.</p>
 
 </div>
 
@@ -137,6 +131,13 @@ when retrieving it from the database.</p>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -225,13 +226,6 @@ or via environment variables (this is how the pod communicates with integrators)
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -248,6 +242,13 @@ or via environment variables (this is how the pod communicates with integrators)
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
