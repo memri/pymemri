@@ -55,6 +55,11 @@ dog = Dog("bob", 3)
 client.create(dog)
 ```
 
+# Docs
+
+- [pymemri docs](http://memri.docs.memri.io/pymemri/pod.client.html#File-API)
+- [plugin tutorial](https://blog.memri.io/getting-started-building-a-plugin/)
+
 # Nbdev & Jupyter Notebooks
 The Python integrators are written in [nbdev](https://nbdev.fast.ai/) ([video](https://www.youtube.com/watch?v=9Q6sLbz37gk&t=1301s)). With nbdev, it is encouraged to write code in 
 [Jupyter Notebooks](https://jupyter.readthedocs.io/en/latest/install/notebook-classic.html). Nbdev syncs all the notebooks in `/nbs` with the python code in `/pymemri`. Tests are written side by side with the code in the notebooks, and documentation is automatically generated from the code and markdown in the notebooks and exported into the `/docs` folder. Check out the [nbdev quickstart](wiki/nbdev_quickstart.md) for an introduction, **watch the video linked above**, or see the [nbdev documentation](https://nbdev.fast.ai/) for a all functionalities and tutorials.
