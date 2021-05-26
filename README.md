@@ -8,6 +8,11 @@
 
 This repository is built with [nbdev](https://github.com/fastai/nbdev), which means that the repo structure has a few differences compared to a standard python repo. 
 
+# Documentation
+
+- [pyMemri Documentation](http://memri.docs.memri.io/pymemri/pod.client.html#File-API)
+- [Plugin Tutorial](https://blog.memri.io/getting-started-building-a-plugin/)
+
 # Installing
 
 ## As a package
@@ -49,6 +54,11 @@ client.add_to_schema(example_dog)
 dog = Dog("bob", 3)
 client.create(dog)
 ```
+
+# Docs
+
+- [pymemri docs](http://memri.docs.memri.io/pymemri/pod.client.html#File-API)
+- [plugin tutorial](https://blog.memri.io/getting-started-building-a-plugin/)
 
 # Nbdev & Jupyter Notebooks
 The Python integrators are written in [nbdev](https://nbdev.fast.ai/) ([video](https://www.youtube.com/watch?v=9Q6sLbz37gk&t=1301s)). With nbdev, it is encouraged to write code in 

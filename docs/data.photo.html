@@ -2,11 +2,13 @@
 
 title: Iphoto
 
+
 keywords: fastai
 sidebar: home_sidebar
 
 
 
+nb_path: "nbs/data.photo.ipynb"
 ---
 <!--
 
@@ -20,13 +22,6 @@ sidebar: home_sidebar
 
 <div class="container" id="notebook-container">
         
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -162,10 +157,9 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Photo" class="doc_header"><code>class</code> <code>Photo</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/schema.py#L4191" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Photo</code>(<strong><code>dateAccessed</code></strong>=<em><code>None</code></em>, <strong><code>dateCreated</code></strong>=<em><code>None</code></em>, <strong><code>dateModified</code></strong>=<em><code>None</code></em>, <strong><code>deleted</code></strong>=<em><code>None</code></em>, <strong><code>externalId</code></strong>=<em><code>None</code></em>, <strong><code>itemDescription</code></strong>=<em><code>None</code></em>, <strong><code>starred</code></strong>=<em><code>None</code></em>, <strong><code>version</code></strong>=<em><code>None</code></em>, <strong><code>id</code></strong>=<em><code>None</code></em>, <strong><code>importJson</code></strong>=<em><code>None</code></em>, <strong><code>bitrate</code></strong>=<em><code>None</code></em>, <strong><code>duration</code></strong>=<em><code>None</code></em>, <strong><code>endTime</code></strong>=<em><code>None</code></em>, <strong><code>fileLocation</code></strong>=<em><code>None</code></em>, <strong><code>startTime</code></strong>=<em><code>None</code></em>, <strong><code>caption</code></strong>=<em><code>None</code></em>, <strong><code>exifData</code></strong>=<em><code>None</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>height</code></strong>=<em><code>None</code></em>, <strong><code>width</code></strong>=<em><code>None</code></em>, <strong><code>channels</code></strong>=<em><code>None</code></em>, <strong><code>changelog</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong><code>genericAttribute</code></strong>=<em><code>None</code></em>, <strong><code>measure</code></strong>=<em><code>None</code></em>, <strong><code>sharedWith</code></strong>=<em><code>None</code></em>, <strong><code>file</code></strong>=<em><code>None</code></em>, <strong><code>includes</code></strong>=<em><code>None</code></em>, <strong><code>thumbnail</code></strong>=<em><code>None</code></em>) :: <code>Item</code></p>
+<h2 id="Photo" class="doc_header"><code>class</code> <code>Photo</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/schema.py#L4191" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Photo</code>(<strong><code>dateAccessed</code></strong>=<em><code>None</code></em>, <strong><code>dateCreated</code></strong>=<em><code>None</code></em>, <strong><code>dateModified</code></strong>=<em><code>None</code></em>, <strong><code>deleted</code></strong>=<em><code>None</code></em>, <strong><code>externalId</code></strong>=<em><code>None</code></em>, <strong><code>itemDescription</code></strong>=<em><code>None</code></em>, <strong><code>starred</code></strong>=<em><code>None</code></em>, <strong><code>version</code></strong>=<em><code>None</code></em>, <strong><code>id</code></strong>=<em><code>None</code></em>, <strong><code>importJson</code></strong>=<em><code>None</code></em>, <strong><code>bitrate</code></strong>=<em><code>None</code></em>, <strong><code>duration</code></strong>=<em><code>None</code></em>, <strong><code>endTime</code></strong>=<em><code>None</code></em>, <strong><code>fileLocation</code></strong>=<em><code>None</code></em>, <strong><code>startTime</code></strong>=<em><code>None</code></em>, <strong><code>caption</code></strong>=<em><code>None</code></em>, <strong><code>exifData</code></strong>=<em><code>None</code></em>, <strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>height</code></strong>=<em><code>None</code></em>, <strong><code>width</code></strong>=<em><code>None</code></em>, <strong><code>channels</code></strong>=<em><code>None</code></em>, <strong><code>changelog</code></strong>=<em><code>None</code></em>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong><code>genericAttribute</code></strong>=<em><code>None</code></em>, <strong><code>measure</code></strong>=<em><code>None</code></em>, <strong><code>sharedWith</code></strong>=<em><code>None</code></em>, <strong><code>file</code></strong>=<em><code>None</code></em>, <strong><code>includes</code></strong>=<em><code>None</code></em>, <strong><code>thumbnail</code></strong>=<em><code>None</code></em>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
-<p>Provides a base class for all items. All items in the schema inherit from this class, and it provides some
-basic functionality for consistency and to enable easier usage.</p>
+<p>Item is the baseclass for all of the data classes.</p>
 
 </div>
 
@@ -173,6 +167,13 @@ basic functionality for consistency and to enable easier usage.</p>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
@@ -187,13 +188,6 @@ basic functionality for consistency and to enable easier usage.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -201,10 +195,9 @@ basic functionality for consistency and to enable easier usage.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="IPhoto" class="doc_header"><code>class</code> <code>IPhoto</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/photo.py#L145" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IPhoto</code>(<strong><code>data</code></strong>=<em><code>None</code></em>, <strong><code>embedding</code></strong>=<em><code>None</code></em>, <strong><code>path</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/data.photo#Photo"><code>Photo</code></a></p>
+<h2 id="IPhoto" class="doc_header"><code>class</code> <code>IPhoto</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/photo.py#L145" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>IPhoto</code>(<strong><code>data</code></strong>=<em><code>None</code></em>, <strong><code>embedding</code></strong>=<em><code>None</code></em>, <strong><code>path</code></strong>=<em><code>None</code></em>, <strong>*<code>args</code></strong>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/data.photo.html#Photo"><code>Photo</code></a></p>
 </blockquote>
-<p>Provides a base class for all items. All items in the schema inherit from this class, and it provides some
-basic functionality for consistency and to enable easier usage.</p>
+<p>Item is the baseclass for all of the data classes.</p>
 
 </div>
 
@@ -212,6 +205,13 @@ basic functionality for consistency and to enable easier usage.</p>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
