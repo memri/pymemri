@@ -6,6 +6,7 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodClient']
 from ..data.itembase import Edge, ItemBase
 from ..data.basic import *
 from ..data.schema import *
+from ..data.photo import Photo
 from ..imports import *
 from hashlib import sha256
 
@@ -94,9 +95,9 @@ class PodClient:
     def create_photo_file(self, photo):
         file = photo.file[0]
         self.create(file)
-        return self.upload_photo(photo.data)
+        return self._upload_image(photo.data)
 
-    def upload_photo(self, arr):
+    def _upload_image(self, arr):
         return self.upload_file(arr.tobytes())
 
     def upload_file(self, file):
