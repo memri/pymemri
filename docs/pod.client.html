@@ -54,7 +54,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v3'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v3'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -369,7 +369,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;item&#39;: Person (#68ccb3db65306d68be32d13099c3a170), &#39;name&#39;: &#39;sender&#39;}]</pre>
+<pre>[{&#39;item&#39;: Person (#a63b11ebe6996b2efb00b75c42ccd930), &#39;name&#39;: &#39;sender&#39;}]</pre>
 </div>
 
 </div>
@@ -545,9 +545,9 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[Person (#68ccb3db65306d68be32d13099c3a170),
- Person (#7e7cc705e24903eefebcf226f007adab),
- Person (#b13015c2676545870003cb2c20e5c18e)]</pre>
+<pre>[Person (#a63b11ebe6996b2efb00b75c42ccd930),
+ Person (#16560d3dd6550a6aa58d88405fab177a),
+ Person (#fa5e4f210ec5b928e7eb263fcabf252f)]</pre>
 </div>
 
 </div>
@@ -660,7 +660,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 <span class="n">photo</span> <span class="o">=</span> <span class="n">IPhoto</span><span class="o">.</span><span class="n">from_np</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">file</span> <span class="o">=</span> <span class="n">photo</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-<span class="n">succes2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">upload_photo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">succes2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">_upload_image</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">succes</span>
 <span class="k">assert</span> <span class="n">succes2</span>
 </pre></div>
@@ -753,6 +753,23 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>creating
+creating photo file
+creating
+Uploaded file
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
@@ -795,7 +812,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>IPhoto (#5b3adb19770862451acf0a722957c503)</pre>
+<pre>IPhoto (#e49db579f6427af57651fc3ca5efafcf)</pre>
 </div>
 
 </div>
