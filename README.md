@@ -8,11 +8,6 @@
 
 This repository is built with [nbdev](https://github.com/fastai/nbdev), which means that the repo structure has a few differences compared to a standard python repo. 
 
-# Documentation
-
-- [pyMemri Documentation](http://memri.docs.memri.io/pymemri/pod.client.html#File-API)
-- [Plugin Tutorial](https://blog.memri.io/getting-started-building-a-plugin/)
-
 # Installing
 
 ## As a package
