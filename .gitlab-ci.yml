@@ -22,10 +22,10 @@ check if there is diff library/nbs:
   script:
   - if [ -n "$(nbdev_diff_nbs)" ]; then echo -e "!!! Detected difference between the notebooks and the library"; false; fi 
 
-# run tests:
-#   stage: test
-#   script:
-#   - ./tools/test_in_ci.sh
+run tests:
+  stage: test
+  script:
+  - ./tools/test_in_ci.sh
 
 pages:
   only:
