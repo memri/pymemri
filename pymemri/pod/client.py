@@ -3,9 +3,9 @@
 __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodClient']
 
 # Cell
-from ..data.itembase import Edge, ItemBase
 from ..data.basic import *
 from ..data.schema import *
+from ..data.itembase import Edge, ItemBase, Item
 from ..data.photo import Photo
 from ..imports import *
 from hashlib import sha256
@@ -391,8 +391,11 @@ class PodClient:
         return client.search(query)[0]
 
     def item_from_json(self, json):
-        indexer_class = json.get("indexerClass", None)
-        constructor = get_constructor(json["type"], indexer_class, extra=self.registered_classes)
+        plugin_class = json.get("pluginClass", None)
+        plugin_package = json.get("pluginPackage", None)
+
+        constructor = get_constructor(json["type"], plugin_class, plugin_package=plugin_package,
+                                      extra=self.registered_classes)
         new_item = constructor.from_json(json)
         existing = ItemBase.global_db.get(new_item.id)
         # TODO: cleanup

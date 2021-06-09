@@ -17,7 +17,7 @@
   {% if folder.output contains "web" %}
   <li>
       <a href="#" class="firstLevelHeader">{{ folder.title }}</a>
-      <ul>
+      <ul class="sidebarlist" style="display:block;">
           {% for folderitem in folder.folderitems %}
           {% if folderitem.output contains "web" %}
           {% if folderitem.external_url %}

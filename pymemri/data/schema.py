@@ -10,19 +10,27 @@
 from .itembase import ItemBase, Edge, Item
 
 
-def get_constructor(_type, indexer_class=None, extra=None):
+def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
     import pymemri.indexers as models
     from pymemri.data.photo import IPhoto
     from pymemri.indexers.indexer import IndexerBase
     import pymemri.integrator_registry
 
-    if _type == "Indexer" and indexer_class is not None and hasattr(pymemri.integrator_registry, indexer_class):
-        return getattr(pymemri.integrator_registry, indexer_class)
+    if _type == "Indexer" and plugin_class is not None and hasattr(pymemri.integrator_registry, plugin_class):
+        return getattr(pymemri.integrator_registry, plugin_class)
+    if plugin_class is not None and plugin_package is not None:
+        try:
+            mod = __import__(plugin_package, fromlist=[plugin_class])
+            dynamic = {plugin_class: getattr(mod, plugin_class)}
+        except Exception as e:
+            print(f"Could not import {plugin_class}.{plugin_package}")
+    else:
+        dynamic = dict()
 
-    classes = z = {**globals(), **locals(), **extra}
+    classes = z = {**globals(), **locals(), **extra, **dynamic}
     if _type in classes:
         if _type == "Indexer":
-            constructor = classes[indexer_class]
+            constructor = classes[plugin_class]
         else:
             i_class = "I" + _type
             if i_class in classes:
@@ -2062,7 +2070,7 @@ class Indexer(Item):
     def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
                  externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
                  name=None, repository=None, icon=None, query=None, bundleImage=None, runDestination=None,
-                 indexerClass=None, changelog=None, label=None, genericAttribute=None, measure=None, sharedWith=None,
+                 pluginClass=None, changelog=None, label=None, genericAttribute=None, measure=None, sharedWith=None,
                  indexerRun=None):
         super().__init__(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
                          deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
@@ -2074,7 +2082,7 @@ class Indexer(Item):
         self.query = query
         self.bundleImage = bundleImage
         self.runDestination = runDestination
-        self.indexerClass = indexerClass
+        self.pluginClass = pluginClass
         self.indexerRun = indexerRun if indexerRun is not None else []
 
     @classmethod
@@ -2096,7 +2104,7 @@ class Indexer(Item):
         query = json.get("query", None)
         bundleImage = json.get("bundleImage", None)
         runDestination = json.get("runDestination", None)
-        indexerClass = json.get("indexerClass", None)
+        pluginClass = json.get("pluginClass", None)
        
         changelog = []
         label = []
@@ -2124,7 +2132,7 @@ class Indexer(Item):
         res = cls(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
                   deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
                   version=version, id=id, importJson=importJson, name=name, repository=repository, icon=icon,
-                  query=query, bundleImage=bundleImage, runDestination=runDestination, indexerClass=indexerClass,
+                  query=query, bundleImage=bundleImage, runDestination=runDestination, pluginClass=pluginClass,
                   changelog=changelog, label=label, genericAttribute=genericAttribute, measure=measure,
                   sharedWith=sharedWith, indexerRun=indexerRun)
         for e in res.get_all_edges(): e.source = res
