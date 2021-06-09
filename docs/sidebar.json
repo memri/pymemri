@@ -2,6 +2,7 @@
   "Getting Started": {
     "Overview": "/",
     "Pod Client": "pod.client.html",
-    "ItemBase": "itembase.html"
+    "ItemBase": "itembase.html",
+    "Plugin": "plugin.pluginbase.html"
   }
 }

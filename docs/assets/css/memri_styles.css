@@ -50,6 +50,8 @@ h4 code {
     /* background-color: white; */
 }
 
+
+
 #mysidebar .firstLevelHeader {
     text-transform: uppercase;
     font-style: normal;
@@ -68,6 +70,14 @@ h4 code {
 .nav a:hover, .nav li.active > a{
     color: #6458A1 !important;
     background-color: white !important;
+}
+
+.output_wrapper{
+    padding-top: 8px;
+}
+
+.sidebarlist{
+    display:block !important;
 }
 
 .nav ul li a{

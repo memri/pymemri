@@ -1,6 +1,6 @@
 from fastscript import *
 import os
-from integrators.indexers.indexer import run_integrator
+from pymemri.plugin.pluginbase import run_plugin
 
 
 @call_parse
@@ -11,5 +11,5 @@ def main(pod_full_address:Param("The pod full address", str)=None,
 
     environment = os.environ
 
-    run_integrator(environ=environment, pod_full_address=pod_full_address, integrator_run_uid=integrator_run_uid,
+    run_plugin(environ=environment, pod_full_address=pod_full_address, integrator_run_uid=integrator_run_uid,
                    database_key=database_key, owner_key=owner_key, verbose=True)
