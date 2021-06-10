@@ -22,7 +22,7 @@ class PluginBase(Item):
     """Base class for plugins"""
     properties = Item.properties + ["name", "repository", "icon", "data_query", "bundleImage",
                                     "runDestination", "pluginClass", "pluginPackage"]
-    edges = Item.edges + ["IndexerRun"]
+    edges = Item.edges + ["PluginRun"]
 
     def __init__(self, name=None, repository=None, icon=None, query=None, bundleImage=None, runDestination=None,
                  pluginClass=None, indexerRun=None, **kwargs):
@@ -73,6 +73,8 @@ def run_plugin_from_run_id(run_id, client):
     if len(plugins) == 0:
         raise ValueError(f"plugin run {run_id} has no plugin attached to it. Make sure there is a 'plugin' \
                            edge from your run to the actual plugin object.")
+    if len(plugins) > 1:
+        raise ValueError("Too many plugins attached to run")
     plugin = plugins[0]
     plugin.run(run, client)
 
