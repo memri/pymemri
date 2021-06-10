@@ -126,39 +126,6 @@ item.some_edge_type, which calls item.traverse(edgetype), which in turn calls th
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ItemBase" class="doc_header"><code>class</code> <code>ItemBase</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L107" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ItemBase</code>(<strong><code>id</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-<p>Provides a base class for all items. All items in the schema inherit from this class, and it provides some
-basic functionality for consistency and to enable easier usage.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
 <h2 id="Item" class="doc_header"><code>class</code> <code>Item</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L227" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Item</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#ItemBase"><code>ItemBase</code></a></p>
 </blockquote>
 <p>Item is the baseclass for all of the data classes.</p>
@@ -240,7 +207,7 @@ from the pod, and stored their values via edges in the object.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>With the <a href="/pymemri/itembase.html#ItemBase"><code>ItemBase</code></a> and <a href="/pymemri/itembase.html#Edge"><code>Edge</code></a> classes we can create an item and its surrounding graph. The schema is defined in schema.py, in general we want to use the from_data staticmethod to generate new items, because it ensures that edges are linked from both the source and the target object. Let's make a new item and add it to the pod.</p>
+<p>With the <a href="/pymemri/itembase.html#Item"><code>Item</code></a> and <a href="/pymemri/itembase.html#Edge"><code>Edge</code></a> classes we can create an item and its surrounding graph. The schema is defined in schema.py, in general we want to use the from_data staticmethod to generate new items, because it ensures that edges are linked from both the source and the target object. Let's make a new item and add it to the pod.</p>
 
 </div>
 </div>
