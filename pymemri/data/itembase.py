@@ -103,7 +103,7 @@ class Edge():
             raise ValueError
 
 # Cell
-
+# hide
 class ItemBase():
     """Provides a base class for all items. All items in the schema inherit from this class, and it provides some
     basic functionality for consistency and to enable easier usage."""
