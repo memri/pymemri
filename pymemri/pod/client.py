@@ -17,14 +17,17 @@ POD_VERSION = "v3"
 # Cell
 class PodClient:
 
-    def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None):
+    def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None,
+                 auth_json=None):
         self.url = url
         self.version = POD_VERSION
         self.test_connection(verbose=False)
         self.database_key=database_key if database_key is not None else self.generate_random_key()
         self.owner_key=owner_key if owner_key is not None else self.generate_random_key()
         self.base_url = f"{url}/{version}/{self.owner_key}"
-        self.auth_json = {"type":"ClientAuth", "databaseKey": self.database_key}
+        self.auth_json = {"type":"ClientAuth","databaseKey":self.database_key} if auth_json is None \
+                          else {**{"type": "PluginAuth"}, **auth_json}
+
         self.registered_classes=dict()
 
     @staticmethod
@@ -418,18 +421,25 @@ class PodClient:
         if ALL_EDGES in properties: del properties[ALL_EDGES]
         return properties
 
-    def run_importer(self, id, servicePayload):
+    def start_plugin(self, container: str, target_item_id):
+        # to prevent circular dependency: REFACTOR
+        from ..plugin.pluginbase import StartPlugin
+        start_plugin_item = StartPlugin(container=container, targetItemId=target_item_id)
+        self.create(start_plugin_item)
 
-        body = dict()
-        body["databaseKey"] = servicePayload["databaseKey"]
-        body["payload"] = {"id": id, "servicePayload": servicePayload}
-        print(body)
 
-        try:
-            res = requests.post(f"{self.base_url}/run_importer", json=body)
-            if res.status_code != 200:
-                print(f"Failed to start importer on {url}:\n{res.status_code}: {res.text}")
-            else:
-                print("Starting importer")
-        except requests.exceptions.RequestException as e:
-            print("Error with calling importer {e}")
+#     def run_importer(self, id, servicePayload):
+
+#         body = dict()
+#         body["databaseKey"] = servicePayload["databaseKey"]
+#         body["payload"] = {"id": id, "servicePayload": servicePayload}
+#         print(body)
+
+#         try:
+#             res = requests.post(f"{self.base_url}/run_importer", json=body)
+#             if res.status_code != 200:
+#                 print(f"Failed to start importer on {url}:\n{res.status_code}: {res.text}")
+#             else:
+#                 print("Starting importer")
+#         except requests.exceptions.RequestException as e:
+#             print("Error with calling importer {e}")
