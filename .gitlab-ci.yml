@@ -1,8 +1,19 @@
 default: 
   image: python:3.6 
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
   before_script:
+  - python -V
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
   - apt-get update && apt-get install -y libsqlcipher-dev && apt-get install -y libgl1-mesa-glx
   - pip install -e .
+
 
 read_notebooks:
   script:
