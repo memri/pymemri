@@ -75,8 +75,8 @@ class Edge():
         _type = json[EDGE_TYPE]
         json_target = json[TARGET]
         target_type = json_target["_type"]
-        indexer_class = json_target.get("indexerClass", None)
-        target_constructor = get_constructor(target_type, indexer_class)
+        plugin_class = json_target.get("pluginClass", None)
+        target_constructor = get_constructor(target_type, plugin_class)
         target = target_constructor.from_json(json_target)
         return cls(source=None, target=target, _type=_type)
 
@@ -89,7 +89,8 @@ class Edge():
 
     def __eq__(self, other):
         return self.source is other.source and self.target is other.target \
-         and self._type == other._type
+         and self._type == other._type and self.reverse == other.reverse and self.created == other.created \
+         and self.label == other.label
 
     def traverse(self, start):
         """We can traverse an edge starting from the source to the target or vice versa. In practice we often call
@@ -102,7 +103,7 @@ class Edge():
             raise ValueError
 
 # Cell
-
+# hide
 class ItemBase():
     """Provides a base class for all items. All items in the schema inherit from this class, and it provides some
     basic functionality for consistency and to enable easier usage."""
@@ -117,9 +118,6 @@ class ItemBase():
         existing = cls.global_db.get(node.id)
         if existing is None and node.id is not None:
             cls.global_db.add(node)
-
-    def replace_self(self, other):
-        self.__dict__.update(other.__dict__)
 
     def __getattribute__(self, name):
         val = object.__getattribute__(self, name)
@@ -138,8 +136,9 @@ class ItemBase():
         if name not in self.__dict__:
             raise NameError(f"object {self} does not have edge with name {name}")
         existing = object.__getattribute__(self, name)
-        res = existing + [val]
-        self.__setattr__(name, res)
+        if val not in existing:
+            res = existing + [val]
+            self.__setattr__(name, res)
 
     def is_expanded(self):
         """returns whether the node is expanded. An expanded node retrieved nodes that are
@@ -181,18 +180,18 @@ class ItemBase():
         if res is None: return False
         return len(res) == 1
 
-    def expand(self, api):
-        """Expands a node (retrieves all directly connected nodes ands adds to object)."""
-        self._expanded = True
-        res = api.get(self.id, expanded=True)
-        for edge_name in res.get_all_edge_names():
-            edges = res.get_edges(edge_name)
-            for e in edges:
-                e.source = self
-            self.__setattr__(edge_name, edges)
+#     def expand(self, api):
+#         """Expands a node (retrieves all directly connected nodes ands adds to object)."""
+#         self._expanded = True
+#         res = api.get(self.id, expanded=True)
+#         for edge_name in res.get_all_edge_names():
+#             edges = res.get_edges(edge_name)
+#             for e in edges:
+#                 e.source = self
+#             self.__setattr__(edge_name, edges)
 
-        # self.edges = res.edges
-        return self
+#         # self.edges = res.edges
+#         return self
 
     def __repr__(self):
         id = self.id
@@ -217,31 +216,62 @@ class ItemBase():
             v.source = res
         return res
 
-    def inherit_funcs(self, other):
-        """This function can be used to inherit new functionalities from a subclass. This is a patch to solve
-        the fact that python does provide extensions of classes that are defined in a different file that are
-        dynamic enough for our use case."""
-        assert issubclass(other, self.__class__)
-        self.__class__ = other
+#     def inherit_funcs(self, other):
+#         """This function can be used to inherit new functionalities from a subclass. This is a patch to solve
+#         the fact that python does provide extensions of classes that are defined in a different file that are
+#         dynamic enough for our use case."""
+#         assert issubclass(other, self.__class__)
+#         self.__class__ = other
 
 # Cell
 class Item(ItemBase):
     """Item is the baseclass for all of the data classes."""
-    def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
-                 externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
-                 changelog=None, label=None, genericAttribute=None, measure=None, sharedWith=None):
-        super().__init__(id)
-        self.dateAccessed = dateAccessed
-        self.dateCreated = dateCreated
-        self.dateModified = dateModified
-        self.deleted = deleted
-        self.externalId = externalId
-        self.itemDescription = itemDescription
-        self.starred = starred
-        self.version = version
-        self.importJson = importJson
-        self.changelog = changelog if changelog is not None else []
-        self.label = label if label is not None else []
-        self.genericAttribute = genericAttribute if genericAttribute is not None else []
-        self.measure = measure if measure is not None else []
-        self.sharedWith = sharedWith if sharedWith is not None else []
+    properties = ["dateAccessed", "dateCreated", "dateModified", "deleted", "externalId", "itemDescription",
+                  "starred", "version", "id", "importJson", "pluginClass"]
+    edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
+    def __init__(self, **kwargs):
+        super().__init__(kwargs.get("id"))
+        for p in self.properties:
+            if p == "id":
+                continue
+            setattr(self, p, kwargs.get(p, None))
+
+        for e in self.edges:
+            setattr(self, e, kwargs.get(e, []))
+
+    @classmethod
+    def parse_json(self, cls, json):
+        property_kwargs = Item.parse_properties(cls, json)
+        edge_kwargs = Item.parse_edges(cls, json)
+        return {**property_kwargs, **edge_kwargs}
+
+    @classmethod
+    def parse_properties(self, cls, json):
+        return {p: json.get(p, None) for p in cls.properties}
+
+    @classmethod
+    def parse_edges(self, cls, json):
+        all_edges = json.get(ALL_EDGES, None)
+        edge_kwargs = dict()
+        reverse_edges = [f"~{e}" for e in cls.edges]
+        if all_edges is not None:
+            for edge_json in all_edges:
+                edge = Edge.from_json(edge_json)
+                if edge.type in self.edges + reverse_edges:
+                    edge_name = self.remove_prefix(edge.type)
+                    if edge_name in edge_kwargs:
+                        edge_kwargs[edge_name] += [edge]
+                    else:
+                        edge_kwargs[edge_name] = [edge]
+        return edge_kwargs
+
+    @classmethod
+    def remove_prefix(s, prefix="~"):
+        return s[1:] if s[0] == "`" else s
+
+    @classmethod
+    def from_json(cls, json):
+        kwargs = Item.parse_json(cls, json)
+        res = cls(**kwargs)
+        for e in res.get_all_edges(): e.source = res
+        return res

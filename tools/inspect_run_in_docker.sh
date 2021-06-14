@@ -2,5 +2,5 @@
 set -euETo pipefail
 
 # run bash to play around
-exec docker run --rm -it --init --name memri-pyintegrators memri-pyintegrators:latest bash
+docker run --rm -it --init --name pymemri pymemri:latest bash
 
