@@ -54,7 +54,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v3'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>)</p>
+<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v3'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -243,17 +243,12 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Dog</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="n">deleted</span><span class="p">)</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">properties</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">edges</span> 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
-    
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">age</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span><span class="n">age</span><span class="o">=</span><span class="n">age</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -369,7 +364,7 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;item&#39;: Person (#a63b11ebe6996b2efb00b75c42ccd930), &#39;name&#39;: &#39;sender&#39;}]</pre>
+<pre>[{&#39;item&#39;: Person (#1282de00d7dbd7d3e24d36ffe180b0d3), &#39;name&#39;: &#39;sender&#39;}]</pre>
 </div>
 
 </div>
@@ -545,9 +540,9 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[Person (#a63b11ebe6996b2efb00b75c42ccd930),
- Person (#16560d3dd6550a6aa58d88405fab177a),
- Person (#fa5e4f210ec5b928e7eb263fcabf252f)]</pre>
+<pre>[Person (#1282de00d7dbd7d3e24d36ffe180b0d3),
+ Person (#4726309701370ded76ba0a734cf04b55),
+ Person (#9241966f2df21487b5f83a0926c7bd49)]</pre>
 </div>
 
 </div>
@@ -753,23 +748,6 @@ Property myAge not defined in Schema (attempted to use it for json value 20) -->
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>creating
-creating photo file
-creating
-Uploaded file
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -812,7 +790,7 @@ Uploaded file
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>IPhoto (#e49db579f6427af57651fc3ca5efafcf)</pre>
+<pre>IPhoto (#84f2b73f6ea6326a9cb26b47ba62cc41)</pre>
 </div>
 
 </div>
@@ -840,25 +818,6 @@ Uploaded file
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Check-if-an-item-exists">Check if an item exists<a class="anchor-link" href="#Check-if-an-item-exists"> </a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Not supported yet by the new PodAPI</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Resetting-the-db">Resetting the db<a class="anchor-link" href="#Resetting-the-db"> </a></h1>
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">

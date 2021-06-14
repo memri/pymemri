@@ -19,9 +19,9 @@ OWNER_KEY_ENV           = 'ownerKey'
 
 class IndexerBase(Indexer):
 
-    def __init__(self, indexerClass=None, *args, **kwargs):
-        if indexerClass is None: indexerClass=self.__class__.__name__
-        super().__init__(indexerClass=indexerClass, *args, **kwargs)
+    def __init__(self, pluginClass=None, *args, **kwargs):
+        if pluginClass is None: pluginClass=self.__class__.__name__
+        super().__init__(pluginClass=pluginClass, *args, **kwargs)
 
     def populate(self, client, items, edges=False):
         new_items = [x for x in items if x.id is None]
@@ -93,7 +93,6 @@ def run_integrator_from_run_id(run_id, client):
         raise NotImplementedError(f"Cannot execute item of type {run}")
 
 # Cell
-
 def run_integrator(environ=None, pod_full_address=None, integrator_run_id=None, database_key=None, owner_key=None,
                    verbose=False):
     """Runs an integrator, you can either provide the run settings as parameters to this function (for local testing)
