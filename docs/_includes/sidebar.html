@@ -3,8 +3,8 @@
 
 <ul id="mysidebar" class="nav">
         <div>
-            <span id="sidebar-title"><a href="/pyintegrators/">pyintegrators&nbsp</a></span>
-            <a href="https://gitlab.memri.io/memri/pyintegrators" id="gitlab-img" target="_blank">
+            <span id="sidebar-title"><a href="/pymemri/">pymemri&nbsp</a></span>
+            <a href="https://gitlab.memri.io/memri/pymemri" id="gitlab-img" target="_blank">
                 <img src="assets/images/GitLab_Logo.svg" height="14" target="_blank">
             </a>
         </div>
@@ -17,7 +17,7 @@
   {% if folder.output contains "web" %}
   <li>
       <a href="#" class="firstLevelHeader">{{ folder.title }}</a>
-      <ul>
+      <ul class="sidebarlist" style="display:block;">
           {% for folderitem in folder.folderitems %}
           {% if folderitem.output contains "web" %}
           {% if folderitem.external_url %}
