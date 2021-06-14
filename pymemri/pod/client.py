@@ -421,18 +421,25 @@ class PodClient:
         if ALL_EDGES in properties: del properties[ALL_EDGES]
         return properties
 
-    def run_importer(self, id, servicePayload):
+    def start_plugin(self, container: str, target_item_id):
+        # to prevent circular dependency: REFACTOR
+        from ..plugin.pluginbase import StartPlugin
+        start_plugin_item = StartPlugin(container=container, targetItemId=target_item_id)
+        self.create(start_plugin_item)
 
-        body = dict()
-        body["databaseKey"] = servicePayload["databaseKey"]
-        body["payload"] = {"id": id, "servicePayload": servicePayload}
-        print(body)
 
-        try:
-            res = requests.post(f"{self.base_url}/run_importer", json=body)
-            if res.status_code != 200:
-                print(f"Failed to start importer on {url}:\n{res.status_code}: {res.text}")
-            else:
-                print("Starting importer")
-        except requests.exceptions.RequestException as e:
-            print("Error with calling importer {e}")
+#     def run_importer(self, id, servicePayload):
+
+#         body = dict()
+#         body["databaseKey"] = servicePayload["databaseKey"]
+#         body["payload"] = {"id": id, "servicePayload": servicePayload}
+#         print(body)
+
+#         try:
+#             res = requests.post(f"{self.base_url}/run_importer", json=body)
+#             if res.status_code != 200:
+#                 print(f"Failed to start importer on {url}:\n{res.status_code}: {res.text}")
+#             else:
+#                 print("Starting importer")
+#         except requests.exceptions.RequestException as e:
+#             print("Error with calling importer {e}")

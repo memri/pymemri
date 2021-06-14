@@ -140,7 +140,9 @@ import os
 def run_plugin(pod_full_address:Param("The pod full address", str)=None,
                plugin_run_id:Param("Run id of the plugin to be executed", str)=None,
                database_key:Param("Database key of the pod", str)=None,
-               owner_key:Param("Owner key of the pod", str)=None):
+               owner_key:Param("Owner key of the pod", str)=None,
+               from_pod:Param("Run by calling the pod", bool)=False,
+               container:Param("Pod container to run frod", str)=None):
 
     env = os.environ
     params = [pod_full_address, plugin_run_id, database_key, owner_key]
@@ -161,8 +163,13 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=None,
                       ("owner_key", owner_key), ("auth_json", pod_auth_json)]:
         print(f"{name}={val}")
     print()
-
-    _run_plugin(client=client, plugin_run_id=plugin_run_id)
+    if from_pod:
+        print(f"calling the `create` api on {pod_full_address} to make your Pod start "
+              f"a plugin with id {plugin_run_id}.")
+        print(f"*Check the pod log/console for debug output.*")
+        client.start_plugin("pymemri", plugin_run_id)
+    else:
+        _run_plugin(client=client, plugin_run_id=plugin_run_id)
 
 # Cell
 # hide
