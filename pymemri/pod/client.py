@@ -17,14 +17,17 @@ POD_VERSION = "v3"
 # Cell
 class PodClient:
 
-    def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None):
+    def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None,
+                 auth_json=None):
         self.url = url
         self.version = POD_VERSION
         self.test_connection(verbose=False)
         self.database_key=database_key if database_key is not None else self.generate_random_key()
         self.owner_key=owner_key if owner_key is not None else self.generate_random_key()
         self.base_url = f"{url}/{version}/{self.owner_key}"
-        self.auth_json = {"type":"ClientAuth", "databaseKey": self.database_key}
+        self.auth_json = {"type":"ClientAuth","databaseKey":self.database_key} if auth_json is None \
+                          else {**{"type": "PluginAuth"}, **auth_json}
+
         self.registered_classes=dict()
 
     @staticmethod
