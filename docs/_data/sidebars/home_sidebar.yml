@@ -10,14 +10,14 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: Pod Client
+      title: The Pod client
       url: pod.client.html
     - output: web,pdf
-      title: ItemBase
-      url: itembase.html
-    - output: web,pdf
-      title: Plugin
+      title: Creating a plugin
       url: plugin.pluginbase.html
+    - output: web,pdf
+      title: Items & Edges
+      url: itembase.html
     output: web
     title: Getting Started
   output: web
