@@ -113,7 +113,6 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pluginPackage</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
@@ -266,7 +265,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L161" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fb306477fa0&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fb2fdf91b20&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fb2fdf91b50&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fb2fdf91bb0&gt;</code>=<em><code>None</code></em>, <strong><code>from_pod</code></strong>:<code>Param object at 0x7fb2fdf91b80&gt;</code>=<em><code>False</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7fb2fdf91d00&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L159" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7f4cca3eff70&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7f4cc1f0eaf0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7f4cc1f0eb20&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7f4cc1f0eb80&gt;</code>=<em><code>None</code></em>, <strong><code>from_pod</code></strong>:<code>Param object at 0x7f4cc1f0eb50&gt;</code>=<em><code>False</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7f4cc1f0ecd0&gt;</code>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -316,8 +315,8 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Used arguments passed to `run_plugin()` (ignoring environment)
 pod_full_address=http://localhost:3030
-plugin_run_id=efadb7f087b90e1b02eaf0ab50d9dc3d
-owner_key=7614806839273308979219451705241218872783289744583066676089559935
+plugin_run_id=dfa5ffdc8a8de3b1fd131862199ae9d3
+owner_key=2662938383745122546993699175421754754357293170332011152245974590
 auth_json=None
 
 running
@@ -361,11 +360,11 @@ running
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Used arguments passed to `run_plugin()` (ignoring environment)
 pod_full_address=http://localhost:3030
-plugin_run_id=efadb7f087b90e1b02eaf0ab50d9dc3d
-owner_key=7614806839273308979219451705241218872783289744583066676089559935
+plugin_run_id=dfa5ffdc8a8de3b1fd131862199ae9d3
+owner_key=2662938383745122546993699175421754754357293170332011152245974590
 auth_json=None
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id efadb7f087b90e1b02eaf0ab50d9dc3d.
+calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id dfa5ffdc8a8de3b1fd131862199ae9d3.
 *Check the pod log/console for debug output.*
 </pre>
 </div>

@@ -25,13 +25,12 @@ POD_AUTH_JSON_ENV           = 'POD_AUTH_JSON'
 class PluginBase(Item, metaclass=ABCMeta):
     """Base class for plugins"""
     properties = Item.properties + ["name", "repository", "icon", "data_query", "bundleImage",
-                                    "runDestination", "pluginClass", "pluginPackage"]
+                                    "runDestination", "pluginClass"]
     edges = Item.edges + ["PluginRun"]
 
     def __init__(self, name=None, repository=None, icon=None, query=None, bundleImage=None, runDestination=None,
                  pluginClass=None, indexerRun=None, **kwargs):
         if pluginClass is None: pluginClass=self.__class__.__name__
-        self.pluginPackage=None
         super().__init__(**kwargs)
         self.name = name
         self.repository = repository
@@ -53,9 +52,9 @@ class PluginBase(Item, metaclass=ABCMeta):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["plugin_module", "plugin_name", "config"]
+    properties = Item.properties + ["pluginModule", "pluginName", "config"]
 
-    def __init__(self, plugin_module, plugin_name, config="", **kwargs):
+    def __init__(self, pluginModule, pluginName, config="", **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
         with an optional `config` string.
@@ -67,8 +66,8 @@ class PluginRun(Item):
                 this could be a `json.dumps` of a configuration dict. Defaults to None.
         """
         super().__init__(**kwargs)
-        self.plugin_module = plugin_module
-        self.plugin_name = plugin_name
+        self.pluginModule = pluginModule
+        self.pluginName = pluginName
         self.config = config
 
 # Cell
@@ -88,7 +87,6 @@ class MyPlugin(PluginBase):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.pluginPackage="pymemri.plugin.pluginbase"
 
     def run(self, run, client):
         print("running")
@@ -115,7 +113,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
         return_plugin (bool): Returns created plugin instance for testing purposes.
     """
     run = client.get(run_id)
-    plugin = get_plugin(run.plugin_module, run.plugin_name)
+    plugin = get_plugin(run.pluginModule, run.pluginName)
     plugin.add_to_schema(client)
     plugin.run(run, client)
 
