@@ -2,7 +2,7 @@
 
 __all__ = ['POD_FULL_ADDRESS_ENV', 'POD_TARGET_ITEM_ENV', 'POD_OWNER_KEY_ENV', 'POD_AUTH_JSON_ENV', 'PluginBase',
            'PluginRun', 'MyItem', 'MyPlugin', 'get_plugin', 'run_plugin_from_run_id', 'register_base_classes',
-           'run_plugin', 'StartPlugin']
+           'run_plugin', 'run_plugin_from_pod']
 
 # Cell
 from ..data.schema import *
@@ -13,6 +13,7 @@ from abc import ABCMeta
 import abc
 import json
 import importlib
+import string
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
@@ -52,9 +53,10 @@ class PluginBase(Item, metaclass=ABCMeta):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["pluginModule", "pluginName", "config"]
+    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage"]
+    edges = PluginBase.edges
 
-    def __init__(self, pluginModule, pluginName, config="", **kwargs):
+    def __init__(self, containerImage, pluginModule, pluginName, config="",targetItemId=None, **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
         with an optional `config` string.
@@ -69,6 +71,10 @@ class PluginRun(Item):
         self.pluginModule = pluginModule
         self.pluginName = pluginName
         self.config = config
+        self.containerImage=containerImage
+        id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
+        self.targetItemId=id_
+        self.id=id_
 
 # Cell
 # hide
@@ -82,7 +88,7 @@ class MyItem(Item):
 
 class MyPlugin(PluginBase):
     """"""
-    properties = PluginBase.properties
+    properties = PluginBase.properties + ["containerImage"]
     edges= PluginBase.edges
 
     def __init__(self, **kwargs):
@@ -123,7 +129,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
 # hide
 def register_base_classes(client):
     try:
-        assert client.add_to_schema(PluginRun("", ""))
+        assert client.add_to_schema(PluginRun("", "", "", "", ""))
     except Exception as e:
         raise ValueError("Could not add base schema")
 
@@ -156,12 +162,12 @@ def _parse_env(env):
 from fastscript import *
 import os
 
+# Cell
 @call_parse
 def run_plugin(pod_full_address:Param("The pod full address", str)=None,
                plugin_run_id:Param("Run id of the plugin to be executed", str)=None,
                database_key:Param("Database key of the pod", str)=None,
                owner_key:Param("Owner key of the pod", str)=None,
-               from_pod:Param("Run by calling the pod", bool)=False,
                container:Param("Pod container to run frod", str)=None):
 
     env = os.environ
@@ -183,20 +189,35 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=None,
                       ("owner_key", owner_key), ("auth_json", pod_auth_json)]:
         print(f"{name}={val}")
     print()
-    if from_pod:
-        print(f"calling the `create` api on {pod_full_address} to make your Pod start "
-              f"a plugin with id {plugin_run_id}.")
-        print(f"*Check the pod log/console for debug output.*")
-        client.start_plugin("pymemri", plugin_run_id)
-    else:
-        _run_plugin(client=client, plugin_run_id=plugin_run_id)
+    _run_plugin(client=client, plugin_run_id=plugin_run_id)
 
 # Cell
-# hide
-class StartPlugin(Item):
-    properties = Item.properties + ["container", "targetItemId"]
-    edges = Item.edges
-    def __init__(self, container=None, targetItemId=None, **kwargs):
-        super().__init__(**kwargs)
-        self.container = container
-        self.targetItemId = targetItemId
+from fastcore.script import call_parse, Param
+import os
+
+@call_parse
+def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None,
+                        database_key:Param("Database key of the pod", str)=None,
+                        owner_key:Param("Owner key of the pod", str)=None,
+                        container:Param("Pod container to run frod", str)=None,
+                        plugin_module:Param("Plugin module", str)=None,
+                        plugin_name:Param("Plugin class name", str)=None,
+                       ):
+    params = [pod_full_address, database_key, owner_key, container, plugin_module, plugin_name]
+    if (None in params):
+        raise ValueError(f"Defined some params to run indexer, but not all. Missing \
+                         {[p for p in params if p is None]}")
+    client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
+    for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
+        print(f"{name}={val}")
+    try:
+        _ = json.loads(settings)
+    except Exception:
+        if not settings is None:
+            raise "Please provide valid json for settings"
+
+    run = PluginRun(container, plugin_module, plugin_name, settings)
+    print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
+          f"a plugin with id {run.id}.")
+    print(f"*Check the pod log/console for debug output.*")
+    client.create(run)

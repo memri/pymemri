@@ -13,7 +13,8 @@ mkdir res
 #  Contributions welcomed!)
 
 # POD_URL='https://gitlab.memri.io/memri/pod/-/jobs/4102/artifacts/file/target/release/pod'
-POD_URL='https://gitlab.memri.io/memri/pymemri/-/raw/ci/pod_ci?inline=false'
+# POD_URL='https://gitlab.memri.io/memri/pymemri/-/raw/ci/pod_ci?inline=false'
+POD_URL='https://gitlab.memri.io/memri/pymemri/-/raw/v4/pod_ci?inline=false'
 
 curl "$POD_URL" -o pod_docker
 

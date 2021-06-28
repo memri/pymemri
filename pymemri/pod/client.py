@@ -12,7 +12,7 @@ from hashlib import sha256
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
-POD_VERSION = "v3"
+POD_VERSION = "v4"
 
 # Cell
 class PodClient:
@@ -341,7 +341,6 @@ class PodClient:
         for k, v in node.__dict__.items():
             if k[:1] != '_' and k != "private" and k not in private and not (isinstance(v, list)) \
                             and v is not None and (not (dates == False and k in DATE_KEYS)):
-
                 res[k] = v
         res["type"] = self._get_schema_type(node)
         return res
@@ -421,11 +420,11 @@ class PodClient:
         if ALL_EDGES in properties: del properties[ALL_EDGES]
         return properties
 
-    def start_plugin(self, container: str, target_item_id):
-        # to prevent circular dependency: REFACTOR
-        from ..plugin.pluginbase import StartPlugin
-        start_plugin_item = StartPlugin(container=container, targetItemId=target_item_id)
-        self.create(start_plugin_item)
+#     def start_plugin(self, container: str, target_item_id):
+#         # to prevent circular dependency: REFACTOR
+#         from pymemri.plugin.pluginbase import PluginRun
+#         start_plugin_item = PluginRun(containerImage=container, targetItemId=target_item_id)
+#         self.create(start_plugin_item)
 
 
 #     def run_importer(self, id, servicePayload):
