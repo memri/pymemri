@@ -214,12 +214,10 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
     if settings_file is not None:
         with open(settings_file, 'r') as f:
             settings = f.read()
-            print(type(settings))
-            print(settings)
     else:
         settings = None
 
-    run = PluginRun(container, plugin_module, plugin_name, "settings")
+    run = PluginRun(container, plugin_module, plugin_name, settings)
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")
