@@ -50,8 +50,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># # hide</span>
-<span class="c1"># class PluginSettings(Item):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># class PluginSettings(Item):</span>
 <span class="c1">#     def __init__(self, settings_dict):</span>
 <span class="c1">#         self.settings_dict=settings_dict</span>
         
@@ -179,23 +178,6 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">PluginRun</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
@@ -213,58 +195,11 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># client.create(plugin)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">PluginRun</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+<span class="c1"># client.create(plugin)</span>
 <span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">(</span><span class="s2">&quot;pymemri&quot;</span><span class="p">,</span> <span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span><span class="p">,</span> <span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span> <span class="s2">&quot;my_config_string&quot;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>True</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">run</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -318,7 +253,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L166" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7f99922dd310&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7f99922dd390&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7f9990eba450&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7f9990fb6650&gt;</code>=<em><code>None</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7f998f30a110&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L166" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fb98b6fb520&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fb98b6fb5b0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fb98b6fb550&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fb98312df40&gt;</code>=<em><code>None</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7fb98312df10&gt;</code>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -368,8 +303,8 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Used arguments passed to `run_plugin()` (ignoring environment)
 pod_full_address=http://localhost:3030
-plugin_run_id=33A294a95F9dE405DB7548ccf7AA6CA5
-owner_key=0976404262528527457330449252813526842102910066371174763451992320
+plugin_run_id=eA8449C3691deFB7fBFBEdCEB2Aa638b
+owner_key=5425376981118796856269853197369070143735402057204813973167558395
 auth_json=None
 
 running
@@ -418,7 +353,7 @@ running
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin_from_pod" class="doc_header"><code>run_plugin_from_pod</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L198" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin_from_pod</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_module</code></strong>:"Plugin module"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Plugin class name"=<em><code>None</code></em>)</p>
+<h4 id="run_plugin_from_pod" class="doc_header"><code>run_plugin_from_pod</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L198" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin_from_pod</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_module</code></strong>:"Plugin module"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Plugin class name"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -468,9 +403,9 @@ running
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>pod_full_address=http://localhost:3030
-owner_key=0976404262528527457330449252813526842102910066371174763451992320
+owner_key=5425376981118796856269853197369070143735402057204813973167558395
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id e6FD5D4Fbacf052A250A729EBc9e60db.
+calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 637ac2a4b5Dbf78c2b48D201CfBC0E2f.
 *Check the pod log/console for debug output.*
 </pre>
 </div>
