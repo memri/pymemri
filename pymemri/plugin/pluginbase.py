@@ -202,7 +202,7 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
                         container:Param("Pod container to run frod", str)=None,
                         plugin_module:Param("Plugin module", str)=None,
                         plugin_name:Param("Plugin class name", str)=None,
-                       ):
+                        settings_file:Param("Plugin settings (json)", str)=None):
     params = [pod_full_address, database_key, owner_key, container, plugin_module, plugin_name]
     if (None in params):
         raise ValueError(f"Defined some params to run indexer, but not all. Missing \
@@ -210,11 +210,14 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
-    try:
-        _ = json.loads(settings)
-    except Exception:
-        if not settings is None:
-            raise "Please provide valid json for settings"
+
+    if settings_file is not None:
+        with open(settings_file, 'r') as f:
+            settings = f.read()
+            print(type(settings))
+            print(settings)
+    else:
+        settings = None
 
     run = PluginRun(container, plugin_module, plugin_name, settings)
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
