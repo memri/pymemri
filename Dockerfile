@@ -27,6 +27,5 @@ COPY ./nbs ./nbs
 # Build the final image
 
 RUN pip3 install --editable .
-# CMD ["python3", "tools/run_integrator.py"]
 CMD ["run_plugin"]
 

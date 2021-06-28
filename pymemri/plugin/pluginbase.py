@@ -121,7 +121,6 @@ def _parse_env(env):
     try:
         pod_full_address = env.get(POD_FULL_ADDRESS_ENV, DEFAULT_POD_ADDRESS)
         plugin_run_json  = json.loads(str(env[POD_TARGET_ITEM_ENV]))
-        print(plugin_run_json)
         plugin_run_id    = plugin_run_json["id"]
         owner_key        = env.get(POD_OWNER_KEY_ENV)
         pod_auth_json    = json.loads(str(env.get(POD_AUTH_JSON_ENV)))
@@ -161,13 +160,14 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=None,
                        auth_json=pod_auth_json)
     for name, val in [("pod_full_address", pod_full_address), ("plugin_run_id", plugin_run_id),
                       ("owner_key", owner_key), ("auth_json", pod_auth_json)]:
-        print(f"{name}={val}")
+        print(f"{name} = {val}")
     print()
     if from_pod:
         print(f"calling the `create` api on {pod_full_address} to make your Pod start "
               f"a plugin with id {plugin_run_id}.")
         print(f"*Check the pod log/console for debug output.*")
-        client.start_plugin("pymemri", plugin_run_id)
+        assert container is not None
+        client.start_plugin(container, plugin_run_id)
     else:
         _run_plugin(client=client, plugin_run_id=plugin_run_id)
 

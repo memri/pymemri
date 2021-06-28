@@ -23,7 +23,8 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
             mod = __import__(plugin_package, fromlist=[plugin_class])
             dynamic = {plugin_class: getattr(mod, plugin_class)}
         except Exception as e:
-            print(f"Could not import {plugin_class}.{plugin_package}")
+            print(e)
+            print(f"Could not import {plugin_package}.{plugin_class}")
     else:
         dynamic = dict()
 
