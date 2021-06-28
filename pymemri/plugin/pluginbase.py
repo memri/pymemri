@@ -2,7 +2,7 @@
 
 __all__ = ['POD_FULL_ADDRESS_ENV', 'POD_TARGET_ITEM_ENV', 'POD_OWNER_KEY_ENV', 'POD_AUTH_JSON_ENV', 'PluginBase',
            'PluginRun', 'MyItem', 'MyPlugin', 'get_plugin', 'run_plugin_from_run_id', 'register_base_classes',
-           'run_plugin', 'run_plugin_from_pod', 'run_plugin_from_pod']
+           'run_plugin', 'run_plugin_from_pod']
 
 # Cell
 from ..data.schema import *
@@ -190,38 +190,6 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=None,
         print(f"{name}={val}")
     print()
     _run_plugin(client=client, plugin_run_id=plugin_run_id)
-
-# Cell
-from fastcore.script import call_parse, Param
-import os
-
-@call_parse
-def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None,
-                        database_key:Param("Database key of the pod", str)=None,
-                        owner_key:Param("Owner key of the pod", str)=None,
-                        container:Param("Pod container to run frod", str)=None,
-                        plugin_module:Param("Plugin module", str)=None,
-                        plugin_name:Param("Plugin class name", str)=None,
-                        settings_file:Param("Plugin settings (json)", str)=None):
-    params = [pod_full_address, database_key, owner_key, container, plugin_module, plugin_name]
-    if (None in params):
-        raise ValueError(f"Defined some params to run indexer, but not all. Missing \
-                         {[p for p in params if p is None]}")
-    client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
-    for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
-        print(f"{name}={val}")
-#     try:
-#         _ = json.loads(settings)
-#     except Exception:
-#         if not settings is None:
-#             raise "Please provide valid json for settings"
-
-    run = PluginRun(container, plugin_module, plugin_name, "settings")
-    print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
-          f"a plugin with id {run.id}.")
-    print(f"*Check the pod log/console for debug output.*")
-    client.create(run)
-
 
 # Cell
 from fastcore.script import call_parse, Param
