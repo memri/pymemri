@@ -210,13 +210,13 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
-    try:
-        _ = json.loads(settings)
-    except Exception:
-        if not settings is None:
-            raise "Please provide valid json for settings"
+#     try:
+#         _ = json.loads(settings)
+#     except Exception:
+#         if not settings is None:
+#             raise "Please provide valid json for settings"
 
-    run = PluginRun(container, plugin_module, plugin_name, settings)
+    run = PluginRun(container, plugin_module, plugin_name, "settings")
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")
