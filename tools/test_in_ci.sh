@@ -28,6 +28,7 @@ RUST_LOG=pod=debug,info \
   "$@" &
 
 pid=$!
-nbdev_test_nbs --n_workers 1
+# nbdev_test_nbs --n_workers 1
+nbdev_test_nbs --fname nbs/pod.client.ipynb
 kill $pid
 
