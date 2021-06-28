@@ -61,7 +61,7 @@ def get_indexer_run_data(client, indexer_run):
     if indexer_run.targetDataType is None:
         raise NotImplementedError
     else:
-        return client.search_by_fields({"_type": indexer_run.targetDataType})
+        return client.search({"type": indexer_run.targetDataType})
 
 def test_registration(integrator):
     """Check whether an integrator is registred. Registration is necessary to be able to load the right indexer
