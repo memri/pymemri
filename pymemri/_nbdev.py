@@ -50,7 +50,7 @@ index = {"read_file": "basic.ipynb",
          "run_plugin_from_run_id": "plugin.pluginbase.ipynb",
          "register_base_classes": "plugin.pluginbase.ipynb",
          "run_plugin": "plugin.pluginbase.ipynb",
-         "StartPlugin": "plugin.pluginbase.ipynb",
+         "run_plugin_from_pod": "plugin.pluginbase.ipynb",
          "DEFAULT_POD_ADDRESS": "pod.client.ipynb",
          "POD_VERSION": "pod.client.ipynb",
          "PodClient": "pod.client.ipynb"}
