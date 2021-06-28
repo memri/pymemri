@@ -170,7 +170,7 @@ class PodClient:
             if src is None or target is None:
                 print(f"Could not create edge {e} missing source or target id")
                 return False
-            data = {"_source": src, "_target": target, "_type": e._type}
+            data = {"_source": src, "_target": target, "_name": e._type}
             if e.label is not None: data[LABEL] = e.label
             if e.sequence is not None: data[SEQUENCE] = e.sequence
 
@@ -178,7 +178,7 @@ class PodClient:
                 data2 = copy(data)
                 data2["_source"] = target
                 data2["_target"] = src
-                data2["_type"] = "~" + data2["_type"]
+                data2["_name"] = "~" + data2["_name"]
                 create_edges.append(data2)
 
             create_edges.append(data)
@@ -198,11 +198,11 @@ class PodClient:
         update_items = update_items if update_items is not None else []
         create_edges = create_edges if create_edges is not None else []
         delete_items = delete_items if delete_items is not None else []
-        edges_data = {"databaseKey": self.database_key, "payload": {
+        edges_data = {"auth": self.auth_json, "payload": {
                     "createItems": create_items, "updateItems": update_items,
                     "createEdges": create_edges, "deleteItems": delete_items}}
         try:
-            result = requests.post(f"{self.base_url}/bulk_action",
+            result = requests.post(f"{self.base_url}/bulk",
                                    json=edges_data)
             if result.status_code != 200:
                 if "UNIQUE constraint failed" in str(result.content):
