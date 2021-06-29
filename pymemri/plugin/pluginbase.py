@@ -14,6 +14,10 @@ import abc
 import json
 import importlib
 import string
+from enum import Enum
+from ..pod.client import PodClient
+from fastscript import *
+import os
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
@@ -53,10 +57,12 @@ class PluginBase(Item, metaclass=ABCMeta):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage"]
+    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage",
+                                    "state"]
     edges = PluginBase.edges
 
-    def __init__(self, containerImage, pluginModule, pluginName, config="",targetItemId=None, **kwargs):
+    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, targetItemId=None,
+                 **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
         with an optional `config` string.
@@ -75,6 +81,7 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
+        self.state=state
 
 # Cell
 # hide
@@ -140,7 +147,6 @@ def _run_plugin(client, plugin_run_id=None, verbose=False):
     register_base_schemas(client)
     run_plugin_from_run_id(plugin_run_id, client)
 
-
 # Cell
 # hide
 def _parse_env(env):
@@ -157,10 +163,6 @@ def _parse_env(env):
     except KeyError as e:
         raise Exception('Missing parameter: {}'.format(e)) from None
 
-
-# Cell
-from fastscript import *
-import os
 
 # Cell
 @call_parse
@@ -223,3 +225,5 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")
     client.create(run)
+    print(f"Created PluginRun: {run.id}")
+    return run
