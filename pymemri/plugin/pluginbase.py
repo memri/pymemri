@@ -14,6 +14,7 @@ import abc
 import json
 import importlib
 import string
+from enum import Enum
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
@@ -225,4 +226,4 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")
-    client.create(run)
+    return client.create(run)
