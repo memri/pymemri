@@ -15,6 +15,9 @@ import json
 import importlib
 import string
 from enum import Enum
+from ..pod.client import PodClient
+from fastscript import *
+import os
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
@@ -144,7 +147,6 @@ def _run_plugin(client, plugin_run_id=None, verbose=False):
     register_base_schemas(client)
     run_plugin_from_run_id(plugin_run_id, client)
 
-
 # Cell
 # hide
 def _parse_env(env):
@@ -161,10 +163,6 @@ def _parse_env(env):
     except KeyError as e:
         raise Exception('Missing parameter: {}'.format(e)) from None
 
-
-# Cell
-from fastscript import *
-import os
 
 # Cell
 @call_parse
