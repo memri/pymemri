@@ -53,10 +53,12 @@ class PluginBase(Item, metaclass=ABCMeta):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage"]
+    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage",
+                                    "state"]
     edges = PluginBase.edges
 
-    def __init__(self, containerImage, pluginModule, pluginName, config="",targetItemId=None, **kwargs):
+    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, targetItemId=None,
+                 **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
         with an optional `config` string.
@@ -75,6 +77,7 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
+        self.state=state
 
 # Cell
 # hide
