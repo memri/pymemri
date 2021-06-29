@@ -226,4 +226,6 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")
-    return client.create(run)
+    client.create(run)
+    print(f"Created PluginRun: {run.id}")
+    return run
