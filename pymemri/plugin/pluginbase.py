@@ -31,10 +31,10 @@ class PluginBase(Item, metaclass=ABCMeta):
     """Base class for plugins"""
     properties = Item.properties + ["name", "repository", "icon", "data_query", "bundleImage",
                                     "runDestination", "pluginClass"]
-    edges = Item.edges + ["PluginRun"]
+    edges = Item.edges
 
     def __init__(self, name=None, repository=None, icon=None, query=None, bundleImage=None, runDestination=None,
-                 pluginClass=None, indexerRun=None, **kwargs):
+                 pluginClass=None, **kwargs):
         if pluginClass is None: pluginClass=self.__class__.__name__
         super().__init__(**kwargs)
         self.name = name
@@ -44,7 +44,6 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.bundleImage = bundleImage
         self.runDestination = runDestination
         self.pluginClass = pluginClass
-        self.indexerRun = indexerRun if indexerRun is not None else []
 
     @abc.abstractmethod
     def run(self):
@@ -59,9 +58,9 @@ class PluginBase(Item, metaclass=ABCMeta):
 class PluginRun(Item):
     properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage",
                                     "state"]
-    edges = PluginBase.edges
+    edges = PluginBase.edges + ["view", "persistentState"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, targetItemId=None,
+    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, view=None, persistentState=None, targetItemId=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -82,6 +81,9 @@ class PluginRun(Item):
         self.targetItemId=id_
         self.id=id_
         self.state=state
+
+        self.view = view if view is not None else []
+        self.persistentState = persistentState if persistentState is not None else []
 
 # Cell
 # hide
@@ -137,6 +139,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
 def register_base_schemas(client):
     try:
         assert client.add_to_schema(PluginRun("", "", "", "", ""))
+        assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
     except Exception as e:
         raise ValueError("Could not add base schema")
 
