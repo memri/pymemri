@@ -36,6 +36,18 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>PluginBase is the plugin class that the simplest plugin inherits.</p>
+<p>Inheriting class should implement:</p>
+<ul>
+<li>run()           that implements the logic of the plugin</li>
+<li>add_to_schema() for plugin specific item types</li>
+</ul>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -123,7 +135,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L171" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7f80e367c370&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7f80e367c3d0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7f80e367c400&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7f80e367c430&gt;</code>=<em><code>None</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7f80e367c460&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L170" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fcde15ae340&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fcde15ae370&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fcde15ae3a0&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fcde15ae3d0&gt;</code>=<em><code>None</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7fcde15ae400&gt;</code>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -246,7 +258,7 @@ running
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin_from_pod" class="doc_header"><code>run_plugin_from_pod</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L203" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin_from_pod</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_module</code></strong>:"Plugin module"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Plugin class name"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>)</p>
+<h4 id="run_plugin_from_pod" class="doc_header"><code>run_plugin_from_pod</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L202" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin_from_pod</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_module</code></strong>:"Plugin module"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Plugin class name"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>

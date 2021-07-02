@@ -50,7 +50,7 @@ class PluginBase(Item, metaclass=ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def add_to_schema(self):
+    def add_to_schema(self, client):
         raise NotImplementedError()
 
 # Cell
@@ -58,9 +58,9 @@ class PluginBase(Item, metaclass=ABCMeta):
 class PluginRun(Item):
     properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage",
                                     "state"]
-    edges = PluginBase.edges + ["view", "persistentState"]
+    edges = PluginBase.edges + ["view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, view=None, persistentState=None, targetItemId=None,
+    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, view=None, targetItemId=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -83,7 +83,6 @@ class PluginRun(Item):
         self.state=state
 
         self.view = view if view is not None else []
-        self.persistentState = persistentState if persistentState is not None else []
 
 # Cell
 # hide
