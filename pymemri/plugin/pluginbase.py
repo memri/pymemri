@@ -60,7 +60,7 @@ class PluginRun(Item):
                                     "state"]
     edges = PluginBase.edges + ["view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, view=None, targetItemId=None,
+    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -75,7 +75,6 @@ class PluginRun(Item):
         super().__init__(**kwargs)
         self.pluginModule = pluginModule
         self.pluginName = pluginName
-        self.config = config
         self.containerImage=containerImage
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
@@ -137,7 +136,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
 # hide
 def register_base_schemas(client):
     try:
-        assert client.add_to_schema(PluginRun("", "", "", "", ""))
+        assert client.add_to_schema(PluginRun("", "", "", state="", targetItemId=""))
         assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
     except Exception as e:
         raise ValueError("Could not add base schema")
