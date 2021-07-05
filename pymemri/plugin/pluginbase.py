@@ -46,7 +46,7 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.pluginClass = pluginClass
 
     @abc.abstractmethod
-    def run(self, run, client):
+    def run(self, client):
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -57,10 +57,10 @@ class PluginBase(Item, metaclass=ABCMeta):
 # hide
 class PluginRun(Item):
     properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
-                                    "error"]
+                                    "oAuthUrl", "error"]
     edges = PluginBase.edges + ["view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None, error=None,
+    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None, oAuthUrl=None, error=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -79,8 +79,9 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state = state
-        self.error = error
+        self.state = state       # for stateful plugins
+        self.oAuthUrl = oAuthUrl # for authenticated plugins
+        self.error = error # universa
 
         self.view = view if view is not None else []
 
@@ -102,7 +103,7 @@ class MyPlugin(PluginBase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def run(self, run, client):
+    def run(self, client):
         print("running")
         client.create(MyItem("some person", 20))
 
@@ -129,7 +130,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
     run = client.get(run_id)
     plugin = get_plugin(run.pluginModule, run.pluginName)
     plugin.add_to_schema(client)
-    plugin.run(run, client)
+    plugin.run(client)
 
     return plugin if return_plugin else None
 

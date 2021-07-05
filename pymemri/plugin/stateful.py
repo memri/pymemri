@@ -12,21 +12,21 @@ import logging
 class PersistentState(Item):
     """ Persistent state variables saved for plugin such as views, accounts, the last state to resume from etc. """
 
-    properties = Item.properties + ["pluginId", "lastState"]
+    properties = Item.properties + ["pluginId", "state"]
     edges = Item.edges + ["account", "view"]
 
-    def __init__(self, pluginName=None, lastState=None, account=None, view=None, **kwargs):
+    def __init__(self, pluginName=None, state=None, account=None, view=None, **kwargs):
         super().__init__(**kwargs)
         self.pluginName = pluginName
-        self.lastState = lastState
+        self.state = state
         self.account = account if account is not None else []
         self.view = view if view is not None else []
 
-    def get_last_state(self):
-        return self.lastState
+    def get_state(self):
+        return self.state
 
-    def set_last_state(self, client, state):
-        self.lastState = state
+    def set_state(self, client, state_str):
+        self.state = state_str
         self.update(client)
 
     def get_account(self):
@@ -45,7 +45,7 @@ class PersistentState(Item):
             existing_account = self.account[0]
             for prop in account.properties:
                 value = getattr(account, prop, None)
-                if value:
+                if value and hasattr(existing_account, prop):
                     setattr(existing_account, prop, value)
             existing_account.update(client)
 
@@ -93,22 +93,22 @@ class StatefulPlugin(PluginBase):
         if account:
             persistence.set_account(account)
 
-    def get_persistence(self, client, pluginName, index=0):
-        result = client.search({'type': 'PersistentState', 'pluginName': pluginName})
-        if len(result) > index:
-            self.persistenceId = result[index].id
-            return result[index]
+    def get_state(self, client, pluginName=None):
+        if self.persistenceId:
+            return client.get(self.persistenceId)
+        elif pluginName:
+            result = client.search({'type': 'PersistentState', 'pluginName': pluginName})
+            if len(result) > 0:
+                self.persistenceId = result[0].id
+                return self.get_state(client)
 
-    def get_persistent_state(self, client):
-        return client.get(self.persistenceId)
-
-    def set_persistent_account(self, client, account):
-        state = self.get_persistent_state(client)
+    def set_account(self, client, account):
+        state = self.get_state(client)
         state.set_account(account)
 
-    def set_persistent_last_state(self, client, lastState):
-        state = self.get_persistent_state(client)
-        state.set_last_state(client, lastState)
+    def set_state_str(self, client, state_str):
+        state = self.get_state(client)
+        state.set_state(client, state_str)
 
     def initialized(self, client):
         logging.warning("PLUGIN run is initialized")
@@ -159,29 +159,29 @@ class StatefulPlugin(PluginBase):
     def set_run_vars(self, client, vars):
         start_plugin = client.get(self.runId, expanded=False)
         for k,v in vars.items():
-            setattr(start_plugin, k, v)
+            if hasattr(start_plugin, k):
+                setattr(start_plugin, k, v)
         client.update_item(start_plugin)
 
-    def get_run_view(self, client, run):
+    def get_run_view(self, client):
         run = self.get_run(client, expanded=True)
         if run:
             for view in run.view:
                 return view
 
     def set_run_view(self, client, view_name):
-        run = self.get_run(client)
-        state = self.get_persistent_state(client)
+        state = self.get_state(client)
         view = state.get_view_by_name(view_name)
 
         if view:
-
-            attached_CVU_edge = self.get_run_view(client, run) # index error here if there is no already bound CVU
+            attached_CVU_edge = self.get_run_view(client) # index error here if there is no already bound CVU
             if attached_CVU_edge:
                 logging.warning(f"Plugin Run already has a view. Updating with {view_name}")
                 attached_CVU_edge.target = view  # update CVU
                 attached_CVU_edge.update(client) # having doubts if this really updates the existing edge
             else:
                 logging.warning(f"Plugin Run does not have a view. Creating {view_name}")
+                run = self.get_run(client)
                 run.add_edge('view', view)
                 run.update(client)
             return True
@@ -192,17 +192,30 @@ class StatefulPlugin(PluginBase):
 
 # Cell
 # hide
+from ..data.schema import Person
+
 class MyStatefulPlugin(StatefulPlugin):
 
     def __init__(self, runId=None, **kwargs):
         super().__init__(runId=runId, **kwargs)
 
-    def run(self):
-        print("Running plugin")
-        pass
+    def run(self, client):
+        # plugin's magic happens here
+
+        # manipulate run state
+        self.set_run_vars({'state': 'Running'})
+
+        # create items in POD
+        imported_person = Person(firstName="Hari", lastName="Seldon")
+        client.create(imported_person)
+
+        # set persistent state
+        self.set_state_str("continue_from:5021")
+
 
     def add_to_schema(self, client):
         print("Adding schema")
         super().add_to_schema(client)
         # add plugin-specific schemas here
+        client.add_to_schema(Person(firstName="", lastName=""))
         pass
