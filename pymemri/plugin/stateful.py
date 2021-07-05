@@ -37,12 +37,17 @@ class PersistentState(Item):
 
     def set_account(self, client, account):
         if len(self.account) == 0:
+            if not account.id:
+                client.create(account)
             self.add_edge('account', account)
             self.update(client)
         else:
-            account_edge = self.get_edges('account')[0]
-            account_edge.target = account.id
-            account_edge.update(client)
+            existing_account = self.account[0]
+            for prop in account.properties:
+                value = getattr(account, prop, None)
+                if value:
+                    setattr(existing_account, prop, value)
+            existing_account.update(client)
 
     def get_view_by_name(self, view_name):
         for cvu in self.view:
@@ -116,7 +121,7 @@ class StatefulPlugin(PluginBase):
     def failed(self, client, error):
         logging.error(f"PLUGIN run is failed: {error}")
         print("Exception while running plugin:", error)
-        self.set_run_vars(client, {'state':RUN_FAILED, 'message': str(error)})
+        self.set_run_vars(client, {'state':RUN_FAILED, 'error': str(error)})
 
     def completed(self, client):
         logging.warning("PLUGIN run is completed")
@@ -136,6 +141,9 @@ class StatefulPlugin(PluginBase):
 
     def is_completed(self, client):
         return self.get_run_state(client) == RUN_COMPLETED
+
+    def is_failed(self, client):
+        return self.get_run_state(client) == RUN_FAILED
 
     def is_daemon(self, client):
         run = self.get_run(client, expanded=False)

@@ -46,7 +46,7 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.pluginClass = pluginClass
 
     @abc.abstractmethod
-    def run(self):
+    def run(self, run, client):
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -56,11 +56,11 @@ class PluginBase(Item, metaclass=ABCMeta):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage",
-                                    "state"]
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+                                    "error"]
     edges = PluginBase.edges + ["view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None,
+    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None, error=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -79,7 +79,8 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state=state
+        self.state = state
+        self.error = error
 
         self.view = view if view is not None else []
 
@@ -221,7 +222,7 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
         settings = None
 
     register_base_schemas(client)
-    run = PluginRun(container, plugin_module, plugin_name, settings)
+    run = PluginRun(container, plugin_module, plugin_name)
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")
