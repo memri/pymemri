@@ -383,6 +383,23 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             return None
 
+    def exists(self, id):
+        try:
+            body = {"auth": self.auth_json,
+                    "payload": str(id)}
+            result = requests.post(f"{self.base_url}/get_item", json=body)
+            if result.status_code != 200:
+                print(result, result.content)
+                return False
+            else:
+                json = result.json()
+                if isinstance(json, list) and len(json) > 0:
+                    return True
+
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
+
     def search_last_added(self, type=None, with_prop=None, with_val=None):
         query = {"_limit": 1, "_sortOrder": "Desc"}
         if type is not None:
