@@ -4,6 +4,7 @@
     "The Pod client": "pod.client.html",
     "Creating a plugin": "plugin.pluginbase.html",
     "Creating a stateful plugin": "plugin.stateful.html",
+    "Creating an authenticated plugin": "plugin.authenticated.html",
     "Items & Edges": "itembase.html"
   }
 }

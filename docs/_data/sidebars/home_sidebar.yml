@@ -19,6 +19,9 @@ entries:
       title: Creating a stateful plugin
       url: plugin.stateful.html
     - output: web,pdf
+      title: Creating an authenticated plugin
+      url: plugin.authenticated.html
+    - output: web,pdf
       title: Items & Edges
       url: itembase.html
     output: web
