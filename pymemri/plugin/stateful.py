@@ -27,7 +27,7 @@ class PersistentState(Item):
 
     def set_state(self, client, state_str):
         self.state = state_str
-        self.update(client)
+        client.update_item(self)
 
     def get_account(self):
         if len(self.account) == 0:
@@ -56,7 +56,7 @@ class PersistentState(Item):
 
     def set_views(self, client, views=None):
         for view in views:
-            view.update(client)
+            client.create(view)
             self.add_edge('view', view)
         self.update(client)
         return True
@@ -86,7 +86,7 @@ class StatefulPlugin(PluginBase):
 
     def persist(self, client, pluginName, views=None, account=None):
         persistence = PersistentState(pluginName=pluginName)
-        persistence.update(client)
+        client.create(persistence)
         self.persistenceId = persistence.id
         if views:
             persistence.set_views(client, views)
