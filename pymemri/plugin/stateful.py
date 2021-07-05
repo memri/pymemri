@@ -27,7 +27,7 @@ class PersistentState(Item):
 
     def set_state(self, client, state_str):
         self.state = state_str
-        client.update_item(self)
+        self.update(client)
 
     def get_account(self):
         if len(self.account) == 0:
@@ -161,7 +161,7 @@ class StatefulPlugin(PluginBase):
         for k,v in vars.items():
             if hasattr(start_plugin, k):
                 setattr(start_plugin, k, v)
-        client.update_item(start_plugin)
+        start_plugin.update(client)
 
     def get_run_view(self, client):
         run = self.get_run(client, expanded=True)
