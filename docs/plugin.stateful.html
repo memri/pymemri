@@ -61,7 +61,7 @@ nb_path: "nbs/plugin.stateful.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PersistentState" class="doc_header"><code>class</code> <code>PersistentState</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/stateful.py#L12" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PersistentState</code>(<strong><code>pluginName</code></strong>=<em><code>None</code></em>, <strong><code>lastState</code></strong>=<em><code>None</code></em>, <strong><code>account</code></strong>=<em><code>None</code></em>, <strong><code>view</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="PersistentState" class="doc_header"><code>class</code> <code>PersistentState</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/stateful.py#L12" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PersistentState</code>(<strong><code>pluginName</code></strong>=<em><code>None</code></em>, <strong><code>state</code></strong>=<em><code>None</code></em>, <strong><code>account</code></strong>=<em><code>None</code></em>, <strong><code>view</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
 <p>Persistent state variables saved for plugin such as views, accounts, the last state to resume from etc.</p>
 
@@ -113,7 +113,7 @@ nb_path: "nbs/plugin.stateful.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="StatefulPlugin" class="doc_header"><code>class</code> <code>StatefulPlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/stateful.py#L71" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>StatefulPlugin</code>(<strong><code>runId</code></strong>=<em><code>None</code></em>, <strong><code>persistenceId</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.pluginbase.html#PluginBase"><code>PluginBase</code></a></p>
+<h2 id="StatefulPlugin" class="doc_header"><code>class</code> <code>StatefulPlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/stateful.py#L76" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>StatefulPlugin</code>(<strong><code>runId</code></strong>=<em><code>None</code></em>, <strong><code>persistenceId</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.pluginbase.html#PluginBase"><code>PluginBase</code></a></p>
 </blockquote>
 <p>Provides state/view setter and getter functions to plugin runtime</p>
 
@@ -150,77 +150,42 @@ nb_path: "nbs/plugin.stateful.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyStatefulPlugin</span><span class="p">(</span><span class="n">StatefulPlugin</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.data.schema</span> <span class="kn">import</span> <span class="n">Person</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">runId</span><span class="o">=</span><span class="n">runId</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MyStatefulPlugin</span><span class="p">(</span><span class="n">StatefulPlugin</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running plugin&quot;</span><span class="p">)</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">views</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">runId</span><span class="o">=</span><span class="n">runId</span><span class="p">,</span> <span class="n">views</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="c1"># plugin&#39;s magic happens here</span>
+
+        <span class="c1"># manipulate run state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_run_vars</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="s1">&#39;Running&#39;</span><span class="p">})</span>
+
+        <span class="c1"># set UI view (CVU)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_run_view</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;splash-screen&#39;</span><span class="p">)</span>
+
+        <span class="c1"># create items in POD</span>
+        <span class="n">imported_person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Hari&quot;</span><span class="p">,</span> <span class="n">lastName</span><span class="o">=</span><span class="s2">&quot;Seldon&quot;</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">imported_person</span><span class="p">)</span>
+
+        <span class="c1"># set persistent state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state_str</span><span class="p">(</span><span class="s2">&quot;continue_from:5021&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Adding schema&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
         <span class="c1"># add plugin-specific schemas here</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">lastName</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="k">pass</span>
 </pre></div>
 
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.pod.client</span> <span class="kn">import</span> <span class="n">PodClient</span>
-<span class="kn">from</span> <span class="nn">pymemri.data.schema</span> <span class="kn">import</span> <span class="n">CVUStoredDefinition</span><span class="p">,</span> <span class="n">Account</span>
-<span class="kn">from</span> <span class="nn">pymemri.plugin.pluginbase</span> <span class="kn">import</span> <span class="n">PluginRun</span><span class="p">,</span> <span class="n">register_base_schemas</span>
-<span class="kn">from</span> <span class="nn">pymemri.plugin.stateful</span> <span class="kn">import</span> <span class="n">StatefulPlugin</span><span class="p">,</span> <span class="n">PersistentState</span><span class="p">,</span> <span class="n">MyStatefulPlugin</span><span class="p">,</span> <span class="n">RUN_STARTED</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
-<span class="n">register_base_schemas</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
-
-<span class="c1"># Create and persist plugin if not already</span>
-<span class="n">stateful</span> <span class="o">=</span> <span class="n">MyStatefulPlugin</span><span class="p">()</span>
-<span class="c1"># Add plugin-specific item types to schema</span>
-<span class="n">stateful</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
-
-<span class="c1"># Fetches persistent state of a plugin by name</span>
-<span class="n">persistence</span> <span class="o">=</span> <span class="n">stateful</span><span class="o">.</span><span class="n">get_persistence</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">&quot;myStatefulPlugin&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">persistence</span><span class="p">:</span>
-    <span class="n">views</span> <span class="o">=</span> <span class="p">[</span><span class="n">CVUStoredDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;login-view&quot;</span><span class="p">),</span> <span class="n">CVUStoredDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;other-view&quot;</span><span class="p">)]</span>
-    <span class="n">persistence</span> <span class="o">=</span> <span class="n">stateful</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">&quot;myStatefulPlugin&quot;</span><span class="p">,</span> <span class="n">views</span><span class="o">=</span><span class="n">views</span><span class="p">,</span> <span class="n">account</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
-<span class="c1"># create a run</span>
-<span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">(</span><span class="n">containerImage</span><span class="o">=</span><span class="s2">&quot;stateful_plugin&quot;</span><span class="p">,</span> <span class="n">pluginModule</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.stateful&quot;</span><span class="p">,</span> <span class="n">pluginName</span><span class="o">=</span><span class="s2">&quot;MyStatefulPlugin&quot;</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-<span class="c1"># set run id of the plugin</span>
-<span class="n">stateful</span><span class="o">.</span><span class="n">runId</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">id</span>
-
-<span class="c1"># set START state</span>
-<span class="n">stateful</span><span class="o">.</span><span class="n">started</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">stateful</span><span class="o">.</span><span class="n">get_run_state</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="o">==</span> <span class="n">RUN_STARTED</span>
-
-<span class="k">assert</span> <span class="n">stateful</span><span class="o">.</span><span class="n">set_run_view</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">&quot;non-existent-view&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">stateful</span><span class="o">.</span><span class="n">set_run_view</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">&quot;login-view&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span>
-<span class="k">assert</span> <span class="n">stateful</span><span class="o">.</span><span class="n">get_run_view</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">run</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;login-view&#39;</span>
-
-<span class="c1"># set a new persistent account</span>
-<span class="n">stateful</span><span class="o">.</span><span class="n">set_persistent_last_state</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">&quot;the last state&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">stateful</span><span class="o">.</span><span class="n">get_persistent_state</span><span class="p">(</span><span class="n">client</span><span class="p">)</span><span class="o">.</span><span class="n">lastState</span> <span class="o">==</span> <span class="s2">&quot;the last state&quot;</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
 </div>
  
 
