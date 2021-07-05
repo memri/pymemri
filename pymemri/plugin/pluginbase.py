@@ -137,7 +137,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
 # hide
 def register_base_schemas(client):
     try:
-        assert client.add_to_schema(PluginRun("", "", "", state="", targetItemId=""))
+        assert client.add_to_schema(PluginRun("", "", "", state="", error="", targetItemId=""))
         assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
     except Exception as e:
         raise ValueError("Could not add base schema")
