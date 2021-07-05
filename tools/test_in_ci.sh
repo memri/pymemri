@@ -20,7 +20,7 @@ curl "$POD_URL" -o pod_docker
 
 chmod +x ./pod_docker
 
-RUST_LOG=pod=debug,info \
+cp /bin/true ./docker && PATH="$PWD:PATH" && RUST_LOG=pod=debug,info \
   ./pod_docker \
   --owners=ANY \
   --insecure-non-tls=0.0.0.0 \
