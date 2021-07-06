@@ -51,17 +51,17 @@ class PluginBase(Item, metaclass=ABCMeta):
 
     @abc.abstractmethod
     def add_to_schema(self, client):
-        client.add_to_schema(PluginRun(containerImage="", pluginModule="", pluginName="", state="", oAuthUrl="", error="", targetItemId=""))
+        client.add_to_schema(PluginRun(containerImage="", pluginModule="", pluginName="", interval=1, state="", oAuthUrl="", error="", targetItemId=""))
         client.add_to_schema(CVUStoredDefinition(name="", definition=""))
 
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "interval", "state", "targetItemId",
                                     "oAuthUrl", "error"]
     edges = PluginBase.edges + ["view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None, oAuthUrl=None, error=None,
+    def __init__(self, containerImage, pluginModule, pluginName, interval=None, state=None, view=None, targetItemId=None, oAuthUrl=None, error=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -80,6 +80,7 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
+        self.interval = interval
         self.state = state       # for stateful plugins
         self.oAuthUrl = oAuthUrl # for authenticated plugins
         self.error = error # universa

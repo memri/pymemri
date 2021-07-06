@@ -84,7 +84,7 @@ class StatefulPlugin(PluginBase):
         self.runId = runId
         self.persistenceId = persistenceId
 
-    def init_run(self, client, containerImage=None, pluginModule=None, pluginName=None, state=None):
+    def init_run(self, client, containerImage=None, pluginModule=None, pluginName=None, interval=None, state=None):
         run = PluginRun(containerImage=containerImage, pluginModule=pluginModule, pluginName=pluginName, state=state)
         client.create(run)
         self.runId = run.id
