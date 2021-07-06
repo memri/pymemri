@@ -84,8 +84,8 @@ class StatefulPlugin(PluginBase):
         self.runId = runId
         self.persistenceId = persistenceId
 
-    def persist(self, client, pluginName, views=None, account=None):
-        persistence = PersistentState(pluginName=pluginName)
+    def persist(self, client, pluginName, state=None, views=None, account=None):
+        persistence = PersistentState(pluginName=pluginName, state=state)
         client.create(persistence)
         self.persistenceId = persistence.id
         if views:
@@ -109,6 +109,11 @@ class StatefulPlugin(PluginBase):
     def set_state_str(self, client, state_str):
         state = self.get_state(client)
         state.set_state(client, state_str)
+
+    def set_run_state_str(self, client, state_str):
+        run = self.get_run(client)
+        run.state = state_str
+        run.update(client)
 
     def initialized(self, client):
         logging.warning("PLUGIN run is initialized")
@@ -134,16 +139,16 @@ class StatefulPlugin(PluginBase):
         self.set_run_vars(client, {'state': RUN_USER_ACTION_NEEDED})
 
     def is_action_required(self, client):
-        return self.get_run_state(client) == RUN_USER_ACTION_NEEDED
+        return self.get_run_state_str(client) == RUN_USER_ACTION_NEEDED
 
     def is_action_completed(self, client):
-        return self.get_run_state(client) == RUN_USER_ACTION_COMPLETED
+        return self.get_run_state_str(client) == RUN_USER_ACTION_COMPLETED
 
     def is_completed(self, client):
-        return self.get_run_state(client) == RUN_COMPLETED
+        return self.get_run_state_str(client) == RUN_COMPLETED
 
     def is_failed(self, client):
-        return self.get_run_state(client) == RUN_FAILED
+        return self.get_run_state_str(client) == RUN_FAILED
 
     def is_daemon(self, client):
         run = self.get_run(client, expanded=False)
@@ -152,7 +157,7 @@ class StatefulPlugin(PluginBase):
     def get_run(self, client, expanded=False):
         return client.get(self.runId, expanded=expanded)
 
-    def get_run_state(self, client):
+    def get_run_state_str(self, client):
         start_plugin = self.get_run(client)
         return start_plugin.state
 
@@ -188,7 +193,7 @@ class StatefulPlugin(PluginBase):
         return False
 
     def add_to_schema(self, client):
-        assert client.add_to_schema(PersistentState("", ""))
+        assert client.add_to_schema(PersistentState(pluginName="", state=""))
 
 # Cell
 # hide

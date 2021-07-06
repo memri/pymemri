@@ -51,7 +51,8 @@ class PluginBase(Item, metaclass=ABCMeta):
 
     @abc.abstractmethod
     def add_to_schema(self, client):
-        raise NotImplementedError()
+        client.add_to_schema(PluginRun(containerImage="", pluginModule="", pluginName="", state="", oAuthUrl="", error="", targetItemId=""))
+        client.add_to_schema(CVUStoredDefinition(name="", definition=""))
 
 # Cell
 # hide

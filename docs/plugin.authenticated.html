@@ -166,7 +166,7 @@ nb_path: "nbs/plugin.authenticated.ipynb"
 
 <span class="c1"># test the run states</span>
 <span class="n">auth_plugin</span><span class="o">.</span><span class="n">started</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">auth_plugin</span><span class="o">.</span><span class="n">get_run_state</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="o">==</span> <span class="n">RUN_STARTED</span>
+<span class="k">assert</span> <span class="n">auth_plugin</span><span class="o">.</span><span class="n">get_run_state_str</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="o">==</span> <span class="n">RUN_STARTED</span>
 
 <span class="c1"># test empty persistent account</span>
 <span class="n">state</span> <span class="o">=</span> <span class="n">auth_plugin</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
