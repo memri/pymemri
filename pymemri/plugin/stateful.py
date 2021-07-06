@@ -184,7 +184,12 @@ class StatefulPlugin(PluginBase):
         view = state.get_view_by_name(view_name)
 
         if view:
-            attached_CVU_edge = self.get_run_view(client) # index error here if there is no already bound CVU
+            # check if any edge to a CVU view already exists. If so, update target of the existing edge
+            try:
+                attached_CVU_edge = self.get_run(client).get_edges('view')[0] # index error here if there is no already bound CVU
+            except:
+                attached_CVU_edge = None
+
             if attached_CVU_edge:
                 logging.warning(f"Plugin Run already has a view. Updating with {view_name}")
                 attached_CVU_edge.target = view  # update CVU

@@ -23,9 +23,9 @@ class AuthenticatedPlugin(StatefulPlugin):
     def start_auth(self, client):
         raise NotImplementedError()
 
-    def get_account_from_plugin(self, client):
+    def get_account_from_plugin(self, client, pluginName=None):
         # Find persistent plugin state
-        persistent_state = self.get_state(client)
+        persistent_state = self.get_state(client, pluginName)
         return persistent_state.get_account()
 
     def ask_user_for_accounts(self, client, view, oauth_url=None):
@@ -58,7 +58,7 @@ class AuthenticatedPlugin(StatefulPlugin):
             # Save accounts as an edge to the plugin
             client.create(account)
             # add the account to the plugin item
-            plugin = client.get(self.plugin_id)
+            plugin = client.get(self.persistenceId)
             plugin.add_edge('account', account)
             plugin.update(client)
 
