@@ -30,7 +30,7 @@ class AuthenticatedPlugin(StatefulPlugin):
 
     def ask_user_for_accounts(self, client, view, oauth_url=None):
         # start userActionNeeded flow
-        self.action_needed(client)
+        self.action_required(client)
 
         self.set_run_vars(client, {'oAuthUrl': oauth_url})
         self.set_run_view(client, view)
