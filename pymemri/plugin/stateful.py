@@ -5,7 +5,7 @@ __all__ = ['PersistentState', 'RUN_IDLE', 'RUN_INITIALIZED', 'RUN_USER_ACTION_NE
 
 # Cell
 from ..data.schema import Item
-from .pluginbase import PluginBase
+from .pluginbase import PluginBase, PluginRun
 import logging
 
 # Cell
@@ -83,6 +83,11 @@ class StatefulPlugin(PluginBase):
         super().__init__(**kwargs)
         self.runId = runId
         self.persistenceId = persistenceId
+
+    def init_run(self, client, containerImage=None, pluginModule=None, pluginName=None, state=None):
+        run = PluginRun(containerImage=containerImage, pluginModule=pluginModule, pluginName=pluginName, state=state)
+        client.create(run)
+        self.runId = run.id
 
     def persist(self, client, pluginName, state=None, views=None, account=None):
         persistence = PersistentState(pluginName=pluginName, state=state)
@@ -193,7 +198,8 @@ class StatefulPlugin(PluginBase):
         return False
 
     def add_to_schema(self, client):
-        assert client.add_to_schema(PersistentState(pluginName="", state=""))
+        super().add_to_schema(client)
+        client.add_to_schema(PersistentState(pluginName="", state=""))
 
 # Cell
 # hide

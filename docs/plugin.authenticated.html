@@ -60,7 +60,7 @@ nb_path: "nbs/plugin.authenticated.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="AuthenticatedPlugin" class="doc_header"><code>class</code> <code>AuthenticatedPlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/authenticated.py#L17" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AuthenticatedPlugin</code>(<strong><code>runId</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.stateful.html#StatefulPlugin"><code>StatefulPlugin</code></a></p>
+<h2 id="AuthenticatedPlugin" class="doc_header"><code>class</code> <code>AuthenticatedPlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/authenticated.py#L18" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>AuthenticatedPlugin</code>(<strong><code>runId</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.stateful.html#StatefulPlugin"><code>StatefulPlugin</code></a></p>
 </blockquote>
 <p>Provides state/view setter and getter functions to plugin runtime</p>
 
@@ -150,15 +150,11 @@ nb_path: "nbs/plugin.authenticated.ipynb"
 
 <span class="c1"># prepare</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
-<span class="n">register_base_schemas</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
-
-<span class="c1"># create a run</span>
-<span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">(</span><span class="n">containerImage</span><span class="o">=</span><span class="s2">&quot;authenticated_plugin&quot;</span><span class="p">,</span> <span class="n">pluginModule</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.authenticated&quot;</span><span class="p">,</span> <span class="n">pluginName</span><span class="o">=</span><span class="s2">&quot;AuthenticatedPlugin&quot;</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
 
 <span class="c1"># deploy plugin or get the deployed state</span>
-<span class="n">auth_plugin</span> <span class="o">=</span> <span class="n">MyAuthPlugin</span><span class="p">(</span><span class="n">runId</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="n">auth_plugin</span> <span class="o">=</span> <span class="n">MyAuthPlugin</span><span class="p">()</span>
 <span class="n">auth_plugin</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="n">auth_plugin</span><span class="o">.</span><span class="n">init_run</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">containerImage</span><span class="o">=</span><span class="s2">&quot;authenticated_plugin&quot;</span><span class="p">,</span> <span class="n">pluginModule</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.authenticated&quot;</span><span class="p">,</span> <span class="n">pluginName</span><span class="o">=</span><span class="s2">&quot;AuthenticatedPlugin&quot;</span><span class="p">)</span>
 <span class="n">persistence</span> <span class="o">=</span> <span class="n">auth_plugin</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s2">&quot;myAuthPlugin&quot;</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">persistence</span><span class="p">:</span>
     <span class="n">views</span> <span class="o">=</span> <span class="p">[</span><span class="n">CVUStoredDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;login-view&quot;</span><span class="p">),</span> <span class="n">CVUStoredDefinition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;other-view&quot;</span><span class="p">)]</span>
