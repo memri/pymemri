@@ -31,10 +31,10 @@ class PluginBase(Item, metaclass=ABCMeta):
     """Base class for plugins"""
     properties = Item.properties + ["name", "repository", "icon", "data_query", "bundleImage",
                                     "runDestination", "pluginClass"]
-    edges = Item.edges + ["PluginRun"]
+    edges = Item.edges
 
     def __init__(self, name=None, repository=None, icon=None, query=None, bundleImage=None, runDestination=None,
-                 pluginClass=None, indexerRun=None, **kwargs):
+                 pluginClass=None, **kwargs):
         if pluginClass is None: pluginClass=self.__class__.__name__
         super().__init__(**kwargs)
         self.name = name
@@ -44,24 +44,23 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.bundleImage = bundleImage
         self.runDestination = runDestination
         self.pluginClass = pluginClass
-        self.indexerRun = indexerRun if indexerRun is not None else []
 
     @abc.abstractmethod
-    def run(self):
+    def run(self, client):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def add_to_schema(self):
+    def add_to_schema(self, client):
         raise NotImplementedError()
 
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["targetItemId", "pluginModule", "pluginName", "config", "containerImage",
-                                    "state"]
-    edges = PluginBase.edges
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+                                    "oAuthUrl", "error"]
+    edges = PluginBase.edges + ["view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, config="", state=None, targetItemId=None,
+    def __init__(self, containerImage, pluginModule, pluginName, state=None, view=None, targetItemId=None, oAuthUrl=None, error=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -76,12 +75,15 @@ class PluginRun(Item):
         super().__init__(**kwargs)
         self.pluginModule = pluginModule
         self.pluginName = pluginName
-        self.config = config
         self.containerImage=containerImage
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state=state
+        self.state = state       # for stateful plugins
+        self.oAuthUrl = oAuthUrl # for authenticated plugins
+        self.error = error # universa
+
+        self.view = view if view is not None else []
 
 # Cell
 # hide
@@ -101,7 +103,7 @@ class MyPlugin(PluginBase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def run(self, run, client):
+    def run(self, client):
         print("running")
         client.create(MyItem("some person", 20))
 
@@ -128,7 +130,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
     run = client.get(run_id)
     plugin = get_plugin(run.pluginModule, run.pluginName)
     plugin.add_to_schema(client)
-    plugin.run(run, client)
+    plugin.run(client)
 
     return plugin if return_plugin else None
 
@@ -136,7 +138,8 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
 # hide
 def register_base_schemas(client):
     try:
-        assert client.add_to_schema(PluginRun("", "", "", "", ""))
+        assert client.add_to_schema(PluginRun("", "", "", state="", error="", targetItemId=""))
+        assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
     except Exception as e:
         raise ValueError("Could not add base schema")
 
@@ -220,7 +223,7 @@ def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None
         settings = None
 
     register_base_schemas(client)
-    run = PluginRun(container, plugin_module, plugin_name, settings)
+    run = PluginRun(container, plugin_module, plugin_name)
     print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
           f"a plugin with id {run.id}.")
     print(f"*Check the pod log/console for debug output.*")

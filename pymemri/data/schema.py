@@ -70,7 +70,8 @@ class Account(Item):
                  externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
                  handle=None, displayName=None, service=None, itemType=None, avatarUrl=None, changelog=None,
                  label=None, genericAttribute=None, measure=None, sharedWith=None, belongsTo=None, price=None,
-                 location=None, organization=None):
+                 location=None, organization=None, identifier=None, secret=None, code=None, accessToken=None,
+                 refreshToken=None, errorMessage=None, contact=None):
         super().__init__(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
                          deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
                          version=version, id=id, importJson=importJson, changelog=changelog, label=label,
@@ -80,6 +81,13 @@ class Account(Item):
         self.service = service
         self.itemType = itemType
         self.avatarUrl = avatarUrl
+        self.identifier = identifier
+        self.secret = secret
+        self.code = code
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        self.errorMessage = errorMessage
+        self.contact = contact if contact is not None else []
         self.belongsTo = belongsTo if belongsTo is not None else []
         self.price = price if price is not None else []
         self.location = location if location is not None else []
@@ -103,6 +111,12 @@ class Account(Item):
         service = json.get("service", None)
         itemType = json.get("itemType", None)
         avatarUrl = json.get("avatarUrl", None)
+        identifier = json.get("identifier", None)
+        secret = json.get("secret", None)
+        code = json.get("code", None)
+        accessToken = json.get("accessToken", None)
+        refreshToken = json.get("refreshToken", None)
+        errorMessage = json.get("errorMessage", None)
        
         changelog = []
         label = []
@@ -113,6 +127,7 @@ class Account(Item):
         price = []
         location = []
         organization = []
+        contact = []
         
         if all_edges is not None:
             for edge_json in all_edges:
@@ -135,13 +150,16 @@ class Account(Item):
                     location.append(edge)
                 elif edge._type == "organization" or edge._type == "~organization": 
                     organization.append(edge)
+                elif edge._type == "contact" or edge._type == "~contact": 
+                    contact.append(edge)
         
         res = cls(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
                   deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
                   version=version, id=id, importJson=importJson, handle=handle, displayName=displayName,
                   service=service, itemType=itemType, avatarUrl=avatarUrl, changelog=changelog, label=label,
                   genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith, belongsTo=belongsTo,
-                  price=price, location=location, organization=organization)
+                  price=price, location=location, organization=organization, identifier=identifier, secret=secret,
+                  code=code, accessToken=accessToken, refreshToken=refreshToken, errorMessage=errorMessage, contact=contact)
         for e in res.get_all_edges(): e.source = res
         return res
 
