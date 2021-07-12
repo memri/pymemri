@@ -9,6 +9,7 @@ from ..data.itembase import Edge, ItemBase, Item
 from ..data.photo import Photo
 from ..imports import *
 from hashlib import sha256
+from .db import DB
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
@@ -18,21 +19,29 @@ POD_VERSION = "v4"
 class PodClient:
 
     def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None,
-                 auth_json=None):
+                 auth_json=None, verbose=False):
+        self.verbose = verbose
         self.url = url
         self.version = POD_VERSION
-        self.test_connection(verbose=False)
+        self.test_connection(verbose=self.verbose)
+
         self.database_key=database_key if database_key is not None else self.generate_random_key()
         self.owner_key=owner_key if owner_key is not None else self.generate_random_key()
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = {"type":"ClientAuth","databaseKey":self.database_key} if auth_json is None \
                           else {**{"type": "PluginAuth"}, **auth_json}
 
+        self.local_db = DB()
         self.registered_classes=dict()
 
     @staticmethod
     def generate_random_key():
         return "".join([str(random.randint(0, 9)) for i in range(64)])
+
+    def add_to_db(self, node):
+        existing = self.local_db.get(node.id)
+        if existing is None and node.id is not None:
+            self.local_db.add(node)
 
     def test_connection(self, verbose=True):
         try:
@@ -58,7 +67,7 @@ class PodClient:
             else:
                 id = result.json()
                 node.id = id
-                ItemBase.add_to_db(node)
+                self.add_to_db(node)
                 return True
         except requests.exceptions.RequestException as e:
             print(e)
@@ -88,7 +97,7 @@ class PodClient:
                     else:
                         id = result.json()
                         node.id = id
-                        ItemBase.add_to_db(node)
+                        self.add_to_db(node)
 
                 except requests.exceptions.RequestException as e:
                     print(e)
@@ -276,24 +285,6 @@ class PodClient:
             item.add_edge(e["name"], e["item"])
         return item
 
-
-#         body = {"payload": [id],
-#                 "databaseKey": self.database_key}
-#         try:
-#             result = requests.post(f"{self.base_url}/get_items_with_edges",
-#                                     json=body)
-#             if result.status_code != 200:
-#                 print(result, result.content)
-#                 return None
-#             else:
-#                 json = result.json()[0]
-#                 res =  self.item_from_json(json)
-#                 return res
-
-#         except requests.exceptions.RequestException as e:
-#             print(e)
-#             return None
-
     def get_edges(self, id):
         body = {"payload": {"item": str(id),
                             "direction": "Outgoing",
@@ -309,7 +300,6 @@ class PodClient:
                 json = result.json()
                 for d in json:
                     d["item"] = self.item_from_json(d["item"])
-#                     res =  self.item_from_json(json[0])
                 return json
         except requests.exceptions.RequestException as e:
             print(e)
@@ -348,10 +338,8 @@ class PodClient:
     @staticmethod
     def _get_schema_type(node):
         for cls in node.__class__.mro():
-#             if cls.__module__ == "pymemri.data.schema" and cls.__name__ != "ItemBase":
             if cls.__name__ != "ItemBase":
                 return cls.__name__
-        raise ValueError
 
     def update_item(self, node):
         data = self.get_properties_json(node, dates=False)
@@ -399,7 +387,7 @@ class PodClient:
         constructor = get_constructor(json["type"], plugin_class, plugin_package=plugin_package,
                                       extra=self.registered_classes)
         new_item = constructor.from_json(json)
-        existing = ItemBase.global_db.get(new_item.id)
+        existing = self.local_db.get(new_item.id)
         # TODO: cleanup
         if existing is not None:
             if not existing.is_expanded() and new_item.is_expanded():
@@ -419,26 +407,3 @@ class PodClient:
         properties = copy(expanded)
         if ALL_EDGES in properties: del properties[ALL_EDGES]
         return properties
-
-#     def start_plugin(self, container: str, target_item_id):
-#         # to prevent circular dependency: REFACTOR
-#         from pymemri.plugin.pluginbase import PluginRun
-#         start_plugin_item = PluginRun(containerImage=container, targetItemId=target_item_id)
-#         self.create(start_plugin_item)
-
-
-#     def run_importer(self, id, servicePayload):
-
-#         body = dict()
-#         body["databaseKey"] = servicePayload["databaseKey"]
-#         body["payload"] = {"id": id, "servicePayload": servicePayload}
-#         print(body)
-
-#         try:
-#             res = requests.post(f"{self.base_url}/run_importer", json=body)
-#             if res.status_code != 200:
-#                 print(f"Failed to start importer on {url}:\n{res.status_code}: {res.text}")
-#             else:
-#                 print("Starting importer")
-#         except requests.exceptions.RequestException as e:
-#             print("Error with calling importer {e}")

@@ -89,7 +89,7 @@ def get_plugin_cls(plugin_module, plugin_name):
         plugin_cls = getattr(module, plugin_name)
         return plugin_cls
     except (ImportError, AttributeError):
-        raise ImportError(f"Unknown plugin: {plugin_module}.{plugin_name}")
+        raise ImportError(f"Unknown plugin: {run.pluginModule}.{run.pluginName}")
 
 def run_plugin_from_run_id(run_id, client):
     """

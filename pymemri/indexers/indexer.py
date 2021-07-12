@@ -123,7 +123,6 @@ def run_integrator(environ=None, pod_full_address=None, integrator_run_id=None, 
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     run_integrator_from_run_id(integrator_run_id, client)
 
-
 # Cell
 def generate_test_env(client, indexer_run):
     payload = json.dumps({DATABASE_KEY_ENV: client.database_key, OWNER_KEY_ENV: client.owner_key})
