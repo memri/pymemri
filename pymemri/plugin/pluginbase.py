@@ -47,7 +47,6 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.bundleImage = bundleImage
         self.runDestination = runDestination
         self.pluginClass = pluginClass
-        self.pluginRun = pluginRun
 
     @abc.abstractmethod
     def run(self, client):
