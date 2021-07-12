@@ -34,7 +34,6 @@ index = {"read_file": "basic.ipynb",
          "run_integrator": "indexers.indexer.ipynb",
          "generate_test_env": "indexers.indexer.ipynb",
          "ALL_EDGES": "itembase.ipynb",
-         "DB": "itembase.ipynb",
          "parse_base_item_json": "itembase.ipynb",
          "Edge": "itembase.ipynb",
          "ItemBase": "itembase.ipynb",
@@ -63,7 +62,8 @@ index = {"read_file": "basic.ipynb",
          "MyStatefulPlugin": "plugin.stateful.ipynb",
          "DEFAULT_POD_ADDRESS": "pod.client.ipynb",
          "POD_VERSION": "pod.client.ipynb",
-         "PodClient": "pod.client.ipynb"}
+         "PodClient": "pod.client.ipynb",
+         "DB": "pod.db.ipynb"}
 
 modules = ["data/basic.py",
            "data/photo.py",
@@ -73,7 +73,8 @@ modules = ["data/basic.py",
            "data/itembase.py",
            "plugin/pluginbase.py",
            "plugin/stateful.py",
-           "pod/client.py"]
+           "pod/client.py",
+           "pod/db.py"]
 
 doc_url = "http://memri.docs.memri.io/pymemri/"
 

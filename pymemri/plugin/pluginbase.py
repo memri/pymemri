@@ -34,7 +34,7 @@ class PluginBase(Item, metaclass=ABCMeta):
     edges = Item.edges
 
     def __init__(self, name=None, repository=None, icon=None, query=None, bundleImage=None, runDestination=None,
-                 pluginClass=None, **kwargs):
+                 pluginClass=None, pluginRun=None, **kwargs):
         if pluginClass is None: pluginClass=self.__class__.__name__
         super().__init__(**kwargs)
         self.name = name
@@ -44,6 +44,7 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.bundleImage = bundleImage
         self.runDestination = runDestination
         self.pluginClass = pluginClass
+        self.pluginRun = pluginRun
 
     @abc.abstractmethod
     def run(self, client):
@@ -112,13 +113,13 @@ class MyPlugin(PluginBase):
 
 # Cell
 # export
-def get_plugin(plugin_module, plugin_name):
+def get_plugin(run):
     try:
-        module = importlib.import_module(plugin_module)
-        plugin_cls = getattr(module, plugin_name)
-        return plugin_cls()
+        module = importlib.import_module(run.pluginModule)
+        plugin_cls = getattr(module, run.pluginName)
+        return plugin_cls(pluginRun=run)
     except (ImportError, AttributeError):
-        raise ImportError(f"Unknown plugin: {plugin_module}.{plugin_name}")
+        raise ImportError(f"Unknown plugin: {run.pluginModule}.{run.pluginName}")
 
 def run_plugin_from_run_id(run_id, client, return_plugin=False):
     """
@@ -128,7 +129,7 @@ def run_plugin_from_run_id(run_id, client, return_plugin=False):
         return_plugin (bool): Returns created plugin instance for testing purposes.
     """
     run = client.get(run_id)
-    plugin = get_plugin(run.pluginModule, run.pluginName)
+    plugin = get_plugin(run)
     plugin.add_to_schema(client)
     plugin.run(client)
 
@@ -165,7 +166,6 @@ def _parse_env(env):
         return pod_full_address, plugin_run_id, pod_auth_json, owner_key
     except KeyError as e:
         raise Exception('Missing parameter: {}'.format(e)) from None
-
 
 # Cell
 @call_parse
