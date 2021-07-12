@@ -39,9 +39,9 @@ class PodClient:
         return "".join([str(random.randint(0, 9)) for i in range(64)])
 
     def add_to_db(self, node):
-            existing = self.local_db.get(node.id)
-            if existing is None and node.id is not None:
-                self.local_db.add(node)
+        existing = self.local_db.get(node.id)
+        if existing is None and node.id is not None:
+            self.local_db.add(node)
 
     def test_connection(self, verbose=True):
         try:
