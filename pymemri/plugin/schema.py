@@ -4,7 +4,9 @@ __all__ = ['PluginRun', 'PersistentState']
 
 # Cell
 # hide
-import random, string
+import random
+import string
+import json
 from ..data.itembase import Item
 
 # Cell
@@ -14,8 +16,8 @@ class PluginRun(Item):
                                     "oAuthUrl", "error", "config"]
     edges = Item.edges + ["view", "persistentState"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, state=None, config=None, view=None, targetItemId=None, oAuthUrl=None, error=None, persistentState=None,
-                 **kwargs):
+    def __init__(self, containerImage, pluginModule, pluginName, state=None, config=None, view=None,
+                 targetItemId=None, oAuthUrl=None, error=None, persistentState=None, **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
         with an optional `config` string.
@@ -29,17 +31,29 @@ class PluginRun(Item):
         super().__init__(**kwargs)
         self.pluginModule = pluginModule
         self.pluginName = pluginName
-        self.containerImage=containerImage
-        id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
-        self.targetItemId=id_
-        self.id=id_
-        self.state = state       # for stateful plugins
-        self.config = config
-        self.oAuthUrl = oAuthUrl # for authenticated plugins
-        self.error = error # universa
+        self.containerImage = containerImage
+        id_ = targetItemId or ''.join(random.choices(string.hexdigits, k=32))
+        self.targetItemId = id_
+        self._config = config
+        self.id = id_
+        self.state = state          # for stateful plugins
+        self.oAuthUrl = oAuthUrl    # for authenticated plugins
+        self.error = error          # universa
 
-        self.persistentState = persistentState if persistentState is not None else []
-        self.view = view if view is not None else []
+        self.persistentState = persistentState or []
+        self.view = view or []
+
+    @property
+    def config(self) -> dict:
+        """Return config of PluginRun instance"""
+
+        return self._config
+
+    @config.setter
+    def config(self, config):
+        """Set config for PluginRun instance"""
+
+        self._config = json.loads(config) if config else config
 
 # Cell
 # hide
