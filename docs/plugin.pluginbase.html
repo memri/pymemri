@@ -119,11 +119,18 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Plugins can be started using the pymemri <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> or <a href="/pymemri/plugin.pluginbase.html#run_plugin_from_pod"><code>run_plugin_from_pod</code></a> CLI. With <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> the plugin is invoked directly by spawning a new python process, while <a href="/pymemri/plugin.pluginbase.html#run_plugin_from_pod"><code>run_plugin_from_pod</code></a> requests the pod to spawn a new process, docker container, or kubernetes container, which in calls <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> (for more info see <a href="/pymemri/plugin.pluginbase.html#run_plugin_from_pod"><code>run_plugin_from_pod</code></a>. When using <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a>, you can either pass your run arguments as parameters, or set them as environment variables. If both are set, the CLI will use the passed arguments.</p>
+<p>Plugins can be started using the pymemri <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> or <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a> CLI. With <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> the plugin is invoked directly by spawning a new python process, while <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a> requests the pod to spawn a new process, docker container, or kubernetes container, which in calls <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> (for more info see <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a>. When using <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a>, you can either pass your run arguments as parameters, or set them as environment variables. If both are set, the CLI will use the passed arguments.</p>
 
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -135,7 +142,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L163" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fe52ddbc090&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fe52ddbc310&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fe52ddbc350&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fe52ddbc390&gt;</code>=<em><code>None</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7fe52ddbc3d0&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fb2da2b9b50&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fb2da2b9990&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fb2da2b9a50&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fb2da2b9ad0&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7fb2da2b9b10&gt;</code>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -169,13 +176,29 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
-<span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">(</span><span class="n">containerImage</span><span class="o">=</span><span class="s2">&quot;pymemri&quot;</span><span class="p">,</span> <span class="n">pluginModule</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">(</span><span class="n">database_key</span><span class="o">=</span><span class="n">read_pod_key</span><span class="p">(</span><span class="s2">&quot;database_key&quot;</span><span class="p">),</span> <span class="n">owner_key</span><span class="o">=</span><span class="n">read_pod_key</span><span class="p">(</span><span class="s2">&quot;owner_key&quot;</span><span class="p">))</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">(</span><span class="n">containerImage</span><span class="o">=</span><span class="s2">&quot;no_container&quot;</span><span class="p">,</span> <span class="n">pluginModule</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span><span class="p">,</span>
+                <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase.MyPlugin&quot;</span><span class="p">,</span>
                 <span class="n">pluginName</span><span class="o">=</span><span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;not started&quot;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">PluginRun</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
+reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -189,8 +212,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>run_plugin --pod_full_address<span class="o">=</span><span class="nv">$DEFAULT_POD_ADDRESS</span> --owner_key<span class="o">=</span><span class="nv">$client</span>.owner_key <span class="err">\</span>
-            <span class="o">--</span><span class="n">database_key</span><span class="o">=</span><span class="err">$</span><span class="n">client</span><span class="o">.</span><span class="n">database_key</span> <span class="o">--</span><span class="n">container</span><span class="o">=</span><span class="s2">&quot;pymemri&quot;</span> <span class="o">--</span><span class="n">plugin_run_id</span><span class="o">=</span><span class="err">$</span><span class="n">run</span><span class="o">.</span><span class="n">id</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">run_plugin</span><span class="p">(</span><span class="n">plugin_run_id</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -203,11 +225,10 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Used arguments passed to `run_plugin()` (ignoring environment)
+<pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
+reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-plugin_run_id=1bf06Bfb7B63f114FcfB8DBC67eA49Be
-owner_key=3961574559904730128514448689870083724159258570216156665995117538
-auth_json=None
+owner_key=3789141683232392970480152516863298047903446543357097566923540000
 
 running
 </pre>
@@ -235,7 +256,7 @@ running
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In production, we start plugins by making an API call to the pod, which in turn creates an environment for the plugin and starts it using docker containers, kubernetes containers or a shell script. We can start this process using the <a href="/pymemri/plugin.pluginbase.html#run_plugin_from_pod"><code>run_plugin_from_pod</code></a> CLI. <strong>Note that when using docker, provided container name should be "installed" within the Pod environemnt (e.g. <code>docker build -t pymemri .</code> for this repo) in order to start it.</strong></p>
+<p>In production, we start plugins by making an API call to the pod, which in turn creates an environment for the plugin and starts it using docker containers, kubernetes containers or a shell script. We can start this process using the <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a> CLI. <strong>Note that when using docker, provided container name should be "installed" within the Pod environemnt (e.g. <code>docker build -t pymemri .</code> for this repo) in order to start it.</strong></p>
 
 </div>
 </div>
@@ -258,7 +279,7 @@ running
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin_from_pod" class="doc_header"><code>run_plugin_from_pod</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L195" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin_from_pod</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>plugin_id</code></strong>:"Pod ID of the plugin"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_module</code></strong>:"Plugin module"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Plugin class name"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>)</p>
+<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L233" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>plugin_id</code></strong>:"Pod ID of the plugin"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -302,9 +323,7 @@ running
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>run_plugin_from_pod --pod_full_address<span class="o">=</span><span class="nv">$DEFAULT_POD_ADDRESS</span> --owner_key<span class="o">=</span><span class="nv">$client</span>.owner_key <span class="err">\</span>
-                     <span class="o">--</span><span class="n">database_key</span><span class="o">=</span><span class="err">$</span><span class="n">client</span><span class="o">.</span><span class="n">database_key</span> <span class="o">--</span><span class="n">container</span><span class="o">=</span><span class="s2">&quot;pymemri&quot;</span> \
-                     <span class="o">--</span><span class="n">plugin_module</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span> <span class="o">--</span><span class="n">plugin_name</span><span class="o">=</span><span class="s2">&quot;MyPlugin&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>simulate_run_plugin_from_frontend --plugin_path<span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase.MyPlugin&quot;</span>
 </pre></div>
 
     </div>
@@ -317,12 +336,15 @@ running
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>pod_full_address=http://localhost:3030
-owner_key=4566065835753341432440539540364977361089552669232085362436171995
+<pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
+reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
+Inferred &#39;pymemri&#39; as plugin container name
+pod_full_address=http://localhost:3030
+owner_key=3789141683232392970480152516863298047903446543357097566923540000
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id cc01FaEbAf5DC88ADc27e408a790b8D6.
+calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 06f965E82dee89cDC15B3CdFc9e1c1BA.
 *Check the pod log/console for debug output.*
-Created PluginRun: cc01FaEbAf5DC88ADc27e408a790b8D6
+Created PluginRun: 06f965E82dee89cDC15B3CdFc9e1c1BA
 </pre>
 </div>
 </div>

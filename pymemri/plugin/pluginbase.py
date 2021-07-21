@@ -2,7 +2,8 @@
 
 __all__ = ['POD_FULL_ADDRESS_ENV', 'POD_TARGET_ITEM_ENV', 'POD_OWNER_KEY_ENV', 'POD_AUTH_JSON_ENV', 'PluginBase',
            'MyItem', 'MyPlugin', 'get_plugin_cls', 'get_plugin_state', 'run_plugin_from_run_id',
-           'register_base_schemas', 'run_plugin', 'run_plugin_from_pod']
+           'register_base_schemas', 'PYMEMRI_FOLDER', 'POD_KEYS_FOLDER', 'POD_KEYS_FILENAME', 'POD_KEYS_FULL_FOLDER',
+           'DEFAULT_POD_KEY_PATH', 'store_keys', 'read_pod_key', 'run_plugin', 'simulate_run_plugin_from_frontend']
 
 # Cell
 from ..data.schema import *
@@ -14,11 +15,13 @@ import abc
 import json
 import importlib
 import string
+import time
 from enum import Enum
 from ..pod.client import PodClient
 from fastscript import *
 import os
 from .schema import PluginRun, PersistentState
+from ..data.basic import *
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
@@ -145,7 +148,9 @@ def _run_plugin(client, plugin_run_id=None, verbose=False):
 
 # Cell
 # hide
-def _parse_env(env):
+def _parse_env():
+    env = os.environ
+    print("Reading `run_plugin()` parameters from environment variables")
     try:
         pod_full_address = env.get(POD_FULL_ADDRESS_ENV, DEFAULT_POD_ADDRESS)
         plugin_run_json  = json.loads(str(env[POD_TARGET_ITEM_ENV]))
@@ -160,32 +165,65 @@ def _parse_env(env):
         raise Exception('Missing parameter: {}'.format(e)) from None
 
 # Cell
+PYMEMRI_FOLDER = ".pymemri"
+POD_KEYS_FOLDER = "pod_keys"
+POD_KEYS_FILENAME = "keys.json"
+POD_KEYS_FULL_FOLDER = Path.home() / ".pymemri" / POD_KEYS_FOLDER
+DEFAULT_POD_KEY_PATH = POD_KEYS_FULL_FOLDER / POD_KEYS_FILENAME
+
+# Cell
+# hide
 @call_parse
-def run_plugin(pod_full_address:Param("The pod full address", str)=None,
+def store_keys(path:Param("path to store the keys", str)=DEFAULT_POD_KEY_PATH,
+               database_key:Param("Database key of the pod", str)=None,
+               owner_key:Param("Owner key of the pod", str)=None):
+
+    if database_key is None: database_key = PodClient.generate_random_key()
+    if owner_key is None: owner_key = PodClient.generate_random_key()
+
+    obj = {"database_key": database_key,
+           "owner_key": owner_key}
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        path.rename(POD_KEYS_FULL_FOLDER / f"keys-{timestr}.json")
+    write_json(obj, path)
+
+# Cell
+# hide
+def read_pod_key(key_type, file=DEFAULT_POD_KEY_PATH):
+    try:
+        json = read_json(file)
+    except:
+        raise ValueError(f"Trying to read key from {file}, but file or key does not exist") from None
+    try:
+        key = json[key_type]
+        print(f"reading {key_type} from {file}")
+        return key
+    except:
+        raise ValueError(f"{key_type} not specified in {file}") from None
+
+# Cell
+@call_parse
+def run_plugin(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_ADDRESS,
                plugin_run_id:Param("Run id of the plugin to be executed", str)=None,
                database_key:Param("Database key of the pod", str)=None,
                owner_key:Param("Owner key of the pod", str)=None,
-               container:Param("Pod container to run frod", str)=None):
+               read_args_from_env:Param("Owner key of the pod", bool)=False):
 
-    env = os.environ
-    params = [pod_full_address, plugin_run_id, database_key, owner_key]
-
-    if all([p is None for p in params]):
-        print("Reading `run_plugin()` parameters from environment variables")
+    if read_args_from_env:
         pod_full_address, plugin_run_id, pod_auth_json, owner_key = _parse_env(env)
         database_key=None
     else:
-        print("Used arguments passed to `run_plugin()` (ignoring environment)")
-        pod_auth_json=None
-        if (None in params):
-            raise ValueError(f"Defined some params to run indexer, but not all. Missing \
-                             {[p for p in params if p is None]}")
+        if database_key is None: database_key = read_pod_key("database_key")
+        if owner_key is None: owner_key = read_pod_key("owner_key")
+        pod_auth_json = None
+
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key,
                        auth_json=pod_auth_json)
-    for name, val in [("pod_full_address", pod_full_address), ("plugin_run_id", plugin_run_id),
-                      ("owner_key", owner_key), ("auth_json", pod_auth_json)]:
-        print(f"{name}={val}")
-    print()
+
+    print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
+
     _run_plugin(client=client, plugin_run_id=plugin_run_id)
 
 # Cell
@@ -193,20 +231,26 @@ from fastcore.script import call_parse, Param
 import os
 
 @call_parse
-def run_plugin_from_pod(pod_full_address:Param("The pod full address", str)=None,
+def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_ADDRESS,
                         database_key:Param("Database key of the pod", str)=None,
                         owner_key:Param("Owner key of the pod", str)=None,
                         plugin_id:Param("Pod ID of the plugin", str)=None,
                         container:Param("Pod container to run frod", str)=None,
-                        plugin_module:Param("Plugin module", str)=None,
-                        plugin_name:Param("Plugin class name", str)=None,
+                        plugin_path:Param("Plugin path", str)=None,
                         settings_file:Param("Plugin settings (json)", str)=None):
     # TODO remove container, plugin_module, plugin_name and move to Plugin item.
-    # Open question: This presumes Plugin item is already in pod before run_plugin_from_pod is called.
+    # Open question: This presumes Plugin item is already in pod before simulate_run_plugin_from_frontend is called.
+    if database_key is None: database_key = read_pod_key("database_key")
+    if owner_key is None: owner_key = read_pod_key("owner_key")
+    if container is None:
+        container = plugin_path.split(".", 1)[0]
+        print(f"Inferred '{container}' as plugin container name")
+
+    plugin_module, plugin_name = plugin_path.rsplit(".", 1)
     params = [pod_full_address, database_key, owner_key, container, plugin_module, plugin_name]
+
     if (None in params):
-        raise ValueError(f"Defined some params to run indexer, but not all. Missing \
-                         {[p for p in params if p is None]}")
+        raise ValueError(f"Defined some params to run indexer, but not all")
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
