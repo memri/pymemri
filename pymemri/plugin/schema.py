@@ -34,7 +34,7 @@ class PluginRun(Item):
         self.containerImage = containerImage
         id_ = targetItemId or ''.join(random.choices(string.hexdigits, k=32))
         self.targetItemId = id_
-        self._config = config
+        self.config = config
         self.id = id_
         self.state = state          # for stateful plugins
         self.oAuthUrl = oAuthUrl    # for authenticated plugins
@@ -53,7 +53,7 @@ class PluginRun(Item):
     def config(self, config):
         """Set config for PluginRun instance"""
 
-        self._config = json.loads(config) if config else config
+        self._config = json.loads(config) if config else None
 
 # Cell
 # hide
