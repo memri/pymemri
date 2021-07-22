@@ -396,7 +396,7 @@ class PodClient:
         if with_prop is not None:
             query[f"{with_prop}=="] = with_val
 
-        return client.search(query)[0]
+        return self.search(query)[0]
 
     def item_from_json(self, json):
         plugin_class = json.get("pluginClass", None)
