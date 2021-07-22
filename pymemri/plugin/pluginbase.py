@@ -237,7 +237,7 @@ def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full addre
                         plugin_id:Param("Pod ID of the plugin", str)=None,
                         container:Param("Pod container to run frod", str)=None,
                         plugin_path:Param("Plugin path", str)=None,
-                        settings_file:Param("Plugin settings (json)", str)=None):
+                        config_file:Param("Plugin config (json)", str)=None):
     # TODO remove container, plugin_module, plugin_name and move to Plugin item.
     # Open question: This presumes Plugin item is already in pod before simulate_run_plugin_from_frontend is called.
     if database_key is None: database_key = read_pod_key("database_key")
@@ -255,11 +255,11 @@ def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full addre
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
 
-    if settings_file is not None:
-        with open(settings_file, 'r') as f:
-            settings = f.read()
+    if config_file is not None:
+        with open(config_file, 'r') as f:
+            config = f.read()
     else:
-        settings = None
+        config = None
 
     register_base_schemas(client)
     run = PluginRun(container, plugin_module, plugin_name)
