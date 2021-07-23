@@ -10,6 +10,8 @@ from ..data.photo import Photo
 from ..imports import *
 from hashlib import sha256
 from .db import DB
+from .utils import *
+from ..plugin.schema import *
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
@@ -19,7 +21,7 @@ POD_VERSION = "v4"
 class PodClient:
 
     def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None,
-                 auth_json=None, verbose=False):
+                 auth_json=None, verbose=False, register_base_schema=True):
         self.verbose = verbose
         self.url = url
         self.version = POD_VERSION
@@ -33,10 +35,26 @@ class PodClient:
 
         self.local_db = DB()
         self.registered_classes=dict()
+        self.register_base_schemas()
+
+    @classmethod
+    def from_local_keys(cls, path=DEFAULT_POD_KEY_PATH, **kwargs):
+        return cls(database_key=read_pod_key("database_key"), owner_key=read_pod_key("owner_key"), **kwargs)
 
     @staticmethod
     def generate_random_key():
         return "".join([str(random.randint(0, 9)) for i in range(64)])
+
+    def register_base_schemas(client):
+        try:
+            assert client.add_to_schema(PluginRun("", "", "", state="", error="", targetItemId="",
+                                                 settings=""))
+            assert client.add_to_schema(PersistentState(pluginName="", state="", account=""))
+            assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
+            assert client.add_to_schema(Account(service="", identifier="", secret="", code="",
+                                                refreshToken="", errorMessage=""))
+        except Exception as e:
+            raise ValueError("Could not add base schema")
 
     def add_to_db(self, node):
         existing = self.local_db.get(node.id)
@@ -250,7 +268,7 @@ class PodClient:
         else:
             res = self._get_item_expanded(id)
         if res is None:
-            return None
+            raise ValueError(f"User with id {id} does not exist")
 
         elif res.deleted == True:
             print(f"Item with id {id} does not exist anymore")
@@ -359,6 +377,24 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             print(e)
 
+    def exists(self, id):
+        try:
+            body = {"auth": self.auth_json,
+                    "payload": str(id)}
+            result = requests.post(f"{self.base_url}/get_item", json=body)
+            if result.status_code != 200:
+                print(result, result.content)
+                return False
+            else:
+                json = result.json()
+                if isinstance(json, list) and len(json) > 0:
+                    return True
+
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
+
+
     def search(self, fields_data, include_edges: bool = True):
         extra_fields = {'[[edges]]': {}} if include_edges else {}
         body = {"payload": {**fields_data, **extra_fields},
@@ -378,7 +414,7 @@ class PodClient:
         if with_prop is not None:
             query[f"{with_prop}=="] = with_val
 
-        return client.search(query)[0]
+        return self.search(query)[0]
 
     def item_from_json(self, json):
         plugin_class = json.get("pluginClass", None)

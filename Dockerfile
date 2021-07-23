@@ -28,5 +28,5 @@ COPY ./nbs ./nbs
 
 RUN pip3 install --editable .
 # CMD ["python3", "tools/run_integrator.py"]
-CMD ["run_plugin"]
+CMD ["run_plugin", "--read_args_from_env", "True"]
 

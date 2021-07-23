@@ -139,9 +139,8 @@ class ItemBase():
                 e.update(api)
 
     def exists(self, api):
-        res = api.search({"id": self.id}) if self.id else None
-        if res is None: return False
-        return len(res) == 1
+        return api.exists(self.id) if self.id else None
+
 
 #     def expand(self, api):
 #         """Expands a node (retrieves all directly connected nodes ands adds to object)."""
