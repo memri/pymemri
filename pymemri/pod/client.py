@@ -268,7 +268,7 @@ class PodClient:
         else:
             res = self._get_item_expanded(id)
         if res is None:
-            return None
+            raise ValueError(f"User with id {id} does not exist")
 
         elif res.deleted == True:
             print(f"Item with id {id} does not exist anymore")
