@@ -395,9 +395,9 @@ class PodClient:
             return None
 
 
-    def search(self, fields_data):
-
-        body = {"payload": fields_data,
+    def search(self, fields_data, include_edges: bool = True):
+        extra_fields = {'[[edges]]': {}} if include_edges else {}
+        body = {"payload": {**fields_data, **extra_fields},
                 "auth": self.auth_json}
         try:
             result = requests.post(f"{self.base_url}/search", json=body)
