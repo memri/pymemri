@@ -45,6 +45,7 @@ _run_id = None
 
 @call_parse
 def run_qr_simulator(run_id:Param("Run id, we attach qr code to run.account.code", str)=None):
+    print("GO TO http://localhost:8000/qr and scan the code")
     assert run_id is not None
     global _run_id
     _run_id = run_id
