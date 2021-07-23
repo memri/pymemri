@@ -65,103 +65,103 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
 
 
 # An account or subscription, for instance for some online service, or a bank account or wallet.
-class Account(Item):
-    def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
-                 externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
-                 handle=None, displayName=None, service=None, itemType=None, avatarUrl=None, changelog=None,
-                 label=None, genericAttribute=None, measure=None, sharedWith=None, belongsTo=None, price=None,
-                 location=None, organization=None, identifier=None, secret=None, code=None, accessToken=None,
-                 refreshToken=None, errorMessage=None, contact=None):
-        super().__init__(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
-                         deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
-                         version=version, id=id, importJson=importJson, changelog=changelog, label=label,
-                         genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith)
-        self.handle = handle
-        self.displayName = displayName
-        self.service = service
-        self.itemType = itemType
-        self.avatarUrl = avatarUrl
-        self.identifier = identifier
-        self.secret = secret
-        self.code = code
-        self.accessToken = accessToken
-        self.refreshToken = refreshToken
-        self.errorMessage = errorMessage
-        self.contact = contact if contact is not None else []
-        self.belongsTo = belongsTo if belongsTo is not None else []
-        self.price = price if price is not None else []
-        self.location = location if location is not None else []
-        self.organization = organization if organization is not None else []
+# class Account(Item):
+#     def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
+#                  externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
+#                  handle=None, displayName=None, service=None, itemType=None, avatarUrl=None, changelog=None,
+#                  label=None, genericAttribute=None, measure=None, sharedWith=None, belongsTo=None, price=None,
+#                  location=None, organization=None, identifier=None, secret=None, code=None, accessToken=None,
+#                  refreshToken=None, errorMessage=None, contact=None):
+#         super().__init__(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
+#                          deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
+#                          version=version, id=id, importJson=importJson, changelog=changelog, label=label,
+#                          genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith)
+#         self.handle = handle
+#         self.displayName = displayName
+#         self.service = service
+#         self.itemType = itemType
+#         self.avatarUrl = avatarUrl
+#         self.identifier = identifier
+#         self.secret = secret
+#         self.code = code
+#         self.accessToken = accessToken
+#         self.refreshToken = refreshToken
+#         self.errorMessage = errorMessage
+#         self.contact = contact if contact is not None else []
+#         self.belongsTo = belongsTo if belongsTo is not None else []
+#         self.price = price if price is not None else []
+#         self.location = location if location is not None else []
+#         self.organization = organization if organization is not None else []
 
-    @classmethod
-    def from_json(cls, json):
-        all_edges = json.get("allEdges", None)
-        dateAccessed = json.get("dateAccessed", None)
-        dateCreated = json.get("dateCreated", None)
-        dateModified = json.get("dateModified", None)
-        deleted = json.get("deleted", None)
-        externalId = json.get("externalId", None)
-        itemDescription = json.get("itemDescription", None)
-        starred = json.get("starred", None)
-        version = json.get("version", None)
-        id = json.get("id", None)
-        importJson = json.get("importJson", None)
-        handle = json.get("handle", None)
-        displayName = json.get("displayName", None)
-        service = json.get("service", None)
-        itemType = json.get("itemType", None)
-        avatarUrl = json.get("avatarUrl", None)
-        identifier = json.get("identifier", None)
-        secret = json.get("secret", None)
-        code = json.get("code", None)
-        accessToken = json.get("accessToken", None)
-        refreshToken = json.get("refreshToken", None)
-        errorMessage = json.get("errorMessage", None)
+#     @classmethod
+#     def from_json(cls, json):
+#         all_edges = json.get("allEdges", None)
+#         dateAccessed = json.get("dateAccessed", None)
+#         dateCreated = json.get("dateCreated", None)
+#         dateModified = json.get("dateModified", None)
+#         deleted = json.get("deleted", None)
+#         externalId = json.get("externalId", None)
+#         itemDescription = json.get("itemDescription", None)
+#         starred = json.get("starred", None)
+#         version = json.get("version", None)
+#         id = json.get("id", None)
+#         importJson = json.get("importJson", None)
+#         handle = json.get("handle", None)
+#         displayName = json.get("displayName", None)
+#         service = json.get("service", None)
+#         itemType = json.get("itemType", None)
+#         avatarUrl = json.get("avatarUrl", None)
+#         identifier = json.get("identifier", None)
+#         secret = json.get("secret", None)
+#         code = json.get("code", None)
+#         accessToken = json.get("accessToken", None)
+#         refreshToken = json.get("refreshToken", None)
+#         errorMessage = json.get("errorMessage", None)
        
-        changelog = []
-        label = []
-        genericAttribute = []
-        measure = []
-        sharedWith = []
-        belongsTo = []
-        price = []
-        location = []
-        organization = []
-        contact = []
+#         changelog = []
+#         label = []
+#         genericAttribute = []
+#         measure = []
+#         sharedWith = []
+#         belongsTo = []
+#         price = []
+#         location = []
+#         organization = []
+#         contact = []
         
-        if all_edges is not None:
-            for edge_json in all_edges:
-                edge = Edge.from_json(edge_json)
-                if edge._type == "changelog" or edge._type == "~changelog": 
-                    changelog.append(edge)
-                elif edge._type == "label" or edge._type == "~label": 
-                    label.append(edge)
-                elif edge._type == "genericAttribute" or edge._type == "~genericAttribute": 
-                    genericAttribute.append(edge)
-                elif edge._type == "measure" or edge._type == "~measure": 
-                    measure.append(edge)
-                elif edge._type == "sharedWith" or edge._type == "~sharedWith": 
-                    sharedWith.append(edge)
-                elif edge._type == "belongsTo" or edge._type == "~belongsTo": 
-                    belongsTo.append(edge)
-                elif edge._type == "price" or edge._type == "~price": 
-                    price.append(edge)
-                elif edge._type == "location" or edge._type == "~location": 
-                    location.append(edge)
-                elif edge._type == "organization" or edge._type == "~organization": 
-                    organization.append(edge)
-                elif edge._type == "contact" or edge._type == "~contact": 
-                    contact.append(edge)
+#         if all_edges is not None:
+#             for edge_json in all_edges:
+#                 edge = Edge.from_json(edge_json)
+#                 if edge._type == "changelog" or edge._type == "~changelog": 
+#                     changelog.append(edge)
+#                 elif edge._type == "label" or edge._type == "~label": 
+#                     label.append(edge)
+#                 elif edge._type == "genericAttribute" or edge._type == "~genericAttribute": 
+#                     genericAttribute.append(edge)
+#                 elif edge._type == "measure" or edge._type == "~measure": 
+#                     measure.append(edge)
+#                 elif edge._type == "sharedWith" or edge._type == "~sharedWith": 
+#                     sharedWith.append(edge)
+#                 elif edge._type == "belongsTo" or edge._type == "~belongsTo": 
+#                     belongsTo.append(edge)
+#                 elif edge._type == "price" or edge._type == "~price": 
+#                     price.append(edge)
+#                 elif edge._type == "location" or edge._type == "~location": 
+#                     location.append(edge)
+#                 elif edge._type == "organization" or edge._type == "~organization": 
+#                     organization.append(edge)
+#                 elif edge._type == "contact" or edge._type == "~contact": 
+#                     contact.append(edge)
         
-        res = cls(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
-                  deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
-                  version=version, id=id, importJson=importJson, handle=handle, displayName=displayName,
-                  service=service, itemType=itemType, avatarUrl=avatarUrl, changelog=changelog, label=label,
-                  genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith, belongsTo=belongsTo,
-                  price=price, location=location, organization=organization, identifier=identifier, secret=secret,
-                  code=code, accessToken=accessToken, refreshToken=refreshToken, errorMessage=errorMessage, contact=contact)
-        for e in res.get_all_edges(): e.source = res
-        return res
+#         res = cls(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
+#                   deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
+#                   version=version, id=id, importJson=importJson, handle=handle, displayName=displayName,
+#                   service=service, itemType=itemType, avatarUrl=avatarUrl, changelog=changelog, label=label,
+#                   genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith, belongsTo=belongsTo,
+#                   price=price, location=location, organization=organization, identifier=identifier, secret=secret,
+#                   code=code, accessToken=accessToken, refreshToken=refreshToken, errorMessage=errorMessage, contact=contact)
+#         for e in res.get_all_edges(): e.source = res
+#         return res
 
 
 # A postal address.
