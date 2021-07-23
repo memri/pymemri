@@ -359,6 +359,24 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             print(e)
 
+    def exists(self, id):
+        try:
+            body = {"auth": self.auth_json,
+                    "payload": str(id)}
+            result = requests.post(f"{self.base_url}/get_item", json=body)
+            if result.status_code != 200:
+                print(result, result.content)
+                return False
+            else:
+                json = result.json()
+                if isinstance(json, list) and len(json) > 0:
+                    return True
+
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
+
+
     def search(self, fields_data):
 
         body = {"payload": fields_data,
@@ -378,7 +396,7 @@ class PodClient:
         if with_prop is not None:
             query[f"{with_prop}=="] = with_val
 
-        return client.search(query)[0]
+        return self.search(query)[0]
 
     def item_from_json(self, json):
         plugin_class = json.get("pluginClass", None)
