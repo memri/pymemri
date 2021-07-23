@@ -18,12 +18,12 @@ class PluginRun(Item):
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
-        with an optional `config` string.
+        with an optional `settings` string.
 
         Args:
             plugin_module (str): module of the plugin.
             plugin_name (str): class name of the plugin.
-            config (str, optional): Optional plugin configuration. For example,
+            settings (str, optional): Optional plugin configuration. For example,
                 this could be a `json.dumps` of a configuration dict. Defaults to None.
         """
         super().__init__(**kwargs)

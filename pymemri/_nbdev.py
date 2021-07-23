@@ -47,20 +47,22 @@ index = {"read_file": "basic.ipynb",
          "get_plugin_cls": "plugin.pluginbase.ipynb",
          "run_plugin_from_run_id": "plugin.pluginbase.ipynb",
          "register_base_schemas": "plugin.pluginbase.ipynb",
-         "PYMEMRI_FOLDER": "plugin.pluginbase.ipynb",
-         "POD_KEYS_FOLDER": "plugin.pluginbase.ipynb",
-         "POD_KEYS_FILENAME": "plugin.pluginbase.ipynb",
-         "POD_KEYS_FULL_FOLDER": "plugin.pluginbase.ipynb",
-         "DEFAULT_POD_KEY_PATH": "plugin.pluginbase.ipynb",
          "store_keys": "plugin.pluginbase.ipynb",
-         "read_pod_key": "plugin.pluginbase.ipynb",
+         "parse_config": "plugin.pluginbase.ipynb",
+         "create_run_expanded": "plugin.pluginbase.ipynb",
          "run_plugin": "plugin.pluginbase.ipynb",
          "simulate_run_plugin_from_frontend": "plugin.pluginbase.ipynb",
          "PluginRun": "plugin.schema.ipynb",
          "DEFAULT_POD_ADDRESS": "pod.client.ipynb",
          "POD_VERSION": "pod.client.ipynb",
          "PodClient": "pod.client.ipynb",
-         "DB": "pod.db.ipynb"}
+         "DB": "pod.db.ipynb",
+         "PYMEMRI_FOLDER": "pod.utils.ipynb",
+         "POD_KEYS_FOLDER": "pod.utils.ipynb",
+         "POD_KEYS_FILENAME": "pod.utils.ipynb",
+         "POD_KEYS_FULL_FOLDER": "pod.utils.ipynb",
+         "DEFAULT_POD_KEY_PATH": "pod.utils.ipynb",
+         "read_pod_key": "pod.utils.ipynb"}
 
 modules = ["data/basic.py",
            "data/photo.py",
@@ -71,7 +73,8 @@ modules = ["data/basic.py",
            "plugin/pluginbase.py",
            "plugin/schema.py",
            "pod/client.py",
-           "pod/db.py"]
+           "pod/db.py",
+           "pod/utils.py"]
 
 doc_url = "http://memri.docs.memri.io/pymemri/"
 
