@@ -52,43 +52,6 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.runDestination = runDestination
         self.pluginClass = pluginClass
 
-    def get_run(self):
-        return self.client.get(self.run_id, expanded=False)
-
-    def get_state(self):
-        return self.get_run().state
-
-    def get_account(self):
-        run = self.get_run()
-        return run.account[0] if len(run.account) > 0 else None
-
-    def get_settings(self):
-        run = self.get_run(self.client)
-        return json.loads(run.settings)
-
-    def set_vars(self, vars):
-        run = self.get_run()
-        for k,v in vars.items():
-            if hasattr(run, k):
-                setattr(run, k, v)
-        run.update(self.client)
-
-    def set_state(self, state, message=None):
-        self.set_vars({'state': state, 'message': message})
-
-    def set_account(self, account):
-        existing = self.get_account()
-        if existing:
-            account.id = existing.id
-            account.update(self.client)
-        else:
-            run = self.get_run()
-            run.add_edge('account', account)
-            run.update(self.client)
-
-    def set_settings(self, settings):
-        self.set_vars({'settings': json.dumps(settings)})
-
     @abc.abstractmethod
     def run(self):
         raise NotImplementedError()
