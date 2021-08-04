@@ -48,8 +48,7 @@ class PodClient:
     def register_base_schemas(client):
         try:
             assert client.add_to_schema(PluginRun("", "", "", state="", error="", targetItemId="",
-                                                 settings=""))
-            assert client.add_to_schema(PersistentState(pluginName="", state="", account=""))
+                                                 settings="", oAuthUrl="", message=""))
             assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
             assert client.add_to_schema(Account(service="", identifier="", secret="", code="",
                                                 refreshToken="", errorMessage=""))

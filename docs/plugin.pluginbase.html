@@ -70,7 +70,34 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyItem</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyAPIClient</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">accessToken</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">accessToken</span>
+
+    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;name_1&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">21</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;name_2&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">}]</span>
+
+<span class="k">class</span> <span class="nc">ExampleOAuthAuthenticator</span><span class="p">(</span><span class="n">OAuthAuthenticator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">get_oauth_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;https://example.com/oauth&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_tokens_from_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="s1">&#39;dummy_access_token_with_&#39;</span> <span class="o">+</span> <span class="n">code</span><span class="p">,</span>
+            <span class="s1">&#39;refresh_token&#39;</span><span class="p">:</span> <span class="s1">&#39;dummy_refresh_token&#39;</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">refresh_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refreshToken</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="s1">&#39;refreshed_dummy_access_token&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;refresh_token&#39;</span><span class="p">:</span> <span class="s1">&#39;refreshed_dummy_refresh_token&#39;</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">get_api_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MyAPIClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pluginRun</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyItem</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">properties</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">edges</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -86,12 +113,21 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;some person&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">age</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]))</span>
 
-    <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;my name&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">auth</span> <span class="o">=</span> <span class="n">ExampleOAuthAuthenticator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pluginRun</span><span class="p">)</span>
+        <span class="c1"># auth.set_test(True) # for testing</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">MyAPIClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pluginRun</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;my name&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -104,13 +140,12 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Test-Plugin-Runtime">Test Plugin Runtime<a class="anchor-link" href="#Test-Plugin-Runtime"> </a></h3>
 </div>
-    {% endraw %}
-
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Running-your-plugin-using-the-CLI">Running your plugin using the CLI<a class="anchor-link" href="#Running-your-plugin-using-the-CLI"> </a></h2>
@@ -128,13 +163,6 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -142,7 +170,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fb2da2b9b50&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fb2da2b9990&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fb2da2b9a50&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fb2da2b9ad0&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7fb2da2b9b10&gt;</code>=<em><code>False</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L194" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fa16b000160&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fa16b0002e0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fa16b0001f0&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fa16b000370&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7fa16b0003d0&gt;</code>=<em><code>False</code></em>, <strong><code>config_file</code></strong>:<code>Param object at 0x7fa16b0003a0&gt;</code>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -176,43 +204,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">(</span><span class="n">database_key</span><span class="o">=</span><span class="n">read_pod_key</span><span class="p">(</span><span class="s2">&quot;database_key&quot;</span><span class="p">),</span> <span class="n">owner_key</span><span class="o">=</span><span class="n">read_pod_key</span><span class="p">(</span><span class="s2">&quot;owner_key&quot;</span><span class="p">))</span>
-<span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">(</span><span class="n">containerImage</span><span class="o">=</span><span class="s2">&quot;no_container&quot;</span><span class="p">,</span> <span class="n">pluginModule</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span><span class="p">,</span>
-                <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase.MyPlugin&quot;</span><span class="p">,</span>
-                <span class="n">pluginName</span><span class="o">=</span><span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;not started&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">PluginRun</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
-reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">run_plugin</span><span class="p">(</span><span class="n">plugin_run_id</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">run_plugin</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;../example_config.json&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -228,9 +220,10 @@ reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
 <pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
 reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-owner_key=3789141683232392970480152516863298047903446543357097566923540000
+owner_key=8677996173299944016776856689234978705539171358808241281853139489
 
 running
+logging in with account myusername and password mypassword
 </pre>
 </div>
 </div>
@@ -279,7 +272,7 @@ running
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L233" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>plugin_id</code></strong>:"Pod ID of the plugin"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>)</p>
+<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -323,7 +316,7 @@ running
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>simulate_run_plugin_from_frontend --plugin_path<span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase.MyPlugin&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>simulate_run_plugin_from_frontend --config_file<span class="o">=</span><span class="s2">&quot;../example_config.json&quot;</span>
 </pre></div>
 
     </div>
@@ -338,13 +331,11 @@ running
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
 reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
-Inferred &#39;pymemri&#39; as plugin container name
 pod_full_address=http://localhost:3030
-owner_key=3789141683232392970480152516863298047903446543357097566923540000
+owner_key=8677996173299944016776856689234978705539171358808241281853139489
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 06f965E82dee89cDC15B3CdFc9e1c1BA.
+calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 4DfDBbcdcbABcf822Fc7DC5d5b3C3BDc.
 *Check the pod log/console for debug output.*
-Created PluginRun: 06f965E82dee89cDC15B3CdFc9e1c1BA
 </pre>
 </div>
 </div>
