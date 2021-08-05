@@ -22,7 +22,6 @@ import os
 from .schema import Account, PluginRun
 from ..data.basic import *
 
-from typing import Any
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
