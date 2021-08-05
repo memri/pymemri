@@ -1,13 +1,14 @@
 {
 	"containerImage": "pymemri",
 	"pluginModule": "pymemri.plugin.pluginbase",
-	"plugin": "pymemri.plugin.pluginbase.MyPlugin",
-	"pluginName": "MyPlugin",
+	"plugin": "pymemri.plugin.pluginbase.MyOAuthPlugin",
+	"pluginName": "MyOAuthPlugin",
 	"state": "not started",
 	"account": {
 		"service": "facebook",
 		"identifier": "myusername",
-		"secret": "mypassword" 
+		"secret": "access_token", 
+		"refreshToken": "refresh_token"
 	},
 	"settings": {
 		"example_setting": "example_value"
