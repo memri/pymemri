@@ -20,23 +20,24 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
         self.pluginRun = pluginRun
         self.isTest = False
 
-    def authenticate(self, test=False):
+    def authenticate(self):
 
         tokens = None
         if self.pluginRun.account[0].refreshToken:
             try:
                 tokens = self.refresh_tokens(self.pluginRun.account[0].refreshToken)
-            except:
+            except: # expired refresh token or revoked access
                 pass
 
         if not tokens:
             url = self.get_oauth_url()
             code = self.present_url_to_user(url)
             tokens = self.get_tokens_from_code(code)
+            # if not tokens: raise an exception or set pluginrun.state=FAILED and pluginRun.message=ERROR_MESSAGE
 
         self.store_tokens(tokens)
 
-    def present_url_to_user(self, url, test=False):
+    def present_url_to_user(self, url):
         if self.isTest:
             return 'dummy_code'
         # request user to visit url
@@ -51,9 +52,10 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
                 return self.pluginRun.account[0].code
 
     def store_tokens(self, tokens):
-        self.pluginRun.account[0].secret = tokens['access_token']
-        self.pluginRun.account[0].refreshToken = tokens['refresh_token']
-        self.pluginRun.account[0].update(self.client)
+        account = self.pluginRun.account[0]
+        account.secret = tokens['access_token']
+        account.refreshToken = tokens['refresh_token']
+        account.update(self.client)
 
     @abc.abstractmethod
     def get_oauth_url(self):
