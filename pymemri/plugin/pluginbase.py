@@ -31,11 +31,8 @@ POD_AUTH_JSON_ENV           = 'POD_AUTH_JSON'
 
 # Cell
 # hide
-class PluginBase(Item, metaclass=ABCMeta):
+class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
-    properties = Item.properties + ["name", "repository", "icon", "query", "bundleImage",
-                                    "runDestination", "pluginClass", "client", "pluginRun"]
-    edges = Item.edges
 
     def __init__(self, client=None, pluginRun=None, name=None, repository=None, icon=None,
                  query=None, bundleImage=None, runDestination=None, pluginClass=None, **kwargs):
@@ -81,8 +78,6 @@ class MyItem(Item):
 
 class MyPlugin(PluginBase):
     """"""
-    properties = PluginBase.properties
-    edges= PluginBase.edges
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
