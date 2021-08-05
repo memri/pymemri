@@ -20,9 +20,6 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
         self.pluginRun = pluginRun
         self.isTest = False
 
-    def set_test(self, isTest):
-        self.isTest = isTest
-
     def authenticate(self, test=False):
 
         tokens = None

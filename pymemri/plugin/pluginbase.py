@@ -91,7 +91,7 @@ class MyPlugin(PluginBase):
 
     def login(self):
         auth = ExampleOAuthAuthenticator(self.client, self.pluginRun)
-        auth.set_test(True)
+        auth.isTest = True
         auth.authenticate()
         self.api = MyAPIClient(self.pluginRun.account[0].secret)
 

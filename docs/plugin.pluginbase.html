@@ -107,8 +107,6 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <span class="k">class</span> <span class="nc">MyPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">PluginBase</span><span class="o">.</span><span class="n">properties</span>
-    <span class="n">edges</span><span class="o">=</span> <span class="n">PluginBase</span><span class="o">.</span><span class="n">edges</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -122,7 +120,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
     <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="n">ExampleOAuthAuthenticator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pluginRun</span><span class="p">)</span>
-        <span class="c1"># auth.set_test(True) # for testing</span>
+        <span class="c1"># auth.isTest = True # for testing</span>
         <span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api</span> <span class="o">=</span> <span class="n">MyAPIClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pluginRun</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
 
@@ -170,7 +168,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L194" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fa16b000160&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fa16b0002e0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fa16b0001f0&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fa16b000370&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7fa16b0003d0&gt;</code>=<em><code>False</code></em>, <strong><code>config_file</code></strong>:<code>Param object at 0x7fa16b0003a0&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L188" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7f59af4a0790&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7f59af4a0910&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7f59af4a0820&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7f59af4a09a0&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7f59af4a0a00&gt;</code>=<em><code>False</code></em>, <strong><code>config_file</code></strong>:<code>Param object at 0x7f59af4a09d0&gt;</code>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -272,7 +270,7 @@ logging in with account myusername and password mypassword
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
+<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L220" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
