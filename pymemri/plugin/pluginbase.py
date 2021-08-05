@@ -118,6 +118,7 @@ class MyPasswordPlugin(PluginBase):
         auth.isTest = True
         token = auth.authenticate()
         self.api = MyAPIClient(token)
+        # or use account.identifier and account.secret directly e.g. MyAPIClient(username=account.identifier, password=account.secret)
 
     def add_to_schema(self):
         self.client.add_to_schema(MyItem("my name", 10))
