@@ -1,0 +1,34 @@
+{
+    "description": "An account or subscription, for instance for some online service, or a bank account or wallet.",
+    "properties": [
+      "handle",
+      "displayName",
+      "service",
+      "itemType",
+      "avatarUrl"
+    ],
+    "relations": {
+      "belongsTo": {
+        "sequenced": false,
+        "singular": false
+      },
+      "price": {
+        "sequenced": false,
+        "singular": false
+      },
+      "location": {
+        "sequenced": false,
+        "singular": false
+      },
+      "organization": {
+        "sequenced": false,
+        "singular": false
+      },
+      "contact": {
+        "sequenced": false,
+        "singular": false
+      }
+    },
+    "foregroundColor": "#ffffff",
+    "backgroundColor": "#93c47d"
+  }
