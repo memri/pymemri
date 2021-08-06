@@ -4,7 +4,7 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodClient']
 
 # Cell
 from ..data.basic import *
-from ..data.schema import *
+from ..data.schema import CVUStoredDefinition
 from ..data.itembase import Edge, ItemBase, Item
 from ..data.photo import Photo
 from ..imports import *
