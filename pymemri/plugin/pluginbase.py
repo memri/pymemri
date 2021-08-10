@@ -60,7 +60,7 @@ class PluginBase(metaclass=ABCMeta):
 # hide
 
 from .authenticators.oauth import ExampleOAuthAuthenticator
-from .authenticators.password import PasswordAuthenticator
+from .authenticators.password import ExamplePasswordAuthenticator
 
 class MyAPIClient:
     def __init__(self, accessToken):
@@ -114,7 +114,7 @@ class MyPasswordPlugin(PluginBase):
             self.client.create(MyItem(name=item['name'], age=item['age']))
 
     def login(self):
-        auth = PasswordAuthenticator(self.client, self.pluginRun)
+        auth = ExamplePasswordAuthenticator(self.client, self.pluginRun)
         auth.isTest = True
         token = auth.authenticate()
         self.api = MyAPIClient(token)
