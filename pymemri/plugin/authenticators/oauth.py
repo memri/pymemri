@@ -23,13 +23,11 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
     def authenticate(self):
 
         tokens = None
-        if self.pluginRun.account[0].refreshToken:
-            try:
-                tokens = self.refresh_tokens(self.pluginRun.account[0].refreshToken)
-            except: # expired refresh token or revoked access
-                pass
-
-        if not tokens:
+        try:
+            if not self.pluginRun.account[0].refreshToken:
+                raise Exception("Refresh token is empty")
+            tokens = self.refresh_tokens(self.pluginRun.account[0].refreshToken)
+        except: # no account exists or expired refresh token
             url = self.get_oauth_url()
             code = self.present_url_to_user(url)
             tokens = self.get_tokens_from_code(code)
