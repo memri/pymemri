@@ -50,7 +50,7 @@ class PodClient:
             assert client.add_to_schema(PluginRun("", "", "", state="", error="", targetItemId="",
                                                  settings="", oAuthUrl="", message=""))
             assert client.add_to_schema(CVUStoredDefinition(name="", definition=""))
-            assert client.add_to_schema(Account(service="", identifier="", secret="", code="",
+            assert client.add_to_schema(Account(service="", identifier="", secret="", code="", accessToken="",
                                                 refreshToken="", errorMessage=""))
         except Exception as e:
             raise ValueError("Could not add base schema")
