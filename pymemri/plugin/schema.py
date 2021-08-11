@@ -11,7 +11,7 @@ from ..data.itembase import Item
 # hide
 class Account(Item):
 
-    properties = Item.properties + ['service', "identifier", "secret", "code", "refreshToken", "errorMessage"]
+    properties = Item.properties + ['service', "identifier", "secret", "code", "accessToken", "refreshToken", "errorMessage"]
     edges = Item.edges + ['belongsTo', 'contact', 'price', 'location', 'organization']
 
 
