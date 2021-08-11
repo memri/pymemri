@@ -28,7 +28,7 @@ cp /bin/true ./docker && PATH="$PWD:PATH" && RUST_LOG=pod=debug,info \
   "$@" &
 
 pid=$!
-nbdev_test_nbs
+nbdev_test_nbs --flags ci
 # nbdev_test_nbs --fname nbs/pod.client.ipynb
 kill $pid
 
