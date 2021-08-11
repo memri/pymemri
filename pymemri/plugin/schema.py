@@ -12,18 +12,27 @@ from ..data.itembase import Item
 class Account(Item):
 
     properties = Item.properties + ['service', "identifier", "secret", "code", "refreshToken", "errorMessage"]
-    edges = Item.edges
+    edges = Item.edges + ['belongsTo', 'contact', 'price', 'location', 'organization']
 
 
-    def __init__(self, service=None, identifier=None, secret=None, code=None, refreshToken=None,
-                 errorMessage=None, **kwargs):
+    def __init__(self, handle=None, displayName=None, service=None, avatarUrl=None, identifier=None, secret=None, code=None, accessToken=None, refreshToken=None,
+                 errorMessage=None, contact=None, belongsTo=None, price=None, location=None, organization=None, **kwargs):
         super().__init__(**kwargs)
+        self.handle = handle
+        self.displayName = displayName
         self.service = service
+        self.avatarUrl = avatarUrl
         self.identifier = identifier
         self.secret = secret
-        self.refreshToken = refreshToken
         self.code = code
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
         self.errorMessage = errorMessage
+        self.contact = contact if contact is not None else []
+        self.belongsTo = belongsTo if belongsTo is not None else []
+        self.price = price if price is not None else []
+        self.location = location if location is not None else []
+        self.organization = organization if organization is not None else []
 
 
 # Cell

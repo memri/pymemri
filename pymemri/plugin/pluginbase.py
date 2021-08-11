@@ -94,7 +94,7 @@ class MyOAuthPlugin(PluginBase):
         auth = ExampleOAuthAuthenticator(self.client, self.pluginRun)
         auth.isTest = True
         auth.authenticate()
-        self.api = MyAPIClient(self.pluginRun.account[0].secret)
+        self.api = MyAPIClient(self.pluginRun.account[0].accessToken)
 
     def add_to_schema(self):
         self.client.add_to_schema(MyItem("my name", 10))

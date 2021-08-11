@@ -49,7 +49,7 @@ class PasswordAuthenticator(metaclass=abc.ABCMeta):
        # WAIT HERE = BLOCK
         while True:
             sleep(self.SLEEP_INTERVAL)
-            self.pluginRun.reload(self.client)
+            self.pluginRun = self.client.get(self.pluginRun.id)
             if self.pluginRun.state == RUN_USER_ACTION_COMPLETED:
                 account = self.pluginRun.account[0]
                 return account.identifier, account.secret
