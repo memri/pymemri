@@ -52,7 +52,7 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
     def store_tokens(self, tokens):
         account = self.pluginRun.account[0]
         account.accessToken = tokens['access_token']
-        account.refreshToken = tokens['refresh_token']
+        account.refreshToken = tokens['refresh_token'] if 'refresh_token' in tokens else None
         account.update(self.client)
 
     @abc.abstractmethod
