@@ -22,6 +22,11 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
 
     def authenticate(self):
 
+        account = self.pluginRun.account[0] if len(self.pluginRun.account) > 0 else None
+        if account.accessToken:
+            if self.verify_access_token(account.accessToken):
+                return
+
         tokens = None
         try:
             if not self.pluginRun.account[0].refreshToken:
@@ -83,6 +88,15 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
         # use self.pluginRun.account[0].refreshToken
         raise NotImplemented()
 
+    @abc.abstractmethod
+    def verify_access_token(self, token):
+        """
+        Check if existing token is working. If this returns True, then user interaction will not be needed.
+        """
+        raise NotImplemented()
+
+
+
 
 # Cell
 # hide
@@ -103,3 +117,7 @@ class ExampleOAuthAuthenticator(OAuthAuthenticator):
             'access_token': 'refreshed_dummy_access_token',
             'refresh_token': 'refreshed_dummy_refresh_token'
         }
+
+    def verify_access_token(self, token):
+        if token:
+            return True
