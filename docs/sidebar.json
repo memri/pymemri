@@ -3,7 +3,6 @@
     "Overview": "/",
     "The Pod client": "pod.client.html",
     "Creating a plugin": "plugin.pluginbase.html",
-    "Creating a stateful plugin": "plugin.stateful.html",
     "Items & Edges": "itembase.html"
   }
 }
