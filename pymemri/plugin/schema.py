@@ -38,14 +38,14 @@ class Account(Item):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
                                     "oAuthUrl", "message", "settings"]
-    edges = Item.edges + ["account"]
+    edges = Item.edges + ["account", "view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, account=None, state=None, settings=None, targetItemId=None, oAuthUrl=None, message=None,
+    def __init__(self, containerImage, pluginModule, pluginName, account=None, status=None, settings=None, targetItemId=None, oAuthUrl=None, message=None, view=None,
                  **kwargs):
         """
-                PluginRun defines a the run of plugin `plugin_module.plugin_name`,
+        PluginRun defines a the run of plugin `plugin_module.plugin_name`,
         with an optional `settings` string.
 
         Args:
@@ -61,12 +61,13 @@ class PluginRun(Item):
         id_ = ''.join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state = state       # for stateful plugins
+        self.status = status
         self.settings = settings
-        self.oAuthUrl = oAuthUrl # to pass oauth url for authenticated plugins
-        self.message = message   # to pass a message
+        self.oAuthUrl = oAuthUrl
+        self.message = message
 
         self.account = account if account is not None else []
+        self.view = view if view is not None else []
 
     def reload(self, client):
         self = client.get(self.id, expanded=True)

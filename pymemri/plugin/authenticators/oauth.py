@@ -36,7 +36,7 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
             url = self.get_oauth_url()
             code = self.present_url_to_user(url)
             tokens = self.get_tokens_from_code(code)
-            # if not tokens: raise an exception or set pluginrun.state=FAILED and pluginRun.message=ERROR_MESSAGE
+            # if not tokens: raise an exception or set pluginRun.status=FAILED and pluginRun.message=ERROR_MESSAGE
 
         self.store_tokens(tokens)
 
@@ -45,13 +45,13 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
             return 'dummy_code'
         # request user to visit url
         self.pluginRun.oAuthUrl = url
-        self.pluginRun.state = RUN_USER_ACTION_NEEDED
+        self.pluginRun.status = RUN_USER_ACTION_NEEDED
         self.pluginRun.update(self.client)
        # WAIT HERE = BLOCK
         while True:
             sleep(self.SLEEP_INTERVAL)
             self.pluginRun = self.client.get(self.pluginRun.id)
-            if self.pluginRun.state == RUN_USER_ACTION_COMPLETED:
+            if self.pluginRun.status == RUN_USER_ACTION_COMPLETED:
                 return self.pluginRun.account[0].code
 
     def store_tokens(self, tokens):
