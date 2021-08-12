@@ -107,14 +107,15 @@ client.create(dog)</code></pre>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>After installation, users can use the plugin CLI to manually run a plugin. For more information on how to build a plugin, see <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a>.</p>
+<p><b>With the pod running, run : </b></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span>run_plugin --pod_full_address<span class="o">=</span>&lt;pod_address&gt; --plugin_run_id<span class="o">=</span>&lt;plugin_run_id&gt; --owner_key<span class="o">=</span>&lt;owner_key&gt; <span class="se">\</span>
-            --database_key<span class="o">=</span>&lt;dabase_key&gt;
+<div class="highlight"><pre><span></span>store_keys
+run_plugin --config_file<span class="o">=</span><span class="s2">&quot;example_config.json&quot;</span>
 </pre></div>
 
 </div>
