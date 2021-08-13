@@ -25,16 +25,15 @@ class Account(Item):
         self.code = code
         self.errorMessage = errorMessage
 
-
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
-                                    "oAuthUrl", "error", "settings"]
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+                                    "authUrl", "error", "settings"]
     edges = Item.edges + ["view", "persistentState", "account"]
 
     def __init__(self, containerImage, pluginModule, pluginName, status=None, settings=None, view=None,
-                 targetItemId=None, oAuthUrl=None, error=None, persistentState=None, account=None,
+                 targetItemId=None, authUrl=None, error=None, persistentState=None, account=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -53,10 +52,10 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.status = status
+        self.status = status       # for stateful plugins
         self.settings = settings
-        self.oAuthUrl = oAuthUrl
-        self.error = error
+        self.authUrl = authUrl # for authenticated plugins
+        self.error = error # universa
         self.account = account if account is not None else []
         self.persistentState = persistentState if persistentState is not None else []
         self.view = view if view is not None else []
@@ -72,15 +71,15 @@ class PersistentState(Item):
     def __init__(self, pluginName=None, state=None, account=None, view=None, **kwargs):
         super().__init__(**kwargs)
         self.pluginName = pluginName
-        self.state = state
+        self.status = state
         self.account = account if account is not None else []
         self.view = view if view is not None else []
 
     def get_state(self):
-        return self.state
+        return self.status
 
     def set_state(self, client, state_str):
-        self.state = state_str
+        self.status = state_str
         client.update_item(self)
 
     def get_account(self):
