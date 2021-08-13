@@ -25,7 +25,6 @@ class Account(Item):
         self.code = code
         self.errorMessage = errorMessage
 
-
 # Cell
 # hide
 class PluginRun(Item):
@@ -53,7 +52,7 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state = state       # for stateful plugins
+        self.status = state       # for stateful plugins
         self.settings = settings
         self.authUrl = authUrl # for authenticated plugins
         self.error = error # universa
@@ -72,15 +71,15 @@ class PersistentState(Item):
     def __init__(self, pluginName=None, state=None, account=None, view=None, **kwargs):
         super().__init__(**kwargs)
         self.pluginName = pluginName
-        self.state = state
+        self.status = state
         self.account = account if account is not None else []
         self.view = view if view is not None else []
 
     def get_state(self):
-        return self.state
+        return self.status
 
     def set_state(self, client, state_str):
-        self.state = state_str
+        self.status = state_str
         client.update_item(self)
 
     def get_account(self):
