@@ -29,7 +29,7 @@ class Account(Item):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
                                     "oAuthUrl", "error", "settings"]
     edges = Item.edges + ["view", "persistentState", "account"]
 
@@ -53,10 +53,10 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state = state       # for stateful plugins
+        self.status = status
         self.settings = settings
-        self.oAuthUrl = oAuthUrl # for authenticated plugins
-        self.error = error # universa
+        self.oAuthUrl = oAuthUrl
+        self.error = error
         self.account = account if account is not None else []
         self.persistentState = persistentState if persistentState is not None else []
         self.view = view if view is not None else []

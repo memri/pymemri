@@ -22,25 +22,25 @@ def run_password_simulator(
         time.sleep(SLEEP_INTERVAL)
         pluginRun = client.get(run_id)
 
-        if pluginRun.state == "userActionNeeded":
+        if pluginRun.status == "userActionNeeded":
             username, password = input_credentials()
             pluginRun.identifier = username
             pluginRun.secret = password
-            pluginRun.state = "ready"
+            pluginRun.status = "ready"
             client.update(pluginRun)
 
-        elif pluginRun.state == "started":
+        elif pluginRun.status == "started":
             print("plugin starting...")
 
-        elif pluginRun.state == "ready":
+        elif pluginRun.status == "ready":
             print("no user action needed.")
 
-        elif pluginRun.state == "error":
+        elif pluginRun.status == "error":
             print("error occurred in plugin.")
             break
     
-        elif pluginRun.state == "done":
+        elif pluginRun.status == "done":
             break
 
         else:
-            print(f"unknown plugin state {pluginRun.state}.")
+            print(f"unknown plugin state {pluginRun.status}.")
