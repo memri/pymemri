@@ -28,7 +28,7 @@ class Account(Item):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
                                     "authUrl", "error", "settings"]
     edges = Item.edges + ["view", "persistentState", "account"]
 
