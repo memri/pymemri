@@ -30,11 +30,11 @@ class Account(Item):
 # hide
 class PluginRun(Item):
     properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
-                                    "oAuthUrl", "error", "settings"]
+                                    "authUrl", "error", "settings"]
     edges = Item.edges + ["view", "persistentState", "account"]
 
     def __init__(self, containerImage, pluginModule, pluginName, state=None, settings=None, view=None,
-                 targetItemId=None, oAuthUrl=None, error=None, persistentState=None, account=None,
+                 targetItemId=None, authUrl=None, error=None, persistentState=None, account=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -55,7 +55,7 @@ class PluginRun(Item):
         self.id=id_
         self.state = state       # for stateful plugins
         self.settings = settings
-        self.oAuthUrl = oAuthUrl # for authenticated plugins
+        self.authUrl = authUrl # for authenticated plugins
         self.error = error # universa
         self.account = account if account is not None else []
         self.persistentState = persistentState if persistentState is not None else []
