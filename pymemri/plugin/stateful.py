@@ -154,7 +154,7 @@ class StatefulPlugin(PluginBase):
 
     def get_run_state(self, client):
         start_plugin = self.get_run(client)
-        return start_plugin.state
+        return start_plugin.status
 
     def set_run_vars(self, client, vars):
         start_plugin = client.get(self.runId, expanded=False)

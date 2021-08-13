@@ -53,7 +53,7 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state = state       # for stateful plugins
+        self.status = status
         self.settings = settings
         self.authUrl = authUrl # for authenticated plugins
         self.error = error # universa
