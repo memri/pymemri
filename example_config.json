@@ -3,7 +3,7 @@
 	"pluginModule": "pymemri.plugin.pluginbase",
 	"plugin": "pymemri.plugin.pluginbase.MyPlugin",
 	"pluginName": "MyPlugin",
-	"state": "not started",
+	"status": "not started",
 	"account": {
 		"service": "facebook",
 		"identifier": "myusername",

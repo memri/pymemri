@@ -13,7 +13,7 @@ from .itembase import ItemBase, Edge, Item
 class PluginItem(Item):
     properties = Item.properties + ["containerImage"]
     edges = Item.edges
-    def __init__(self, containerImage=None,, **kwargs):
+    def __init__(self, containerImage=None, **kwargs):
         super().__init__(**kwargs)
         self.containerImage = containerImage
 

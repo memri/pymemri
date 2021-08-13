@@ -32,7 +32,7 @@ class PluginRun(Item):
                                     "authUrl", "error", "settings"]
     edges = Item.edges + ["view", "persistentState", "account"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, state=None, settings=None, view=None,
+    def __init__(self, containerImage, pluginModule, pluginName, status=None, settings=None, view=None,
                  targetItemId=None, authUrl=None, error=None, persistentState=None, account=None,
                  **kwargs):
         """
@@ -52,7 +52,7 @@ class PluginRun(Item):
         id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.status = state       # for stateful plugins
+        self.status = status       # for stateful plugins
         self.settings = settings
         self.authUrl = authUrl # for authenticated plugins
         self.error = error # universa
