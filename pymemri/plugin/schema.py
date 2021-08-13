@@ -33,7 +33,7 @@ class PluginRun(Item):
                                     "oAuthUrl", "error", "settings"]
     edges = Item.edges + ["view", "persistentState", "account"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, state=None, settings=None, view=None,
+    def __init__(self, containerImage, pluginModule, pluginName, status=None, settings=None, view=None,
                  targetItemId=None, oAuthUrl=None, error=None, persistentState=None, account=None,
                  **kwargs):
         """
