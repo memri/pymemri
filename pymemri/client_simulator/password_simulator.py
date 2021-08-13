@@ -1,4 +1,5 @@
 from pymemri.pod.client import PodClient
+from pymemri.plugin.states import RUN_COMPLETED, RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED, RUN_STARTED, RUN_FAILED
 import time
 from fastscript import call_parse, Param
 
@@ -16,16 +17,20 @@ def run_password_simulator(
     run_id: Param("owner key", str)=None
 ):
 
-    client = PodClient(database_key=database_key, owner_key=owner_key)
+    print("FRONTEND PASSWORD SIMULATOR")
+    if database_key and owner_key:   
+        print("pod credentials from from args")
+        client = PodClient(database_key=database_key, owner_key=owner_key)
+    else:
+        client = PodClient.from_local_keys()
 
     while True:
         time.sleep(SLEEP_INTERVAL)
         pluginRun = client.get(run_id)
         account = pluginRun.account[0]
 
-        if pluginRun.status == "userActionNeeded":
+        if pluginRun.status == RUN_USER_ACTION_NEEDED:
             username, password = input_credentials()
-            print(username, password)
             account.identifier = username
             account.secret = password
             pluginRun.status = "ready"
@@ -34,17 +39,17 @@ def run_password_simulator(
             print("Done authenticating")
             break
 
-        elif pluginRun.status == "started":
+        elif pluginRun.status == RUN_STARTED:
             print("plugin starting...")
 
-        elif pluginRun.status == "ready":
+        elif pluginRun.status == RUN_USER_ACTION_COMPLETED:
             print("no user action needed.")
 
-        elif pluginRun.status == "error":
+        elif pluginRun.status == RUN_FAILED:
             print("error occurred in plugin.")
             break
     
-        elif pluginRun.status == "done":
+        elif pluginRun.status == RUN_COMPLETED:
             break
 
         else:
