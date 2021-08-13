@@ -21,13 +21,18 @@ def run_password_simulator(
     while True:
         time.sleep(SLEEP_INTERVAL)
         pluginRun = client.get(run_id)
+        account = pluginRun.account[0]
 
         if pluginRun.status == "userActionNeeded":
             username, password = input_credentials()
-            pluginRun.identifier = username
-            pluginRun.secret = password
+            print(username, password)
+            account.identifier = username
+            account.secret = password
             pluginRun.status = "ready"
-            client.update(pluginRun)
+            client.update_item(pluginRun)
+            client.update_item(account)
+            print("Done authenticating")
+            break
 
         elif pluginRun.status == "started":
             print("plugin starting...")
