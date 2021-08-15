@@ -40,9 +40,9 @@ class Account(Item):
 class PluginRun(Item):
     properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
                                     "oAuthUrl", "message", "settings"]
-    edges = Item.edges + ["account"]
+    edges = Item.edges + ["account", "view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, account=None, state=None, settings=None, targetItemId=None, oAuthUrl=None, message=None,
+    def __init__(self, containerImage, pluginModule, pluginName, account=None, view=None, state=None, settings=None, targetItemId=None, oAuthUrl=None, message=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -67,6 +67,7 @@ class PluginRun(Item):
         self.message = message   # to pass a message
 
         self.account = account if account is not None else []
+        self.view = view if view is not None else []
 
     def reload(self, client):
         self = client.get(self.id, expanded=True)
