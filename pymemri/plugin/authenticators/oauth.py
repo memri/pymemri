@@ -6,7 +6,7 @@ __all__ = ['OAuthAuthenticator', 'ExampleOAuthAuthenticator']
 # hide
 import abc
 from time import sleep
-from ..states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED
+from ..states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED, RUN_FAILED
 
 # Cell
 # hide
@@ -53,6 +53,8 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
             self.pluginRun = self.client.get(self.pluginRun.id)
             if self.pluginRun.state == RUN_USER_ACTION_COMPLETED:
                 return self.pluginRun.account[0].code
+            if self.pluginRun.state == RUN_FAILED:
+                raise Exception(f"Error in plugin.authenticators.oauth {self.pluginRun.message}")
 
     def store_tokens(self, tokens):
         account = self.pluginRun.account[0]
