@@ -244,12 +244,6 @@ def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full addre
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
 
-#     if settings_file is not None:
-#         with open(settings_file, 'r') as f:
-#             settings = f.read()
-#     else:
-#         settings = None
-
     if config_file is not None:
         run = parse_config(config_file)
         create_run_expanded(client, run)
