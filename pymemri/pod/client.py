@@ -78,11 +78,9 @@ class PodClient:
         return properties
 
     def create(self, node):
-        if isinstance(node, Photo) and not self.create_photo_file(node): return False
-
-        create_dict = self.get_create_dict(node)
         try:
 
+            create_dict = self.get_create_dict(node)
             body = {"auth": self.auth_json, "payload": create_dict}
 
             result = requests.post(f"{self.base_url}/create_item", json=body)
@@ -147,15 +145,20 @@ class PodClient:
         self.upload_file_b(data)
         return file
 
-    def create_photo_file(self, photo):
-        # TODO: currently this only works for numpy images
-        file = photo.file[0]
-        self.create(file)
-        return self._upload_image(photo.data)
-
-    def _upload_image(self, arr):
-        # TODO: currently this only works for numpy images
-        return self.upload_file(arr.tobytes())
+    def create_photo(self, data, **kwargs):
+        """
+            Creates a Photo item in POD with an edge to its created & uploaded file
+            Requires raw image file data.
+            Optional keyword arguments set Photo item's other properties such as height, width...
+        """
+        photo = Photo.from_bytes(data)
+        for key, value in kwargs.items():
+            if hasattr(photo, key):
+                setattr(photo, key, value)
+        file = self.create_file(data, **kwargs)
+        photo.add_edge('file', file)
+        photo.update(self)
+        return photo
 
     def upload_file(self, data):
         try:
