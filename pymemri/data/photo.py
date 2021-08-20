@@ -18,6 +18,9 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 
+from PIL import Image, ExifTags
+from io import BytesIO
+
 # Cell
 def show_images(images, cols = 3, titles = None):
     image_list = [x.data for x in images] if isinstance(images[0], Photo) else images
@@ -55,18 +58,14 @@ def get_height_width_channels(img):
 class Photo(Item):
     def __init__(self, dateAccessed=None, dateCreated=None, dateModified=None, deleted=None,
                  externalId=None, itemDescription=None, starred=None, version=None, id=None, importJson=None,
-                 bitrate=None, duration=None, endTime=None, fileLocation=None, startTime=None, caption=None,
-                 exifData=None, name=None, height=None, width=None, channels=None, changelog=None, label=None,
-                 genericAttribute=None, measure=None, sharedWith=None, file=None, includes=None, thumbnail=None):
+                 fileLocation=None, caption=None, exifData=None, name=None, height=None, width=None,
+                 channels=None, changelog=None, label=None, genericAttribute=None, measure=None, sharedWith=None,
+                 file=None, includes=None, thumbnail=None):
         super().__init__(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
                          deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
                          version=version, id=id, importJson=importJson, changelog=changelog, label=label,
                          genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith)
-        self.bitrate = bitrate
-        self.duration = duration
-        self.endTime = endTime
         self.fileLocation = fileLocation
-        self.startTime = startTime
         self.caption = caption
         self.exifData = exifData
         self.name = name
@@ -90,11 +89,7 @@ class Photo(Item):
         version = json.get("version", None)
         id = json.get("id", None)
         importJson = json.get("importJson", None)
-        bitrate = json.get("bitrate", None)
-        duration = json.get("duration", None)
-        endTime = json.get("endTime", None)
         fileLocation = json.get("fileLocation", None)
-        startTime = json.get("startTime", None)
         caption = json.get("caption", None)
         exifData = json.get("exifData", None)
         name = json.get("name", None)
@@ -133,13 +128,36 @@ class Photo(Item):
 
         res = cls(dateAccessed=dateAccessed, dateCreated=dateCreated, dateModified=dateModified,
                   deleted=deleted, externalId=externalId, itemDescription=itemDescription, starred=starred,
-                  version=version, id=id, importJson=importJson, bitrate=bitrate, duration=duration,
-                  endTime=endTime, fileLocation=fileLocation, startTime=startTime, caption=caption, exifData=exifData,
-                  name=name, height=height, width=width, channels=channels, changelog=changelog, label=label,
-                  genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith, file=file,
+                  version=version, id=id, importJson=importJson, fileLocation=fileLocation, caption=caption,
+                  exifData=exifData, name=name, height=height, width=width, channels=channels, changelog=changelog,
+                  label=label, genericAttribute=genericAttribute, measure=measure, sharedWith=sharedWith, file=file,
                   includes=includes, thumbnail=thumbnail)
         for e in res.get_all_edges(): e.source = res
         return res
+
+    @classmethod
+    def from_bytes(cls, data):
+        image = Image.open(BytesIO(data))
+        if bool(image._getexif()):
+            exif = {
+                ExifTags.TAGS[k]: v
+                for k, v in image._getexif().items()
+                if k in ExifTags.TAGS
+            }
+        else:
+            exif = {}
+        attrs_dict = {
+            'exifData': str(exif),
+            'height': image.height,
+            'width': image.width,
+            'channels': len(image.getbands()),
+        }
+        return cls.from_data(**attrs_dict)
+
+    @staticmethod
+    def to_array(data):
+        image = Image.open(BytesIO(data))
+        return np.array(image)
 
 # Cell
 class IPhoto(Photo):
