@@ -13,6 +13,8 @@ from .db import DB
 from .utils import *
 from ..plugin.schema import *
 
+from urllib.parse import quote
+
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
 POD_VERSION = "v4"
@@ -122,19 +124,54 @@ class PodClient:
                     return False
         return True
 
+    def create_file(self, data, **kwargs):
+        """
+            Creates a File item in POD and uploads it's contents
+            Requires raw file data.
+            Optional keyword arguments may set filename or it's edges (in form of Edge() objects)
+
+        """
+        sha = sha256(data).hexdigest()
+        file = File(sha256=sha)
+        for key, value in kwargs.items():
+            if hasattr(file, key):
+                setattr(file, key, value)
+        self.create(file)
+        self.upload_file_b(data)
+        return file
+
     def create_photo_file(self, photo):
+        # TODO: currently this only works for numpy images
         file = photo.file[0]
         self.create(file)
         return self._upload_image(photo.data)
 
     def _upload_image(self, arr):
+        # TODO: currently this only works for numpy images
         return self.upload_file(arr.tobytes())
 
-    def upload_file(self, file):
-        # TODO: currently this only works for numpy images
+    def upload_file(self, data):
         try:
-            sha = sha256(file).hexdigest()
-            result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
+            sha = sha256(data).hexdigest()
+            result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=data)
+            if result.status_code != 200:
+                print(result, result.content)
+                return False
+            else:
+                return True
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return False
+
+    def upload_file_b(self, data):
+        """
+            Uploads file contents to the POD using auth json.
+            Plugins must use this method only.
+        """
+        try:
+            sha = sha256(data).hexdigest()
+            auth = quote(json.dumps(self.auth_json))
+            result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=data)
             if result.status_code != 200:
                 print(result, result.content)
                 return False
