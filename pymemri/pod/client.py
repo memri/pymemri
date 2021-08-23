@@ -96,16 +96,18 @@ class PodClient:
         attributes = self.get_properties_json(node)
         for k, v in attributes.items():
             if not isinstance(v, list) and k != "type":
-                if isinstance(v, str):
+                if isinstance(v, bool):
+                    value_type = "Bool"
+                elif isinstance(v, str):
                     value_type = "Text"
                 elif isinstance(v, int):
                     value_type = "Integer"
+
 
                 payload = {"type": "ItemPropertySchema", "itemType": attributes["type"],
                            "propertyName": k, "valueType": value_type}
 
                 body = {"auth": self.auth_json, "payload": payload }
-
                 try:
                     result = requests.post(f"{self.base_url}/create_item", json=body)
 
