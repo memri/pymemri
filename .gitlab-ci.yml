@@ -1,7 +1,7 @@
 default: 
   image: python:3.6
   before_script:
-  - apt-get update && apt-get install -y libsqlcipher-dev && apt-get install -y libgl1-mesa-glx
+  - apt-get update && apt-get install -y libsqlcipher-dev && apt-get install -y libgl1-mesa-glx ffmpeg
   - pip install -e .
 
 read_notebooks:
