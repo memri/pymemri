@@ -115,7 +115,6 @@ class PodClient:
                     else:
                         id = result.json()
                         node.id = id
-                        self.add_to_db(node)
 
                 except requests.exceptions.RequestException as e:
                     print(e)
@@ -415,6 +414,10 @@ class PodClient:
             query[f"{with_prop}=="] = with_val
 
         return self.search(query)[0]
+
+    def sync(self):
+        for k in self.local_db.nodes:
+            self.local_db.update(self.get(k))
 
     def item_from_json(self, json):
         plugin_class = json.get("pluginClass", None)

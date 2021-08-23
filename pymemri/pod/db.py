@@ -9,10 +9,16 @@ class DB():
         self.nodes = dict()
 
     def add(self, node):
-        id = node.id
-        if id in self.nodes:
-            print(f"Error trying to add node, but node with with id: {id} is already in database")
-        self.nodes[id] = node
+        uid = node.id
+        if uid in self.nodes:
+            raise ValueError(f"Trying to add node, but node with with id: {uid} is already in database")
+        self.nodes[uid] = node
+
+    def update(self, node):
+        uid = node.id
+        if uid not in self.nodes:
+            raise ValueError(f"Trying to update node, but node with with id: {uid} is not in database")
+        self.nodes[uid] = node
 
     def get(self, id):
         res = self.nodes.get(id, None)
