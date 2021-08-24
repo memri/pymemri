@@ -12,6 +12,7 @@ from hashlib import sha256
 from .db import DB
 from .utils import *
 from ..plugin.schema import *
+import uuid
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
@@ -70,13 +71,18 @@ class PodClient:
             print("Could no connect to backend")
             return False
 
+    def get_create_dict(self, node):
+        properties = self.get_properties_json(node)
+        properties = {k:v for k, v in properties.items() if v != []}
+        return properties
+
     def create(self, node):
         if isinstance(node, Photo) and not self.create_photo_file(node): return False
 
+        create_dict = self.get_create_dict(node)
         try:
-            properties = self.get_properties_json(node)
-            properties = {k:v for k, v in properties.items() if v != []}
-            body = {"auth": self.auth_json, "payload":properties}
+
+            body = {"auth": self.auth_json, "payload": create_dict}
 
             result = requests.post(f"{self.base_url}/create_item", json=body)
             if result.status_code != 200:
@@ -191,28 +197,31 @@ class PodClient:
         return len(existing) > 0
 
     def create_edges(self, edges):
-        """Create edges between nodes, edges should be of format [{"_type": "friend", "_source": 1, "_target": 2}]"""
-        create_edges = []
-        for e in edges:
-            src, target = e.source.id, e.target.id
+        """Create edges between nodes, edges should be of format:
+           [{"_type": "friend", "_source": 1, "_target": 2}]"""
+        return self.bulk_action(create_edges=edges)
 
-            if src is None or target is None:
-                print(f"Could not create edge {e} missing source or target id")
-                return False
-            data = {"_source": src, "_target": target, "_name": e._type}
-            if e.label is not None: data[LABEL] = e.label
-            if e.sequence is not None: data[SEQUENCE] = e.sequence
+#         create_edges = []
+#         for e in edges:
+#             src, target = e.source.id, e.target.id
 
-            if e.reverse:
-                data2 = copy(data)
-                data2["_source"] = target
-                data2["_target"] = src
-                data2["_name"] = "~" + data2["_name"]
-                create_edges.append(data2)
+#             if src is None or target is None:
+#                 print(f"Could not create edge {e} missing source or target id")
+#                 return False
+#             data = {"_source": src, "_target": target, "_name": e._type}
+#             if e.label is not None: data[LABEL] = e.label
+#             if e.sequence is not None: data[SEQUENCE] = e.sequence
 
-            create_edges.append(data)
+#             if e.reverse:
+#                 data2 = copy(data)
+#                 data2["_source"] = target
+#                 data2["_target"] = src
+#                 data2["_name"] = "~" + data2["_name"]
+#                 create_edges.append(data2)
 
-        return self.bulk_action(create_items=[], update_items=[],create_edges=create_edges)
+#             create_edges.append(data)
+
+#         return self.bulk_action(create_items=[], update_items=[],create_edges=create_edges)
 
     def delete_items(self, items):
         ids = [i.id for i in items]
@@ -223,10 +232,17 @@ class PodClient:
         self.delete_items(items)
 
     def bulk_action(self, create_items=None, update_items=None, create_edges=None, delete_items=None):
-        create_items = create_items if create_items is not None else []
+        # we need to set the id to not lose the reference
+        if create_items is not None:
+            for c in create_items:
+                if c.id is None: c.id = uuid.uuid4().hex
+        create_items = [self.get_create_dict(i) for i in create_items] if create_items is not None else []
+        create_edges = [self.get_create_edge_dict(i) for i in create_edges] if create_edges is not None else []
+        assert update_items is None, "Not implemented"
+        assert delete_items is None, "Not implemented"
         update_items = update_items if update_items is not None else []
-        create_edges = create_edges if create_edges is not None else []
         delete_items = delete_items if delete_items is not None else []
+
         edges_data = {"auth": self.auth_json, "payload": {
                     "createItems": create_items, "updateItems": update_items,
                     "createEdges": create_edges, "deleteItems": delete_items}}
@@ -245,8 +261,11 @@ class PodClient:
             print(e)
             return False
 
+    def get_create_edge_dict(self, edge):
+        return {"_source": edge.source.id, "_target": edge.target.id, "_name": edge._type}
+
     def create_edge(self, edge):
-        payload = {"_source": edge.source.id, "_target": edge.target.id, "_name": edge._type}
+        payload = self.get_create_edge_dict(edge)
         body = {"auth": self.auth_json,
                 "payload": payload}
 
