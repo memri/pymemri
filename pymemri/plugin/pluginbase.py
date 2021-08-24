@@ -21,6 +21,7 @@ from fastscript import *
 import os
 from .schema import PluginRun, PersistentState, Account
 from ..data.basic import *
+import warnings
 
 # Cell
 POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
@@ -32,30 +33,31 @@ POD_AUTH_JSON_ENV           = 'POD_AUTH_JSON'
 # hide
 class PluginBase(Item, metaclass=ABCMeta):
     """Base class for plugins"""
-    properties = Item.properties + ["name", "repository", "icon", "data_query", "bundleImage",
-                                    "runDestination", "pluginClass"]
-    edges = Item.edges
 
-    def __init__(self, pluginRun=None, persistentState=None, name=None, repository=None, icon=None,
-                 query=None, bundleImage=None, runDestination=None, pluginClass=None, **kwargs):
-        if pluginClass is None: pluginClass=self.__class__.__name__
+    def __init__(self, pluginRun=None, client=None, persistentState=None, **kwargs):
         super().__init__(**kwargs)
+
+        if pluginRun is None:
+            warnings.warn(
+                "Plugin needs a pluginRun as kwarg, running without will only work while testing.",
+                RuntimeWarning)
         self.pluginRun = pluginRun
+
+        if client is None:
+            raise ValueError("Plugins need a `client: PodClient` as kwarg to run.")
+        self.client = client
+
         self.persistentState = persistentState
-        self.name = name
-        self.repository = repository
-        self.icon = icon
-        self.query = query
-        self.bundleImage = bundleImage
-        self.runDestination = runDestination
-        self.pluginClass = pluginClass
 
     @abc.abstractmethod
-    def run(self, client):
+    def run(self):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def add_to_schema(self, client):
+    def add_to_schema(self):
+        """
+        Add all schema classes required by the plugin to self.client here.
+        """
         raise NotImplementedError()
 
 # Cell
@@ -69,24 +71,21 @@ class MyItem(Item):
         self.age = age
 
 class MyPlugin(PluginBase):
-    """"""
-    properties = PluginBase.properties + ["containerImage"]
-    edges= PluginBase.edges
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def run(self, client):
+    def run(self):
         print("running")
         self.login()
-        client.create(MyItem("some person", 20))
+        self.client.create(MyItem("some person", 20))
 
     def login(self):
         account = self.pluginRun.account[0]
         print(f"logging in with account {account.identifier} and password {account.secret}")
 
-    def add_to_schema(self, client):
-        client.add_to_schema(MyItem("my name", 10))
+    def add_to_schema(self):
+        self.client.add_to_schema(MyItem("my name", 10))
 
 # Cell
 # export
@@ -125,11 +124,11 @@ def run_plugin_from_run_id(run_id, client):
     plugin_state = get_plugin_state(run)
 
     plugin_cls = get_plugin_cls(run.pluginModule, run.pluginName)
-    plugin = plugin_cls(pluginRun=run, persistentState=plugin_state)
-    plugin.add_to_schema(client)
+    plugin = plugin_cls(pluginRun=run, client=client, persistentState=plugin_state)
+    plugin.add_to_schema()
 
     # TODO handle plugin status before run
-    plugin.run(client)
+    plugin.run()
 
     return plugin
 
