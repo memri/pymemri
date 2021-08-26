@@ -9,6 +9,8 @@ from ..data.schema import *
 from ..pod.client import *
 from ..imports import *
 from ..pod.utils import *
+from .states import *
+
 from os import environ
 from abc import ABCMeta
 import abc
@@ -48,6 +50,12 @@ class PluginBase(Item, metaclass=ABCMeta):
         self.client = client
 
         self.persistentState = persistentState
+
+    def set_run_status(self, status):
+        # TODO sync before setting status (requires pod_client.sync())
+        if self.pluginRun and self.client:
+            self.pluginRun.status = status
+            self.client.update_item(self.pluginRun)
 
     @abc.abstractmethod
     def run(self):
@@ -127,8 +135,10 @@ def run_plugin_from_run_id(run_id, client):
     plugin = plugin_cls(pluginRun=run, client=client, persistentState=plugin_state)
     plugin.add_to_schema()
 
-    # TODO handle plugin status before run
+    plugin.set_run_status(RUN_STARTED)
     plugin.run()
+    plugin.pluginRun = plugin.client.get(run_id)
+    plugin.set_run_status(RUN_COMPLETED)
 
     return plugin
 
