@@ -68,44 +68,60 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyItem</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">properties</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
-    <span class="n">edges</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">edges</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
-<span class="k">class</span> <span class="nc">MyPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">PluginBase</span><span class="o">.</span><span class="n">properties</span>
-    <span class="n">edges</span><span class="o">=</span> <span class="n">PluginBase</span><span class="o">.</span><span class="n">edges</span>
+<div class="output_wrapper">
+<div class="output">
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="output_area">
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;some person&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pluginRun</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;logging in with account </span><span class="si">{</span><span class="n">account</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2"> and password </span><span class="si">{</span><span class="n">account</span><span class="o">.</span><span class="n">secret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="ExamplePlugin" class="doc_header"><code>class</code> <code>ExamplePlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L72" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ExamplePlugin</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.pluginbase.html#PluginBase"><code>PluginBase</code></a></p>
+</blockquote>
 
-    <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;my name&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-</pre></div>
+</div>
+
+</div>
 
 </div>
 </div>
+
 </div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Memri plugins need to define at least 2 methods: <code>.run()</code> and <code>.add_to_schema()</code>. <code>.run()</code> defines the logic of the plugin. <code>.add_to_schema()</code> defines the schema for the plugin in the pod. Note that currently, <code>add_to_schema</code> requires all item to <strong>have all properties defined that are used in the plugin</strong>. In the future, we might replace add_to_schema, to be done automatically, based on a declarative schema defined in the plugin.</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Authentication">Authentication<a class="anchor-link" href="#Authentication"> </a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Many plugins use authentication. For examples, see <a href="/pymemri/plugin.authenticators.oauth.html#OAuthAuthenticator"><code>OAuthAuthenticator</code></a> or <a href="/pymemri/plugins.authenticators.password.html#PasswordAuthenticator"><code>PasswordAuthenticator</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Helper-methods">Helper methods<a class="anchor-link" href="#Helper-methods"> </a></h2>
 </div>
 </div>
 </div>
@@ -133,7 +149,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L194" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fe3957bf610&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fe3957bf410&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fe3957bf450&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fe3957bf3d0&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7fe3957bf490&gt;</code>=<em><code>False</code></em>, <strong><code>config_file</code></strong>:<code>Param object at 0x7fe3957bf5d0&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L173" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fb462579210&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fb462579250&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fb462579350&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fb4625792d0&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7fb462579290&gt;</code>=<em><code>False</code></em>, <strong><code>config_file</code></strong>:<code>Param object at 0x7fb462579450&gt;</code>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -180,13 +196,12 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
-reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
+<pre>reading database_key from /home/eelco/.pymemri/pod_keys/keys.json
+reading owner_key from /home/eelco/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-owner_key=8677996173299944016776856689234978705539171358808241281853139489
+owner_key=4299293696825439424119818256297577448568264074337439987068013321
 
 running
-logging in with account myusername and password mypassword
 </pre>
 </div>
 </div>
@@ -235,7 +250,7 @@ logging in with account myusername and password mypassword
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>plugin_id</code></strong>:"Pod ID of the plugin"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>)</p>
+<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L205" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -292,12 +307,12 @@ logging in with account myusername and password mypassword
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
-reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
+<pre>reading database_key from /home/eelco/.pymemri/pod_keys/keys.json
+reading owner_key from /home/eelco/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-owner_key=8677996173299944016776856689234978705539171358808241281853139489
+owner_key=4299293696825439424119818256297577448568264074337439987068013321
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 4DfDBbcdcbABcf822Fc7DC5d5b3C3BDc.
+calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id ECC02c39eCAAEe1aebbaFA1CE7Ea3d52.
 *Check the pod log/console for debug output.*
 </pre>
 </div>
