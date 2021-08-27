@@ -4,6 +4,7 @@ __all__ = ['ALL_EDGES', 'parse_base_item_json', 'Edge', 'ItemBase', 'Item']
 
 # Cell
 # hide
+from typing import Optional
 from ..imports import *
 
 ALL_EDGES = "allEdges"
@@ -79,8 +80,8 @@ class ItemBase():
     All items in the schema inherit from this class, and it provides some
     basic functionality for consistency and to enable easier usage."""
 
-    def __init__(self, id=None):
-        self.id=id
+    def __init__(self, id: str = None):
+        self.id: Optional[str] = id
 
     def __getattribute__(self, name):
         val = object.__getattribute__(self, name)
@@ -188,18 +189,61 @@ class ItemBase():
 # Cell
 class Item(ItemBase):
     """Item is the baseclass for all of the data classes."""
-    properties = ["dateAccessed", "dateCreated", "dateModified", "deleted", "externalId", "itemDescription",
-                  "starred", "version", "id", "importJson", "pluginClass"]
-    edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
-    def __init__(self, **kwargs):
-        super().__init__(kwargs.get("id"))
-        for p in self.properties:
-            if p == "id":
-                continue
-            setattr(self, p, kwargs.get(p, None))
 
-        for e in self.edges:
-            setattr(self, e, kwargs.get(e, []))
+    properties = [
+        "dateAccessed",
+        "dateCreated",
+        "dateModified",
+        "deleted",
+        "externalId",
+        "itemDescription",
+        "starred",
+        "version",
+        "id",
+        "importJson",
+        "pluginClass",
+    ]
+    edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
+
+    def __init__(
+        self,
+        dateAccessed: str = None,
+        dateCreated: str = None,
+        dateModified: str = None,
+        deleted: str = None,
+        externalId: str = None,
+        itemDescription: str = None,
+        starred: str = None,
+        version: str = None,
+        id: str = None,
+        importJson: str = None,
+        pluginClass: str = None,
+        changelog: list = None,
+        label: list = None,
+        genericAttribute: list = None,
+        measure: list = None,
+        sharedWith: list = None
+    ):
+        super().__init__(id)
+
+        # Properties
+        self.dateAccessed: Optional[str] = dateAccessed
+        self.dateCreated: Optional[str] = dateCreated
+        self.dateModified: Optional[str] = dateModified
+        self.deleted: Optional[str] = deleted
+        self.externalId: Optional[str] = externalId
+        self.itemDescription: Optional[str] = itemDescription
+        self.starred: Optional[str] = starred
+        self.version: Optional[str] = version
+        self.importJson: Optional[str] = importJson
+        self.pluginClass: Optional[str] = pluginClass
+
+        # Edges
+        self.changelog: list = changelog if changelog is not None else []
+        self.label: list = label if label is not None else []
+        self.genericAttribute: list = genericAttribute if genericAttribute is not None else []
+        self.measure: list = measure if measure is not None else []
+        self.sharedWith: list = sharedWith if sharedWith is not None else []
 
     @classmethod
     def parse_json(self, cls, json):
@@ -235,5 +279,6 @@ class Item(ItemBase):
     def from_json(cls, json):
         kwargs = Item.parse_json(cls, json)
         res = cls(**kwargs)
-        for e in res.get_all_edges(): e.source = res
+        for e in res.get_all_edges():
+            e.source = res
         return res

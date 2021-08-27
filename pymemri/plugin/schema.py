@@ -5,65 +5,101 @@ __all__ = ['Account', 'PluginRun', 'PersistentState']
 # Cell
 # hide
 import random, string
+from typing import Optional
+
 from ..data.itembase import Item
 
 # Cell
 # hide
 class Account(Item):
 
-    properties = Item.properties + ['service', "identifier", "secret", "code", "refreshToken", "errorMessage"]
+    properties = Item.properties + [
+        "service",
+        "identifier",
+        "secret",
+        "code",
+        "refreshToken",
+        "errorMessage",
+    ]
     edges = Item.edges
 
-
-    def __init__(self, service=None, identifier=None, secret=None, code=None, refreshToken=None,
-                 errorMessage=None, **kwargs):
+    def __init__(
+        self,
+        service: str = None,
+        identifier: str = None,
+        secret: str = None,
+        code: str = None,
+        refreshToken: str = None,
+        errorMessage: str = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
-        self.service = service
-        self.identifier = identifier
-        self.secret = secret
-        self.refreshToken = refreshToken
-        self.code = code
-        self.errorMessage = errorMessage
+
+        # Properties
+        self.service: Optional[str] = service
+        self.identifier: Optional[str] = identifier
+        self.secret: Optional[str] = secret
+        self.refreshToken: Optional[str] = refreshToken
+        self.code: Optional[str] = code
+        self.errorMessage: Optional[str] = errorMessage
 
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
-                                    "authUrl", "error", "settings"]
+    properties = Item.properties + [
+        "containerImage",
+        "pluginModule",
+        "pluginName",
+        "status",
+        "targetItemId",
+        "authUrl",
+        "error",
+        "settings",
+    ]
     edges = Item.edges + ["view", "persistentState", "account"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, status=None, settings=None, view=None,
-                 targetItemId=None, authUrl=None, error=None, persistentState=None, account=None,
-                 **kwargs):
-        """
-                PluginRun defines a the run of plugin `plugin_module.plugin_name`,
-        with an optional `settings` string.
-
-        Args:
-            plugin_module (str): module of the plugin.
-            plugin_name (str): class name of the plugin.
-            settings (str, optional): Optional plugin configuration. For example,
-                this could be a `json.dumps` of a configuration dict. Defaults to None.
-        """
+    def __init__(
+        self,
+        containerImage: str = None,
+        pluginModule: str = None,
+        pluginName: str = None,
+        status: str = None,
+        settings: str = None,
+        targetItemId: str = None,
+        authUrl: str = None,
+        error: str = None,
+        persistentState: list = None,
+        account: list = None,
+        view: list = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
-        self.pluginModule = pluginModule
-        self.pluginName = pluginName
-        self.containerImage=containerImage
-        id_ = "".join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
-        self.targetItemId=id_
-        self.id=id_
-        self.status = status       # for stateful plugins
-        self.settings = settings
-        self.authUrl = authUrl # for authenticated plugins
-        self.error = error # universa
-        self.account = account if account is not None else []
-        self.persistentState = persistentState if persistentState is not None else []
-        self.view = view if view is not None else []
+        id_ = (
+            "".join([random.choice(string.hexdigits) for i in range(32)])
+            if targetItemId is None
+            else targetItemId
+        )
+
+        # Properties
+        self.pluginModule: Optional[str] = pluginModule
+        self.pluginName: Optional[str] = pluginName
+        self.containerImage: Optional[str] = containerImage
+        self.targetItemId: Optional[str] = id_
+        self.id: Optional[str] = id_
+        self.status: Optional[str] = status
+        self.settings: Optional[str] = settings
+        self.authUrl: Optional[str] = authUrl
+        self.error: Optional[str] = error
+
+        # Edges
+        self.account: list = account if account is not None else []
+        self.persistentState: list = persistentState if persistentState is not None else []
+        self.view: list = view if view is not None else []
 
 # Cell
 # hide
 class PersistentState(Item):
-    """ Persistent state variables saved for plugin such as views, accounts, the last state to resume from etc. """
+    # TODO remove this schema, it is no longer needed with the updated PluginRun
 
     properties = Item.properties + ["pluginId", "state"]
     edges = Item.edges + ["account", "view"]
@@ -92,7 +128,7 @@ class PersistentState(Item):
         if len(self.account) == 0:
             if not account.id:
                 client.create(account)
-            self.add_edge('account', account)
+            self.add_edge("account", account)
             self.update(client)
         else:
             existing_account = self.account[0]
@@ -110,6 +146,6 @@ class PersistentState(Item):
     def set_views(self, client, views=None):
         for view in views:
             client.create(view)
-            self.add_edge('view', view)
+            self.add_edge("view", view)
         self.update(client)
         return True
