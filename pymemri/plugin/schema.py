@@ -11,11 +11,11 @@ from ..data.itembase import Item
 # hide
 class Account(Item):
 
-    properties = Item.properties + ['service', "identifier", "secret", "code", "accessToken", "error", "refreshToken", "errorMessage"]
+    properties = Item.properties + ['service', "identifier", "secret", "code", "accessToken", "refreshToken", "errorMessage"]
     edges = Item.edges + ['belongsTo', 'contact']
 
 
-    def __init__(self, handle=None, displayName=None, service=None, error=None, avatarUrl=None, identifier=None, secret=None, code=None, accessToken=None, refreshToken=None,
+    def __init__(self, handle=None, displayName=None, service=None, avatarUrl=None, identifier=None, secret=None, code=None, accessToken=None, refreshToken=None,
                  errorMessage=None, contact=None, belongsTo=None, **kwargs):
         super().__init__(**kwargs)
         self.handle = handle
@@ -25,7 +25,6 @@ class Account(Item):
         self.identifier = identifier
         self.secret = secret
         self.code = code
-        self.error = error
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.errorMessage = errorMessage
@@ -36,11 +35,11 @@ class Account(Item):
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "state", "targetItemId",
-                                    "oAuthUrl", "message", "settings"]
+    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
+                                    "oAuthUrl", "settings", "error"]
     edges = Item.edges + ["account", "view"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, account=None, view=None, state=None, settings=None, targetItemId=None, oAuthUrl=None, message=None,
+    def __init__(self, containerImage, pluginModule, pluginName, account=None, view=None, status=None, settings=None, targetItemId=None, oAuthUrl=None,
                  **kwargs):
         """
                 PluginRun defines a the run of plugin `plugin_module.plugin_name`,
@@ -59,11 +58,9 @@ class PluginRun(Item):
         id_ = ''.join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
         self.targetItemId=id_
         self.id=id_
-        self.state = state       # for stateful plugins
+        self.status = status       # for stateful plugins
         self.settings = settings
         self.oAuthUrl = oAuthUrl # to pass oauth url for authenticated plugins
-        self.message = message   # to pass a message
-
         self.account = account if account is not None else []
         self.view = view if view is not None else []
 

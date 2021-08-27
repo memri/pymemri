@@ -7,7 +7,7 @@ __all__ = ['RUN_IDLE', 'RUN_INITIALIZED', 'RUN_USER_ACTION_NEEDED', 'RUN_USER_AC
 
 # run states
 RUN_IDLE = 'idle'                           #1
-RUN_INITIALIZED = 'initilized'              #2
+RUN_INITIALIZED = 'initialized'              #2
 RUN_USER_ACTION_NEEDED = 'userActionNeeded' # 2-3
 RUN_USER_ACTION_COMPLETED = 'ready'         # 2-3
 RUN_STARTED = 'start'                       #3
