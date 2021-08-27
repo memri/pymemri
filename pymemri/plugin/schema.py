@@ -11,12 +11,12 @@ from ..data.itembase import Item
 # hide
 class Account(Item):
 
-    properties = Item.properties + ['service', "identifier", "secret", "code", "accessToken", "refreshToken", "errorMessage"]
-    edges = Item.edges + ['belongsTo', 'contact', 'price', 'location', 'organization']
+    properties = Item.properties + ['service', "identifier", "secret", "code", "accessToken", "error", "refreshToken", "errorMessage"]
+    edges = Item.edges + ['belongsTo', 'contact']
 
 
-    def __init__(self, handle=None, displayName=None, service=None, avatarUrl=None, identifier=None, secret=None, code=None, accessToken=None, refreshToken=None,
-                 errorMessage=None, contact=None, belongsTo=None, price=None, location=None, organization=None, **kwargs):
+    def __init__(self, handle=None, displayName=None, service=None, error=None, avatarUrl=None, identifier=None, secret=None, code=None, accessToken=None, refreshToken=None,
+                 errorMessage=None, contact=None, belongsTo=None, **kwargs):
         super().__init__(**kwargs)
         self.handle = handle
         self.displayName = displayName
@@ -25,14 +25,12 @@ class Account(Item):
         self.identifier = identifier
         self.secret = secret
         self.code = code
+        self.error = error
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.errorMessage = errorMessage
         self.contact = contact if contact is not None else []
         self.belongsTo = belongsTo if belongsTo is not None else []
-        self.price = price if price is not None else []
-        self.location = location if location is not None else []
-        self.organization = organization if organization is not None else []
 
 
 # Cell
