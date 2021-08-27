@@ -5,64 +5,100 @@ __all__ = ['Account', 'PluginRun']
 # Cell
 # hide
 import random, string
+from typing import Optional
+
 from ..data.itembase import Item
 
 # Cell
 # hide
 class Account(Item):
 
-    properties = Item.properties + ['service', "identifier", "secret", "code", "accessToken", "refreshToken", "errorMessage"]
+    properties = Item.properties + [
+        "service",
+        "identifier",
+        "secret",
+        "code",
+        "refreshToken",
+        "errorMessage",
+        "accessToken"
+    ]
     edges = Item.edges + ['belongsTo', 'contact']
 
-
-    def __init__(self, handle=None, displayName=None, service=None, avatarUrl=None, identifier=None, secret=None, code=None, accessToken=None, refreshToken=None,
-                 errorMessage=None, contact=None, belongsTo=None, **kwargs):
+    def __init__(
+        self,
+        service: str = None,
+        identifier: str = None,
+        secret: str = None,
+        code: str = None,
+        refreshToken: str = None,
+        errorMessage: str = None,
+        accessToken: str = None,
+        belongsTo: list = None,
+        contact: list = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
-        self.handle = handle
-        self.displayName = displayName
-        self.service = service
-        self.avatarUrl = avatarUrl
-        self.identifier = identifier
-        self.secret = secret
-        self.code = code
-        self.accessToken = accessToken
-        self.refreshToken = refreshToken
-        self.errorMessage = errorMessage
-        self.contact = contact if contact is not None else []
-        self.belongsTo = belongsTo if belongsTo is not None else []
 
+        # Properties
+        self.service: Optional[str] = service
+        self.identifier: Optional[str] = identifier
+        self.secret: Optional[str] = secret
+        self.refreshToken: Optional[str] = refreshToken
+        self.code: Optional[str] = code
+        self.errorMessage: Optional[str] = errorMessage
+        self.accessToken: Optional[str] = accessToken
+        self.contact: list = contact if contact is not None else []
+        self.belongsTo: list = belongsTo if belongsTo is not None else []
 
 # Cell
 # hide
 class PluginRun(Item):
-    properties = Item.properties + ["containerImage", "pluginModule", "pluginName", "status", "targetItemId",
-                                    "oAuthUrl", "settings", "error"]
-    edges = Item.edges + ["account", "view"]
+    properties = Item.properties + [
+        "containerImage",
+        "pluginModule",
+        "pluginName",
+        "status",
+        "targetItemId",
+        "authUrl",
+        "error",
+        "settings",
+    ]
+    edges = Item.edges + ["view", "persistentState", "account"]
 
-    def __init__(self, containerImage, pluginModule, pluginName, account=None, view=None, status=None, settings=None, targetItemId=None, oAuthUrl=None,
-                 **kwargs):
-        """
-                PluginRun defines a the run of plugin `plugin_module.plugin_name`,
-        with an optional `settings` string.
-
-        Args:
-            plugin_module (str): module of the plugin.
-            plugin_name (str): class name of the plugin.
-            settings (str, optional): Optional plugin configuration. For example,
-                this could be a `json.dumps` of a configuration dict. Defaults to None.
-        """
+    def __init__(
+        self,
+        containerImage: str = None,
+        pluginModule: str = None,
+        pluginName: str = None,
+        status: str = None,
+        settings: str = None,
+        targetItemId: str = None,
+        authUrl: str = None,
+        error: str = None,
+        persistentState: list = None,
+        account: list = None,
+        view: list = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
-        self.pluginModule = pluginModule
-        self.pluginName = pluginName
-        self.containerImage = containerImage
-        id_ = ''.join([random.choice(string.hexdigits) for i in range(32)]) if targetItemId is None else targetItemId
-        self.targetItemId=id_
-        self.id=id_
-        self.status = status       # for stateful plugins
-        self.settings = settings
-        self.oAuthUrl = oAuthUrl # to pass oauth url for authenticated plugins
-        self.account = account if account is not None else []
-        self.view = view if view is not None else []
+        id_ = (
+            "".join([random.choice(string.hexdigits) for i in range(32)])
+            if targetItemId is None
+            else targetItemId
+        )
 
-    def reload(self, client):
-        self = client.get(self.id, expanded=True)
+        # Properties
+        self.pluginModule: Optional[str] = pluginModule
+        self.pluginName: Optional[str] = pluginName
+        self.containerImage: Optional[str] = containerImage
+        self.targetItemId: Optional[str] = id_
+        self.id: Optional[str] = id_
+        self.status: Optional[str] = status
+        self.settings: Optional[str] = settings
+        self.authUrl: Optional[str] = authUrl
+        self.error: Optional[str] = error
+
+        # Edges
+        self.account: list = account if account is not None else []
+        self.persistentState: list = persistentState if persistentState is not None else []
+        self.view: list = view if view is not None else []

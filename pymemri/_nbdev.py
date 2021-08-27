@@ -14,6 +14,9 @@ index = {"read_file": "basic.ipynb",
          "HOME_DIR": "basic.ipynb",
          "MODEL_DIR": "basic.ipynb",
          "MEMRI_S3": "basic.ipynb",
+         "BASE_PATH": "cvu.utils.ipynb",
+         "get_default_cvu": "cvu.utils.ipynb",
+         "list_default_cvus": "cvu.utils.ipynb",
          "show_images": "data.photo.ipynb",
          "get_height_width_channels": "data.photo.ipynb",
          "Photo": "data.photo.ipynb",
@@ -71,9 +74,11 @@ index = {"read_file": "basic.ipynb",
          "POD_KEYS_FILENAME": "pod.utils.ipynb",
          "POD_KEYS_FULL_FOLDER": "pod.utils.ipynb",
          "DEFAULT_POD_KEY_PATH": "pod.utils.ipynb",
-         "read_pod_key": "pod.utils.ipynb"}
+         "read_pod_key": "pod.utils.ipynb",
+         "get_ci_variables": "test_utils.ipynb"}
 
 modules = ["data/basic.py",
+           "cvu/utils.py",
            "data/photo.py",
            "importers/importer.py",
            "importers/util.py",
@@ -86,7 +91,8 @@ modules = ["data/basic.py",
            "plugin/authenticators/password.py",
            "pod/client.py",
            "pod/db.py",
-           "pod/utils.py"]
+           "pod/utils.py",
+           "test_utils.py"]
 
 doc_url = "http://memri.docs.memri.io/pymemri/"
 

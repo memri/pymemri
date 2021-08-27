@@ -9,6 +9,8 @@ from ..data.schema import *
 from ..pod.client import *
 from ..imports import *
 from ..pod.utils import *
+from .states import *
+
 from os import environ
 from abc import ABCMeta
 import abc
@@ -34,19 +36,26 @@ POD_AUTH_JSON_ENV           = 'POD_AUTH_JSON'
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
-    def __init__(self, client=None, pluginRun=None, name=None, repository=None, icon=None,
-                 query=None, bundleImage=None, runDestination=None, pluginClass=None, **kwargs):
-        if pluginClass is None: pluginClass=self.__class__.__name__
+    def __init__(self, pluginRun=None, client=None, persistentState=None, **kwargs):
         super().__init__(**kwargs)
-        self.client = client
+
+        if pluginRun is None:
+            warnings.warn(
+                "Plugin needs a pluginRun as kwarg, running without will only work while testing.",
+                RuntimeWarning)
         self.pluginRun = pluginRun
-        self.name = name
-        self.repository = repository
-        self.icon = icon
-        self.query = query
-        self.bundleImage = bundleImage
-        self.runDestination = runDestination
-        self.pluginClass = pluginClass
+
+        if client is None:
+            raise ValueError("Plugins need a `client: PodClient` as kwarg to run.")
+        self.client = client
+
+        self.persistentState = persistentState
+
+    def set_run_status(self, status):
+        # TODO sync before setting status (requires pod_client.sync())
+        if self.pluginRun and self.client:
+            self.pluginRun.status = status
+            self.client.update_item(self.pluginRun)
 
     @abc.abstractmethod
     def run(self):
@@ -54,6 +63,9 @@ class PluginBase(metaclass=ABCMeta):
 
     @abc.abstractmethod
     def add_to_schema(self):
+        """
+        Add all schema classes required by the plugin to self.client here.
+        """
         raise NotImplementedError()
 
 # Cell
@@ -90,11 +102,13 @@ def run_plugin_from_run_id(run_id, client):
 
     run = client.get(run_id)
     plugin_cls = get_plugin_cls(run.pluginModule, run.pluginName)
-    plugin = plugin_cls(client=client, pluginRun=run)
+    plugin = plugin_cls(pluginRun=run, client=client)
     plugin.add_to_schema()
 
-    # TODO handle plugin status before run
+    plugin.set_run_status(RUN_STARTED)
     plugin.run()
+    plugin.pluginRun = plugin.client.get(run_id)
+    plugin.set_run_status(RUN_COMPLETED)
 
     return plugin
 
@@ -209,12 +223,6 @@ def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full addre
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
-
-    # if settings_file is not None:
-    #     with open(settings_file, 'r') as f:
-    #         settings = f.read()
-    # else:
-    #     settings = None
 
     if config_file is not None:
         run = parse_config(config_file)

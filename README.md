@@ -54,9 +54,11 @@ client.create(dog)
 
 After installation, users can use the plugin CLI to manually run a plugin. For more information on how to build a plugin, see `run_plugin`.
 
+<b>With the pod running, run : </b>
+
 ```bash
-run_plugin --pod_full_address=<pod_address> --plugin_run_id=<plugin_run_id> --owner_key=<owner_key> \
-            --database_key=<dabase_key>
+store_keys
+run_plugin --config_file="example_config.json"
 ```
 
 ## Docs
