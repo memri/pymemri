@@ -423,10 +423,24 @@ class PodClient:
         try:
             result = requests.post(f"{self.base_url}/search", json=body)
             json =  result.json()
-            res = [self.item_from_json(item) for item in json]
+
+            res = [self._item_from_search(item) for item in json]
             return self.filter_deleted(res)
         except requests.exceptions.RequestException as e:
             return None
+
+
+    def _item_from_search(self, item_json: dict):
+        # search returns different fields w.r.t. edges compared to `get` api,
+        # different method to keep `self.get` clean.
+        item = self.item_from_json(item_json)
+
+        for edge_json in item_json.get("[[edges]]", []):
+            edge_name = edge_json["_edge"]
+            edge_item = self.item_from_json(edge_json["_item"])
+            item.add_edge(edge_name, edge_item)
+
+        return item
 
     def search_last_added(self, type=None, with_prop=None, with_val=None):
         query = {"_limit": 1, "_sortOrder": "Desc"}
