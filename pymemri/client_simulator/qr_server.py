@@ -9,6 +9,8 @@ app = flask.Flask(__name__, template_folder='template')
 qr_code_dict = None
 
 QR_CODE_KEY = "qr_code"
+DEFAULT_AUTH_PORT=8080
+PLUGIN_DNS_ENVKEY="PLUGIN_DNS"
 
 
 @app.route('/qr')
@@ -17,7 +19,7 @@ def index():
     qr_code_data = qr_code_dict[QR_CODE_KEY]
     return render_template('images.html', chart_output=qr_code_data)
 
-def run_app(qr_dict, host="0.0.0.0", port=8000):
+def run_app(qr_dict, host="0.0.0.0", port=DEFAULT_AUTH_PORT):
     global qr_code_dict
     qr_code_dict = qr_dict
     app.run(host=host, port=port)
@@ -27,8 +29,9 @@ def run_qr_server(_qr_code_data):
     process_dict = manager.dict()
     process_dict["qr_code"] = _qr_code_data
     print("GO TO http://localhost:8000/qr and scan the code")
+    host = os.environ.get(PLUGIN_DNS_ENVKEY, "0.0.0.0")
     process = multiprocessing.Process(target=run_app, args=(process_dict,),
-                                      kwargs={"host": "0.0.0.0", "port": 8000}, daemon=True)
+                                      kwargs={"host": host, "port": DEFAULT_AUTH_PORT}, daemon=True)
     process.start()
     return process, process_dict
 
