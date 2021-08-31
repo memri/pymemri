@@ -17,6 +17,9 @@ import cv2
 import matplotlib.pyplot as plt
 import math
 import numpy as np
+import io
+from PIL import Image
+from hashlib import sha256
 
 # Cell
 def show_images(images, cols = 3, titles = None):
@@ -142,14 +145,30 @@ class Photo(Item):
         return res
 
 # Cell
-class IPhoto(Photo):
+NUMPY, BYTES = "numpy", "bytes"
 
-    def __init__(self, data=None, embedding=None,path=None, *args, **kwargs):
+# Cell
+class IPhoto(Photo):
+    properties = Item.properties + [
+        "service",
+        "identifier",
+        "secret",
+        "code",
+        "handle",
+        "refreshToken",
+        "errorMessage",
+        "accessToken",
+        "displayName"
+    ]
+    edges = Item.edges + ['belongsTo', 'contact']
+
+    def __init__(self, data=None, embedding=None,path=None, encoding=None, *args, **kwargs):
         self.private = ["data", "embedding", "path"]
         super().__init__(*args, **kwargs)
         self.data=data
         self.embedding=embedding
         self.path=path
+        self.encoding=encoding
 
     def show(self):
         fig,ax = plt.subplots(1)
@@ -216,8 +235,26 @@ class IPhoto(Photo):
     def from_np(cls, data, size=None, *args, **kwargs):
         if size is not None: data = resize(data, size)
         h,w,c = get_height_width_channels(data)
-        res = cls(data=data, height=h, width=w, channels=c, *args, **kwargs)
+        res = cls(data=data, height=h, width=w, channels=c, encoding=NUMPY, *args, **kwargs)
         file = File.from_data(sha256=sha256(data.tobytes()).hexdigest())
+        res.add_edge("file", file)
+        return res
+
+    @classmethod
+    def from_bytes(cls, _bytes):
+        image_stream = io.BytesIO(_bytes)
+        pil_image = Image.open(image_stream)
+        size = pil_image.size
+        if len(size) == 3:
+            w, h, c = size
+        if len(size) == 2:
+            w,h = size
+            c=1
+        else:
+            raise Error
+
+        res = cls(data=_bytes, height=h, width=w, encoding=BYTES, channels=c)
+        file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
 
