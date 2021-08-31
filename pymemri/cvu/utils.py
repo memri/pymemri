@@ -11,7 +11,7 @@ import pymemri
 from ..data.basic import read_file
 from ..data.schema import CVUStoredDefinition
 
-BASE_PATH = Path(pymemri.__file__).parent.parent / "cvu"
+BASE_PATH = Path(pymemri.__file__).parent / "cvu_definitions"
 
 # Cell
 
