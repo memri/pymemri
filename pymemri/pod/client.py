@@ -50,7 +50,7 @@ class PodClient:
 
         try:
             assert client.add_to_schema(PluginRun("", "", "", status="", error="", targetItemId="",
-                                                 settings=""))
+                                                 settings="", authUrl=""))
             assert client.add_to_schema(CVUStoredDefinition(name="", definition="", externalId=""))
             assert client.add_to_schema(Account(service="", identifier="", secret="", code="", accessToken="",
                                                 refreshToken="", errorMessage=""))

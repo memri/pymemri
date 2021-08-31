@@ -188,6 +188,9 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_A
         if owner_key is None: owner_key = read_pod_key("owner_key")
         pod_auth_json = None
 
+    if POD_PLUGIN_DNS_ENV in os.environ:
+        print(f"Plugin accesible via {os.environ.get(POD_PLUGIN_DNS_ENV)}:8080")
+
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key,
                        auth_json=pod_auth_json)
 
@@ -225,8 +228,6 @@ def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full addre
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
         print(f"{name}={val}")
-    if POD_PLUGIN_DNS_ENV in os.environ:
-        print(f"Plugin accesible via {os.environ.get(POD_PLUGIN_DNS_ENV)}:8080")
 
     if config_file is not None:
         run = parse_config(config_file)
