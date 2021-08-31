@@ -237,11 +237,10 @@ class PodClient:
             for c in create_items:
                 if c.id is None: c.id = uuid.uuid4().hex
         create_items = [self.get_create_dict(i) for i in create_items] if create_items is not None else []
+        update_items = [self.get_update_dict(i) for i in update_items] if update_items is not None else []
         create_edges = [self.get_create_edge_dict(i) for i in create_edges] if create_edges is not None else []
-        assert update_items is None, "Not implemented"
-        assert delete_items is None, "Not implemented"
-        update_items = update_items if update_items is not None else []
-        delete_items = delete_items if delete_items is not None else []
+        # Note: skip delete_items without id, as items that are not in pod cannot be deleted
+        delete_items = [item.id for item in delete_items if item.id is not None] if delete_items is not None else []
 
         edges_data = {"auth": self.auth_json, "payload": {
                     "createItems": create_items, "updateItems": update_items,
@@ -380,16 +379,18 @@ class PodClient:
             if cls.__name__ != "ItemBase":
                 return cls.__name__
 
+
+    def get_update_dict(self, node):
+        properties = self.get_properties_json(node, dates=False)
+        properties.pop("type", None)
+        properties.pop("deleted", None)
+        return properties
+
+
     def update_item(self, node):
-        data = self.get_properties_json(node, dates=False)
-        if "type" in data:
-            del data["type"]
-        if "deleted" in data:
-            del data["deleted"]
-        id = data["id"]
+        data = self.get_update_dict(node)
         body = {"payload": data,
                 "auth": self.auth_json}
-
         try:
             result = requests.post(f"{self.base_url}/update_item",
                                   json=body)
