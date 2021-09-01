@@ -28,9 +28,10 @@ def run_qr_flow(_qr_code_data, client, plugin_run):
     manager = multiprocessing.Manager()
     process_dict = manager.dict()
     process_dict["qr_code"] = _qr_code_data
-    host = os.environ.get(POD_PLUGIN_DNS_ENV, "0.0.0.0")
+    user_host = os.environ.get(POD_PLUGIN_DNS_ENV, "0.0.0.0")
+    host = "0.0.0.0"
     port = 8080
-    full_auth_url = f"{host}:{port}/qr"
+    full_auth_url = f"{user_host}:{port}/qr"
     process = multiprocessing.Process(target=run_app, args=(process_dict,),
                                       kwargs={"host": host, "port": port}, daemon=True)
     process.start()
