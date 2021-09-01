@@ -30,13 +30,13 @@ def run_qr_flow(_qr_code_data, client, plugin_run):
     process_dict["qr_code"] = _qr_code_data
     host = "0.0.0.0"
     port = 8080
-    user_host = os.environ.get(POD_PLUGIN_DNS_ENV, f"0.0.0.0/{port}")
-    full_auth_url = f"{user_host}/qr"
+    user_host = os.environ.get(POD_PLUGIN_DNS_ENV, f"http://0.0.0.0:{port}")
+    full_user_auth_url = f"{user_host}/qr"
     process = multiprocessing.Process(target=run_app, args=(process_dict,),
                                       kwargs={"host": host, "port": port}, daemon=True)
     process.start()
 
-    print(f"GO TO {full_auth_url} and scan the code")
+    print(f"GO TO {full_user_auth_url} and scan the code")
 
     # set 
     cvu = get_default_cvu("qr_code_auth.cvu")
@@ -44,7 +44,7 @@ def run_qr_flow(_qr_code_data, client, plugin_run):
     plugin_run.add_edge("view", cvu)
     client.create_edge(plugin_run.get_edges("view")[0])
     plugin_run.status = RUN_USER_ACTION_NEEDED
-    plugin_run.authUrl = full_auth_url
+    plugin_run.authUrl = full_user_auth_url
     client.update_item(plugin_run)
 
     return process, process_dict
