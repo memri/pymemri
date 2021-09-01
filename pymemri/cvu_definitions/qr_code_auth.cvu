@@ -1,11 +1,11 @@
 .whatsapp-auth-view {
     title: "WhatsApp integration"
-    defaultRenderer: custom
+    defaultRenderer: singleItem
     showContextualBottomBar: false
     showBottomBar: false
     showDefaultLayout: false
     
-    [renderer = custom] {
+    [renderer = singleItem] {
         VStack {
             padding: 10
             alignment: center
@@ -32,7 +32,7 @@
                     text: "1. Copy this url"
                 }
                 Text {
-                    text: "2. Open this url on another device (e.g. desktop or friend's phone)"
+                    text: "2. Open this url on another device (e.g. desktop or other phone)"
                 }
                 Text {
                     text: "3. Scan shown QR code using WhatsApp client on this phone"
