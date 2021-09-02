@@ -108,6 +108,10 @@ class PodClient:
                     value_type = "Text"
                 elif isinstance(v, int):
                     value_type = "Integer"
+                elif isinstance(v, float):
+                    value_type = "Real"
+                else:
+                    raise ValueError(f"Could not add property {k} with type {type(v)}")
 
 
                 payload = {"type": "ItemPropertySchema", "itemType": attributes["type"],
@@ -482,10 +486,11 @@ class PodClient:
 
 # Cell
 class Dog(Item):
-    properties = Item.properties + ["name", "age", "bites"]
+    properties = Item.properties + ["name", "age", "bites", "weight"]
     edges = Item.edges
-    def __init__(self, name=None, age=None, bites=False, **kwargs):
+    def __init__(self, name=None, age=None, bites=False, weight=None, **kwargs):
         super().__init__(**kwargs)
         self.name = name
         self.age = age
-        self.bites=bites
+        self.bites = bites
+        self.weight = weight
