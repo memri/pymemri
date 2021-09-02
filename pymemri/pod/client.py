@@ -50,7 +50,7 @@ class PodClient:
 
         try:
             assert client.add_to_schema(PluginRun("", "", "", status="", error="", targetItemId="",
-                                                 settings=""))
+                                                 settings="", authUrl=""))
             assert client.add_to_schema(CVUStoredDefinition(name="", definition="", externalId=""))
             assert client.add_to_schema(Account(service="", identifier="", secret="", code="", accessToken="",
                                                 refreshToken="", errorMessage="", handle="", displayName=""))
@@ -108,6 +108,10 @@ class PodClient:
                     value_type = "Text"
                 elif isinstance(v, int):
                     value_type = "Integer"
+                elif isinstance(v, float):
+                    value_type = "Real"
+                else:
+                    raise ValueError(f"Could not add property {k} with type {type(v)}")
 
                 payload = {"type": "ItemPropertySchema", "itemType": attributes["type"],
                            "propertyName": k, "valueType": value_type}
@@ -246,11 +250,10 @@ class PodClient:
             for c in create_items:
                 if c.id is None: c.id = uuid.uuid4().hex
         create_items = [self.get_create_dict(i) for i in create_items] if create_items is not None else []
+        update_items = [self.get_update_dict(i) for i in update_items] if update_items is not None else []
         create_edges = [self.get_create_edge_dict(i) for i in create_edges] if create_edges is not None else []
-        assert update_items is None, "Not implemented"
-        assert delete_items is None, "Not implemented"
-        update_items = update_items if update_items is not None else []
-        delete_items = delete_items if delete_items is not None else []
+        # Note: skip delete_items without id, as items that are not in pod cannot be deleted
+        delete_items = [item.id for item in delete_items if item.id is not None] if delete_items is not None else []
 
         edges_data = {"auth": self.auth_json, "payload": {
                     "createItems": create_items, "updateItems": update_items,
@@ -389,16 +392,18 @@ class PodClient:
             if cls.__name__ != "ItemBase":
                 return cls.__name__
 
+
+    def get_update_dict(self, node):
+        properties = self.get_properties_json(node, dates=False)
+        properties.pop("type", None)
+        properties.pop("deleted", None)
+        return properties
+
+
     def update_item(self, node):
-        data = self.get_properties_json(node, dates=False)
-        if "type" in data:
-            del data["type"]
-        if "deleted" in data:
-            del data["deleted"]
-        id = data["id"]
+        data = self.get_update_dict(node)
         body = {"payload": data,
                 "auth": self.auth_json}
-
         try:
             result = requests.post(f"{self.base_url}/update_item",
                                   json=body)
@@ -432,10 +437,24 @@ class PodClient:
         try:
             result = requests.post(f"{self.base_url}/search", json=body)
             json =  result.json()
-            res = [self.item_from_json(item) for item in json]
+
+            res = [self._item_from_search(item) for item in json]
             return self.filter_deleted(res)
         except requests.exceptions.RequestException as e:
             return None
+
+
+    def _item_from_search(self, item_json: dict):
+        # search returns different fields w.r.t. edges compared to `get` api,
+        # different method to keep `self.get` clean.
+        item = self.item_from_json(item_json)
+
+        for edge_json in item_json.get("[[edges]]", []):
+            edge_name = edge_json["_edge"]
+            edge_item = self.item_from_json(edge_json["_item"])
+            item.add_edge(edge_name, edge_item)
+
+        return item
 
     def search_last_added(self, type=None, with_prop=None, with_val=None):
         query = {"_limit": 1, "_sortOrder": "Desc"}
@@ -476,10 +495,11 @@ class PodClient:
 
 # Cell
 class Dog(Item):
-    properties = Item.properties + ["name", "age", "bites"]
+    properties = Item.properties + ["name", "age", "bites", "weight"]
     edges = Item.edges
-    def __init__(self, name=None, age=None, bites=False, **kwargs):
+    def __init__(self, name=None, age=None, bites=False, weight=None, **kwargs):
         super().__init__(**kwargs)
         self.name = name
         self.age = age
-        self.bites=bites
+        self.bites = bites
+        self.weight = weight

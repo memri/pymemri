@@ -31,7 +31,7 @@ nb_path: "nbs/itembase.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Any data class in pymemri inherits from <code>Item</code>. It is a base class for items with some handy functionalities to create new items and edges, retrieve all edges to other items, and sync with the pod.</p>
+<p>Any data class in pymemri inherits from <a href="/pymemri/itembase.html#Item"><code>Item</code></a>. It is a base class for items with some handy functionalities to create new items and edges, retrieve all edges to other items, and sync with the pod.</p>
 
 </div>
 </div>
@@ -47,11 +47,11 @@ nb_path: "nbs/itembase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Edge" class="doc_header"><code>class</code> <code>Edge</code><a href="pymemri/data/itembase.py#L29" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Edge</code>(<strong><code>source</code></strong>, <strong><code>target</code></strong>, <strong><code>_type</code></strong>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong><code>sequence</code></strong>=<em><code>None</code></em>, <strong><code>created</code></strong>=<em><code>False</code></em>, <strong><code>reverse</code></strong>=<em><code>True</code></em>)</p>
+<h2 id="Edge" class="doc_header"><code>class</code> <code>Edge</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L29" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Edge</code>(<strong><code>source</code></strong>, <strong><code>target</code></strong>, <strong><code>_type</code></strong>, <strong><code>label</code></strong>=<em><code>None</code></em>, <strong><code>sequence</code></strong>=<em><code>None</code></em>, <strong><code>created</code></strong>=<em><code>False</code></em>, <strong><code>reverse</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
-<p>Edges makes a link between two <code>ItemBase</code> Items. You won't use this class a lot in practice, as edges are
+<p>Edges makes a link between two <a href="/pymemri/itembase.html#ItemBase"><code>ItemBase</code></a> Items. You won't use this class a lot in practice, as edges are
 abstracted away for normal users. When items are retrieved from the database, the edges are parsed automatically.
-When you add an edge between to items within pymemri, you will often use <code>ItemBase.add_edge</code></p>
+When you add an edge between to items within pymemri, you will often use <a href="/pymemri/itembase.html#ItemBase.add_edge"><code>ItemBase.add_edge</code></a></p>
 
 </div>
 
@@ -81,7 +81,7 @@ When you add an edge between to items within pymemri, you will often use <code>I
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Edge.traverse" class="doc_header"><code>Edge.traverse</code><a href="pymemri/data/itembase.py#L66" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Edge.traverse</code>(<strong><code>start</code></strong>)</p>
+<h4 id="Edge.traverse" class="doc_header"><code>Edge.traverse</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L66" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Edge.traverse</code>(<strong><code>start</code></strong>)</p>
 </blockquote>
 <p>We can traverse an edge starting from the source to the target or vice versa. In practice we often call
 item.some_edge_type, which calls item.traverse(edgetype), which in turn calls this function.</p>
@@ -126,7 +126,7 @@ item.some_edge_type, which calls item.traverse(edgetype), which in turn calls th
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Item" class="doc_header"><code>class</code> <code>Item</code><a href="pymemri/data/itembase.py#L190" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Item</code>(<strong><code>dateAccessed</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>dateCreated</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>dateModified</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>deleted</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>externalId</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>itemDescription</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>starred</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>version</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>id</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>importJson</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>pluginClass</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>changelog</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>label</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>genericAttribute</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>measure</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>sharedWith</code></strong>:<code>list</code>=<em><code>None</code></em>) :: <code>ItemBase</code></p>
+<h2 id="Item" class="doc_header"><code>class</code> <code>Item</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L190" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Item</code>(<strong><code>dateAccessed</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>dateCreated</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>dateModified</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>deleted</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>externalId</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>itemDescription</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>starred</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>version</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>id</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>importJson</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>pluginClass</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>changelog</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>label</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>genericAttribute</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>measure</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>sharedWith</code></strong>:<code>list</code>=<em><code>None</code></em>) :: <a href="/pymemri/itembase.html#ItemBase"><code>ItemBase</code></a></p>
 </blockquote>
 <p>Item is the baseclass for all of the data classes.</p>
 
@@ -158,7 +158,7 @@ item.some_edge_type, which calls item.traverse(edgetype), which in turn calls th
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ItemBase.add_edge" class="doc_header"><code>ItemBase.add_edge</code><a href="pymemri/data/itembase.py#L97" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ItemBase.add_edge</code>(<strong><code>name</code></strong>, <strong><code>val</code></strong>)</p>
+<h4 id="ItemBase.add_edge" class="doc_header"><code>ItemBase.add_edge</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L97" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ItemBase.add_edge</code>(<strong><code>name</code></strong>, <strong><code>val</code></strong>)</p>
 </blockquote>
 <p>Creates an edge of type name and makes it point to val</p>
 
@@ -183,7 +183,7 @@ item.some_edge_type, which calls item.traverse(edgetype), which in turn calls th
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="ItemBase.is_expanded" class="doc_header"><code>ItemBase.is_expanded</code><a href="pymemri/data/itembase.py#L107" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ItemBase.is_expanded</code>()</p>
+<h4 id="ItemBase.is_expanded" class="doc_header"><code>ItemBase.is_expanded</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/itembase.py#L107" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>ItemBase.is_expanded</code>()</p>
 </blockquote>
 <p>returns whether the node is expanded. An expanded node retrieved nodes that are
 <em>directly</em> connected to it
@@ -207,7 +207,7 @@ from the pod, and stored their values via edges in the object.</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>With the <code>Item</code> and <code>Edge</code> classes we can create an item and its surrounding graph. The schema is defined in schema.py, in general we want to use the from_data staticmethod to generate new items, because it ensures that edges are linked from both the source and the target object. Let's make a new item and add it to the pod.</p>
+<p>With the <a href="/pymemri/itembase.html#Item"><code>Item</code></a> and <a href="/pymemri/itembase.html#Edge"><code>Edge</code></a> classes we can create an item and its surrounding graph. The schema is defined in schema.py, in general we want to use the from_data staticmethod to generate new items, because it ensures that edges are linked from both the source and the target object. Let's make a new item and add it to the pod.</p>
 
 </div>
 </div>

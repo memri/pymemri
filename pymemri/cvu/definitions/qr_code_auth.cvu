@@ -1,0 +1,43 @@
+.whatsapp-auth-view {
+    title: "WhatsApp integration"
+    defaultRenderer: singleItem
+    showContextualBottomBar: false
+    showBottomBar: false
+    showDefaultLayout: false
+    
+    [renderer = singleItem] {
+        VStack {
+            padding: 10
+            alignment: center
+            HStack {
+                Text {
+                    text: {{.~account.authUrl}}
+                    font: 16 bold
+                    color: #000
+                }
+                Spacer
+                Button {
+                    onPress: copyToClipboard {
+                        value: {{.~account.authUrl}}
+                    }
+                    
+                    Text { text: "copy" }
+                }
+            }
+            VStack {
+                padding: 15
+                spacing: 5
+                alignment: left
+                Text {
+                    text: "1. Copy this url"
+                }
+                Text {
+                    text: "2. Open this url on another device (e.g. desktop or other phone)"
+                }
+                Text {
+                    text: "3. Scan shown QR code using WhatsApp client on this phone"
+                }
+            }
+        }
+    }
+}
