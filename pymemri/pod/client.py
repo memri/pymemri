@@ -13,6 +13,7 @@ from .db import DB
 from .utils import *
 from ..plugin.schema import *
 import uuid
+from urllib.parse import quote
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
@@ -145,11 +146,15 @@ class PodClient:
         else:
             raise ValueError(f"Unknown image data type {type(img)}")
 
-    def upload_file(self, file):
-        # TODO: currently this only works for numpy images
+    def upload_file(self, data):
+        """
+            Takes bytes as input
+            Uses auth json
+        """
         try:
-            sha = sha256(file).hexdigest()
-            result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
+            sha = sha256(data).hexdigest()
+            auth = quote(json.dumps(self.auth_json))
+            result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=data)
             if result.status_code != 200:
                 print(result, result.content)
                 return False
