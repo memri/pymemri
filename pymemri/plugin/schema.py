@@ -18,9 +18,11 @@ class Account(Item):
         "identifier",
         "secret",
         "code",
+        "handle",
         "refreshToken",
         "errorMessage",
-        "accessToken"
+        "accessToken",
+        "displayName"
     ]
     edges = Item.edges + ['belongsTo', 'contact']
 
@@ -35,6 +37,8 @@ class Account(Item):
         accessToken: str = None,
         belongsTo: list = None,
         contact: list = None,
+        handle: str = None,
+        displayName: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -47,6 +51,8 @@ class Account(Item):
         self.code: Optional[str] = code
         self.errorMessage: Optional[str] = errorMessage
         self.accessToken: Optional[str] = accessToken
+        self.handle: Optional[str] = handle
+        self.displayName: Optional[str] = displayName
         self.contact: list = contact if contact is not None else []
         self.belongsTo: list = belongsTo if belongsTo is not None else []
 

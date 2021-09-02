@@ -6,7 +6,7 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodClient', 'Dog']
 from ..data.basic import *
 from ..data.schema import *
 from ..data.itembase import Edge, ItemBase, Item
-from ..data.photo import Photo
+from ..data.photo import Photo, NUMPY, BYTES
 from ..imports import *
 from hashlib import sha256
 from .db import DB
@@ -53,7 +53,7 @@ class PodClient:
                                                  settings="", authUrl=""))
             assert client.add_to_schema(CVUStoredDefinition(name="", definition="", externalId=""))
             assert client.add_to_schema(Account(service="", identifier="", secret="", code="", accessToken="",
-                                                refreshToken="", errorMessage=""))
+                                                refreshToken="", errorMessage="", handle="", displayName=""))
         except Exception as e:
             raise ValueError("Could not add base schema")
 
@@ -113,10 +113,8 @@ class PodClient:
                 else:
                     raise ValueError(f"Could not add property {k} with type {type(v)}")
 
-
                 payload = {"type": "ItemPropertySchema", "itemType": attributes["type"],
                            "propertyName": k, "valueType": value_type}
-
                 body = {"auth": self.auth_json, "payload": payload }
                 try:
                     result = requests.post(f"{self.base_url}/create_item", json=body)
@@ -139,8 +137,13 @@ class PodClient:
         self.create(file)
         return self._upload_image(photo.data)
 
-    def _upload_image(self, arr):
-        return self.upload_file(arr.tobytes())
+    def _upload_image(self, img):
+        if isinstance(img, np.ndarray):
+            return self.upload_file(img.tobytes())
+        elif isinstance(img, bytes):
+            return self.upload_file(img)
+        else:
+            raise ValueError(f"Unknown image data type {type(img)}")
 
     def upload_file(self, file):
         # TODO: currently this only works for numpy images
@@ -182,13 +185,19 @@ class PodClient:
             if file is None:
                 print(f"Could not load data of {photo} attached file item does not have data in pod")
                 return
-            data = np.frombuffer(file, dtype=np.uint8)
-            c = photo.channels
-            shape = (photo.height,photo.width, c) if c is not None and c > 1 else (photo.height, photo.width)
-            data = data.reshape(shape)
-            if size is not None: data = resize(data, size)
-            photo.data = data
-            return
+            if photo.encoding == NUMPY:
+                data = np.frombuffer(file, dtype=np.uint8)
+                c = photo.channels
+                shape = (photo.height,photo.width, c) if c is not None and c > 1 else (photo.height, photo.width)
+                data = data.reshape(shape)
+                if size is not None: data = resize(data, size)
+                photo.data = data
+                return
+            elif photo.encoding == BYTES:
+                photo.data = file
+                return
+            else:
+                raise ValueError("Unsupported encoding")
         print(f"could not load data of {photo}, no file attached")
 
     def create_if_external_id_not_exists(self, node):
