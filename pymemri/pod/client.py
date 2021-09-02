@@ -111,7 +111,6 @@ class PodClient:
 
                 payload = {"type": "ItemPropertySchema", "itemType": attributes["type"],
                            "propertyName": k, "valueType": value_type}
-
                 body = {"auth": self.auth_json, "payload": payload }
                 try:
                     result = requests.post(f"{self.base_url}/create_item", json=body)
