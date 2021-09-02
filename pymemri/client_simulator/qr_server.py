@@ -11,8 +11,6 @@ app = flask.Flask(__name__, template_folder='template')
 qr_code_dict = None
 
 QR_CODE_KEY = "qr_code"
-DEFAULT_AUTH_PORT=8080
-PLUGIN_DNS_ENVKEY="PLUGIN_DNS"
 
 
 @app.route('/qr')
