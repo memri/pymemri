@@ -53,7 +53,7 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
 
     def present_url_to_user(self, url):
         # request user to visit url
-        self.pluginRun.oAuthUrl = url
+        self.pluginRun.authUrl = url
         self.pluginRun.status = RUN_USER_ACTION_NEEDED
         self.pluginRun.update(self.client)
 
