@@ -54,6 +54,7 @@ class PodClient:
             assert client.add_to_schema(CVUStoredDefinition(name="", definition="", externalId=""))
             assert client.add_to_schema(Account(service="", identifier="", secret="", code="", accessToken="",
                                                 refreshToken="", errorMessage="", handle="", displayName=""))
+            assert client.add_to_schema(Photo(width=1,height=1,channels=1,encoding=""))
         except Exception as e:
             raise ValueError("Could not add base schema")
 
