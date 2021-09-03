@@ -160,7 +160,7 @@ class PodClient:
         # TODO: currently this only works for numpy images
         if self.auth_json.get("type") == "PluginAuth":
             # alternative file upload for plugins, with different authentication
-            self.upload_file_b(self, file)
+            self.upload_file_b(file)
         else:
             try:
                 sha = sha256(file).hexdigest()
