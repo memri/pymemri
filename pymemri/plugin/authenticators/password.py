@@ -102,15 +102,33 @@ def set_account_credentials(pod_client, run_id, username, password):
 
 # Cell
 from ...pod.client import PodClient
+from .credentials import *
 
 @call_parse
-def simulate_enter_credentials(run_id:Param("run id that requires the password", str),
+def simulate_enter_credentials(run_id:Param("run id that requires the password", str)=None,
+                               plugin:Param("plugin name, used for finding credentials", str)=None,
                                pod_full_address:Param("The pod full address", str)=DEFAULT_POD_ADDRESS,
                                database_key:Param("Database key of the pod", str)=None,
                                owner_key:Param("Owner key of the pod", str)=None,):
     if database_key is None: database_key = read_pod_key("database_key")
     if owner_key is None: owner_key = read_pod_key("owner_key")
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
-    username = input(f"Enter username for service used by {run_id}: ")
-    password = getpass.getpass(f"Enter password for service used by {run_id}: ")
+    if plugin is not None:
+        try:
+            username, password = read_username_password(plugin)
+        except Exception as e:
+            print(e)
+            print(f"Could not find credentials for plugin {plugin}, if you don't want to set those locally remove the --plugin arg. Exiting")
+            exit()
+    else:
+        username = input(f"Enter username for service used by {run_id}: ")
+        password = getpass.getpass(f"Enter password for service used by {run_id}: ")
+
+    if run_id is None:
+        try:
+            run_path = PLUGIN_DIR / plugin / "current_run.json"
+            print(f"Reading run id from {run_path}")
+            run_id = read_json(run_path)["id"]
+        except Exception as e:
+            print(f"No run_id specified and could not read current run information:\n{e}")
     set_account_credentials(client, run_id, username, password)
