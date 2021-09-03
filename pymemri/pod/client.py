@@ -20,6 +20,14 @@ POD_VERSION = "v4"
 
 # Cell
 class PodClient:
+    # Mapping from python type to schema type
+    # TODO move to data.schema once schema is refactored
+    TYPE_TO_SCHEMA = {
+        bool: "Bool",
+        str: "Text",
+        int: "Integer",
+        float: "Real"
+    }
 
     def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None,
                  auth_json=None, verbose=False, register_base_schema=True):
@@ -46,22 +54,18 @@ class PodClient:
     def generate_random_key():
         return "".join([str(random.randint(0, 9)) for i in range(64)])
 
-    def register_base_schemas(client):
+    def register_base_schemas(self):
 
         try:
-            assert client.add_to_schema(PluginRun("", "", "", status="", error="", targetItemId="",
-                                                 settings="", authUrl=""))
-            assert client.add_to_schema(CVUStoredDefinition(name="", definition="", externalId=""))
-            assert client.add_to_schema(Account(service="", identifier="", secret="", code="", accessToken="",
-                                                refreshToken="", errorMessage="", handle="", displayName=""))
-            assert client.add_to_schema(Photo(width=1,height=1,channels=1,encoding=""))
+            assert self.add_to_schema(
+                PluginRun("", "", "", status="", error="", targetItemId="", settings="", authUrl=""),
+                CVUStoredDefinition(name="", definition="", externalId=""),
+                Account(service="", identifier="", secret="", code="", accessToken="",
+                        refreshToken="", errorMessage="", handle="", displayName=""),
+                Photo(width=1,height=1,channels=1,encoding="")
+            )
         except Exception as e:
             raise ValueError("Could not add base schema")
-
-    def add_to_db(self, node):
-        existing = self.local_db.get(node.id)
-        if existing is None and node.id is not None:
-            self.local_db.add(node)
 
     def test_connection(self, verbose=True):
         try:
@@ -71,6 +75,14 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             print("Could no connect to backend")
             return False
+
+    def add_to_db(self, node):
+            existing = self.local_db.get(node.id)
+            if existing is None and node.id is not None:
+                self.local_db.add(node)
+
+    def reset_local_db(self):
+        self.local_db = DB()
 
     def get_create_dict(self, node):
         properties = self.get_properties_json(node)
@@ -98,39 +110,36 @@ class PodClient:
             print(e)
             return False
 
-    def add_to_schema(self, node):
-        self.registered_classes[node.__class__.__name__] = type(node)
-        attributes = self.get_properties_json(node)
-        for k, v in attributes.items():
-            if not isinstance(v, list) and k != "type":
-                if isinstance(v, bool):
-                    value_type = "Bool"
-                elif isinstance(v, str):
-                    value_type = "Text"
-                elif isinstance(v, int):
-                    value_type = "Integer"
-                elif isinstance(v, float):
-                    value_type = "Real"
-                else:
+
+
+    def add_to_schema(self, *nodes):
+        # TODO instead of adding nodes: List[Item], add_to_schema should add types: List[type]
+        create_items = []
+
+        for node in nodes:
+            self.registered_classes[node.__class__.__name__] = type(node)
+            attributes = self.get_properties_json(node)
+            for k, v in attributes.items():
+                if type(v) not in self.TYPE_TO_SCHEMA:
                     raise ValueError(f"Could not add property {k} with type {type(v)}")
+                value_type = self.TYPE_TO_SCHEMA[type(v)]
 
-                payload = {"type": "ItemPropertySchema", "itemType": attributes["type"],
-                           "propertyName": k, "valueType": value_type}
-                body = {"auth": self.auth_json, "payload": payload }
-                try:
-                    result = requests.post(f"{self.base_url}/create_item", json=body)
+                create_items.append({
+                    "type": "ItemPropertySchema", "itemType": attributes["type"],
+                    "propertyName": k, "valueType": value_type
+                })
 
-                    if result.status_code != 200:
-                        print(result, result.content)
-                        return False
-                    else:
-                        id = result.json()
-                        node.id = id
-                        self.add_to_db(node)
-
-                except requests.exceptions.RequestException as e:
-                    print(e)
-                    return False
+        body = {"auth": self.auth_json, "payload": {
+            "createItems": create_items
+        }}
+        try:
+            result = requests.post(f"{self.base_url}/bulk", json=body)
+            if result.status_code != 200:
+                print(result, result.content)
+                return False
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return False
         return True
 
     def create_photo_file(self, photo):
