@@ -101,8 +101,10 @@ def set_account_credentials(pod_client, run_id, username, password):
     print(f"Setting username and password for {run_id}'s Account'")
 
 # Cell
+from .credentials import PLUGIN_DIR
 from ...pod.client import PodClient
 from .credentials import *
+from ...data.basic import *
 
 @call_parse
 def simulate_enter_credentials(run_id:Param("run id that requires the password", str)=None,

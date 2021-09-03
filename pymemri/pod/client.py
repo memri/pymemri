@@ -13,6 +13,7 @@ from .db import DB
 from .utils import *
 from ..plugin.schema import *
 import uuid
+import urllib
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
@@ -157,9 +158,27 @@ class PodClient:
 
     def upload_file(self, file):
         # TODO: currently this only works for numpy images
+        if self.auth_json.get("type") == "PluginAuth":
+            # alternative file upload for plugins, with different authentication
+            self.upload_file_b(self, file)
+        else:
+            try:
+                sha = sha256(file).hexdigest()
+                result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
+                if result.status_code != 200:
+                    print(result, result.content)
+                    return False
+                else:
+                    return True
+            except requests.exceptions.RequestException as e:
+                print(e)
+                return False
+
+    def upload_file_b(self, file):
         try:
             sha = sha256(file).hexdigest()
-            result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
+            auth = urllib.urlencode(self.auth_json)
+            result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
             if result.status_code != 200:
                 print(result, result.content)
                 return False
