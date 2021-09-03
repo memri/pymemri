@@ -83,7 +83,7 @@ class PasswordAuthenticator:
 
             sleep(self.SLEEP_INTERVAL)
             self.pluginRun = self.client.get(self.pluginRun.id)
-            print(f"polling for credentials... run.status={self.pluginRun.status}", flush=True)
+            print(f"polling for credentials from account of pluginRun {self.pluginRun.id} ... run.status={self.pluginRun.status}", flush=True)
             if self.pluginRun.status == RUN_USER_ACTION_COMPLETED:
                 account = self.pluginRun.account[0]
                 return account.identifier, account.secret
