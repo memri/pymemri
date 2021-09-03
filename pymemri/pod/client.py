@@ -12,6 +12,7 @@ from hashlib import sha256
 from .db import DB
 from .utils import *
 from ..plugin.schema import *
+from multidimensional_urlencode import urlencode
 import uuid
 import urllib
 
@@ -159,6 +160,7 @@ class PodClient:
     def upload_file(self, file):
         # TODO: currently this only works for numpy images
         if self.auth_json.get("type") == "PluginAuth":
+            print("Using upload_file b")
             # alternative file upload for plugins, with different authentication
             self.upload_file_b(file)
         else:
@@ -177,7 +179,7 @@ class PodClient:
     def upload_file_b(self, file):
         try:
             sha = sha256(file).hexdigest()
-            auth = urllib.parse.urlencode(self.auth_json["data"])
+            auth = urlencode(self.auth_json)
             result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
             if result.status_code != 200:
                 print(result, result.content)
