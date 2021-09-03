@@ -177,7 +177,7 @@ class PodClient:
     def upload_file_b(self, file):
         try:
             sha = sha256(file).hexdigest()
-            auth = urllib.parse.urlencode(self.auth_json)
+            auth = urllib.parse.urlencode(self.auth_json["data"])
             result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
             if result.status_code != 200:
                 print(result, result.content)
@@ -321,7 +321,6 @@ class PodClient:
             print(e)
             return False
 
-
         return self.create_edges([edge])
 
     def get(self, id, expanded=True):
@@ -421,13 +420,11 @@ class PodClient:
             if cls.__name__ != "ItemBase":
                 return cls.__name__
 
-
     def get_update_dict(self, node):
         properties = self.get_properties_json(node, dates=False)
         properties.pop("type", None)
         properties.pop("deleted", None)
         return properties
-
 
     def update_item(self, node):
         data = self.get_update_dict(node)
@@ -457,7 +454,6 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             print(e)
             return None
-
 
     def search(self, fields_data, include_edges: bool = True):
         extra_fields = {'[[edges]]': {}} if include_edges else {}
