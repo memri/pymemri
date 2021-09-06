@@ -136,12 +136,10 @@ class ItemBase():
             api.update_item(self)
 
         if edges:
-            for e in self.get_all_edges():
-                e.update(api)
+            api.create_edges(self.get_all_edges())
 
     def exists(self, api):
         return api.exists(self.id) if self.id else None
-
 
 #     def expand(self, api):
 #         """Expands a node (retrieves all directly connected nodes ands adds to object)."""
