@@ -179,6 +179,7 @@ class PodClient:
         try:
             sha = sha256(file).hexdigest()
             auth = urllib.parse.quote(json.dumps(self.auth_json))
+            print(auth)
             result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
             if result.status_code != 200:
                 print(result, result.content)
