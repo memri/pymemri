@@ -160,7 +160,6 @@ class PodClient:
     def upload_file(self, file):
         # TODO: currently this only works for numpy images
         if self.auth_json.get("type") == "PluginAuth":
-            print("Using upload_file b")
             # alternative file upload for plugins, with different authentication
             return self.upload_file_b(file)
         else:
