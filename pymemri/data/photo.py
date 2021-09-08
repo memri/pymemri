@@ -84,16 +84,16 @@ class Photo(Item):
         plt.show()
 
     @classmethod
-    def from_data(cls,*args, **kwargs):
+    def from_data(cls, *args, **kwargs):
         res = super().from_data(*args, **kwargs)
         if res.file:
             res.file[0]
         return res
 
     @classmethod
-    def from_path(cls, path, size=None):
+    def from_path(cls, path, size=None, *args, **kwargs):
         data = cv2.imread(str(path))
-        res = cls.from_np(data, size)
+        res = cls.from_np(data, size, *args, **kwargs)
         return res
 
     @classmethod
@@ -106,7 +106,7 @@ class Photo(Item):
         return res
 
     @classmethod
-    def from_bytes(cls, _bytes):
+    def from_bytes(cls, _bytes, *args, **kwargs):
         image_stream = io.BytesIO(_bytes)
         pil_image = Image.open(image_stream)
         size = pil_image.size
@@ -118,7 +118,7 @@ class Photo(Item):
         else:
             raise Error
 
-        res = cls(data=_bytes, height=h, width=w, encoding=BYTES, channels=c)
+        res = cls(data=_bytes, height=h, width=w, encoding=BYTES, channels=c, *args, **kwargs)
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
