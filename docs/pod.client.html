@@ -54,7 +54,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L22" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v4'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>, <strong><code>register_base_schema</code></strong>=<em><code>True</code></em>)</p>
+<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L24" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v4'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>, <strong><code>register_base_schema</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 
 </div>
@@ -242,7 +242,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;970b21ed7c2370ddfcec1dc9c05ff23e&#39;</pre>
+<pre>&#39;3173989e1917b4f6fde0e02b2300322f&#39;</pre>
 </div>
 
 </div>
@@ -271,7 +271,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L497" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>age</code></strong>=<em><code>None</code></em>, <strong><code>bites</code></strong>=<em><code>False</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L527" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>=<em><code>None</code></em>, <strong><code>age</code></strong>=<em><code>None</code></em>, <strong><code>bites</code></strong>=<em><code>False</code></em>, <strong><code>weight</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
 <p>Item is the baseclass for all of the data classes.</p>
 
@@ -319,7 +319,8 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dog_from_db</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dog2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">reset_local_db</span><span class="p">()</span>
+<span class="n">dog_from_db</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dog2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -417,7 +418,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;item&#39;: Person (#4ea6019e70593c6a2038b3b6045fc2a1), &#39;name&#39;: &#39;sender&#39;}]</pre>
+<pre>[{&#39;item&#39;: Person (#e2f05d9528cfe6ee9c72f3a3a5fe291d), &#39;name&#39;: &#39;sender&#39;}]</pre>
 </div>
 
 </div>
@@ -834,10 +835,26 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">create_photo</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -926,7 +943,31 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">create_photo</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We create a new client to prevent caching</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">new_client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">(</span><span class="n">database_key</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">database_key</span><span class="p">,</span> <span class="n">owner_key</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">owner_key</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -943,7 +984,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_photo</span><span class="p">(</span><span class="n">photo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">225</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">new_client</span><span class="o">.</span><span class="n">get_photo</span><span class="p">(</span><span class="n">photo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">225</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -976,6 +1017,39 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="output_text output_subarea output_execute_result">
 <pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span><span class="o">.</span><span class="n">file</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[File (#14a26270fdb987f6cecf29443575a409)]</pre>
 </div>
 
 </div>

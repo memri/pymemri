@@ -92,11 +92,8 @@ class PodClient:
         return properties
 
     def create(self, node):
-        if isinstance(node, Photo) and not self.create_photo_file(node): return False
-
         create_dict = self.get_create_dict(node)
         try:
-
             body = {"auth": self.auth_json, "payload": create_dict}
 
             result = requests.post(f"{self.base_url}/create_item", json=body)
@@ -112,7 +109,13 @@ class PodClient:
             print(e)
             return False
 
-
+    def create_photo(self, photo):
+        # create the file
+        file_succes = self.create_photo_file(photo)
+        if file_succes == False:
+            raise ValueError("Could not create file")
+        # create the photo
+        return self.bulk_action(create_items=[photo], create_edges=photo.get_edges("file"))
 
     def add_to_schema(self, *nodes):
         # TODO instead of adding nodes: List[Item], add_to_schema should add types: List[type]
