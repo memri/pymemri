@@ -21,6 +21,10 @@ import getpass
 from ...pod.client import DEFAULT_POD_ADDRESS
 from fastscript import Param
 from ...pod.utils import *
+from ..pluginbase import PluginBase
+from ..schema import PluginRun, Account
+from ...pod.client import PodClient
+import threading
 
 # Cell
 # hide
@@ -102,10 +106,10 @@ def set_account_credentials(pod_client, run_id, username, password):
 
 # Cell
 from .credentials import PLUGIN_DIR
-from ...pod.client import PodClient
+from ...pod.client import PodClient, DEFAULT_POD_ADDRESS
 from .credentials import *
 from ...data.basic import *
-from fastscript import call_parse
+from fastscript import call_parse, Param
 
 @call_parse
 def simulate_enter_credentials(run_id:Param("run id that requires the password", str)=None,
