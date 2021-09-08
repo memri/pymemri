@@ -280,3 +280,19 @@ class Item(ItemBase):
         for e in res.get_all_edges():
             e.source = res
         return res
+
+    def _get_schema_type(self):
+        for cls in self.__class__.mro():
+            if cls.__name__ != "ItemBase":
+                return cls.__name__
+
+    def to_json(self, dates=True):
+        DATE_KEYS = ['dateCreated', 'dateModified', 'dateServerModified']
+        res = dict()
+        private = getattr(self, "private", [])
+        for k, v in self.__dict__.items():
+            if k[:1] != '_' and k != "private" and k not in private and not (isinstance(v, list)) \
+                            and v is not None and (not (dates == False and k in DATE_KEYS)):
+                res[k] = v
+        res["type"] = self._get_schema_type()
+        return res

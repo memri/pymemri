@@ -87,7 +87,7 @@ class PodClient:
         self.local_db = DB()
 
     def get_create_dict(self, node):
-        properties = self.get_properties_json(node)
+        properties = node.to_json()
         properties = {k:v for k, v in properties.items() if v != []}
         return properties
 
@@ -123,7 +123,7 @@ class PodClient:
 
         for node in nodes:
             self.registered_classes[node.__class__.__name__] = type(node)
-            attributes = self.get_properties_json(node)
+            attributes = node.to_json()
             for k, v in attributes.items():
                 if type(v) not in self.TYPE_TO_SCHEMA:
                     raise ValueError(f"Could not add property {k} with type {type(v)}")
@@ -407,25 +407,8 @@ class PodClient:
             print(e)
             return None
 
-    def get_properties_json(self, node, dates=True):
-        DATE_KEYS = ['dateCreated', 'dateModified', 'dateServerModified']
-        res = dict()
-        private = getattr(node, "private", [])
-        for k, v in node.__dict__.items():
-            if k[:1] != '_' and k != "private" and k not in private and not (isinstance(v, list)) \
-                            and v is not None and (not (dates == False and k in DATE_KEYS)):
-                res[k] = v
-        res["type"] = self._get_schema_type(node)
-        return res
-
-    @staticmethod
-    def _get_schema_type(node):
-        for cls in node.__class__.mro():
-            if cls.__name__ != "ItemBase":
-                return cls.__name__
-
     def get_update_dict(self, node):
-        properties = self.get_properties_json(node, dates=False)
+        properties = node.to_json(dates=False)
         properties.pop("type", None)
         properties.pop("deleted", None)
         return properties
