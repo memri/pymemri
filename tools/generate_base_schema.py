@@ -8,7 +8,7 @@ import black
 import shutil
 
 SCHEMA_URL = "https://gitlab.memri.io/memri/schema/-/archive/dev/schema-dev.zip"
-DOWNLOAD_PATH = Path(__file__).parent / "tmp"
+DOWNLOAD_PATH = Path(__file__).parent
 BASE_DIR = DOWNLOAD_PATH / "schema-dev" / "TypeHierarchy" / "Item"
 OUTPUT_FILE = Path(__file__).parent.parent / "pymemri" / "data" / "central_schema.py"
 EXCLUDED_SCHEMAS = {"Item", "Type"}
@@ -85,9 +85,9 @@ def generate_from_json(path: Path, schema_template):
 
 
 if __name__=="__main__":
-    # r = requests.get(SCHEMA_URL)
-    # zip = zipfile.ZipFile(io.BytesIO(r.content))
-    # zip.extractall(DOWNLOAD_PATH)
+    r = requests.get(SCHEMA_URL)
+    zip = zipfile.ZipFile(io.BytesIO(r.content))
+    zip.extractall(DOWNLOAD_PATH)
 
     schema_template = Template(TEMPLATE, lstrip_blocks=True, trim_blocks=True)
 
@@ -104,4 +104,4 @@ if __name__=="__main__":
     with open(OUTPUT_FILE, 'w') as f:
         f.write(file_content)
 
-    # shutil.rmtree(DOWNLOAD_PATH)
+    shutil.rmtree(DOWNLOAD_PATH / "schema-dev")
