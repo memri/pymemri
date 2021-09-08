@@ -57,13 +57,13 @@ def get_height_width_channels(img):
     else: return img.shape
 
 # Cell
-# An image file.
 class Photo(Item):
 
     properties = Item.properties + ["width", "height", "channels", "encoding"]
     edges = Item.edges + ['file']
 
-    def __init__(self, data=None, includes=None, thumbnail=None, height=None, width=None, channels=None, encoding=None, file=None, *args, **kwargs):
+    def __init__(self, data=None, includes=None, thumbnail=None, height=None, width=None, channels=None, encoding=None, file=None,
+                _file_created=False,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.private = ["data", "embedding", "path"]
         self.height = height
@@ -72,6 +72,7 @@ class Photo(Item):
         self.encoding = encoding
         self.file = file if file is not None else []
         self.data=data
+        self._file_created=_file_created
 
     def show(self):
         fig,ax = plt.subplots(1)

@@ -105,6 +105,7 @@ from .credentials import PLUGIN_DIR
 from ...pod.client import PodClient
 from .credentials import *
 from ...data.basic import *
+from fastscript import call_parse
 
 @call_parse
 def simulate_enter_credentials(run_id:Param("run id that requires the password", str)=None,

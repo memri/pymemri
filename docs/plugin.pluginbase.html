@@ -79,7 +79,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ExamplePlugin" class="doc_header"><code>class</code> <code>ExamplePlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L74" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ExamplePlugin</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.pluginbase.html#PluginBase"><code>PluginBase</code></a></p>
+<h2 id="ExamplePlugin" class="doc_header"><code>class</code> <code>ExamplePlugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L79" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ExamplePlugin</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/plugin.pluginbase.html#PluginBase"><code>PluginBase</code></a></p>
 </blockquote>
 
 </div>
@@ -149,7 +149,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L175" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7f822fba6890&gt;</code>=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7f822fba6fd0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7f822fbac0d0&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7f822fbac250&gt;</code>=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:<code>Param object at 0x7f822fbac150&gt;</code>=<em><code>False</code></em>, <strong><code>config_file</code></strong>:<code>Param object at 0x7f822fbac210&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L194" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:"Run id of the plugin to be executed"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:"Read the args from the environment"=<em><code>False</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -199,7 +199,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
 reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-owner_key=2569016072279448212827783175849288223263838743822271288233281191
+owner_key=6973887593419866958592645577399040666193244966403234969395379182
 
 running
 </pre>
@@ -250,7 +250,7 @@ running
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L210" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
+<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L226" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>settings_file</code></strong>:"Plugin settings (json)"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"config file for the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -310,9 +310,9 @@ running
 <pre>reading database_key from /Users/koen/.pymemri/pod_keys/keys.json
 reading owner_key from /Users/koen/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-owner_key=2569016072279448212827783175849288223263838743822271288233281191
+owner_key=6973887593419866958592645577399040666193244966403234969395379182
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 6dee1eCdbAc3b45De261B885CB06f8AE.
+calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id ab07B7dC297f9C1Fe7624bcFB28f73C7.
 *Check the pod log/console for debug output.*
 </pre>
 </div>
