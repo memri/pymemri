@@ -505,6 +505,22 @@ class PodClient:
         if ALL_EDGES in properties: del properties[ALL_EDGES]
         return properties
 
+    def send_email(self, to, subject="", body=""):
+        body = {"payload": {"to": to,
+                            "subject": subject,
+                            "body": body
+                           },
+                "auth": self.auth_json}
+        try:
+            result = requests.post(f"{self.base_url}/send_email", json=body)
+            if result.status_code == 200:
+                print(f"succesfully sent email to {to}")
+            else:
+                print(f"could not send email {result.content}")
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
+
 # Cell
 class Dog(Item):
     properties = Item.properties + ["name", "age", "bites", "weight"]
