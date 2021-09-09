@@ -38,7 +38,23 @@ def run_qr_flow(_qr_code_data, client, plugin_run):
 
     print(f"GO TO {full_user_auth_url} and scan the code")
 
+    # Gather email
+    # show cvu that gather email, and wait untill status = "ready"
+    # Cant do this because 1) authEmail is not defined in front-end 2) Don't have CVU's yet
+
+    # send email
+    try:
+        to = plugin_run.account[0].authEmail
+        if to is None:
+            raise ValueError("no auth email")
+        client.send_email(to, subject="The link to your qr code", body=full_user_auth_url)
+        email_sent = True
+    except Exception as e:
+        email_sent = False
+        print(f"failed to send email:\n{e}")  
+    
     # set 
+    # depending on whether email was a success, either show qr link, or message that link was sent to email
     cvu = get_default_cvu("qr_code_auth.cvu")
     client.create(cvu)
     plugin_run.add_edge("view", cvu)
@@ -46,7 +62,7 @@ def run_qr_flow(_qr_code_data, client, plugin_run):
     plugin_run.status = RUN_USER_ACTION_NEEDED
     plugin_run.authUrl = full_user_auth_url
     client.update_item(plugin_run)
-
+    
     return process, process_dict
 
 if __name__ == "__main__":
