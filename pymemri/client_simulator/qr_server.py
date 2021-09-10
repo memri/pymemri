@@ -63,6 +63,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     try:
         sleep(1)
         plugin_run = client.get(plugin_run.id)
+        print(plugin_run.account[0].to_json())
         to = plugin_run.account[0].authEmail
         if to is None:
             raise ValueError("no auth email")
