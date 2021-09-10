@@ -63,7 +63,7 @@ class PodClient:
                 PluginRun("", "", "", status="", error="", targetItemId="", settings="", authUrl=""),
                 CVUStoredDefinition(name="", definition="", externalId=""),
                 Account(service="", identifier="", secret="", code="", accessToken="",
-                        refreshToken="", errorMessage="", handle="", displayName=""),
+                        refreshToken="", errorMessage="", handle="", displayName="", authEmail=""),
                 Photo(width=1,height=1,channels=1,encoding="")
             )
         except Exception as e:

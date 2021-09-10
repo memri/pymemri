@@ -43,10 +43,10 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
 
     # Gather email
     plugin_run.status = RUN_USER_ACTION_NEEDED
-    pwd_cvu = get_default_cvu("request_password.cvu")
+    email_cvu = get_default_cvu("request_email.cvu")
     client.bulk_action(
-        create_items=[pwd_cvu], 
-        create_edges=[Edge(plugin_run, pwd_cvu, "view")]
+        create_items=[email_cvu], 
+        create_edges=[Edge(plugin_run, email_cvu, "view")]
     )
     client.update_item(plugin_run)
 
@@ -66,9 +66,10 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
         email_sent = False
         print(f"failed to send email:\n{e}")  
     
-    # set 
     # depending on whether email was a success, either show qr link, or message that link was sent to email
     if not email_sent:
+        # NOTE Theres currently no documented way to delete edges, so client will have to pick the last added cvu.
+        client.bulk_action(delete_items=[email_cvu])
         cvu = get_default_cvu("qr_code_auth.cvu")
         client.create(cvu)
         plugin_run.add_edge("view", cvu)
