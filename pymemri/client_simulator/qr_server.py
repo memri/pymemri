@@ -61,9 +61,8 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     print("Sending email...")
     print("RUNID BEFORE", plugin_run.id)
     try:
-        account: Account = plugin_run.account[0]
-        print(account.to_json())
-        client.get(plugin_run.account[0].id)
+        sleep(1)
+        plugin_run = client.get(plugin_run.id)
         to = plugin_run.account[0].authEmail
         if to is None:
             raise ValueError("no auth email")
