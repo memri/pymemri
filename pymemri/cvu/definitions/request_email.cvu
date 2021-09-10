@@ -9,16 +9,31 @@
     [renderer = generalEditor] {
         layout: [
             { section: info}
-            { section: e-mail, fields: authEmail }
+            { section: your email address, fields: authEmail }
             { section: send }
         ]
 
         info {
             showTitle: false
-            HStack {
+            VStack {
+                spacing: 8
+                Text {
+                    text: "Connect WhatsApp"
+                    font: 20 semibold
+                    color: #000
+                    padding: 5 8 5 8
+                }
+
+                Text {
+                    text: "To complete the Whatsapp authorisation you will need a second device (computer, tablet or other) to scan the QR code with your phone."
+                    font: 16
+                    color: #000
+                    padding: 5 8 5 8
+                }
+
                 Text {
                     text: "Please enter your email, we will send you a link to authenticate the plugin"
-                    font: 20 semibold
+                    font: 16 bold
                     color: #000
                     padding: 5 8 5 8
                 }
@@ -27,34 +42,37 @@
 
         send {
             showTitle: false
-            HStack {
+            VStack {
                 alignment: center
+
                 Spacer
-                Button {
-                    padding: 20 0 20 0
-                    onPress: [
-                        setProperty {
-                            subject: {{.~account}}
-                            property: "status"
-                            value: "ready"
-                        }
-                        sync
-                        back
-                    ]
+                HStack {
+                    alignment: center
+                    Button {
+                        padding: 20 0 20 0
+                        onPress: [
+                            setProperty {
+                                subject: {{.~account}}
+                                property: "status"
+                                value: "ready"
+                            }
+                            sync
+                            back
+                        ]
 
-                    VStack {
-                        background: #218721
-                        cornerRadius: 5
+                        VStack {
+                            background: #000
+                            cornerRadius: 5
 
-                        Text {
-                            text: "Send"
-                            font: 16 semibold
-                            color: #fff
-                            padding: 5 8 5 8
+                            Text {
+                                text: "Send authorisation email"
+                                font: button_label
+                                color: #fff
+                                padding: 20 20 20 25
+                            }
                         }
                     }
                 }
-                Spacer
             }
         }
     }
