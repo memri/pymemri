@@ -42,6 +42,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     print(f"GO TO {full_user_auth_url} and scan the code")
 
     # Gather email
+    print("RUNID BEFORE", plugin_run.id)
     plugin_run.status = RUN_USER_ACTION_NEEDED
     email_cvu = get_default_cvu("request_email.cvu")
     client.bulk_action(
@@ -51,11 +52,14 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     client.update_item(plugin_run)
 
     # Poll until status == "ready"
+    print("Polling for email...")
     while plugin_run.status != RUN_USER_ACTION_COMPLETED:
         sleep(1)
         plugin_run = client.get(plugin_run.id)
 
     # send email
+    print("Sending email...")
+    print("RUNID BEFORE", plugin_run.id)
     try:
         to = plugin_run.account[0].authEmail
         if to is None:
