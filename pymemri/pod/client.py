@@ -156,6 +156,7 @@ class PodClient:
                 property_dicts = self._property_dicts_from_instance(item)
                 item = type(item)
             create_items.extend(property_dicts)
+            self.registered_classes[item.__name__] = item
 
         body = {
             "auth": self.auth_json, "payload": {"createItems": create_items}
