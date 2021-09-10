@@ -58,16 +58,6 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
 
     # send email
     print("Sending email...")
-    print(plugin_run.account[0].to_json())
-    try:
-        to = plugin_run.account[0].authEmail 
-    except Exception as e:
-        print(f"Except: {e}")
-        account = plugin_run.account[0]
-        account = client.get(account.id, expanded=False)
-        to = account.authEmail
-        print(to)
-
     try:
         to = plugin_run.account[0].authEmail
         if to is None:
