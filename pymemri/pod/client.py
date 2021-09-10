@@ -13,6 +13,8 @@ from .db import DB
 from .utils import *
 from ..plugin.schema import *
 from multidimensional_urlencode import urlencode
+
+from typing import List, Union
 import uuid
 import urllib
 
@@ -117,26 +119,48 @@ class PodClient:
         # create the photo
         return self.bulk_action(create_items=[photo], create_edges=photo.get_edges("file"))
 
-    def add_to_schema(self, *nodes):
-        # TODO instead of adding nodes: List[Item], add_to_schema should add types: List[type]
+
+    def _property_dicts_from_instance(self, node):
+        create_items = []
+        attributes = self.get_properties_json(node)
+        for k, v in attributes.items():
+            if type(v) not in self.TYPE_TO_SCHEMA:
+                raise ValueError(f"Could not add property {k} with type {type(v)}")
+            value_type = self.TYPE_TO_SCHEMA[type(v)]
+
+            create_items.append({
+                "type": "ItemPropertySchema", "itemType": attributes["type"],
+                "propertyName": k, "valueType": value_type
+            })
+        return create_items
+
+
+    def _property_dicts_from_type(self, item):
+        create_items = []
+        for property, p_type in item.get_property_types().items():
+            p_type = self.TYPE_TO_SCHEMA[p_type]
+            create_items.append({
+                "type": "ItemPropertySchema", "itemType": item.__name__,
+                "propertyName": property, "valueType": p_type
+            })
+        return create_items
+
+
+    def add_to_schema(self, *items: List[Union[object, type]]):
         create_items = []
 
-        for node in nodes:
-            self.registered_classes[node.__class__.__name__] = type(node)
-            attributes = self.get_properties_json(node)
-            for k, v in attributes.items():
-                if type(v) not in self.TYPE_TO_SCHEMA:
-                    raise ValueError(f"Could not add property {k} with type {type(v)}")
-                value_type = self.TYPE_TO_SCHEMA[type(v)]
+        for item in items:
+            if isinstance(item, type):
+                property_dicts = self._property_dicts_from_type(item)
+            else:
+                property_dicts = self._property_dicts_from_instance(item)
+                item = type(item)
+            create_items.extend(property_dicts)
 
-                create_items.append({
-                    "type": "ItemPropertySchema", "itemType": attributes["type"],
-                    "propertyName": k, "valueType": value_type
-                })
+        body = {
+            "auth": self.auth_json, "payload": {"createItems": create_items}
+        }
 
-        body = {"auth": self.auth_json, "payload": {
-            "createItems": create_items
-        }}
         try:
             result = requests.post(f"{self.base_url}/bulk", json=body)
             if result.status_code != 200:
