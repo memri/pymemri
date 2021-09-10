@@ -9,7 +9,7 @@
     [renderer = generalEditor] {
         layout: [
             { section: info}
-            { section: your email address, fields: authEmail }
+            { section: yourEmailAddress, fields: authEmail }
             { section: send }
         ]
 
@@ -45,7 +45,6 @@
             VStack {
                 alignment: center
 
-                Spacer
                 HStack {
                     alignment: center
                     Button {
