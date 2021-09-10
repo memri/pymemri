@@ -1,5 +1,5 @@
 from pymemri.data.itembase import Edge
-from pymemri.plugin.schema import PluginRun
+from pymemri.plugin.schema import Account, PluginRun
 from pymemri.pod.client import PodClient
 import flask
 import multiprocessing
@@ -57,6 +57,9 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
 
     # send email
     try:
+        account: Account = plugin_run.account[0]
+        print(account.to_json())
+        client.get(plugin_run.account[0].id)
         to = plugin_run.account[0].authEmail
         if to is None:
             raise ValueError("no auth email")
