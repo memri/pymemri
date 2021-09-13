@@ -11,7 +11,6 @@ if [ ! -d $OUT_DIR ];then
 fi
 
 mkdir -p /tmp/pymemri && cd /tmp/pymemri
-cd /tmp/pymemri
 
 {
     cd schema
