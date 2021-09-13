@@ -21,6 +21,6 @@ cd /tmp/pymemri
     cd schema
 } &> /dev/null
 
-python tools/convert_pymemri.py -o $OUT_DIR/$FILENAME
+python tools/export_pymemri.py -o $OUT_DIR/$FILENAME
 
 rm -rf /tmp/pymemri/schema

@@ -6,35 +6,174 @@ from .itembase import Item
 from typing import Optional
 
 
-class File(Item):
-    description = """Any file that can be stored on disk."""
-    properties = Item.properties + ["filename", "keystr", "nonce", "sha256"]
-    edges = Item.edges + []
+class Account(Item):
+    description = """An account or subscription, for instance for some online service, or a bank account or wallet."""
+    properties = Item.properties + [
+        "avatarUrl",
+        "authEmail",
+        "code",
+        "displayName",
+        "externalId",
+        "handle",
+        "identifier",
+        "isMe",
+        "itemType",
+        "secret",
+        "service",
+    ]
+    edges = Item.edges + [
+        "changelog",
+        "cryptoTransaction",
+        "location",
+        "network",
+        "ownCurrency",
+        "owner",
+        "trust",
+    ]
 
     def __init__(
         self,
-        filename: str = None,
-        keystr: str = None,
-        nonce: str = None,
-        sha256: str = None,
+        avatarUrl: str = None,
+        authEmail: str = None,
+        code: str = None,
+        displayName: str = None,
+        externalId: str = None,
+        handle: str = None,
+        identifier: str = None,
+        isMe: bool = None,
+        itemType: str = None,
+        secret: str = None,
+        service: str = None,
+        changelog: list = None,
+        cryptoTransaction: list = None,
+        location: list = None,
+        network: list = None,
+        ownCurrency: list = None,
+        owner: list = None,
+        trust: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
-        self.filename: Optional[str] = filename
-        self.keystr: Optional[str] = keystr
-        self.nonce: Optional[str] = nonce
-        self.sha256: Optional[str] = sha256
+        self.avatarUrl: Optional[str] = avatarUrl
+        self.authEmail: Optional[str] = authEmail
+        self.code: Optional[str] = code
+        self.displayName: Optional[str] = displayName
+        self.externalId: Optional[str] = externalId
+        self.handle: Optional[str] = handle
+        self.identifier: Optional[str] = identifier
+        self.isMe: Optional[bool] = isMe
+        self.itemType: Optional[str] = itemType
+        self.secret: Optional[str] = secret
+        self.service: Optional[str] = service
+
+        # Edges
+        self.changelog: list = changelog if changelog is not None else []
+        self.cryptoTransaction: list = (
+            cryptoTransaction if cryptoTransaction is not None else []
+        )
+        self.location: list = location if location is not None else []
+        self.network: list = network if network is not None else []
+        self.ownCurrency: list = ownCurrency if ownCurrency is not None else []
+        self.owner: list = owner if owner is not None else []
+        self.trust: list = trust if trust is not None else []
 
 
-class VoteAction(Item):
-    description = """The act casting a vote."""
-    properties = Item.properties + []
+class AuditItem(Item):
+    description = """TBD"""
+    properties = Item.properties + ["actionname", "content"]
     edges = Item.edges + []
 
-    def __init__(self, **kwargs):
+    def __init__(self, actionname: str = None, content: str = None, **kwargs):
         super().__init__(**kwargs)
+
+        # Properties
+        self.actionname: Optional[str] = actionname
+        self.content: Optional[str] = content
+
+
+class CVUStoredDefinition(Item):
+    description = """TBD"""
+    properties = Item.properties + [
+        "definition",
+        "domain",
+        "itemType",
+        "name",
+        "querystr",
+        "selector",
+    ]
+    edges = Item.edges + []
+
+    def __init__(
+        self,
+        definition: str = None,
+        domain: str = None,
+        itemType: str = None,
+        name: str = None,
+        querystr: str = None,
+        selector: str = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.definition: Optional[str] = definition
+        self.domain: Optional[str] = domain
+        self.itemType: Optional[str] = itemType
+        self.name: Optional[str] = name
+        self.querystr: Optional[str] = querystr
+        self.selector: Optional[str] = selector
+
+
+class CreativeWork(Item):
+    description = """The most generic kind of creative work, including books, movies, photographs, software programs, etc."""
+    properties = Item.properties + [
+        "abstract",
+        "content",
+        "itemType",
+        "keyword",
+        "textContent",
+        "title",
+        "transcript",
+    ]
+    edges = Item.edges + ["contentLocation", "file", "locationCreated", "writtenBy"]
+
+    def __init__(
+        self,
+        abstract: str = None,
+        content: str = None,
+        itemType: str = None,
+        keyword: str = None,
+        textContent: str = None,
+        title: str = None,
+        transcript: str = None,
+        contentLocation: list = None,
+        file: list = None,
+        locationCreated: list = None,
+        writtenBy: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.abstract: Optional[str] = abstract
+        self.content: Optional[str] = content
+        self.itemType: Optional[str] = itemType
+        self.keyword: Optional[str] = keyword
+        self.textContent: Optional[str] = textContent
+        self.title: Optional[str] = title
+        self.transcript: Optional[str] = transcript
+
+        # Edges
+        self.contentLocation: list = (
+            contentLocation if contentLocation is not None else []
+        )
+        self.file: list = file if file is not None else []
+        self.locationCreated: list = (
+            locationCreated if locationCreated is not None else []
+        )
+        self.writtenBy: list = writtenBy if writtenBy is not None else []
 
 
 class CryptoCurrency(Item):
@@ -65,19 +204,98 @@ class CryptoCurrency(Item):
         self.picture: list = picture if picture is not None else []
 
 
-class Network(Item):
-    description = """A group or system of interconnected people or things, for instance a social network."""
-    properties = Item.properties + ["name"]
-    edges = Item.edges + ["website"]
+class CryptoKey(Item):
+    description = """A key used in an cryptography protocol."""
+    properties = Item.properties + [
+        "active",
+        "itemType",
+        "keystr",
+        "name",
+        "role",
+        "starred",
+    ]
+    edges = Item.edges + ["owner"]
 
-    def __init__(self, name: str = None, website: list = None, **kwargs):
+    def __init__(
+        self,
+        active: bool = None,
+        itemType: str = None,
+        keystr: str = None,
+        name: str = None,
+        role: str = None,
+        starred: bool = None,
+        owner: list = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
 
         # Properties
+        self.active: Optional[bool] = active
+        self.itemType: Optional[str] = itemType
+        self.keystr: Optional[str] = keystr
         self.name: Optional[str] = name
+        self.role: Optional[str] = role
+        self.starred: Optional[bool] = starred
 
         # Edges
-        self.website: list = website if website is not None else []
+        self.owner: list = owner if owner is not None else []
+
+
+class CryptoTransaction(Item):
+    description = """"""
+    properties = Item.properties + ["outward", "quantity"]
+    edges = Item.edges + ["cryptoCurrency", "relateToOther", "relateToOwner"]
+
+    def __init__(
+        self,
+        outward: bool = None,
+        quantity: float = None,
+        cryptoCurrency: list = None,
+        relateToOther: list = None,
+        relateToOwner: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.outward: Optional[bool] = outward
+        self.quantity: Optional[float] = quantity
+
+        # Edges
+        self.cryptoCurrency: list = cryptoCurrency if cryptoCurrency is not None else []
+        self.relateToOther: list = relateToOther if relateToOther is not None else []
+        self.relateToOwner: list = relateToOwner if relateToOwner is not None else []
+
+
+class CurrencySetting(Item):
+    description = """"""
+    properties = Item.properties + [
+        "deviceAddress",
+        "profileAddress",
+        "seedPhrase",
+        "tokenAddress",
+    ]
+    edges = Item.edges + ["wallet"]
+
+    def __init__(
+        self,
+        deviceAddress: str = None,
+        profileAddress: str = None,
+        seedPhrase: str = None,
+        tokenAddress: str = None,
+        wallet: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.deviceAddress: Optional[str] = deviceAddress
+        self.profileAddress: Optional[str] = profileAddress
+        self.seedPhrase: Optional[str] = seedPhrase
+        self.tokenAddress: Optional[str] = tokenAddress
+
+        # Edges
+        self.wallet: list = wallet if wallet is not None else []
 
 
 class Diet(Item):
@@ -136,104 +354,79 @@ class Diet(Item):
         self.writtenBy: list = writtenBy if writtenBy is not None else []
 
 
-class Note(Item):
-    description = """A file containing a note."""
-    properties = Item.properties + [
-        "abstract",
-        "content",
-        "itemType",
-        "keyword",
-        "starred",
-        "textContent",
-        "title",
-        "transcript",
-    ]
-    edges = Item.edges + [
-        "contentLocation",
-        "file",
-        "label",
-        "locationCreated",
-        "writtenBy",
-    ]
+class File(Item):
+    description = """Any file that can be stored on disk."""
+    properties = Item.properties + ["filename", "keystr", "nonce", "sha256"]
+    edges = Item.edges + []
 
     def __init__(
         self,
-        abstract: str = None,
-        content: str = None,
+        filename: str = None,
+        keystr: str = None,
+        nonce: str = None,
+        sha256: str = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.filename: Optional[str] = filename
+        self.keystr: Optional[str] = keystr
+        self.nonce: Optional[str] = nonce
+        self.sha256: Optional[str] = sha256
+
+
+class Integrator(Item):
+    description = """An integrator operates on your database enhances your personal data by inferring facts over existing data and adding those to the database."""
+    properties = Item.properties + ["name", "repository"]
+    edges = Item.edges + []
+
+    def __init__(self, name: str = None, repository: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.repository: Optional[str] = repository
+
+
+class ItemEdgeSchema(Item):
+    description = """"""
+    properties = Item.properties + ["edgeName", "sourceType", "targetType"]
+    edges = Item.edges + []
+
+    def __init__(
+        self,
+        edgeName: str = None,
+        sourceType: str = None,
+        targetType: str = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.edgeName: Optional[str] = edgeName
+        self.sourceType: Optional[str] = sourceType
+        self.targetType: Optional[str] = targetType
+
+
+class ItemPropertySchema(Item):
+    description = """"""
+    properties = Item.properties + ["itemType", "propertyName", "valueType"]
+    edges = Item.edges + []
+
+    def __init__(
+        self,
         itemType: str = None,
-        keyword: str = None,
-        starred: bool = None,
-        textContent: str = None,
-        title: str = None,
-        transcript: str = None,
-        contentLocation: list = None,
-        file: list = None,
-        label: list = None,
-        locationCreated: list = None,
-        writtenBy: list = None,
+        propertyName: str = None,
+        valueType: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
-        self.abstract: Optional[str] = abstract
-        self.content: Optional[str] = content
         self.itemType: Optional[str] = itemType
-        self.keyword: Optional[str] = keyword
-        self.starred: Optional[bool] = starred
-        self.textContent: Optional[str] = textContent
-        self.title: Optional[str] = title
-        self.transcript: Optional[str] = transcript
-
-        # Edges
-        self.contentLocation: list = (
-            contentLocation if contentLocation is not None else []
-        )
-        self.file: list = file if file is not None else []
-        self.label: list = label if label is not None else []
-        self.locationCreated: list = (
-            locationCreated if locationCreated is not None else []
-        )
-        self.writtenBy: list = writtenBy if writtenBy is not None else []
-
-
-class PluginRun(Item):
-    description = """Information about a Plugin container being run by the Pod."""
-    properties = Item.properties + [
-        "containerImage",
-        "oAuthUrl",
-        "pluginModule",
-        "pluginName",
-        "status",
-        "targetItemId",
-    ]
-    edges = Item.edges + ["plugin", "view"]
-
-    def __init__(
-        self,
-        containerImage: str = None,
-        oAuthUrl: str = None,
-        pluginModule: str = None,
-        pluginName: str = None,
-        status: str = None,
-        targetItemId: str = None,
-        plugin: list = None,
-        view: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.containerImage: Optional[str] = containerImage
-        self.oAuthUrl: Optional[str] = oAuthUrl
-        self.pluginModule: Optional[str] = pluginModule
-        self.pluginName: Optional[str] = pluginName
-        self.status: Optional[str] = status
-        self.targetItemId: Optional[str] = targetItemId
-
-        # Edges
-        self.plugin: list = plugin if plugin is not None else []
-        self.view: list = view if view is not None else []
+        self.propertyName: Optional[str] = propertyName
+        self.valueType: Optional[str] = valueType
 
 
 class Label(Item):
@@ -271,154 +464,63 @@ class LabelAnnotation(Item):
         self.annotatedItem: list = annotatedItem if annotatedItem is not None else []
 
 
-class Receipt(Item):
-    description = """A bill that describes money owed for some Transaction."""
-    properties = Item.properties + ["category", "store", "totalCost"]
-    edges = Item.edges + ["file", "photo"]
-
-    def __init__(
-        self,
-        category: str = None,
-        store: str = None,
-        totalCost: float = None,
-        file: list = None,
-        photo: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.category: Optional[str] = category
-        self.store: Optional[str] = store
-        self.totalCost: Optional[float] = totalCost
-
-        # Edges
-        self.file: list = file if file is not None else []
-        self.photo: list = photo if photo is not None else []
-
-
-class CVUStoredDefinition(Item):
-    description = """TBD"""
-    properties = Item.properties + [
-        "definition",
-        "domain",
-        "itemType",
-        "name",
-        "querystr",
-        "selector",
-    ]
+class Location(Item):
+    description = """The location of something."""
+    properties = Item.properties + ["latitude", "longitude"]
     edges = Item.edges + []
 
-    def __init__(
-        self,
-        definition: str = None,
-        domain: str = None,
-        itemType: str = None,
-        name: str = None,
-        querystr: str = None,
-        selector: str = None,
-        **kwargs
-    ):
+    def __init__(self, latitude: float = None, longitude: float = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
-        self.definition: Optional[str] = definition
-        self.domain: Optional[str] = domain
-        self.itemType: Optional[str] = itemType
-        self.name: Optional[str] = name
-        self.querystr: Optional[str] = querystr
-        self.selector: Optional[str] = selector
+        self.latitude: Optional[float] = latitude
+        self.longitude: Optional[float] = longitude
 
 
-class Plugin(Item):
-    description = """Information about a Plugin"""
-    properties = Item.properties + [
-        "bundleImage",
-        "container",
-        "dataType",
-        "icon",
-        "itemDescription",
-        "name",
-        "pluginModule",
-        "pluginName",
-        "pluginType",
-    ]
-    edges = Item.edges + ["view"]
-
-    def __init__(
-        self,
-        bundleImage: str = None,
-        container: str = None,
-        dataType: str = None,
-        icon: str = None,
-        itemDescription: str = None,
-        name: str = None,
-        pluginModule: str = None,
-        pluginName: str = None,
-        pluginType: str = None,
-        view: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.bundleImage: Optional[str] = bundleImage
-        self.container: Optional[str] = container
-        self.dataType: Optional[str] = dataType
-        self.icon: Optional[str] = icon
-        self.itemDescription: Optional[str] = itemDescription
-        self.name: Optional[str] = name
-        self.pluginModule: Optional[str] = pluginModule
-        self.pluginName: Optional[str] = pluginName
-        self.pluginType: Optional[str] = pluginType
-
-        # Edges
-        self.view: list = view if view is not None else []
-
-
-class Photo(Item):
-    description = """An image file."""
-    properties = Item.properties + [
-        "bitrate",
-        "caption",
-        "duration",
-        "exifData",
-        "fileLocation",
-        "name",
-    ]
-    edges = Item.edges + ["changelog", "file", "includes", "label", "thumbnail"]
+class MediaObject(Item):
+    description = """A media object, such as an image, video, or audio object embedded in a web page or a downloadable dataset i.e. DataDownload. Note that a creative work may have many media objects associated with it on the same web page. For example, a page about a single song (MusicRecording) may have a music video (VideoObject), and a high and low bandwidth audio stream (2 AudioObject's)."""
+    properties = Item.properties + ["bitrate", "duration", "fileLocation"]
+    edges = Item.edges + ["file", "includes"]
 
     def __init__(
         self,
         bitrate: int = None,
-        caption: str = None,
         duration: int = None,
-        exifData: str = None,
         fileLocation: str = None,
-        name: str = None,
-        changelog: list = None,
         file: list = None,
         includes: list = None,
-        label: list = None,
-        thumbnail: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
         self.bitrate: Optional[int] = bitrate
-        self.caption: Optional[str] = caption
         self.duration: Optional[int] = duration
-        self.exifData: Optional[str] = exifData
         self.fileLocation: Optional[str] = fileLocation
-        self.name: Optional[str] = name
 
         # Edges
-        self.changelog: list = changelog if changelog is not None else []
         self.file: list = file if file is not None else []
         self.includes: list = includes if includes is not None else []
-        self.label: list = label if label is not None else []
-        self.thumbnail: list = thumbnail if thumbnail is not None else []
+
+
+class MedicalCondition(Item):
+    description = """Any condition of the human body that affects the normal functioning of a person, whether physically or mentally. Includes diseases, injuries, disabilities, disorders, syndromes, etc."""
+    properties = Item.properties + ["conditiontype", "itemType", "name"]
+    edges = Item.edges + []
+
+    def __init__(
+        self,
+        conditiontype: str = None,
+        itemType: str = None,
+        name: str = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.conditiontype: Optional[str] = conditiontype
+        self.itemType: Optional[str] = itemType
+        self.name: Optional[str] = name
 
 
 class MessageChannel(Item):
@@ -471,73 +573,205 @@ class NavigationItem(Item):
         self.title: Optional[str] = title
 
 
-class Country(Item):
-    description = """A country."""
-    properties = Item.properties + ["latitude", "longitude", "name"]
-    edges = Item.edges + ["flag", "location"]
+class Network(Item):
+    description = """A group or system of interconnected people or things, for instance a social network."""
+    properties = Item.properties + ["name"]
+    edges = Item.edges + ["website"]
 
-    def __init__(
-        self,
-        latitude: float = None,
-        longitude: float = None,
-        name: str = None,
-        flag: list = None,
-        location: list = None,
-        **kwargs
-    ):
+    def __init__(self, name: str = None, website: list = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
-        self.latitude: Optional[float] = latitude
-        self.longitude: Optional[float] = longitude
         self.name: Optional[str] = name
 
         # Edges
-        self.flag: list = flag if flag is not None else []
-        self.location: list = location if location is not None else []
+        self.website: list = website if website is not None else []
 
 
-class IndexerRun(Item):
-    description = """A run of a certain Indexer."""
+class Person(Item):
+    description = """A person (alive, dead, undead, or fictional)."""
     properties = Item.properties + [
-        "errorMessage",
-        "name",
-        "progress",
-        "progressMessage",
-        "querystr",
-        "repository",
-        "runStatus",
-        "targetDataType",
+        "addressBookId",
+        "displayName",
+        "email",
+        "firstName",
+        "gender",
+        "lastName",
+        "role",
+        "sexualOrientation",
+        "starred",
     ]
-    edges = Item.edges + ["indexer"]
+    edges = Item.edges + [
+        "account",
+        "address",
+        "birthPlace",
+        "cryptoKey",
+        "deathPlace",
+        "diet",
+        "hasPhoneNumber",
+        "label",
+        "me",
+        "medicalCondition",
+        "mergedFrom",
+        "profilePicture",
+        "relationship",
+        "website",
+    ]
 
     def __init__(
         self,
-        errorMessage: str = None,
-        name: str = None,
-        progress: float = None,
-        progressMessage: str = None,
-        querystr: str = None,
-        repository: str = None,
-        runStatus: str = None,
-        targetDataType: str = None,
-        indexer: list = None,
+        addressBookId: str = None,
+        displayName: str = None,
+        email: str = None,
+        firstName: str = None,
+        gender: str = None,
+        lastName: str = None,
+        role: str = None,
+        sexualOrientation: str = None,
+        starred: bool = None,
+        account: list = None,
+        address: list = None,
+        birthPlace: list = None,
+        cryptoKey: list = None,
+        deathPlace: list = None,
+        diet: list = None,
+        hasPhoneNumber: list = None,
+        label: list = None,
+        me: list = None,
+        medicalCondition: list = None,
+        mergedFrom: list = None,
+        profilePicture: list = None,
+        relationship: list = None,
+        website: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
-        self.errorMessage: Optional[str] = errorMessage
-        self.name: Optional[str] = name
-        self.progress: Optional[float] = progress
-        self.progressMessage: Optional[str] = progressMessage
-        self.querystr: Optional[str] = querystr
-        self.repository: Optional[str] = repository
-        self.runStatus: Optional[str] = runStatus
-        self.targetDataType: Optional[str] = targetDataType
+        self.addressBookId: Optional[str] = addressBookId
+        self.displayName: Optional[str] = displayName
+        self.email: Optional[str] = email
+        self.firstName: Optional[str] = firstName
+        self.gender: Optional[str] = gender
+        self.lastName: Optional[str] = lastName
+        self.role: Optional[str] = role
+        self.sexualOrientation: Optional[str] = sexualOrientation
+        self.starred: Optional[bool] = starred
 
         # Edges
-        self.indexer: list = indexer if indexer is not None else []
+        self.account: list = account if account is not None else []
+        self.address: list = address if address is not None else []
+        self.birthPlace: list = birthPlace if birthPlace is not None else []
+        self.cryptoKey: list = cryptoKey if cryptoKey is not None else []
+        self.deathPlace: list = deathPlace if deathPlace is not None else []
+        self.diet: list = diet if diet is not None else []
+        self.hasPhoneNumber: list = hasPhoneNumber if hasPhoneNumber is not None else []
+        self.label: list = label if label is not None else []
+        self.me: list = me if me is not None else []
+        self.medicalCondition: list = (
+            medicalCondition if medicalCondition is not None else []
+        )
+        self.mergedFrom: list = mergedFrom if mergedFrom is not None else []
+        self.profilePicture: list = profilePicture if profilePicture is not None else []
+        self.relationship: list = relationship if relationship is not None else []
+        self.website: list = website if website is not None else []
+
+
+class PhoneNumber(Item):
+    description = """A telephone number, SIP Address."""
+    properties = Item.properties + ["phoneNumber"]
+    edges = Item.edges + []
+
+    def __init__(self, phoneNumber: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.phoneNumber: Optional[str] = phoneNumber
+
+
+class Plugin(Item):
+    description = """Information about a Plugin"""
+    properties = Item.properties + [
+        "bundleImage",
+        "container",
+        "dataType",
+        "icon",
+        "itemDescription",
+        "name",
+        "pluginModule",
+        "pluginName",
+        "pluginType",
+    ]
+    edges = Item.edges + ["view"]
+
+    def __init__(
+        self,
+        bundleImage: str = None,
+        container: str = None,
+        dataType: str = None,
+        icon: str = None,
+        itemDescription: str = None,
+        name: str = None,
+        pluginModule: str = None,
+        pluginName: str = None,
+        pluginType: str = None,
+        view: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.bundleImage: Optional[str] = bundleImage
+        self.container: Optional[str] = container
+        self.dataType: Optional[str] = dataType
+        self.icon: Optional[str] = icon
+        self.itemDescription: Optional[str] = itemDescription
+        self.name: Optional[str] = name
+        self.pluginModule: Optional[str] = pluginModule
+        self.pluginName: Optional[str] = pluginName
+        self.pluginType: Optional[str] = pluginType
+
+        # Edges
+        self.view: list = view if view is not None else []
+
+
+class PluginRun(Item):
+    description = """Information about a Plugin container being run by the Pod."""
+    properties = Item.properties + [
+        "containerImage",
+        "oAuthUrl",
+        "pluginModule",
+        "pluginName",
+        "status",
+        "targetItemId",
+    ]
+    edges = Item.edges + ["plugin", "view"]
+
+    def __init__(
+        self,
+        containerImage: str = None,
+        oAuthUrl: str = None,
+        pluginModule: str = None,
+        pluginName: str = None,
+        status: str = None,
+        targetItemId: str = None,
+        plugin: list = None,
+        view: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.containerImage: Optional[str] = containerImage
+        self.oAuthUrl: Optional[str] = oAuthUrl
+        self.pluginModule: Optional[str] = pluginModule
+        self.pluginName: Optional[str] = pluginName
+        self.status: Optional[str] = status
+        self.targetItemId: Optional[str] = targetItemId
+
+        # Edges
+        self.plugin: list = plugin if plugin is not None else []
+        self.view: list = view if view is not None else []
 
 
 class Post(Item):
@@ -570,61 +804,30 @@ class Post(Item):
         self.photo: list = photo if photo is not None else []
 
 
-class MedicalCondition(Item):
-    description = """Any condition of the human body that affects the normal functioning of a person, whether physically or mentally. Includes diseases, injuries, disabilities, disorders, syndromes, etc."""
-    properties = Item.properties + ["conditiontype", "itemType", "name"]
-    edges = Item.edges + []
+class Receipt(Item):
+    description = """A bill that describes money owed for some Transaction."""
+    properties = Item.properties + ["category", "store", "totalCost"]
+    edges = Item.edges + ["file", "photo"]
 
     def __init__(
         self,
-        conditiontype: str = None,
-        itemType: str = None,
-        name: str = None,
+        category: str = None,
+        store: str = None,
+        totalCost: float = None,
+        file: list = None,
+        photo: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
-        self.conditiontype: Optional[str] = conditiontype
-        self.itemType: Optional[str] = itemType
-        self.name: Optional[str] = name
-
-
-class CryptoKey(Item):
-    description = """A key used in an cryptography protocol."""
-    properties = Item.properties + [
-        "active",
-        "itemType",
-        "keystr",
-        "name",
-        "role",
-        "starred",
-    ]
-    edges = Item.edges + ["owner"]
-
-    def __init__(
-        self,
-        active: bool = None,
-        itemType: str = None,
-        keystr: str = None,
-        name: str = None,
-        role: str = None,
-        starred: bool = None,
-        owner: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.active: Optional[bool] = active
-        self.itemType: Optional[str] = itemType
-        self.keystr: Optional[str] = keystr
-        self.name: Optional[str] = name
-        self.role: Optional[str] = role
-        self.starred: Optional[bool] = starred
+        self.category: Optional[str] = category
+        self.store: Optional[str] = store
+        self.totalCost: Optional[float] = totalCost
 
         # Edges
-        self.owner: list = owner if owner is not None else []
+        self.file: list = file if file is not None else []
+        self.photo: list = photo if photo is not None else []
 
 
 class Relationship(Item):
@@ -647,26 +850,6 @@ class Relationship(Item):
         self.relationship: list = relationship if relationship is not None else []
 
 
-class ItemEdgeSchema(Item):
-    description = """"""
-    properties = Item.properties + ["edgeName", "sourceType", "targetType"]
-    edges = Item.edges + []
-
-    def __init__(
-        self,
-        edgeName: str = None,
-        sourceType: str = None,
-        targetType: str = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.edgeName: Optional[str] = edgeName
-        self.sourceType: Optional[str] = sourceType
-        self.targetType: Optional[str] = targetType
-
-
 class Setting(Item):
     description = """A setting, named by a key, specifications in JSON format."""
     properties = Item.properties + ["json", "keystr"]
@@ -678,187 +861,6 @@ class Setting(Item):
         # Properties
         self.json: Optional[str] = json
         self.keystr: Optional[str] = keystr
-
-
-class Location(Item):
-    description = """The location of something."""
-    properties = Item.properties + ["latitude", "longitude"]
-    edges = Item.edges + []
-
-    def __init__(self, latitude: float = None, longitude: float = None, **kwargs):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.latitude: Optional[float] = latitude
-        self.longitude: Optional[float] = longitude
-
-
-class Account(Item):
-    description = """An account or subscription, for instance for some online service, or a bank account or wallet."""
-    properties = Item.properties + [
-        "avatarUrl",
-        "code",
-        "displayName",
-        "externalId",
-        "handle",
-        "identifier",
-        "isMe",
-        "itemType",
-        "secret",
-        "service",
-    ]
-    edges = Item.edges + [
-        "changelog",
-        "cryptoTransaction",
-        "location",
-        "network",
-        "ownCurrency",
-        "owner",
-        "trust",
-    ]
-
-    def __init__(
-        self,
-        avatarUrl: str = None,
-        code: str = None,
-        displayName: str = None,
-        externalId: str = None,
-        handle: str = None,
-        identifier: str = None,
-        isMe: bool = None,
-        itemType: str = None,
-        secret: str = None,
-        service: str = None,
-        changelog: list = None,
-        cryptoTransaction: list = None,
-        location: list = None,
-        network: list = None,
-        ownCurrency: list = None,
-        owner: list = None,
-        trust: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.avatarUrl: Optional[str] = avatarUrl
-        self.code: Optional[str] = code
-        self.displayName: Optional[str] = displayName
-        self.externalId: Optional[str] = externalId
-        self.handle: Optional[str] = handle
-        self.identifier: Optional[str] = identifier
-        self.isMe: Optional[bool] = isMe
-        self.itemType: Optional[str] = itemType
-        self.secret: Optional[str] = secret
-        self.service: Optional[str] = service
-
-        # Edges
-        self.changelog: list = changelog if changelog is not None else []
-        self.cryptoTransaction: list = (
-            cryptoTransaction if cryptoTransaction is not None else []
-        )
-        self.location: list = location if location is not None else []
-        self.network: list = network if network is not None else []
-        self.ownCurrency: list = ownCurrency if ownCurrency is not None else []
-        self.owner: list = owner if owner is not None else []
-        self.trust: list = trust if trust is not None else []
-
-
-class Indexer(Item):
-    description = """An indexer enhances your personal data by inferring facts over existing data and adding those to the database."""
-    properties = Item.properties + [
-        "bundleImage",
-        "icon",
-        "indexerClass",
-        "itemDescription",
-        "name",
-        "querystr",
-        "repository",
-        "runDestination",
-    ]
-    edges = Item.edges + ["indexerRun"]
-
-    def __init__(
-        self,
-        bundleImage: str = None,
-        icon: str = None,
-        indexerClass: str = None,
-        itemDescription: str = None,
-        name: str = None,
-        querystr: str = None,
-        repository: str = None,
-        runDestination: str = None,
-        indexerRun: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.bundleImage: Optional[str] = bundleImage
-        self.icon: Optional[str] = icon
-        self.indexerClass: Optional[str] = indexerClass
-        self.itemDescription: Optional[str] = itemDescription
-        self.name: Optional[str] = name
-        self.querystr: Optional[str] = querystr
-        self.repository: Optional[str] = repository
-        self.runDestination: Optional[str] = runDestination
-
-        # Edges
-        self.indexerRun: list = indexerRun if indexerRun is not None else []
-
-
-class Wallet(Item):
-    description = """"""
-    properties = Item.properties + ["name"]
-    edges = Item.edges + ["picture"]
-
-    def __init__(self, name: str = None, picture: list = None, **kwargs):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.name: Optional[str] = name
-
-        # Edges
-        self.picture: list = picture if picture is not None else []
-
-
-class CryptoTransaction(Item):
-    description = """"""
-    properties = Item.properties + ["outward", "quantity"]
-    edges = Item.edges + ["cryptoCurrency", "relateToOther", "relateToOwner"]
-
-    def __init__(
-        self,
-        outward: bool = None,
-        quantity: float = None,
-        cryptoCurrency: list = None,
-        relateToOther: list = None,
-        relateToOwner: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.outward: Optional[bool] = outward
-        self.quantity: Optional[float] = quantity
-
-        # Edges
-        self.cryptoCurrency: list = cryptoCurrency if cryptoCurrency is not None else []
-        self.relateToOther: list = relateToOther if relateToOther is not None else []
-        self.relateToOwner: list = relateToOwner if relateToOwner is not None else []
-
-
-class Website(Item):
-    description = """A Website is a set of related web pages and other items typically served from a single web domain and accessible via URLs."""
-    properties = Item.properties + ["itemType", "url"]
-    edges = Item.edges + []
-
-    def __init__(self, itemType: str = None, url: str = None, **kwargs):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.itemType: Optional[str] = itemType
-        self.url: Optional[str] = url
 
 
 class SuggestedMerge(Item):
@@ -879,362 +881,143 @@ class SuggestedMerge(Item):
         self.mergeFrom: list = mergeFrom if mergeFrom is not None else []
 
 
-class EmailMessage(Item):
-    description = """A single email message."""
-    properties = Item.properties + [
-        "abstract",
-        "content",
-        "externalId",
-        "itemType",
-        "keyword",
-        "service",
-        "starred",
-        "subject",
-        "textContent",
-        "title",
-        "transcript",
-    ]
-    edges = Item.edges + [
-        "bcc",
-        "cc",
-        "contentLocation",
-        "file",
-        "locationCreated",
-        "message",
-        "messageChannel",
-        "receiver",
-        "replyTo",
-        "sender",
-        "writtenBy",
-    ]
-
-    def __init__(
-        self,
-        abstract: str = None,
-        content: str = None,
-        externalId: str = None,
-        itemType: str = None,
-        keyword: str = None,
-        service: str = None,
-        starred: bool = None,
-        subject: str = None,
-        textContent: str = None,
-        title: str = None,
-        transcript: str = None,
-        bcc: list = None,
-        cc: list = None,
-        contentLocation: list = None,
-        file: list = None,
-        locationCreated: list = None,
-        message: list = None,
-        messageChannel: list = None,
-        receiver: list = None,
-        replyTo: list = None,
-        sender: list = None,
-        writtenBy: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.abstract: Optional[str] = abstract
-        self.content: Optional[str] = content
-        self.externalId: Optional[str] = externalId
-        self.itemType: Optional[str] = itemType
-        self.keyword: Optional[str] = keyword
-        self.service: Optional[str] = service
-        self.starred: Optional[bool] = starred
-        self.subject: Optional[str] = subject
-        self.textContent: Optional[str] = textContent
-        self.title: Optional[str] = title
-        self.transcript: Optional[str] = transcript
-
-        # Edges
-        self.bcc: list = bcc if bcc is not None else []
-        self.cc: list = cc if cc is not None else []
-        self.contentLocation: list = (
-            contentLocation if contentLocation is not None else []
-        )
-        self.file: list = file if file is not None else []
-        self.locationCreated: list = (
-            locationCreated if locationCreated is not None else []
-        )
-        self.message: list = message if message is not None else []
-        self.messageChannel: list = messageChannel if messageChannel is not None else []
-        self.receiver: list = receiver if receiver is not None else []
-        self.replyTo: list = replyTo if replyTo is not None else []
-        self.sender: list = sender if sender is not None else []
-        self.writtenBy: list = writtenBy if writtenBy is not None else []
-
-
-class Person(Item):
-    description = """A person (alive, dead, undead, or fictional)."""
-    properties = Item.properties + [
-        "addressBookId",
-        "displayName",
-        "email",
-        "firstName",
-        "gender",
-        "height",
-        "lastName",
-        "role",
-        "sexualOrientation",
-        "starred",
-    ]
-    edges = Item.edges + [
-        "account",
-        "address",
-        "birthPlace",
-        "cryptoKey",
-        "deathPlace",
-        "diet",
-        "hasPhoneNumber",
-        "label",
-        "me",
-        "medicalCondition",
-        "mergedFrom",
-        "profilePicture",
-        "relationship",
-        "website",
-    ]
-
-    def __init__(
-        self,
-        addressBookId: str = None,
-        displayName: str = None,
-        email: str = None,
-        firstName: str = None,
-        gender: str = None,
-        height: float = None,
-        lastName: str = None,
-        role: str = None,
-        sexualOrientation: str = None,
-        starred: bool = None,
-        account: list = None,
-        address: list = None,
-        birthPlace: list = None,
-        cryptoKey: list = None,
-        deathPlace: list = None,
-        diet: list = None,
-        hasPhoneNumber: list = None,
-        label: list = None,
-        me: list = None,
-        medicalCondition: list = None,
-        mergedFrom: list = None,
-        profilePicture: list = None,
-        relationship: list = None,
-        website: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.addressBookId: Optional[str] = addressBookId
-        self.displayName: Optional[str] = displayName
-        self.email: Optional[str] = email
-        self.firstName: Optional[str] = firstName
-        self.gender: Optional[str] = gender
-        self.height: Optional[float] = height
-        self.lastName: Optional[str] = lastName
-        self.role: Optional[str] = role
-        self.sexualOrientation: Optional[str] = sexualOrientation
-        self.starred: Optional[bool] = starred
-
-        # Edges
-        self.account: list = account if account is not None else []
-        self.address: list = address if address is not None else []
-        self.birthPlace: list = birthPlace if birthPlace is not None else []
-        self.cryptoKey: list = cryptoKey if cryptoKey is not None else []
-        self.deathPlace: list = deathPlace if deathPlace is not None else []
-        self.diet: list = diet if diet is not None else []
-        self.hasPhoneNumber: list = hasPhoneNumber if hasPhoneNumber is not None else []
-        self.label: list = label if label is not None else []
-        self.me: list = me if me is not None else []
-        self.medicalCondition: list = (
-            medicalCondition if medicalCondition is not None else []
-        )
-        self.mergedFrom: list = mergedFrom if mergedFrom is not None else []
-        self.profilePicture: list = profilePicture if profilePicture is not None else []
-        self.relationship: list = relationship if relationship is not None else []
-        self.website: list = website if website is not None else []
-
-
-class Message(Item):
-    description = """A single message."""
-    properties = Item.properties + [
-        "abstract",
-        "content",
-        "externalId",
-        "itemType",
-        "keyword",
-        "service",
-        "subject",
-        "textContent",
-        "title",
-        "transcript",
-    ]
-    edges = Item.edges + [
-        "contentLocation",
-        "file",
-        "locationCreated",
-        "message",
-        "messageChannel",
-        "photo",
-        "receiver",
-        "sender",
-        "writtenBy",
-    ]
-
-    def __init__(
-        self,
-        abstract: str = None,
-        content: str = None,
-        externalId: str = None,
-        itemType: str = None,
-        keyword: str = None,
-        service: str = None,
-        subject: str = None,
-        textContent: str = None,
-        title: str = None,
-        transcript: str = None,
-        contentLocation: list = None,
-        file: list = None,
-        locationCreated: list = None,
-        message: list = None,
-        messageChannel: list = None,
-        photo: list = None,
-        receiver: list = None,
-        sender: list = None,
-        writtenBy: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.abstract: Optional[str] = abstract
-        self.content: Optional[str] = content
-        self.externalId: Optional[str] = externalId
-        self.itemType: Optional[str] = itemType
-        self.keyword: Optional[str] = keyword
-        self.service: Optional[str] = service
-        self.subject: Optional[str] = subject
-        self.textContent: Optional[str] = textContent
-        self.title: Optional[str] = title
-        self.transcript: Optional[str] = transcript
-
-        # Edges
-        self.contentLocation: list = (
-            contentLocation if contentLocation is not None else []
-        )
-        self.file: list = file if file is not None else []
-        self.locationCreated: list = (
-            locationCreated if locationCreated is not None else []
-        )
-        self.message: list = message if message is not None else []
-        self.messageChannel: list = messageChannel if messageChannel is not None else []
-        self.photo: list = photo if photo is not None else []
-        self.receiver: list = receiver if receiver is not None else []
-        self.sender: list = sender if sender is not None else []
-        self.writtenBy: list = writtenBy if writtenBy is not None else []
-
-
-class AuditItem(Item):
-    description = """TBD"""
-    properties = Item.properties + ["actionname", "content"]
+class VoteAction(Item):
+    description = """The act casting a vote."""
+    properties = Item.properties + []
     edges = Item.edges + []
 
-    def __init__(self, actionname: str = None, content: str = None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Properties
-        self.actionname: Optional[str] = actionname
-        self.content: Optional[str] = content
 
-
-class CurrencySetting(Item):
+class Wallet(Item):
     description = """"""
-    properties = Item.properties + [
-        "deviceAddress",
-        "profileAddress",
-        "seedPhrase",
-        "tokenAddress",
-    ]
-    edges = Item.edges + ["wallet"]
+    properties = Item.properties + ["name"]
+    edges = Item.edges + ["picture"]
 
-    def __init__(
-        self,
-        deviceAddress: str = None,
-        profileAddress: str = None,
-        seedPhrase: str = None,
-        tokenAddress: str = None,
-        wallet: list = None,
-        **kwargs
-    ):
+    def __init__(self, name: str = None, picture: list = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
-        self.deviceAddress: Optional[str] = deviceAddress
-        self.profileAddress: Optional[str] = profileAddress
-        self.seedPhrase: Optional[str] = seedPhrase
-        self.tokenAddress: Optional[str] = tokenAddress
+        self.name: Optional[str] = name
 
         # Edges
-        self.wallet: list = wallet if wallet is not None else []
+        self.picture: list = picture if picture is not None else []
 
 
-class ItemPropertySchema(Item):
-    description = """"""
-    properties = Item.properties + ["itemType", "propertyName", "valueType"]
+class Website(Item):
+    description = """A Website is a set of related web pages and other items typically served from a single web domain and accessible via URLs."""
+    properties = Item.properties + ["itemType", "url"]
     edges = Item.edges + []
 
-    def __init__(
-        self,
-        itemType: str = None,
-        propertyName: str = None,
-        valueType: str = None,
-        **kwargs
-    ):
+    def __init__(self, itemType: str = None, url: str = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.itemType: Optional[str] = itemType
-        self.propertyName: Optional[str] = propertyName
-        self.valueType: Optional[str] = valueType
+        self.url: Optional[str] = url
 
 
-class PhoneNumber(Item):
-    description = """A telephone number, SIP Address."""
-    properties = Item.properties + ["phoneNumber"]
-    edges = Item.edges + []
+class WrittenWork(CreativeWork):
+    description = """A written work, for instance a book, article or note. Doesn't have to be published."""
+    properties = CreativeWork.properties + []
+    edges = CreativeWork.edges + []
 
-    def __init__(self, phoneNumber: str = None, **kwargs):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Indexer(Integrator):
+    description = """An indexer enhances your personal data by inferring facts over existing data and adding those to the database."""
+    properties = Integrator.properties + [
+        "bundleImage",
+        "icon",
+        "indexerClass",
+        "itemDescription",
+        "querystr",
+        "runDestination",
+    ]
+    edges = Integrator.edges + ["indexerRun"]
+
+    def __init__(
+        self,
+        bundleImage: str = None,
+        icon: str = None,
+        indexerClass: str = None,
+        itemDescription: str = None,
+        querystr: str = None,
+        runDestination: str = None,
+        indexerRun: list = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
 
         # Properties
-        self.phoneNumber: Optional[str] = phoneNumber
+        self.bundleImage: Optional[str] = bundleImage
+        self.icon: Optional[str] = icon
+        self.indexerClass: Optional[str] = indexerClass
+        self.itemDescription: Optional[str] = itemDescription
+        self.querystr: Optional[str] = querystr
+        self.runDestination: Optional[str] = runDestination
+
+        # Edges
+        self.indexerRun: list = indexerRun if indexerRun is not None else []
 
 
-class Address(Item):
+class IndexerRun(Integrator):
+    description = """A run of a certain Indexer."""
+    properties = Integrator.properties + [
+        "errorMessage",
+        "progress",
+        "progressMessage",
+        "querystr",
+        "runStatus",
+        "targetDataType",
+    ]
+    edges = Integrator.edges + ["indexer"]
+
+    def __init__(
+        self,
+        errorMessage: str = None,
+        progress: float = None,
+        progressMessage: str = None,
+        querystr: str = None,
+        runStatus: str = None,
+        targetDataType: str = None,
+        indexer: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.errorMessage: Optional[str] = errorMessage
+        self.progress: Optional[float] = progress
+        self.progressMessage: Optional[str] = progressMessage
+        self.querystr: Optional[str] = querystr
+        self.runStatus: Optional[str] = runStatus
+        self.targetDataType: Optional[str] = targetDataType
+
+        # Edges
+        self.indexer: list = indexer if indexer is not None else []
+
+
+class Address(Location):
     description = """A postal address."""
-    properties = Item.properties + [
+    properties = Location.properties + [
         "city",
         "itemType",
-        "latitude",
         "locationAutoLookupHash",
-        "longitude",
         "postalCode",
         "state",
         "street",
     ]
-    edges = Item.edges + ["changelog", "country", "location"]
+    edges = Location.edges + ["changelog", "country", "location"]
 
     def __init__(
         self,
         city: str = None,
         itemType: str = None,
-        latitude: float = None,
         locationAutoLookupHash: str = None,
-        longitude: float = None,
         postalCode: str = None,
         state: str = None,
         street: str = None,
@@ -1248,9 +1031,7 @@ class Address(Item):
         # Properties
         self.city: Optional[str] = city
         self.itemType: Optional[str] = itemType
-        self.latitude: Optional[float] = latitude
         self.locationAutoLookupHash: Optional[str] = locationAutoLookupHash
-        self.longitude: Optional[float] = longitude
         self.postalCode: Optional[str] = postalCode
         self.state: Optional[str] = state
         self.street: Optional[str] = street
@@ -1259,3 +1040,128 @@ class Address(Item):
         self.changelog: list = changelog if changelog is not None else []
         self.country: list = country if country is not None else []
         self.location: list = location if location is not None else []
+
+
+class Country(Location):
+    description = """A country."""
+    properties = Location.properties + ["name"]
+    edges = Location.edges + ["flag", "location"]
+
+    def __init__(
+        self, name: str = None, flag: list = None, location: list = None, **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+
+        # Edges
+        self.flag: list = flag if flag is not None else []
+        self.location: list = location if location is not None else []
+
+
+class Photo(MediaObject):
+    description = """An image file."""
+    properties = MediaObject.properties + ["caption", "exifData", "name"]
+    edges = MediaObject.edges + ["changelog", "label", "thumbnail"]
+
+    def __init__(
+        self,
+        caption: str = None,
+        exifData: str = None,
+        name: str = None,
+        changelog: list = None,
+        label: list = None,
+        thumbnail: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.caption: Optional[str] = caption
+        self.exifData: Optional[str] = exifData
+        self.name: Optional[str] = name
+
+        # Edges
+        self.changelog: list = changelog if changelog is not None else []
+        self.label: list = label if label is not None else []
+        self.thumbnail: list = thumbnail if thumbnail is not None else []
+
+
+class Message(WrittenWork):
+    description = """A single message."""
+    properties = WrittenWork.properties + ["externalId", "service", "subject"]
+    edges = WrittenWork.edges + [
+        "message",
+        "messageChannel",
+        "photo",
+        "receiver",
+        "sender",
+    ]
+
+    def __init__(
+        self,
+        externalId: str = None,
+        service: str = None,
+        subject: str = None,
+        message: list = None,
+        messageChannel: list = None,
+        photo: list = None,
+        receiver: list = None,
+        sender: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.externalId: Optional[str] = externalId
+        self.service: Optional[str] = service
+        self.subject: Optional[str] = subject
+
+        # Edges
+        self.message: list = message if message is not None else []
+        self.messageChannel: list = messageChannel if messageChannel is not None else []
+        self.photo: list = photo if photo is not None else []
+        self.receiver: list = receiver if receiver is not None else []
+        self.sender: list = sender if sender is not None else []
+
+
+class Note(WrittenWork):
+    description = """A file containing a note."""
+    properties = WrittenWork.properties + ["starred"]
+    edges = WrittenWork.edges + ["label"]
+
+    def __init__(self, starred: bool = None, label: list = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.starred: Optional[bool] = starred
+
+        # Edges
+        self.label: list = label if label is not None else []
+
+
+class EmailMessage(Message):
+    description = """A single email message."""
+    properties = Message.properties + ["starred"]
+    edges = Message.edges + ["bcc", "cc", "message", "replyTo"]
+
+    def __init__(
+        self,
+        starred: bool = None,
+        bcc: list = None,
+        cc: list = None,
+        message: list = None,
+        replyTo: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.starred: Optional[bool] = starred
+
+        # Edges
+        self.bcc: list = bcc if bcc is not None else []
+        self.cc: list = cc if cc is not None else []
+        self.message: list = message if message is not None else []
+        self.replyTo: list = replyTo if replyTo is not None else []
