@@ -20,7 +20,6 @@ class PluginItem(Item):
 
 
 def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
-    import pymemri.indexers as models
     from pymemri.data.photo import Photo
     import pymemri.integrator_registry
 
