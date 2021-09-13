@@ -12,7 +12,6 @@ from hashlib import sha256
 from .db import DB
 from .utils import *
 from ..plugin.schema import *
-from multidimensional_urlencode import urlencode
 
 from typing import List, Union
 import uuid
