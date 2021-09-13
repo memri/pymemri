@@ -27,20 +27,7 @@ def run_app(qr_dict, host="0.0.0.0", port=8080):
     qr_code_dict = qr_dict
     app.run(host=host, port=port)
 
-def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
-    manager = multiprocessing.Manager()
-    process_dict = manager.dict()
-    process_dict["qr_code"] = _qr_code_data
-    host = "0.0.0.0"
-    port = 8080
-    user_host = os.environ.get(POD_PLUGIN_DNS_ENV, f"http://0.0.0.0:{port}")
-    full_user_auth_url = f"{user_host}/qr"
-    process = multiprocessing.Process(target=run_app, args=(process_dict,),
-                                      kwargs={"host": host, "port": port}, daemon=True)
-    process.start()
-
-    print(f"GO TO {full_user_auth_url} and scan the code")
-
+def send_email(plugin_run, client, full_user_auth_url):
     # Gather email
     plugin_run.status = RUN_USER_ACTION_NEEDED
     email_cvu = get_default_cvu("request_email.cvu")
@@ -50,7 +37,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     )
     client.update_item(plugin_run)
 
-    # Poll until status == "ready"
+	# Poll until status == "ready"
     print("Polling for email...")
     while plugin_run.status != RUN_USER_ACTION_COMPLETED:
         sleep(1)
@@ -79,6 +66,23 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
         plugin_run.status = RUN_USER_ACTION_NEEDED
         plugin_run.authUrl = full_user_auth_url
         client.update_item(plugin_run)
+
+def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
+    manager = multiprocessing.Manager()
+    process_dict = manager.dict()
+    process_dict["qr_code"] = _qr_code_data
+    host = "0.0.0.0"
+    port = 8080
+    user_host = os.environ.get(POD_PLUGIN_DNS_ENV, f"http://0.0.0.0:{port}")
+    full_user_auth_url = f"{user_host}/qr"
+    process = multiprocessing.Process(target=run_app, args=(process_dict,),
+                                      kwargs={"host": host, "port": port}, daemon=True)
+    process.start()
+
+    print(f"GO TO {full_user_auth_url} and scan the code")
+
+    process_email = multiprocessing.Process(target=send_email, args=(plugin_run, client, full_user_auth_url), daemon=True)
+    process_email.start()
     
     return process, process_dict
 

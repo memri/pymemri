@@ -57,6 +57,9 @@ class Account(Item):
         self.displayName: Optional[str] = displayName
         self.authEmail: Optional[str] = authEmail
 
+        self.contact: list = contact if contact is not None else []
+        self.belongsTo: list = belongsTo if belongsTo is not None else []
+
 # Cell
 # hide
 class PluginRun(Item):
