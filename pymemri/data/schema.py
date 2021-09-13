@@ -22,7 +22,6 @@ class PluginItem(Item):
 def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
     import pymemri.indexers as models
     from pymemri.data.photo import Photo
-    from pymemri.indexers.indexer import IndexerBase
     import pymemri.integrator_registry
 
     if _type == "Indexer" and plugin_class is not None and hasattr(pymemri.integrator_registry, plugin_class):

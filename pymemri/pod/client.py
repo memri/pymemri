@@ -59,16 +59,13 @@ class PodClient:
 
     def register_base_schemas(self):
 
-        try:
-            assert self.add_to_schema(
-                PluginRun("", "", "", status="", error="", targetItemId="", settings="", authUrl=""),
-                CVUStoredDefinition(name="", definition="", externalId=""),
-                Account(service="", identifier="", secret="", code="", accessToken="",
-                        refreshToken="", errorMessage="", handle="", displayName="", authEmail=""),
-                Photo(width=1,height=1,channels=1,encoding="")
-            )
-        except Exception as e:
-            raise ValueError("Could not add base schema")
+        assert self.add_to_schema(
+            PluginRun("", "", "", status="", error="", targetItemId="", settings="", authUrl=""),
+            CVUStoredDefinition(name="", definition="", externalId=""),
+            Account(service="", identifier="", secret="", code="", accessToken="",
+                    refreshToken="", errorMessage="", handle="", displayName="", authEmail=""),
+            Photo(width=1,height=1,channels=1,encoding="")
+        )
 
     def test_connection(self, verbose=True):
         try:
