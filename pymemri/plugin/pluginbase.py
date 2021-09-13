@@ -96,6 +96,7 @@ def write_run_info(plugin, id_):
         if plugin is None:
             raise ValueError("Empty container")
         run_path = PLUGIN_DIR / plugin / "current_run.json"
+        run_path.parent.mkdir(parents=True, exist_ok=True)
         print(f"writing run info to {run_path}")
         write_json({"id": id_}, run_path)
     except Exception as e:
