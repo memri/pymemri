@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCHEMA_REPO="https://gitlab.memri.io/memri/schema.git"
-BRANCH="python-converter"
+BRANCH="schema-cleanup"
 OUT_DIR="$(pwd)/pymemri/data"
 FILENAME="central_schema.py"
 
