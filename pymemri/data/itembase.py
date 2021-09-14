@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'parse_base_item_json', 'Edge', 'ItemBase', 'Item']
 
 # Cell
 # hide
-from typing import Optional
+from typing import Optional, Dict
 from ..imports import *
 
 ALL_EDGES = "allEdges"
@@ -203,15 +203,17 @@ class Item(ItemBase):
     ]
     edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
 
+    DATE_PROPERTIES = ['dateCreated', 'dateModified', 'dateServerModified']
+
     def __init__(
         self,
         dateAccessed: str = None,
         dateCreated: str = None,
         dateModified: str = None,
-        deleted: str = None,
+        deleted: bool = None,
         externalId: str = None,
         itemDescription: str = None,
-        starred: str = None,
+        starred: bool = None,
         version: str = None,
         id: str = None,
         importJson: str = None,
@@ -270,6 +272,28 @@ class Item(ItemBase):
         return edge_kwargs
 
     @classmethod
+    def get_property_types(cls, dates=False) -> Dict[str, type]:
+        """
+        Infer the property types of all properties in cls.
+        Raises ValueError if type anotations for properties are missing in the cls init.
+        """
+        mro = cls.mro()
+        property_types = dict()
+        for basecls in reversed(mro[:mro.index(ItemBase)]):
+            property_types.update(basecls.__init__.__annotations__)
+        property_types = {k: v for k, v in property_types.items() if k in cls.properties}
+
+        if not set(property_types.keys()) == set(cls.properties):
+            raise ValueError(f"Item {cls.__name__} has missing property annotations.")
+
+        res = dict()
+        for k, v in property_types.items():
+            if k[:1] != '_' and k != "private" and not (isinstance(v, list)) \
+                            and v is not None and (not (dates == False and k in cls.DATE_PROPERTIES)):
+                res[k] = v
+        return res
+
+    @classmethod
     def remove_prefix(s, prefix="~"):
         return s[1:] if s[0] == "`" else s
 
@@ -287,12 +311,11 @@ class Item(ItemBase):
                 return cls.__name__
 
     def to_json(self, dates=True):
-        DATE_KEYS = ['dateCreated', 'dateModified', 'dateServerModified']
         res = dict()
         private = getattr(self, "private", [])
         for k, v in self.__dict__.items():
             if k[:1] != '_' and k != "private" and k not in private and not (isinstance(v, list)) \
-                            and v is not None and (not (dates == False and k in DATE_KEYS)):
+                            and v is not None and (not (dates == False and k in self.DATE_PROPERTIES)):
                 res[k] = v
         res["type"] = self._get_schema_type()
         return res
