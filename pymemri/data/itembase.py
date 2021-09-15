@@ -6,6 +6,7 @@ __all__ = ['ALL_EDGES', 'parse_base_item_json', 'Edge', 'ItemBase', 'Item']
 # hide
 from typing import Optional, Dict
 from ..imports import *
+from datetime import datetime
 
 ALL_EDGES = "allEdges"
 SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE = "_source", "_target", "_type", "_type", "label", "sequence"
@@ -207,9 +208,9 @@ class Item(ItemBase):
 
     def __init__(
         self,
-        dateAccessed: str = None,
-        dateCreated: str = None,
-        dateModified: str = None,
+        dateAccessed: datetime = None,
+        dateCreated: datetime = None,
+        dateModified: datetime = None,
         deleted: bool = None,
         externalId: str = None,
         itemDescription: str = None,
@@ -300,6 +301,12 @@ class Item(ItemBase):
     @classmethod
     def from_json(cls, json):
         kwargs = Item.parse_json(cls, json)
+
+        property_types = cls.get_property_types(dates=True)
+        for k, v in kwargs.items():
+            if v is not None and property_types[k] == datetime:
+                # Datetime in pod is in milliseconds
+                kwargs[k] = datetime.fromtimestamp(v / 1000.)
         res = cls(**kwargs)
         for e in res.get_all_edges():
             e.source = res
@@ -316,6 +323,9 @@ class Item(ItemBase):
         for k, v in self.__dict__.items():
             if k[:1] != '_' and k != "private" and k not in private and not (isinstance(v, list)) \
                             and v is not None and (not (dates == False and k in self.DATE_PROPERTIES)):
+                if isinstance(v, datetime):
+                    # Save datetimes in milliseconds
+                    v = int(v.timestamp() * 1000)
                 res[k] = v
         res["type"] = self._get_schema_type()
         return res

@@ -16,6 +16,7 @@ from ..plugin.schema import *
 from typing import List, Union
 import uuid
 import urllib
+from datetime import datetime
 
 # Cell
 DEFAULT_POD_ADDRESS = "http://localhost:3030"
@@ -29,7 +30,8 @@ class PodClient:
         bool: "Bool",
         str: "Text",
         int: "Integer",
-        float: "Real"
+        float: "Real",
+        datetime: "DateTime"
     }
 
     def __init__(self, url=DEFAULT_POD_ADDRESS, version=POD_VERSION, database_key=None, owner_key=None,
@@ -546,7 +548,7 @@ class PodClient:
 class Dog(Item):
     properties = Item.properties + ["name", "age", "bites", "weight"]
     edges = Item.edges
-    def __init__(self, name=None, age=None, bites=False, weight=None, **kwargs):
+    def __init__(self, name: str=None, age: int=None, bites: bool=False, weight: float=None, **kwargs):
         super().__init__(**kwargs)
         self.name = name
         self.age = age

@@ -20,6 +20,7 @@ import numpy as np
 import io
 from PIL import Image
 from hashlib import sha256
+from typing import Any
 
 # Cell
 NUMPY, BYTES = "numpy", "bytes"
@@ -60,31 +61,42 @@ def get_height_width_channels(img):
 class Photo(Item):
 
     properties = Item.properties + ["width", "height", "channels", "encoding"]
-    edges = Item.edges + ['file']
+    edges = Item.edges + ["file"]
 
-    def __init__(self, data=None, includes=None, thumbnail=None, height=None, width=None, channels=None, encoding=None, file=None,
-                _file_created=False,*args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        data: Any=None,
+        includes: Any=None,
+        thumbnail: Any=None,
+        height: int=None,
+        width: int=None,
+        channels: int=None,
+        encoding: str=None,
+        file: list=None,
+        _file_created: bool=False,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
         self.private = ["data", "embedding", "path"]
         self.height = height
         self.width = width
         self.channels = channels
         self.encoding = encoding
         self.file = file if file is not None else []
-        self.data=data
-        self._file_created=_file_created
+        self.data = data
+        self._file_created = _file_created
 
     def show(self):
-        fig,ax = plt.subplots(1)
+        fig, ax = plt.subplots(1)
         fig.set_figheight(15)
         fig.set_figwidth(15)
-        ax.axis('off')
-        imshow(self.data[:,:,::-1])
-        fig.set_size_inches((6,6))
+        ax.axis("off")
+        imshow(self.data[:, :, ::-1])
+        fig.set_size_inches((6, 6))
         plt.show()
 
     @classmethod
-    def from_data(cls,*args, **kwargs):
+    def from_data(cls, *args, **kwargs):
         res = super().from_data(*args, **kwargs)
         if res.file:
             res.file[0]
@@ -98,9 +110,12 @@ class Photo(Item):
 
     @classmethod
     def from_np(cls, data, size=None, *args, **kwargs):
-        if size is not None: data = resize(data, size)
-        h,w,c = get_height_width_channels(data)
-        res = cls(data=data, height=h, width=w, channels=c, encoding=NUMPY, *args, **kwargs)
+        if size is not None:
+            data = resize(data, size)
+        h, w, c = get_height_width_channels(data)
+        res = cls(
+            data=data, height=h, width=w, channels=c, encoding=NUMPY, *args, **kwargs
+        )
         file = File.from_data(sha256=sha256(data.tobytes()).hexdigest())
         res.add_edge("file", file)
         return res
@@ -113,8 +128,8 @@ class Photo(Item):
         if len(size) == 3:
             w, h, c = size
         if len(size) == 2:
-            w,h = size
-            c=1
+            w, h = size
+            c = 1
         else:
             raise Error
 
