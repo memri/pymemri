@@ -28,6 +28,9 @@ def run_app(qr_dict, host="0.0.0.0", port=8080):
     app.run(host=host, port=port)
 
 def send_email(plugin_run, client, full_user_auth_url):
+    # To make auth possible without email, attach url to pluginrun.
+    plugin_run.authUrl = full_user_auth_url
+    
     # Gather email
     plugin_run.status = RUN_USER_ACTION_NEEDED
     email_cvu = get_default_cvu("request_email.cvu")
