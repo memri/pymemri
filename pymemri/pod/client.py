@@ -62,11 +62,7 @@ class PodClient:
     def register_base_schemas(self):
 
         assert self.add_to_schema(
-            PluginRun("", "", "", status="", error="", targetItemId="", settings="", authUrl=""),
-            CVUStoredDefinition(name="", definition="", externalId=""),
-            Account(service="", identifier="", secret="", code="", accessToken="",
-                    refreshToken="", errorMessage="", handle="", displayName="", authEmail=""),
-            Photo(width=1,height=1,channels=1,encoding="")
+            PluginRun, CVUStoredDefinition, Account, Photo
         )
 
     def test_connection(self, verbose=True):
