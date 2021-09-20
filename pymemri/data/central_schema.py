@@ -22,6 +22,8 @@ class Account(Item):
         "itemType",
         "secret",
         "service",
+        "accessToken",
+        "refreshToken",
     ]
     edges = Item.edges + [
         "changelog",
@@ -46,6 +48,8 @@ class Account(Item):
         itemType: str = None,
         secret: str = None,
         service: str = None,
+        accessToken: str = None,
+        refreshToken: str = None,
         changelog: list = None,
         cryptoTransaction: list = None,
         location: list = None,
@@ -69,6 +73,8 @@ class Account(Item):
         self.itemType: Optional[str] = itemType
         self.secret: Optional[str] = secret
         self.service: Optional[str] = service
+        self.accessToken: Optional[str] = accessToken
+        self.refreshToken: Optional[str] = refreshToken
 
         # Edges
         self.changelog: list = changelog if changelog is not None else []
@@ -566,11 +572,18 @@ class MessageChannel(Item):
 
 class NavigationItem(Item):
     description = """TBD"""
-    properties = Item.properties + ["itemType", "sequence", "sessionName", "title"]
+    properties = Item.properties + [
+        "icon",
+        "itemType",
+        "sequence",
+        "sessionName",
+        "title",
+    ]
     edges = Item.edges + []
 
     def __init__(
         self,
+        icon: str = None,
         itemType: str = None,
         sequence: int = None,
         sessionName: str = None,
@@ -580,6 +593,7 @@ class NavigationItem(Item):
         super().__init__(**kwargs)
 
         # Properties
+        self.icon: Optional[str] = icon
         self.itemType: Optional[str] = itemType
         self.sequence: Optional[int] = sequence
         self.sessionName: Optional[str] = sessionName
@@ -749,45 +763,6 @@ class Plugin(Item):
         self.pluginType: Optional[str] = pluginType
 
         # Edges
-        self.view: list = view if view is not None else []
-
-
-class PluginRun(Item):
-    description = """Information about a Plugin container being run by the Pod."""
-    properties = Item.properties + [
-        "containerImage",
-        "oAuthUrl",
-        "pluginModule",
-        "pluginName",
-        "status",
-        "targetItemId",
-    ]
-    edges = Item.edges + ["plugin", "view"]
-
-    def __init__(
-        self,
-        containerImage: str = None,
-        oAuthUrl: str = None,
-        pluginModule: str = None,
-        pluginName: str = None,
-        status: str = None,
-        targetItemId: str = None,
-        plugin: list = None,
-        view: list = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.containerImage: Optional[str] = containerImage
-        self.oAuthUrl: Optional[str] = oAuthUrl
-        self.pluginModule: Optional[str] = pluginModule
-        self.pluginName: Optional[str] = pluginName
-        self.status: Optional[str] = status
-        self.targetItemId: Optional[str] = targetItemId
-
-        # Edges
-        self.plugin: list = plugin if plugin is not None else []
         self.view: list = view if view is not None else []
 
 
