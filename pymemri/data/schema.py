@@ -19,8 +19,6 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
         dynamic = dict()
 
     classes = z = {**globals(), **locals(), **extra, **dynamic}
-    if _type == "Plugin":
-        return PluginItem
 
     if _type in classes:
         if _type == "Indexer":
@@ -34,14 +32,6 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
     else:
         raise TypeError(f"Could not initialize item, type {_type} not registered in PodClient")
     return constructor
-
-
-class PluginItem(Item):
-    properties = Item.properties + ["containerImage"]
-    edges = Item.edges
-    def __init__(self, containerImage=None, **kwargs):
-        super().__init__(**kwargs)
-        self.containerImage = containerImage
 
 
 class PluginRun(Item):
