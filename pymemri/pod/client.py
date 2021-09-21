@@ -188,11 +188,11 @@ class PodClient:
             try:
                 sha = sha256(file).hexdigest()
                 result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
-                if result.status_code != 200:
+                if result.status_code in [200, 409]: # 409 = CONFLICT, file already exists
+                    return True
+                else:
                     print(result, result.content)
                     return False
-                else:
-                    return True
             except requests.exceptions.RequestException as e:
                 print(e)
                 return False
@@ -202,11 +202,11 @@ class PodClient:
             sha = sha256(file).hexdigest()
             auth = urllib.parse.quote(json.dumps(self.auth_json))
             result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
-            if result.status_code != 200:
+            if result.status_code in [200, 409]: # 409 = CONFLICT, file already exists
+                return True
+            else:
                 print(result, result.content)
                 return False
-            else:
-                return True
         except requests.exceptions.RequestException as e:
             print(e)
             return False
