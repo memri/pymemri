@@ -24,6 +24,13 @@ check if there is diff library/nbs:
 
 run tests:
   stage: test
+  services:
+    - name: gitlab.memri.io:5050/memri/pod:dev-de929382
+      alias: pod
+      entrypoint:
+        - "/pod"
+        - "--owners=ANY"
+        - "--insecure-non-tls=0.0.0.0"
   script:
   - ./tools/test_in_ci.sh
 

@@ -14,18 +14,18 @@ mkdir res
 
 # POD_URL='https://gitlab.memri.io/memri/pod/-/jobs/4102/artifacts/file/target/release/pod'
 # POD_URL='https://gitlab.memri.io/memri/pymemri/-/raw/ci/pod_ci?inline=false'
-POD_URL='https://gitlab.memri.io/memri/pymemri/-/raw/v4/pod_ci?inline=false'
+# POD_URL='https://gitlab.memri.io/memri/pymemri/-/raw/v4/pod_ci?inline=false'
 
-curl "$POD_URL" -o pod_docker
+# curl "$POD_URL" -o pod_docker
 
-chmod +x ./pod_docker
+# chmod +x ./pod_docker
 
-cp /bin/true ./docker && PATH="$PWD:PATH" && RUST_LOG=pod=debug,info \
-  ./pod_docker \
-  --owners=ANY \
-  --insecure-non-tls=0.0.0.0 \
-  --insecure-http-headers \
-  "$@" &
+# cp /bin/true ./docker && PATH="$PWD:PATH" && RUST_LOG=pod=debug,info \
+#   ./pod_docker \
+#   --owners=ANY \
+#   --insecure-non-tls=0.0.0.0 \
+#   --insecure-http-headers \
+#   "$@" &
 
 pid=$!
 nbdev_test_nbs --flags ci
