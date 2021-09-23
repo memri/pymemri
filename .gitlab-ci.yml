@@ -33,7 +33,7 @@ run tests:
         - "--insecure-non-tls=0.0.0.0"
 #        - --insecure-http-headers
   script:
-  - curl http://pod:3030
+  - curl http://pod:3030/version
   - ./tools/test_in_ci.sh
 
 pages:
