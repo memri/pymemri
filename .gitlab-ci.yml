@@ -34,7 +34,6 @@ run tests:
 #        - --insecure-http-headers
   script:
   - curl http://pod:3030/version
-  - curl http://localhost:3030/version
   - ./tools/test_in_ci.sh
 
 pages:
