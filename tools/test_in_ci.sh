@@ -27,7 +27,7 @@ mkdir res
 #   --insecure-http-headers \
 #   "$@" &
 
-pid=$!
+#pid=$!
 nbdev_test_nbs --flags ci
 # nbdev_test_nbs --fname nbs/pod.client.ipynb
 kill $pid
