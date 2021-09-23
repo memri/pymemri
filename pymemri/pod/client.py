@@ -296,6 +296,22 @@ class PodClient:
         items = self.get_all_items()
         self.delete_items(items)
 
+    @staticmethod
+    def gather_batch(items, start_idx, start_size=0, max_size=5000000):
+        idx = start_idx
+        total_size = start_size
+        batch_items = []
+        for i, x in enumerate(items):
+            if i < idx:
+                continue
+            elif total_size < max_size:
+                batch_items.append(x)
+                total_size += len(str(x))
+                idx = i+1
+            else:
+                break
+        return batch_items, idx, total_size
+
     def bulk_action(self, create_items=None, update_items=None, create_edges=None, delete_items=None):
         # we need to set the id to not lose the reference
         if create_items is not None:
@@ -307,9 +323,35 @@ class PodClient:
         # Note: skip delete_items without id, as items that are not in pod cannot be deleted
         delete_items = [item.id for item in delete_items if item.id is not None] if delete_items is not None else []
 
-        edges_data = {"auth": self.auth_json, "payload": {
-                    "createItems": create_items, "updateItems": update_items,
-                    "createEdges": create_edges, "deleteItems": delete_items}}
+        n_total = len(create_items + update_items + create_edges + delete_items)
+        n=0
+
+        i_ci, i_ui, i_ce, i_di = 0,0,0,0
+        while not( i_ci == len(create_items) and i_ui == len(update_items) and i_ce == len(create_edges) and i_di == len(delete_items)):
+            batch_size=0
+            create_items_batch, i_ci, batch_size = self.gather_batch(create_items, i_ci, start_size=batch_size)
+            update_items_batch, i_ui, batch_size = self.gather_batch(update_items, i_ui, start_size=batch_size)
+            create_edges_batch, i_ce, batch_size = self.gather_batch(create_edges, i_ce, start_size=batch_size)
+            delete_items_batch, i_di, batch_size = self.gather_batch(delete_items, i_di, start_size=batch_size)
+            n_batch = len(create_items_batch+update_items_batch+create_edges_batch+delete_items_batch)
+            n+=n_batch
+            print(f"BULK: Writing {n}/{n_total} items/edges")
+            succes = self._bulk_action(create_items_batch, update_items_batch, create_edges_batch, delete_items_batch)
+            if not succes:
+                print("could not complete bulk aciton, aborting")
+                return False
+        print(f"Completed Bulk action, written {n} items/edges")
+        return True
+
+    def _bulk_action(self, create_items=None, update_items=None, create_edges=None, delete_items=None):
+        edges_data = {
+            "auth": self.auth_json,
+            "payload": {
+                "createItems": create_items, "updateItems": update_items,
+                "createEdges": create_edges, "deleteItems": delete_items
+            }
+        }
+
         try:
             result = requests.post(f"{self.base_url}/bulk",
                                    json=edges_data)
