@@ -304,7 +304,7 @@ class PodClient:
         for i, x in enumerate(items):
             if i < idx:
                 continue
-            elif total_size < max_size:
+            elif total_size + len(str(x)) < max_size:
                 batch_items.append(x)
                 total_size += len(str(x))
                 idx = i+1
@@ -331,8 +331,11 @@ class PodClient:
             batch_size=0
             create_items_batch, i_ci, batch_size = self.gather_batch(create_items, i_ci, start_size=batch_size)
             update_items_batch, i_ui, batch_size = self.gather_batch(update_items, i_ui, start_size=batch_size)
-            create_edges_batch, i_ce, batch_size = self.gather_batch(create_edges, i_ce, start_size=batch_size)
             delete_items_batch, i_di, batch_size = self.gather_batch(delete_items, i_di, start_size=batch_size)
+            if i_ci == len(create_items):
+                create_edges_batch, i_ce, batch_size = self.gather_batch(create_edges, i_ce, start_size=batch_size)
+            else:
+                create_edges_batch = []
             n_batch = len(create_items_batch+update_items_batch+create_edges_batch+delete_items_batch)
             n+=n_batch
             print(f"BULK: Writing {n}/{n_total} items/edges")
