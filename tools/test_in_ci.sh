@@ -30,5 +30,5 @@ mkdir res
 #pid=$!
 nbdev_test_nbs --flags ci
 # nbdev_test_nbs --fname nbs/pod.client.ipynb
-kill $pid
+#kill $pid
 
