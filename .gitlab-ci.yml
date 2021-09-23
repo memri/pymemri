@@ -31,7 +31,7 @@ run tests:
         - "/pod"
         - "--owners=ANY"
         - "--insecure-non-tls=0.0.0.0"
-        - --insecure-http-headers
+#        - --insecure-http-headers
   script:
   - curl http://pod:3030
   - ./tools/test_in_ci.sh
