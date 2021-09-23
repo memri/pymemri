@@ -27,10 +27,13 @@ run tests:
   services:
     - name: ${POD_IMAGE}
       alias: pod
+      ports:
+        - "0.0.0.0:3030:3030"
       entrypoint:
         - "/pod"
         - "--owners=ANY"
         - "--insecure-non-tls=0.0.0.0"
+        - --insecure-http-headers
   script:
   - ./tools/test_in_ci.sh
 
