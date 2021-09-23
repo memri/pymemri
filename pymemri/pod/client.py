@@ -19,7 +19,7 @@ import urllib
 from datetime import datetime
 
 # Cell
-DEFAULT_POD_ADDRESS = "http://localhost:3030"
+DEFAULT_POD_ADDRESS = "http://pod:3030"
 POD_VERSION = "v4"
 
 # Cell
