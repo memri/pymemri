@@ -289,8 +289,7 @@ class PodClient:
 #         return self.bulk_action(create_items=[], update_items=[],create_edges=create_edges)
 
     def delete_items(self, items):
-        ids = [i.id for i in items]
-        return self.bulk_action(delete_items=ids)
+        return self.bulk_action(delete_items=items)
 
     def delete_all(self):
         items = self.get_all_items()
