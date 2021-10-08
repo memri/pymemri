@@ -303,10 +303,13 @@ class PodClient:
         for i, x in enumerate(items):
             if i < idx:
                 continue
+            elif len(str(x)) > max_size:
+                idx = i + 1
+                print("Could not add item: Item exceeds max item size")
             elif total_size + len(str(x)) < max_size:
                 batch_items.append(x)
                 total_size += len(str(x))
-                idx = i+1
+                idx = i + 1
             else:
                 break
         return batch_items, idx, total_size
