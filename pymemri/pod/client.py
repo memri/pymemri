@@ -347,7 +347,7 @@ class PodClient:
         return True
 
     def _bulk_action(self, create_items=None, update_items=None, create_edges=None, delete_items=None):
-        edges_data = {
+        json_data = {
             "auth": self.auth_json,
             "payload": {
                 "createItems": create_items, "updateItems": update_items,
@@ -357,10 +357,10 @@ class PodClient:
 
         try:
             result = requests.post(f"{self.base_url}/bulk",
-                                   json=edges_data)
+                                   json=json_data)
             if result.status_code != 200:
                 if "UNIQUE constraint failed" in str(result.content):
-                    print(result.status_code, "Edge already exists")
+                    print(result.status_code, result.content, "Failed bulk update")
                 else:
                     print(result, result.content)
                 return False
