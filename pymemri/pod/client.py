@@ -529,9 +529,11 @@ class PodClient:
 
         for edge_json in item_json.get("[[edges]]", []):
             edge_name = edge_json["_edge"]
-            edge_item = self.item_from_json(edge_json["_item"])
-            item.add_edge(edge_name, edge_item)
-
+            try:
+                edge_item = self.item_from_json(edge_json["_item"])
+                item.add_edge(edge_name, edge_item)
+            except Exception as e:
+                continue
         return item
 
     def search_last_added(self, type=None, with_prop=None, with_val=None):
