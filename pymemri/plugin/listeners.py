@@ -33,8 +33,8 @@ def abort_process_callback():
     os.killpg(pgid, signal.SIGABRT)
 
 # Cell
-def get_abort_plugin_listener(client, pluginRun):
+def get_abort_plugin_listener(client, run_id):
     return Process(
         target=status_listener,
-        args=(client, pluginRun.id, "aborted", abort_process_callback)
+        args=(client, run_id, "aborted", abort_process_callback)
     )
