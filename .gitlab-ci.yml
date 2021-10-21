@@ -24,7 +24,16 @@ check if there is diff library/nbs:
 
 run tests:
   stage: test
+  services:
+    - name: ${POD_IMAGE}
+      alias: pod
+      entrypoint:
+        - "/pod"
+        - "--owners=ANY"
+        - "--insecure-non-tls=0.0.0.0"
   script:
+  - curl http://pod:3030/version
+  - export POD_ADDRESS='http://pod:3030/'
   - ./tools/test_in_ci.sh
 
 pages:
