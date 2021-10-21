@@ -12,6 +12,7 @@ from hashlib import sha256
 from .db import DB
 from .utils import *
 from ..plugin.schema import *
+from ..test_utils import get_ci_variables
 
 from typing import List, Union
 import uuid
@@ -19,7 +20,7 @@ import urllib
 from datetime import datetime
 
 # Cell
-DEFAULT_POD_ADDRESS = "http://localhost:3030"
+DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
 POD_VERSION = "v4"
 
 # Cell
@@ -507,6 +508,36 @@ class PodClient:
         except requests.exceptions.RequestException as e:
             print(e)
             return None
+
+    def search_paginate(self, fields_data, limit=50):
+        """
+        A generator that performs search with pagination.
+
+        Returns at least `limit` items, but can return more because
+        of pod implementation details.
+        """
+        if (
+            "_limit" in fields_data
+            or "dateServerModified" in fields_data
+            or "dateServerModified>=" in fields_data
+            or "dateServerModified<" in fields_data
+        ):
+            raise ValueError("Cannot paginate query")
+        if "_sortOrder" in fields_data:
+            raise NotImplementedError("Only 'Asc' order is supported.")
+
+        response = self.search({**fields_data, "_limit": limit})
+        next_dsm = int(response[-1].dateServerModified.timestamp() * 1000) + 1
+        yield response
+
+        while True:
+            response = client.search(
+                {**fields_data, "_limit": limit, "dateServerModified>=": next_dsm}
+            )
+            if not len(response):
+                break
+            next_dsm = int(response[-1].dateServerModified.timestamp() * 1000) + 1
+            yield response
 
     def search(self, fields_data, include_edges: bool = True):
         extra_fields = {'[[edges]]': {}} if include_edges else {}
