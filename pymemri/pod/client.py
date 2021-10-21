@@ -509,6 +509,36 @@ class PodClient:
             print(e)
             return None
 
+    def search_paginate(self, fields_data, limit=50):
+        """
+        A generator that performs search with pagination.
+
+        Returns at least `limit` items, but can return more because
+        of pod implementation details.
+        """
+        if (
+            "_limit" in fields_data
+            or "dateServerModified" in fields_data
+            or "dateServerModified>=" in fields_data
+            or "dateServerModified<" in fields_data
+        ):
+            raise ValueError("Cannot paginate query")
+        if "_sortOrder" in fields_data:
+            raise NotImplementedError("Only 'Asc' order is supported.")
+
+        response = self.search({**fields_data, "_limit": limit})
+        next_dsm = int(response[-1].dateServerModified.timestamp() * 1000) + 1
+        yield response
+
+        while True:
+            response = client.search(
+                {**fields_data, "_limit": limit, "dateServerModified>=": next_dsm}
+            )
+            if not len(response):
+                break
+            next_dsm = int(response[-1].dateServerModified.timestamp() * 1000) + 1
+            yield response
+
     def search(self, fields_data, include_edges: bool = True):
         extra_fields = {'[[edges]]': {}} if include_edges else {}
         body = {"payload": {**fields_data, **extra_fields},
