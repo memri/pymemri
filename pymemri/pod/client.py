@@ -12,6 +12,7 @@ from hashlib import sha256
 from .db import DB
 from .utils import *
 from ..plugin.schema import *
+from ..test_utils import get_ci_variables
 
 from typing import List, Union
 import uuid
@@ -19,7 +20,7 @@ import urllib
 from datetime import datetime
 
 # Cell
-DEFAULT_POD_ADDRESS = "http://localhost:3030"
+DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
 POD_VERSION = "v4"
 
 # Cell
