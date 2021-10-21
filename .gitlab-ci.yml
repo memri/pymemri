@@ -33,6 +33,7 @@ run tests:
         - "--insecure-non-tls=0.0.0.0"
   script:
   - curl http://pod:3030/version
+  - export POD_ADDRESS='http://pod:3030'
   - ./tools/test_in_ci.sh
 
 pages:
