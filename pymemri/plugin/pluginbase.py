@@ -11,6 +11,7 @@ from ..pod.client import *
 from ..imports import *
 from ..pod.utils import *
 from .states import *
+from .listeners import get_abort_plugin_listener
 
 from os import environ
 from abc import ABCMeta
@@ -58,6 +59,11 @@ class PluginBase(metaclass=ABCMeta):
         self.client = client
 
         self.persistentState = persistentState
+        self.listeners = []
+        if self.client and self.pluginRun:
+            status_abort_listener = get_abort_plugin_listener(client, pluginRun.id)
+            status_abort_listener.start()
+            self.listeners.append(status_abort_listener)
 
     def set_run_status(self, status):
         # TODO sync before setting status (requires pod_client.sync())
