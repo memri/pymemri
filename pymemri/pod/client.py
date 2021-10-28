@@ -531,7 +531,7 @@ class PodClient:
         yield response
 
         while True:
-            response = client.search(
+            response = self.search(
                 {**fields_data, "_limit": limit, "dateServerModified>=": next_dsm}
             )
             if not len(response):
