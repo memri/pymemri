@@ -60,15 +60,26 @@ class PluginBase(metaclass=ABCMeta):
 
         self.persistentState = persistentState
         self._status_listeners = []
-        if self.client and self.pluginRun:
-            status_abort_listener = get_abort_plugin_listener(client, pluginRun.id)
-            self._status_listeners.append(status_abort_listener)
 
     def set_run_status(self, status):
         # TODO sync before setting status (requires pod_client.sync())
         if self.pluginRun and self.client:
             self.pluginRun.status = status
             self.client.update_item(self.pluginRun)
+
+    def setup(self):
+        if self.client and self.pluginRun:
+            status_abort_listener = get_abort_plugin_listener(self.client, self.pluginRun.id)
+            self._status_listeners.append(status_abort_listener)
+
+    def teardown(self):
+        for listener in self._status_listeners:
+            listener.stop()
+
+    def _run(self):
+        self.setup()
+        self.run()
+        self.teardown()
 
     @abc.abstractmethod
     def run(self):
@@ -139,7 +150,7 @@ def run_plugin_from_run_id(run_id, client):
     plugin.add_to_schema()
 
     plugin.set_run_status(RUN_STARTED)
-    plugin.run()
+    plugin._run()
     plugin.pluginRun = plugin.client.get(run_id)
     plugin.set_run_status(RUN_COMPLETED)
 
@@ -234,11 +245,12 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_A
 
     try:
         run_plugin_from_run_id(run_id=plugin_run_id, client=client)
+
     except Exception as e:
-        run = client.get(run.id)
+        run = client.get(plugin_run_id)
         run.status = RUN_FAILED
         client.update_item(run)
-        print(traceback.format_exc())
+        print(traceback.format_exc(), flush=True)
         raise PluginError("The plugin quit unexpectedly.") from None
 
 # Cell
