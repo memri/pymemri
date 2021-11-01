@@ -46,10 +46,8 @@ class StatusListener:
 # Cell
 def force_exit_callback():
     print("Status aborted, killing plugin...", flush=True)
-    os._exit(os.EX_OK)
-    # NOTE os.kill does not work in Docker for some reason.
-    # pid = os.getpid()
-    # os.kill(pid, signal.SIGTERM)
+    pid = os.getpid()
+    os.kill(pid, signal.SIGINT)
 
 def get_abort_plugin_listener(client, run_id, **kwargs):
     listener = StatusListener(
