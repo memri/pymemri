@@ -1150,7 +1150,7 @@ class Note(WrittenWork):
 
 class EmailMessage(Message):
     description = """A single email message."""
-    properties = Message.properties + ["starred"]
+    properties = Message.properties + ["starred", "read"]
     edges = Message.edges + ["bcc", "cc", "message", "replyTo", "inbox"]
 
     def __init__(
