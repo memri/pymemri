@@ -1151,24 +1151,28 @@ class Note(WrittenWork):
 class EmailMessage(Message):
     description = """A single email message."""
     properties = Message.properties + ["starred"]
-    edges = Message.edges + ["bcc", "cc", "message", "replyTo"]
+    edges = Message.edges + ["bcc", "cc", "message", "replyTo", "inbox"]
 
     def __init__(
         self,
         starred: bool = None,
+        read: bool = None,
         bcc: list = None,
         cc: list = None,
         message: list = None,
         replyTo: list = None,
+        inbox: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
         self.starred: Optional[bool] = starred
+        self.read: Optional[bool] = read
 
         # Edges
         self.bcc: list = bcc if bcc is not None else []
         self.cc: list = cc if cc is not None else []
         self.message: list = message if message is not None else []
         self.replyTo: list = replyTo if replyTo is not None else []
+        self.inbox: list = inbox if inbox is not None else []
