@@ -45,6 +45,7 @@ class PluginRun(Item):
         "targetItemId",
         "error",
         "settings",
+        "progress",
     ]
     edges = Item.edges + ["plugin", "view", "account"]
 
@@ -58,6 +59,7 @@ class PluginRun(Item):
         targetItemId: str = None,
         error: str = None,
         settings: str = None,
+        progress: float = None,
         plugin: list = None,
         view: list = None,
         account: list = None,
@@ -80,6 +82,7 @@ class PluginRun(Item):
         self.targetItemId: Optional[str] = id_
         self.error: Optional[str] = error
         self.settings: Optional[str] = settings
+        self.progress: Optional[str] = progress
 
         # Edges
         self.plugin: list = plugin if plugin is not None else []
