@@ -82,7 +82,7 @@ class PluginRun(Item):
         self.targetItemId: Optional[str] = id_
         self.error: Optional[str] = error
         self.settings: Optional[str] = settings
-        self.progress: Optional[str] = progress
+        self.progress: Optional[float] = progress
 
         # Edges
         self.plugin: list = plugin if plugin is not None else []
