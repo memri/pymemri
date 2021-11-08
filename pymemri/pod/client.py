@@ -527,6 +527,11 @@ class PodClient:
             raise NotImplementedError("Only 'Asc' order is supported.")
 
         response = self.search({**fields_data, "_limit": limit})
+
+        # Return empty iterator if there are not results
+        if not len(response):
+            return iter(())
+
         next_dsm = int(response[-1].dateServerModified.timestamp() * 1000) + 1
         yield response
 
