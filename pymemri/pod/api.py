@@ -142,7 +142,7 @@ class PodAPI:
         payload = {k: v for k, v in payload.items() if v is not None}
         return self.post("bulk", payload).json()
 
-    def upload_file(self, file):
+    def upload_file(self, file: bytes) -> Any:
         if self.auth_json.get("type") == "PluginAuth":
             # alternative file upload for plugins, with different authentication
             return self.upload_file_b(file)
@@ -156,7 +156,7 @@ class PodAPI:
 
         return result
 
-    def upload_file_b(self, file):
+    def upload_file_b(self, file: bytes) -> Any:
         sha = sha256(file).hexdigest()
         auth = urllib.parse.quote(json.dumps(self.auth_json))
         result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
@@ -165,9 +165,9 @@ class PodAPI:
 
         return result
 
-    def get_file(self, sha):
+    def get_file(self, sha: str) -> bytes:
         return self.post("get_file", {"sha256": sha}).content
 
-    def send_email(self, to, subject="", body=""):
+    def send_email(self, to: str, subject: str = "", body: str = "") -> Any:
         payload = {"to": to, "subject": subject, "body": body}
         return self.post("send_email", payload)
