@@ -6,6 +6,8 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodError', 'PodAPI']
 import os
 from typing import Any, Dict, List, Generator
 import requests
+import urllib
+from hashlib import sha256
 
 # Cell
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
@@ -13,8 +15,10 @@ POD_VERSION = "v4"
 
 # Cell
 class PodError(Exception):
-    def __init__(self, *args: List[Any]) -> None:
-        super().__init__(*args)
+    def __init__(self, status=None, message=None, **kwargs) -> None:
+        super().__init__(status, message, **kwargs)
+        self.status = status
+        self.message = message
 
     def __str__(self) -> str:
         return " ".join([str(a) for a in self.args if a])
@@ -28,9 +32,12 @@ class PodAPI:
         url: str = DEFAULT_POD_ADDRESS,
         version: str = POD_VERSION,
         auth_json: dict = None,
+        verbose: bool = True,
     ) -> None:
+        self.verbose = verbose
         self.database_key = database_key
         self.owner_key = owner_key
+        self.version = version
         self._url = url
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
@@ -41,8 +48,18 @@ class PodAPI:
         else:
             return {"type": "ClientAuth", "databaseKey": self.database_key}
 
+    def test_connection(self):
+        try:
+            res = requests.get(self._url)
+            if self.verbose:
+                print("Succesfully connected to pod")
+            return True
+        except requests.exceptions.RequestException as e:
+            print("Could no connect to backend")
+            return False
+
     @property
-    def version(self) -> dict:
+    def pod_version(self) -> dict:
         response = requests.get(f"{self._url}/version")
         if response.status_code != 200:
             raise PodError(response.status_code, response.text)
@@ -53,32 +70,31 @@ class PodAPI:
         response = requests.post(f"{self.base_url}/{endpoint}", json=body)
         if response.status_code != 200:
             raise PodError(response.status_code, response.text)
-        return response.json()
+        return response
 
     def get_item(self, uid: str) -> dict:
-        return self.post("get_item", uid)
+        return self.post("get_item", uid).json()
 
     def create_item(self, item: dict) -> str:
-        return self.post("create_item", item)
+        return self.post("create_item", item).json()
 
     def update_item(self, item: dict) -> None:
-        return self.post("update_item", item)
+        return self.post("update_item", item).json()
 
     def get_edges(
         self, uid: str, direction: str = "Outgoing", expand_items: bool = True
     ) -> List[dict]:
         payload = {"item": uid, "direction": direction, "expandItems": expand_items}
-        return self.post("get_edges", payload)
+        return self.post("get_edges", payload).json()
 
-    def create_edge(self, src_id: str, tgt_id: str, name: str) -> str:
-        payload = {"_source": src_id, "_target": tgt_id, "_name": name}
-        return self.post("create_edge", payload)
+    def create_edge(self, edge: dict) -> str:
+        return self.post("create_edge", edge).json()
 
     def delete_item(self, uid) -> None:
-        return self.post("delete_item", uid)
+        return self.post("delete_item", uid).json()
 
     def search(self, query: dict) -> List[dict]:
-        return self.post("search", query)
+        return self.post("search", query).json()
 
     def search_paginate(self, query: dict, limit: int = 32) -> Generator:
         if (
@@ -124,4 +140,34 @@ class PodAPI:
             "search": search,
         }
         payload = {k: v for k, v in payload.items() if v is not None}
-        return self.post("bulk", payload)
+        return self.post("bulk", payload).json()
+
+    def upload_file(self, file):
+        if self.auth_json.get("type") == "PluginAuth":
+            # alternative file upload for plugins, with different authentication
+            return self.upload_file_b(file)
+
+        sha = sha256(file).hexdigest()
+        result = requests.post(
+            f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file
+        )
+        if result.status_code != 200:
+            raise PodError(result.status_code, result.text)
+
+        return result
+
+    def upload_file_b(self, file):
+        sha = sha256(file).hexdigest()
+        auth = urllib.parse.quote(json.dumps(self.auth_json))
+        result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
+        if result.status_code != 200:
+            raise PodError(result.status_code, result.text)
+
+        return result
+
+    def get_file(self, sha):
+        return self.post("get_file", {"sha256": sha}).content
+
+    def send_email(self, to, subject="", body=""):
+        payload = {"to": to, "subject": subject, "body": body}
+        return self.post("send_email", payload)
