@@ -58,16 +58,6 @@ class PodClient:
             verbose=verbose,
         )
         self.api.test_connection()
-
-        #         self.url = url
-        #         self.version = POD_VERSION
-        #         self.base_url = f"{url}/{version}/{self.owner_key}"
-        #         self.auth_json = (
-        #             {"type": "ClientAuth", "databaseKey": self.database_key}
-        #             if auth_json is None
-        #             else {**{"type": "PluginAuth"}, **auth_json}
-        #         )
-
         self.local_db = DB()
         self.registered_classes = dict()
         self.register_base_schemas()
