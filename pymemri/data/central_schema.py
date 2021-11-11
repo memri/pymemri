@@ -23,6 +23,7 @@ class Account(Item):
         "secret",
         "service",
         "accessToken",
+        "phoneNumber",
         "refreshToken",
     ]
     edges = Item.edges + [
@@ -33,6 +34,7 @@ class Account(Item):
         "ownCurrency",
         "owner",
         "trust",
+        "profilePicture",
     ]
 
     def __init__(
@@ -49,6 +51,7 @@ class Account(Item):
         secret: str = None,
         service: str = None,
         accessToken: str = None,
+        phoneNumber: str = None,
         refreshToken: str = None,
         changelog: list = None,
         cryptoTransaction: list = None,
@@ -57,6 +60,7 @@ class Account(Item):
         ownCurrency: list = None,
         owner: list = None,
         trust: list = None,
+        profilePicture: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -74,16 +78,20 @@ class Account(Item):
         self.secret: Optional[str] = secret
         self.service: Optional[str] = service
         self.accessToken: Optional[str] = accessToken
+        self.phoneNumber: Optional[str] = phoneNumber
         self.refreshToken: Optional[str] = refreshToken
 
         # Edges
         self.changelog: list = changelog if changelog is not None else []
-        self.cryptoTransaction: list = cryptoTransaction if cryptoTransaction is not None else []
+        self.cryptoTransaction: list = (
+            cryptoTransaction if cryptoTransaction is not None else []
+        )
         self.location: list = location if location is not None else []
         self.network: list = network if network is not None else []
         self.ownCurrency: list = ownCurrency if ownCurrency is not None else []
         self.owner: list = owner if owner is not None else []
         self.trust: list = trust if trust is not None else []
+        self.profilePicture: list = profilePicture if profilePicture is not None else []
 
 
 class AuditItem(Item):
@@ -182,9 +190,13 @@ class CreativeWork(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: list = contentLocation if contentLocation is not None else []
+        self.contentLocation: list = (
+            contentLocation if contentLocation is not None else []
+        )
         self.file: list = file if file is not None else []
-        self.locationCreated: list = locationCreated if locationCreated is not None else []
+        self.locationCreated: list = (
+            locationCreated if locationCreated is not None else []
+        )
         self.writtenBy: list = writtenBy if writtenBy is not None else []
 
 
@@ -210,7 +222,9 @@ class CryptoCurrency(Item):
         self.topic: Optional[str] = topic
 
         # Edges
-        self.currencySetting: list = currencySetting if currencySetting is not None else []
+        self.currencySetting: list = (
+            currencySetting if currencySetting is not None else []
+        )
         self.picture: list = picture if picture is not None else []
 
 
@@ -357,15 +371,19 @@ class Diet(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: list = contentLocation if contentLocation is not None else []
+        self.contentLocation: list = (
+            contentLocation if contentLocation is not None else []
+        )
         self.file: list = file if file is not None else []
-        self.locationCreated: list = locationCreated if locationCreated is not None else []
+        self.locationCreated: list = (
+            locationCreated if locationCreated is not None else []
+        )
         self.writtenBy: list = writtenBy if writtenBy is not None else []
 
 
 class File(Item):
     description = """Any file that can be stored on disk."""
-    properties = Item.properties + ["filename", "keystr", "nonce", "sha256"]
+    properties = Item.properties + ["filename", "keystr", "nonce", "sha256", "starred"]
     edges = Item.edges + []
 
     def __init__(
@@ -374,6 +392,7 @@ class File(Item):
         keystr: str = None,
         nonce: str = None,
         sha256: str = None,
+        starred: bool = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -383,6 +402,7 @@ class File(Item):
         self.keystr: Optional[str] = keystr
         self.nonce: Optional[str] = nonce
         self.sha256: Optional[str] = sha256
+        self.starred: Optional[bool] = starred
 
 
 class Integrator(Item):
@@ -701,7 +721,9 @@ class Person(Item):
         self.hasPhoneNumber: list = hasPhoneNumber if hasPhoneNumber is not None else []
         self.label: list = label if label is not None else []
         self.me: list = me if me is not None else []
-        self.medicalCondition: list = medicalCondition if medicalCondition is not None else []
+        self.medicalCondition: list = (
+            medicalCondition if medicalCondition is not None else []
+        )
         self.mergedFrom: list = mergedFrom if mergedFrom is not None else []
         self.profilePicture: list = profilePicture if profilePicture is not None else []
         self.relationship: list = relationship if relationship is not None else []
@@ -1093,6 +1115,7 @@ class Message(WrittenWork):
         "externalId",
         "service",
         "subject",
+        "sendStatus",
     ]
     edges = WrittenWork.edges + [
         "message",
@@ -1109,6 +1132,7 @@ class Message(WrittenWork):
         externalId: str = None,
         service: str = None,
         subject: str = None,
+        sendStatus: str = None,
         message: list = None,
         messageChannel: list = None,
         photo: list = None,
@@ -1124,6 +1148,7 @@ class Message(WrittenWork):
         self.externalId: Optional[str] = externalId
         self.service: Optional[str] = service
         self.subject: Optional[str] = subject
+        self.sendStatus: Optional[str] = sendStatus
 
         # Edges
         self.message: list = message if message is not None else []
