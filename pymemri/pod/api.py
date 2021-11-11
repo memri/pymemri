@@ -48,7 +48,7 @@ class PodAPI:
         else:
             return {"type": "ClientAuth", "databaseKey": self.database_key}
 
-    def test_connection(self):
+    def test_connection(self) -> bool:
         try:
             res = requests.get(self._url)
             if self.verbose:
@@ -78,7 +78,7 @@ class PodAPI:
     def create_item(self, item: dict) -> str:
         return self.post("create_item", item).json()
 
-    def update_item(self, item: dict) -> None:
+    def update_item(self, item: dict) -> list:
         return self.post("update_item", item).json()
 
     def get_edges(
@@ -90,7 +90,7 @@ class PodAPI:
     def create_edge(self, edge: dict) -> str:
         return self.post("create_edge", edge).json()
 
-    def delete_item(self, uid) -> None:
+    def delete_item(self, uid) -> list:
         return self.post("delete_item", uid).json()
 
     def search(self, query: dict) -> List[dict]:
@@ -130,7 +130,7 @@ class PodAPI:
         create_edges: List[dict] = None,
         delete_items: List[str] = None,
         search: dict = None,
-    ) -> Dict[str, list]:
+    ) -> Dict[str, Any]:
 
         payload = {
             "createItems": create_items,
