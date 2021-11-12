@@ -3,5 +3,6 @@ include LICENSE
 include CONTRIBUTING.md
 include README.md
 include pymemri/client_simulator/template/images.html
+include pymemri/client_simulator/template/success.html
 include pymemri/cvu/definitions/*.cvu
 recursive-exclude * __pycache__
