@@ -20,7 +20,11 @@ QR_CODE_KEY = "qr_code"
 def index():
     global qr_code_dict
     qr_code_data = qr_code_dict[QR_CODE_KEY]
-    return render_template('images.html', chart_output=qr_code_data)
+    done = qr_code_dict.get("authenticated", False)
+    if done:
+        return render_template("success.html")
+    else:
+        return render_template('images.html', chart_output=qr_code_data)
 
 def run_app(qr_dict, host="0.0.0.0", port=8080):
     global qr_code_dict
@@ -74,6 +78,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     manager = multiprocessing.Manager()
     process_dict = manager.dict()
     process_dict["qr_code"] = _qr_code_data
+    process_dict["authenticated"] = False
     host = "0.0.0.0"
     port = 8080
     user_host = os.environ.get(POD_PLUGIN_DNS_ENV, f"http://0.0.0.0:{port}")
