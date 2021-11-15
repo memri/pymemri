@@ -40,13 +40,6 @@ nb_path: "nbs/pod.client.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -54,7 +47,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L26" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v4'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>, <strong><code>register_base_schema</code></strong>=<em><code>True</code></em>)</p>
+<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L24" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v4'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>, <strong><code>register_base_schema</code></strong>=<em><code>True</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 
 </div>
@@ -89,25 +82,11 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
-<span class="n">success</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">test_connection</span><span class="p">()</span>
+<span class="n">success</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">test_connection</span><span class="p">()</span>
 <span class="k">assert</span> <span class="n">success</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Succesfully connected to pod
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -210,7 +189,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;a90e26027c4460a328d3fd1d66bded3a&#39;</pre>
+<pre>&#39;9855880cae6516fcbbde7a765d867bf1&#39;</pre>
 </div>
 
 </div>
@@ -239,7 +218,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L588" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>age</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>bites</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>weight</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L511" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>age</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>bites</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>weight</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
 <p>Item is the baseclass for all of the data classes.</p>
 
@@ -387,7 +366,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;item&#39;: Person (#15bc9019cf5c6727a71d0cf789156b4d), &#39;name&#39;: &#39;sender&#39;}]</pre>
+<pre>[{&#39;item&#39;: Person (#20d61e4d48f6ed7fdea3c2feb7fb152b), &#39;name&#39;: &#39;sender&#39;}]</pre>
 </div>
 
 </div>
@@ -616,6 +595,95 @@ Completed Bulk action, written 1 items/edges
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_people</span> <span class="o">=</span> <span class="n">new_client</span><span class="o">.</span><span class="n">search</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Person&quot;</span><span class="p">},</span> <span class="n">include_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Person</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">all_people</span><span class="p">])</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_people</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
 <span class="k">assert</span> <span class="nb">any</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">account</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">all_people</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">bulk_action</span><span class="p">(</span><span class="n">create_items</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Account</span><span class="p">(</span><span class="n">identifier</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">j</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">service</span><span class="o">=</span><span class="s2">&quot;paginate_test&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">])</span>
+
+<span class="n">accounts</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Account&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;paginate_test&quot;</span><span class="p">})</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_paginate</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Account&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;paginate_test&quot;</span><span class="p">})</span>
+<span class="n">accounts_paginated</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+    <span class="n">accounts_paginated</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+    
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">accounts_paginated</span><span class="p">)</span> <span class="o">==</span> <span class="mi">100</span>
+<span class="k">assert</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">accounts_paginated</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+BULK: Writing 10/10 items/edges
+Completed Bulk action, written 10 items/edges
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Account&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;NonExistentService&quot;</span><span class="p">})</span>
+<span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="p">[]</span>
+
+<span class="n">paginator</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_paginate</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Account&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;NonExistentService&quot;</span><span class="p">})</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">paginator</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="kc">False</span>
 </pre></div>
 
     </div>
@@ -1051,7 +1119,7 @@ Completed Bulk action, written 2 items/edges
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[File (#f97f96d594a36ba33bbece3dba8a62ac)]</pre>
+<pre>[File (#8fa5466537431004bfa54fb301bcbc19)]</pre>
 </div>
 
 </div>
