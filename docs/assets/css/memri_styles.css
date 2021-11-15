@@ -33,6 +33,19 @@
   }
 
 
+pre {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+.input_area pre {
+    background-color: #f7f4ff !important;
+}
+
+.output_area pre {
+background-color: #ffffff !important;
+}
+
 
 #tg-sb-content h1{
     font-family: "Frutiger Neue LT", Helvetica !important;
