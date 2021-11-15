@@ -93,6 +93,7 @@ class PluginBase(metaclass=ABCMeta):
         raise NotImplementedError()
 
 # Cell
+# hide
 class PluginError(Exception):
     """Generic class for plugin errors. This error is raised when a plugin raises an unexpected exception."""
     pass
