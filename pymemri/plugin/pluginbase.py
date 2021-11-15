@@ -98,6 +98,7 @@ class PluginError(Exception):
     pass
 
 # Cell
+# hide
 class ExamplePlugin(PluginBase):
     """"""
 
