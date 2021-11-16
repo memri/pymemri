@@ -4,10 +4,11 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodError', 'PodAPI']
 
 # Cell
 import os
-from typing import Any, Dict, List, Generator
+from typing import Any, Dict, List, Generator, Deque
 import requests
 import urllib
 from hashlib import sha256
+from collections import deque
 
 # Cell
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
@@ -96,7 +97,32 @@ class PodAPI:
     def search(self, query: dict) -> List[dict]:
         return self.post("search", query).json()
 
-    def search_paginate(self, query: dict, limit: int = 32) -> Generator:
+    def search_paginate(self, query: dict, limit: int = 32, even_page_size=True) -> Generator:
+        """
+        The Pod returns uneven page sizes when paginating, which can be an issue for some applications.
+        `search_paginate` wraps the pagination, and always returns pages of size `limit` by storing overflow items
+        in a queue.
+        """
+        paginator = self._paginate(query, limit)
+
+        if not even_page_size:
+            yield from paginator
+
+        remaining: Deque[Item] = deque()
+        while True:
+            if len(remaining) >= limit:
+                yield [remaining.popleft() for _ in range(limit)]
+            if len(remaining) < limit:
+                try:
+                    remaining.extend(next(paginator))
+                except StopIteration:
+                    break
+
+        while len(remaining):
+            yield [remaining.popleft() for _ in range(min(limit, len(remaining)))]
+
+
+    def _paginate(self, query: dict, limit: int = 32) -> Generator:
         if (
             "_limit" in query
             or "dateServerModified" in query
