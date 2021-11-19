@@ -70,6 +70,11 @@ index = {"read_file": "basic.ipynb",
          "POD_KEYS_FULL_FOLDER": "pod.utils.ipynb",
          "DEFAULT_POD_KEY_PATH": "pod.utils.ipynb",
          "read_pod_key": "pod.utils.ipynb",
+         "INDEXER_TEMPLATE_URL": "template.formatter.ipynb",
+         "str_to_identifier": "template.formatter.ipynb",
+         "download_indexer_template": "template.formatter.ipynb",
+         "TemplateFormatter": "template.formatter.ipynb",
+         "indexer_from_template": "template.formatter.ipynb",
          "get_ci_variables": "test_utils.ipynb"}
 
 modules = ["data/basic.py",
@@ -86,6 +91,7 @@ modules = ["data/basic.py",
            "pod/client.py",
            "pod/db.py",
            "pod/utils.py",
+           "template/formatter.py",
            "test_utils.py"]
 
 doc_url = "http://memri.docs.memri.io/pymemri/"
