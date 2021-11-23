@@ -103,7 +103,7 @@ def plugin_from_template(
     if model_name is None:
         model_name = package_name + "_model"
 
-    template = download_indexer_template(template_name)
+    template = download_plugin_template(template_name)
     tgt_path = Path(target_dir)
     replace_dict = {
         "user": user,
