@@ -52,10 +52,10 @@ class TemplateFormatter:
         self.verbose = verbose
 
     def format_content(self, content):
-        return Template(content).substitute(self.replace_dict)
+        return Template(content).safe_substitute(self.replace_dict)
 
     def format_path(self, path):
-        new_path = Template(path).substitute(self.replace_dict)
+        new_path = Template(path).safe_substitute(self.replace_dict)
         return self.tgt_path / new_path
 
     def format_file(self, filename, content):
@@ -74,17 +74,18 @@ class TemplateFormatter:
 # Cell
 @call_parse
 def plugin_from_template(
-    template_name: Param("Name of the template, see the Plugin Templates repository.") = None,
     user: Param("Your Gitlab username", str) = None,
-    repo_name: Param("The name of your Gitlab plugin repository", str) = None,
-    package_name: Param("Name of your plugin python package", str) = None,
+    repo_url: Param("The url of your empty Gitlab plugin repository", str) = None,
     plugin_name: Param("Display name of your plugin", str) = None,
+    template_name: Param("Name of the template, see the Plugin Templates repository.") = None,
+    package_name: Param("Name of your plugin python package", str) = None,
     model_name: Param("Name of the model used in the indexer", str) = None,
+    description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
 ):
     if template_name is None:
-        print("template name not defined, using the indexer template.")
-        template_name = "indexer"
+        print("template name not defined, using the classifier_plugin template.")
+        template_name = "classifier_plugin"
 
     if user is None:
         print("Define your gitlab user name with `--user <username>`")
@@ -94,11 +95,14 @@ def plugin_from_template(
         print("Define your gitlab user name with `--plugin_name <name>`")
         return
 
+    if repo_url is None:
+        print("Define your gitlab repository url with `--repo_url <url>`")
+        return
+
+    repo_name = repo_url.strip("/").split("/")[-1]
+
     if package_name is None:
         package_name = str_to_identifier(plugin_name, lower=True)
-
-    if repo_name is None:
-        repo_name = package_name
 
     if model_name is None:
         model_name = package_name + "_model"
@@ -111,7 +115,8 @@ def plugin_from_template(
         "plugin_name": plugin_name,
         "model_name": model_name,
         "repo_name": repo_name,
-        "repo_url": f"https://gitlab.memri.io/{user}/{repo_name}",
+        "repo_url": repo_url,
+        "description": str(description),
     }
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
