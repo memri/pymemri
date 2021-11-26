@@ -9,9 +9,5 @@
 		"identifier": "myusername",
 		"secret": "access_token", 
 		"refreshToken": "refresh_token"
-	},
-	"settings": {
-		"example_setting": "example_value"
 	}
-
 }

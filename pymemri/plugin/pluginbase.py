@@ -2,8 +2,8 @@
 
 __all__ = ['POD_FULL_ADDRESS_ENV', 'POD_TARGET_ITEM_ENV', 'POD_OWNER_KEY_ENV', 'POD_AUTH_JSON_ENV',
            'POD_PLUGIN_DNS_ENV', 'PluginBase', 'PluginError', 'ExamplePlugin', 'write_run_info', 'get_plugin_cls',
-           'run_plugin_from_run_id', 'store_keys', 'parse_config', 'create_run_expanded', 'run_plugin',
-           'simulate_run_plugin_from_frontend']
+           'run_plugin_from_run_id', 'store_keys', 'parse_metadata', 'parse_config', 'create_run_expanded',
+           'run_plugin', 'simulate_run_plugin_from_frontend']
 
 # Cell
 from ..data.schema import *
@@ -45,21 +45,19 @@ POD_PLUGIN_DNS_ENV          = 'PLUGIN_DNS'
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
-    def __init__(self, pluginRun=None, client=None, persistentState=None, **kwargs):
-        super().__init__(**kwargs)
-
+    def __init__(self, pluginRun=None, client=None, **kwargs):
+        super().__init__()
         if pluginRun is None:
             warnings.warn(
-                "Plugin needs a pluginRun as kwarg, running without will only work while testing.",
+                "Plugin needs a pluginRun as kwarg, running without will only work in development.",
                 RuntimeWarning)
         self.pluginRun = pluginRun
 
         if client is None:
             raise ValueError("Plugins need a `client: PodClient` as kwarg to run.")
         self.client = client
-
-        self.persistentState = persistentState
         self._status_listeners = []
+        self._config_dict = kwargs
 
     def set_run_status(self, status):
         # TODO sync before setting status (requires pod_client.sync())
@@ -107,8 +105,8 @@ class ExamplePlugin(PluginBase):
         super().__init__(**kwargs)
 
     def run(self):
-        print("running")
         self.client.create(Dog("some dog", 20))
+        print("Plugin run success.")
 
     def add_to_schema(self):
         self.client.add_to_schema(Dog("my name", 10))
@@ -136,19 +134,20 @@ def get_plugin_cls(plugin_module, plugin_name):
     except (ImportError, AttributeError):
         raise ImportError(f"Unknown plugin: {plugin_module}.{plugin_name}")
 
-def run_plugin_from_run_id(run_id, client):
+def run_plugin_from_run_id(run_id, client, **kwargs):
     """
+    Runs a plugin from run_id, initialized with **kwargs.
+
     Args:
-        run_id (int): id of the PluginRun
         client (PodClient): client containing PluginRun
-        return_plugin (bool): Returns created plugin instance for testing purposes.
+        run_id (int): id of the PluginRun
     """
 
     run = client.get(run_id)
     write_run_info(run.pluginModule.split(".")[0] if run.pluginModule is not None else run.containerImage, run.id)
 
     plugin_cls = get_plugin_cls(run.pluginModule, run.pluginName)
-    plugin = plugin_cls(pluginRun=run, client=client)
+    plugin = plugin_cls(pluginRun=run, client=client, **kwargs)
     plugin.add_to_schema()
 
     plugin.set_run_status(RUN_STARTED)
@@ -194,18 +193,39 @@ def store_keys(path:Param("path to store the keys", str)=DEFAULT_POD_KEY_PATH,
 
 # Cell
 # hide
-def parse_config(file, remove_container=False):
-    json_dict = read_json(file)
-    account = Account.from_json(json_dict["account"])
-    del json_dict["account"]
-    settings = json.dumps(json_dict["settings"])
-    del json_dict["settings"]
-    run = PluginRun.from_json(json_dict)
-    run.settings = settings
-    run.add_edge("account", account)
+def parse_metadata(fn, remove_container=False):
+    metadata = read_json(fn)
+    for k in ["pluginModule", "pluginName"]:
+        if k not in metadata:
+            raise ValueError(f"Missing metadata: {k}")
+
+    run_vars = {k: v for k, v in metadata.items() if k in PluginRun.properties}
+    run = PluginRun.from_json(run_vars)
     if remove_container:
         run.containerImage = "none"
+
+    if "account" in metadata:
+        account = Account.from_json(metadata["account"])
+        run.add_edge("account", account)
     return run
+
+
+def parse_config(run_config, config_file=None, remove_container=False):
+    """
+    Parse the configuration of the plugin. A configuration is a dict that is passed to the plugin init as kwargs.
+    If configuration file is defined, the run_config is ignored.
+    """
+    if config_file is not None:
+        config = read_json(config_file)
+    elif isinstance(run_config, str) and len(run_config):
+        config = json.loads(run_config)
+    else:
+        config = dict()
+
+    if not isinstance(config, dict):
+        raise ValueError(f"Incorrect plugin config format, expected a dict, got a {type(config)}")
+    return config
+
 
 def create_run_expanded(client, run):
     client.create(run)
@@ -217,37 +237,50 @@ def create_run_expanded(client, run):
 
 # Cell
 @call_parse
-def run_plugin(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_ADDRESS,
-               plugin_run_id:Param("Run id of the plugin to be executed", str)=None,
-               database_key:Param("Database key of the pod", str)=None,
-               owner_key:Param("Owner key of the pod", str)=None,
-               read_args_from_env:Param("Read the args from the environment", bool)=False,
-               config_file:Param("config file for the PluginRun", str)=None):
+def run_plugin(
+    pod_full_address: Param("The pod full address", str) = DEFAULT_POD_ADDRESS,
+    plugin_run_id: Param("Run id of the plugin to be executed", str) = None,
+    database_key: Param("Database key of the pod", str) = None,
+    owner_key: Param("Owner key of the pod", str) = None,
+    read_args_from_env: Param("Read the args from the environment", bool) = False,
+    metadata: Param("metadata file for the PluginRun", str) = None,
+    config_file: Param(
+        "A plugin configuration, overwrites the configuration of the PluginRun", str
+    ) = None,
+):
 
     if read_args_from_env:
         pod_full_address, plugin_run_id, pod_auth_json, owner_key = _parse_env()
-        database_key=None
+        database_key = None
     else:
-        if database_key is None: database_key = read_pod_key("database_key")
-        if owner_key is None: owner_key = read_pod_key("owner_key")
+        if database_key is None:
+            database_key = read_pod_key("database_key")
+        if owner_key is None:
+            owner_key = read_pod_key("owner_key")
         pod_auth_json = None
-
     if POD_PLUGIN_DNS_ENV in os.environ:
         print(f"Plugin accesible via {os.environ.get(POD_PLUGIN_DNS_ENV)}:8080")
 
-    client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key,
-                       auth_json=pod_auth_json)
-
-    if config_file is not None:
-        run = parse_config(config_file, remove_container=True)
-        create_run_expanded(client, run)
-        plugin_run_id=run.id
-
+    client = PodClient(
+        url=pod_full_address,
+        database_key=database_key,
+        owner_key=owner_key,
+        auth_json=pod_auth_json,
+    )
     print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
 
-    try:
-        run_plugin_from_run_id(run_id=plugin_run_id, client=client)
+    if metadata is not None:
+        run = parse_metadata(metadata, remove_container=True)
+        create_run_expanded(client, run)
+        plugin_run_id = run.id
+    else:
+        run = client.get(plugin_run_id)
+    plugin_config = parse_config(run.config, config_file)
 
+    try:
+        run_plugin_from_run_id(
+            plugin_run_id, client, **plugin_config
+        )
     except Exception as e:
         run = client.get(plugin_run_id)
         run.status = RUN_FAILED
@@ -257,47 +290,49 @@ def run_plugin(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_A
 
 # Cell
 @call_parse
-def simulate_run_plugin_from_frontend(pod_full_address:Param("The pod full address", str)=DEFAULT_POD_ADDRESS,
-                        database_key:Param("Database key of the pod", str)=None,
-                        owner_key:Param("Owner key of the pod", str)=None,
-                        container:Param("Pod container to run frod", str)=None,
-                        plugin_path:Param("Plugin path", str)=None,
-                        settings_file:Param("Plugin settings (json)", str)=None,
-                        config_file:Param("config file for the PluginRun", str)=None,
-                        account_id:Param("Account id to be used inside the plugin", str)=None):
-
-    # TODO remove container, plugin_module, plugin_name and move to Plugin item.
-    # Open question: This presumes Plugin item is already in pod before simulate_run_plugin_from_frontend is called.
-    if database_key is None: database_key = read_pod_key("database_key")
-    if owner_key is None: owner_key = read_pod_key("owner_key")
+def simulate_run_plugin_from_frontend(
+    pod_full_address: Param("The pod full address", str) = DEFAULT_POD_ADDRESS,
+    database_key: Param("Database key of the pod", str) = None,
+    owner_key: Param("Owner key of the pod", str) = None,
+    container: Param("Pod container to run frod", str) = None,
+    plugin_path: Param("Plugin path", str) = None,
+    metadata: Param("metadata file for the PluginRun", str) = None,
+    config_file: Param(
+        "A plugin configuration, overwrites the configuration of the PluginRun", str
+    ) = None,
+    account_id: Param("Account id to be used inside the plugin", str) = None,
+):
+    if database_key is None:
+        database_key = read_pod_key("database_key")
+    if owner_key is None:
+        owner_key = read_pod_key("owner_key")
     params = [pod_full_address, database_key, owner_key]
+    if None in params:
+        raise ValueError(f"Missing Pod credentials")
 
-    if (None in params):
-        raise ValueError(f"Defined some params to run indexer, but not all")
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
-    for name, val in [("pod_full_address", pod_full_address), ("owner_key", owner_key)]:
-        print(f"{name}={val}")
+    print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
 
-    if config_file is not None:
-        run = parse_config(config_file)
+    if metadata is not None:
+        run = parse_metadata(metadata)
         create_run_expanded(client, run)
     else:
         if container is None:
             container = plugin_path.split(".", 1)[0]
         print(f"Inferred '{container}' as plugin container name")
-
         plugin_module, plugin_name = plugin_path.rsplit(".", 1)
         run = PluginRun(container, plugin_module, plugin_name)
 
         if account_id is not None:
             account = client.get(account_id)
-            run.add_edge('account', account)
+            run.add_edge("account", account)
             print(f"Using existing {account}")
 
         client.create(run)
 
-    print(f"\ncalling the `create` api on {pod_full_address} to make your Pod start "
-          f"a plugin with id {run.id}.")
+    print(
+        f"Created pluginrun with id {run.id} on {pod_full_address}"
+    )
 
     plugin_dir = run.containerImage
     write_run_info(plugin_dir, run.id)
