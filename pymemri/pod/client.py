@@ -19,6 +19,8 @@ import uuid
 import urllib
 from datetime import datetime
 
+from threading import Thread
+
 # Cell
 class PodClient:
     # Mapping from python type to schema type
@@ -101,7 +103,7 @@ class PodClient:
             print(e)
             return False
 
-    def create_photo(self, photo):
+    def create_photo(self, photo, asyncFlag=True):
         file = photo.file[0]
 
         # create the photo
@@ -111,7 +113,7 @@ class PodClient:
         if not items_edges_success:
             raise ValueError("Could not create file or photo item")
 
-        return self._upload_image(photo.data)
+        return self._upload_image(photo.data, asyncFlag=asyncFlag)
 
     def _property_dicts_from_instance(self, node):
         create_items = []
@@ -164,15 +166,17 @@ class PodClient:
             print(e)
             return False
 
-    def _upload_image(self, img):
+    def _upload_image(self, img, asyncFlag=True, callback=None):
         if isinstance(img, np.ndarray):
-            return self.upload_file(img.tobytes())
+            return self.upload_file(img.tobytes(), asyncFlag=asyncFlag, callback=callback)
         elif isinstance(img, bytes):
-            return self.upload_file(img)
+            return self.upload_file(img, asyncFlag=asyncFlag, callback=callback)
         else:
             raise ValueError(f"Unknown image data type {type(img)}")
 
-    def upload_file(self, file):
+    def upload_file(self, file, asyncFlag=True, callback=None):
+        if asyncFlag:
+            return self.upload_file_async(file, callback=callback)
         try:
             self.api.upload_file(file)
             return True
@@ -181,6 +185,14 @@ class PodClient:
             if e.status == 409:
                 return True
             return False
+
+    def upload_file_async(self, file, callback=None):
+        def thread_fn(file, callback):
+            result = self.upload_file(file, asyncFlag=False)
+            if callback:
+                callback(result)
+        Thread(target=thread_fn, args=(file, callback)).start()
+        return True
 
     def get_file(self, sha):
         return self.api.get_file(sha)
