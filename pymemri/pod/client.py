@@ -510,7 +510,7 @@ class PodClient:
 # Cell
 class Dog(Item):
     properties = Item.properties + ["name", "age", "bites", "weight"]
-    edges = Item.edges
+
     def __init__(self, name: str=None, age: int=None, bites: bool=False, weight: float=None, **kwargs):
         super().__init__(**kwargs)
         self.name = name
