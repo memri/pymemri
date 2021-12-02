@@ -41,7 +41,6 @@ POD_AUTH_JSON_ENV           = 'POD_AUTH_JSON'
 POD_PLUGIN_DNS_ENV          = 'PLUGIN_DNS'
 
 # Cell
-# hide
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
@@ -99,17 +98,19 @@ class PluginError(Exception):
 # Cell
 # hide
 class ExamplePlugin(PluginBase):
-    """"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, dog_name: str = "Bob", **kwargs):
         super().__init__(**kwargs)
+        self.dog_name = dog_name
 
     def run(self):
-        self.client.create(Dog("some dog", 20))
-        print("Plugin run success.")
+        print("Started plugin run...")
+        dog = Dog(self.dog_name, 10)
+        self.client.create(dog)
+        print("Run success!")
 
     def add_to_schema(self):
-        self.client.add_to_schema(Dog("my name", 10))
+        self.client.add_to_schema(Dog)
 
 # Cell
 # hide
@@ -178,7 +179,17 @@ def _parse_env():
 @call_parse
 def store_keys(path:Param("path to store the keys", str)=DEFAULT_POD_KEY_PATH,
                database_key:Param("Database key of the pod", str)=None,
-               owner_key:Param("Owner key of the pod", str)=None):
+               owner_key:Param("Owner key of the pod", str)=None,
+               replace: Param("Replace existing stored keys", str)=True):
+
+    if not replace:
+        try:
+            read_pod_key("database_key")
+            read_pod_key("owner_key")
+            print("Existing stored keys found, exiting without generating new keys.")
+            return
+        except ValueError:
+            pass
 
     if database_key is None: database_key = PodClient.generate_random_key()
     if owner_key is None: owner_key = PodClient.generate_random_key()
