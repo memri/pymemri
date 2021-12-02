@@ -81,6 +81,7 @@ index = {"read_file": "basic.ipynb",
          "TEMPLATE_BASE_PATH": "template.formatter.ipynb",
          "str_to_identifier": "template.formatter.ipynb",
          "download_plugin_template": "template.formatter.ipynb",
+         "get_templates": "template.formatter.ipynb",
          "TemplateFormatter": "template.formatter.ipynb",
          "plugin_from_template": "template.formatter.ipynb",
          "get_ci_variables": "test_utils.ipynb"}
