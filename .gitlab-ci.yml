@@ -52,4 +52,13 @@ pages:
     paths:
     - public
 
+memri-docs:
+  stage: deploy
+  only:
+    - dev
+  trigger: memri/docs.memri.io
+
+
+
+
  
