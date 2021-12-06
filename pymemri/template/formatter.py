@@ -15,7 +15,7 @@ import re
 
 # Cell
 # hide
-TEMPLATE_URL = "https://gitlab.memri.io/plugins/plugin-templates/-/archive/dev/plugin-templates-dev.zip"
+TEMPLATE_URL = "https://gitlab.memri.io/memri/plugin-templates/-/archive/dev/plugin-templates-dev.zip"
 TEMPLATE_BASE_PATH = "plugin-templates-dev"
 
 # Cell
