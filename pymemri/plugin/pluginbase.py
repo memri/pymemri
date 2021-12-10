@@ -64,6 +64,11 @@ class PluginBase(metaclass=ABCMeta):
             self.pluginRun.status = status
             self.client.update_item(self.pluginRun)
 
+    def set_progress(self, progress):
+        if self.pluginRun and self.client:
+            self.pluginRun.progress = progress
+            self.client.update_item(self.pluginRun)
+
     def setup(self):
         if self.client and self.pluginRun:
             status_abort_listener = get_abort_plugin_listener(self.client, self.pluginRun.id)
