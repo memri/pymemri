@@ -1,13 +1,13 @@
 ---
 
-title: pymemri
+title: Pymemri
 
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Pymemri is a python client for the Memri Personal online datastore (pod). This client can be used to build plugins in python. Plugins connect and add the information to your Pod. Plugins that <b>import your data from external services</b> are called **Importers** (Gmail, WhatsApp, etc.). Plugins that <b>connect new data to the existing data</b> are called  **indexers** (face recognition, spam detection, object detection, etc.). Lastly there are plugins that <b>execute actions</b> (sending messages, uploading files)."
-description: "Pymemri is a python client for the Memri Personal online datastore (pod). This client can be used to build plugins in python. Plugins connect and add the information to your Pod. Plugins that <b>import your data from external services</b> are called **Importers** (Gmail, WhatsApp, etc.). Plugins that <b>connect new data to the existing data</b> are called  **indexers** (face recognition, spam detection, object detection, etc.). Lastly there are plugins that <b>execute actions</b> (sending messages, uploading files)."
+summary: "Pymemri is a python library for creating <b>Plugins</b> for the Memri Personal online datastore <a href='https://gitlab.memri.io/memri/pod'>(pod)</a>. Pymemri has a PodClient to communicate with the pod, and tools to build and test plugins."
+description: "Pymemri is a python library for creating <b>Plugins</b> for the Memri Personal online datastore <a href='https://gitlab.memri.io/memri/pod'>(pod)</a>. Pymemri has a PodClient to communicate with the pod, and tools to build and test plugins."
 nb_path: "nbs/index.ipynb"
 ---
 <!--
@@ -32,7 +32,7 @@ nb_path: "nbs/index.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a href="https://gitlab.memri.io/memri/pymemri/-/pipelines/latest"><img src="https://img.shields.io/gitlab/pipeline/memri/pymemri/dev?gitlab_url=https%3A%2F%2Fgitlab.memri.io&amp;label=CI&amp;logo=gitlab&amp;style=plastic" alt="Gitlab pipeline status (self-hosted)"></a>
-<a href="https://discourse.memri.io"><img src="https://img.shields.io/discourse/status?color=00A850&amp;label=Discourse&amp;logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAhCAYAAAC4JqlRAAAEhUlEQVR42r2XA5RjyxqFM7Y90ymd6uCNbdu2bdu2bdu2bdu27dmvUtfpk9zu5K6utXZU+Pb/l3IsISlCiFiCiBKS0m4GpdMNxpa5JCmbZFDeQTKWR0oZyfJfF8l5IQVdr6DfDcrwL3qnDM3knKf2GyysIoMacKcSfNAvg7AllNIkvrDDCMJ6uQZRgj9S2Xjpmppgk1MlShRNULrcD6iZvhqM1QkOP5xqvMnTQIFKJQlHZ6WhAQJDrALtrFz/JoNjhLHaXumqwRizjjYlF/S4gt5PZuAst+Fk9lS4UDg9LhRJj9O502B3quTowARs3k18Vusqo/lKJ7yiWafsCrwtwMA9BT6eISWe106DtzUF3jV04kP/Avg0tQo+z6iGj0OK4nXzzDhSMRtyO6Q3E3ftdnuMf8CTJ08eUVXccG+ck3KcVPArARL3q2XS4A/dc+DboT7Ah2XA11X/1JeV+HFxFB6Pr4Y6xTJ4McF7/jP1lLZ3b+RQ2quivqrgz2upqOtIfN3YVkPcwKa6cmwASlXO7vGsMAwjoYar/RFe/fDIvVF/K9dpf1g9A97WDcT3k4NNQN7V52B3JM+R0dSEIKz3n6ece2VypYvJBI5nTKXT/m1755DCtZ68W4hMi1pABDqCmiDs2u/p5yPcK+sSHT1e1EmDj4MK+wL/U0V3tQBp1R2mu4sQoQywPe4Vo6wcp6RdR68WlV8Gep/tDT57CLg9RdBpoLS6y8BD94qFAQKncqfF+/aZ/lx0vmrejRGwL2uJBJXbmmSB9nMZ+OxesUoZuFwqo9rjlf2Bay25NQpyTX3E6LbQbB1MsZjNzXSrwNVymfB1XSu/DYy/MhBsdW1EGnfILAPzTA30JBwX1EHydUt7vw00PtYRtlWNEHHSCbMMTDY1kJcwfex+WdnML/ivrythXVcN9sVdEGnM/iAcyVgfbcBMa41AfJhYyS8Da++OhWVpacSbOR8xuswxux2reDRQmnBcq5UT+LzCJ/hX1S/VljoIWF0DlpUvkLB8syAMIQTxaCA/5bhcMSt+vV3ik4FWx7vo6BPMnoqwi+6bnIb0vEUVjwaaE4EXE2v4BO9+uqeG25a1hWXVa8Sr3cvsLujs1cC0XGnw8+bEEIHvv12A4nuaa7h9RUtYVjxB5JG7Ibh0j/65lDKmVwNbmxX/x+A/v6zCroeTsPX+BLz7uPTP31+9X4z1d8eh7pH2iLS8HKIsLw86b7CK/CUiTjwG7kxttvrbargnA4FKN1d21YAjj6ei9f4+SL+0M6yzh4HMHq73dZxVlRB1RXkdbfhlZcFW14FY0BfhF17QaY/RbQG4zWn2L/kyYyyyVwNZUjoxeHpHFOrVGLJuQyQpVA3WTHkhpB0sZQbEbjEG4WddRvhF55QuqVX+REPDLnqA6L2WICBncc8PLYT8T4PdDPgkki4HkuUpg6QFKsGaOR+ECPTW/ofBWBkN9cGAXxKUfZCMldbAUDdA2D1JaVoNC10D+mlo7J/bLfQM0PuSsMH6mA1OUS6n+iNB+UQF7a8+15aEJLeEsPwfm4dbxw/8yD4AAAAASUVORK5CYII=&amp;server=https%3A%2F%2Fdiscourse.memri.io" alt="Discourse status"></a> 
+<a href="https://discord.gg/BcRfajJk4k"><img src="https://img.shields.io/discord/799216875480678430?color=blue&amp;label=Discord&amp;logo=discord&amp;style=plastic" alt="Discord"></a>
 <a href="https://twitter.com/YourMemri"><img src="https://img.shields.io/twitter/url?label=%40YourMemri&amp;logo=twitter&amp;style=plastic&amp;url=https%3A%2F%2Ftwitter.com%2FYourMemri" alt="Twitter URL"></a></p>
 
 </div>
@@ -40,7 +40,7 @@ nb_path: "nbs/index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This repository is built with <a href="https://github.com/fastai/nbdev">nbdev</a>, which means that the repo structure has a few differences compared to a standard python repo.</p>
+<p>Plugins connect and add the information to your Pod. Plugins that <b>import your data from external services</b> are called <strong>Importers</strong> (Gmail, WhatsApp, etc.). Plugins that <b>connect new data to the existing data</b> are called  <strong>indexers</strong> (face recognition, spam detection, object detection, etc.). Lastly there are plugins that <b>execute actions</b> (sending messages, uploading files). This repository is built with <a href="https://github.com/fastai/nbdev">nbdev</a>, which means that the repo structure has a few differences compared to a standard python repo.</p>
 
 </div>
 </div>
@@ -71,51 +71,57 @@ nb_path: "nbs/index.ipynb"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Quickstart">Quickstart<a class="anchor-link" href="#Quickstart"> </a></h2><p>To use the pymemri <a href="/pymemri/pod.client.html#PodClient"><code>PodClient</code></a>, we first need to have a pod running. The quickest way to do this is to install from the <a href="https://gitlab.memri.io/memri/pod">pod repo</a>, and run <code>./examples/run_development.sh</code> from within that repo.</p>
+<h2 id="Quickstart:-Pod-Client">Quickstart: Pod Client<a class="anchor-link" href="#Quickstart:-Pod-Client"> </a></h2><p>All interaction between plugins and the pod goes via the Pymemri <a href="/pymemri/pod.client.html#PodClient"><code>PodClient</code></a>. To use this client in development, we first need to have a pod running locally. The quickest way to do this is to install from the <a href="https://gitlab.memri.io/memri/pod">pod repo</a>, and run <code>./examples/run_development.sh</code>.</p>
+<p>If you have a running pod, you can define and add your own item definitions:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.data.itembase</span> <span class="kn">import</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">pymemri.pod.client</span> <span class="kn">import</span> <span class="n">PodClient</span>
 
-<pre><code>from pymemri.data.schema import *
-from pymemri.pod.client import *
+<span class="k">class</span> <span class="nc">Dog</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">properties</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
 
-class Dog(Item):
-    def __init__(self, name, age, id=None, deleted=None):
-        super().__init__(id=id, deleted=deleted)
-        self.name = name
-        self.age = age
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
 
-    @classmethod
-    def from_json(cls, json):
-        id = json.get("id", None)
-        name = json.get("name", None)
-        age = json.get("age", None)
-        return cls(id=id,name=name,age=age)
+<span class="c1"># Connect to the pod and add the Dog item definition</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">Dog</span><span class="p">)</span>
 
-client = PodClient()
-example_dog = Dog("max", 2)
-client.add_to_schema(example_dog)
-dog = Dog("bob", 3)
-client.create(dog)</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Running-a-plugin">Running a plugin<a class="anchor-link" href="#Running-a-plugin"> </a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>After installation, users can use the plugin CLI to manually run a plugin. For more information, see <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a>.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span>run_plugin --pod_full_address<span class="o">=</span>&lt;pod_address&gt; --plugin_run_id<span class="o">=</span>&lt;plugin_run_id&gt; --owner_key<span class="o">=</span>&lt;owner_key&gt; <span class="se">\</span>
-            --database_key<span class="o">=</span>&lt;dabase_key&gt;
+<span class="c1"># Add a Dog to the pod</span>
+<span class="n">dog</span> <span class="o">=</span> <span class="n">Dog</span><span class="p">(</span><span class="s2">&quot;bob&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">dog</span><span class="p">)</span>
 </pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Quickstart:-Running-a-plugin">Quickstart: Running a plugin<a class="anchor-link" href="#Quickstart:-Running-a-plugin"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After installation, users can use the plugin CLI to manually run a plugin. For more information on how to build a plugin, see <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a>.</p>
+<p><b>With the pod running, run in your terminal|: </b></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span>store_keys
+run_plugin --metadata <span class="s2">&quot;example_plugin.json&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This stores a random owner key and database key on your disk for future use, and runs the pymemri example plugin. If everything works correctly, the output should read <code>Plugin run success.</code></p>
 
 </div>
 </div>

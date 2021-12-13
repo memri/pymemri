@@ -43,39 +43,9 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Creating-a-plugin">Creating a plugin<a class="anchor-link" href="#Creating-a-plugin"> </a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The memri <a href="https://gitlab.memri.io/memri/pod">pod</a> uses a plugin system to add features to the backend memri backend. Plugins, can import your data (importers), change your data (indexers), or call other serivces. Users can define their own plugins to add new behaviour to their memri app. Let's use the following plugin as an example of how we can start plugins.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Memri plugins need to define at least 2 methods: <code>.run()</code> and <code>.add_to_schema()</code>. <code>.run()</code> defines the logic of the plugin. <code>.add_to_schema()</code> defines the schema for the plugin in the pod. Note that currently, <code>add_to_schema</code> requires all item to <strong>have all properties defined that are used in the plugin</strong>. In the future, we might replace add_to_schema, to be done automatically, based on a declarative schema defined in the plugin.</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">MyPlugin</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -83,9 +53,11 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <div class="output_area">
 
 
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="PluginBase" class="doc_header"><code>class</code> <code>PluginBase</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L44" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PluginBase</code>(<strong><code>pluginRun</code></strong>=<em><code>None</code></em>, <strong><code>client</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Base class for plugins</p>
 
-<div class="output_text output_subarea output_execute_result">
-<pre>MyPlugin (#None)</pre>
 </div>
 
 </div>
@@ -96,150 +68,85 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyItem</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">properties</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
-    <span class="n">edges</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">edges</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<p><a href="/pymemri/plugin.pluginbase.html#PluginBase"><code>PluginBase</code></a> is the base class of all Pymemri plugins. You can either build your plugin from scratch, or start with one of our <a href="https://gitlab.memri.io/plugins/plugin-templates">Plugins Templates</a>.</p>
+<p>All inheriting classes should implement:</p>
+<ul>
+<li><a href="/pymemri/plugin.pluginbase.html#PluginBase.run"><code>PluginBase.run</code></a>,          which implements the logic of the plugin</li>
+<li><a href="/pymemri/plugin.pluginbase.html#PluginBase.add_to_schema"><code>PluginBase.add_to_schema</code></a>, for adding plugin specific item types to the Pod</li>
+</ul>
+<p>Note that both the <code>pluginRun</code> and <code>client</code> arguments are mandatory for running a plugin. When using the <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> CLI, these are handled for you. For local development and testing, a plugin can be initialized with just a <code>client</code>, which results in a <code>RuntimeWarning</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Example-plugin">Example plugin<a class="anchor-link" href="#Example-plugin"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's use the following plugin as an example of how we can define and run plugins.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.pod.client</span> <span class="kn">import</span> <span class="n">Dog</span>
+
+<span class="k">class</span> <span class="nc">ExamplePlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dog_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dog_name</span> <span class="o">=</span> <span class="n">dog_name</span>
 
-<span class="k">class</span> <span class="nc">MyPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">PluginBase</span><span class="o">.</span><span class="n">properties</span>
-    <span class="n">edges</span><span class="o">=</span> <span class="n">PluginBase</span><span class="o">.</span><span class="n">edges</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Started plugin run...&quot;</span><span class="p">)</span>
+        <span class="n">dog</span> <span class="o">=</span> <span class="n">Dog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dog_name</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">dog</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run success!&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pluginPackage</span><span class="o">=</span><span class="s2">&quot;pymemri.plugin.pluginbase&quot;</span>
-
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;some person&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">MyItem</span><span class="p">(</span><span class="s2">&quot;my name&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">Dog</span><span class="p">)</span>
 </pre></div>
 
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.pod.client</span> <span class="kn">import</span> <span class="n">PodClient</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">MyPlugin</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="n">data_query</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">))</span>
-<span class="k">assert</span> <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">PluginRun</span><span class="p">())</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plugin</span> <span class="o">=</span> <span class="n">MyPlugin</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="n">data_query</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">)</span>
-<span class="n">run</span> <span class="o">=</span> <span class="n">PluginRun</span><span class="p">()</span>
-<span class="n">run</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;plugin&quot;</span><span class="p">,</span> <span class="n">plugin</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">get_edges</span><span class="p">(</span><span class="s2">&quot;plugin&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]);</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">run</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Running-your-plugin">Running your plugin<a class="anchor-link" href="#Running-your-plugin"> </a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Plugins can be started using the pymemri <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> CLI. To use the CLI, you can either pass your run arguments as parameters, or set them as environment variables. If both are set, the CLI will prefer the passed arguments.</p>
-
+<h3 id="Authentication">Authentication<a class="anchor-link" href="#Authentication"> </a></h3>
 </div>
 </div>
 </div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="CLI">CLI<a class="anchor-link" href="#CLI"> </a></h3>
+<p>Many plugins use authentication for external services that require passwords or oauth authentication. Pymemri implements some common cases, see <a href="/pymemri/plugin.authenticators.oauth.html#OAuthAuthenticator"><code>OAuthAuthenticator</code></a> or <a href="/pymemri/plugins.authenticators.password.html#PasswordAuthenticator"><code>PasswordAuthenticator</code></a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Running-your-plugin-using-the-CLI">Running your plugin using the CLI<a class="anchor-link" href="#Running-your-plugin-using-the-CLI"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Plugins can be started using the pymemri <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> or <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a> CLI. With <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> the plugin is invoked directly by spawning a new python process, while <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a> requests the pod to spawn a new process, docker container, or kubernetes container, which in calls <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> (for more info see <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a>. When using <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a>, you can either pass your run arguments as parameters, or set them as environment variables. If both are set, the CLI will use the passed arguments.</p>
+
 </div>
 </div>
 </div>
@@ -254,7 +161,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L139" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:<code>Param object at 0x7fdc47df5e90&gt;</code>=<em><code>None</code></em>, <strong><code>plugin_run_id</code></strong>:<code>Param object at 0x7fdc47a4d7d0&gt;</code>=<em><code>None</code></em>, <strong><code>database_key</code></strong>:<code>Param object at 0x7fdc496dcf10&gt;</code>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:<code>Param object at 0x7fdc496dcf90&gt;</code>=<em><code>None</code></em>, <strong><code>from_pod</code></strong>:<code>Param object at 0x7fdc44203c50&gt;</code>=<em><code>False</code></em>, <strong><code>container</code></strong>:<code>Param object at 0x7fdc4a0afad0&gt;</code>=<em><code>None</code></em>)</p>
+<h4 id="run_plugin" class="doc_header"><code>run_plugin</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L250" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>run_plugin</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>plugin_run_id</code></strong>:"Run id of the plugin to be executed"=<em><code>None</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>read_args_from_env</code></strong>:"Read the args from the environment"=<em><code>False</code></em>, <strong><code>metadata</code></strong>:"metadata file for the PluginRun"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"A plugin configuration, overwrites the configuration of the PluginRun"=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -276,7 +183,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To start a plugin on your local machine, you can use the CLI. This will create a client for you, and run the code defined in <code>&lt;myplugin&gt;.run()</code></p>
+<p>To start a plugin on your local machine, you can use the CLI. This will create a client for you, initialize the plugin, and run the code defined in the run method of your plugin.</p>
 
 </div>
 </div>
@@ -288,8 +195,7 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>run_plugin --pod_full_address<span class="o">=</span><span class="nv">$DEFAULT_POD_ADDRESS</span> --plugin_run_id<span class="o">=</span><span class="nv">$run</span>.id --owner_key<span class="o">=</span><span class="nv">$client</span>.owner_key <span class="err">\</span>
-            <span class="o">--</span><span class="n">database_key</span><span class="o">=</span><span class="err">$</span><span class="n">client</span><span class="o">.</span><span class="n">database_key</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>run_plugin --metadata <span class="s2">&quot;../example_plugin.json&quot;</span>
 </pre></div>
 
     </div>
@@ -302,13 +208,14 @@ nb_path: "nbs/plugin.pluginbase.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Used arguments passed to `run_plugin()` (ignoring environment)
+<pre>reading database_key from /home/eelco/.pymemri/pod_keys/keys.json
+reading owner_key from /home/eelco/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-plugin_run_id=0f32df2e21355877f6a7a5a52121ff9e
-owner_key=1818730013390615608004006544815007352548160219130568937676646480
-auth_json=None
+owner_key=3115475769495298505787935906714974107670251574210177626680528981
 
-running
+writing run info to /home/eelco/.pymemri/plugins/pymemri/current_run.json
+Started plugin run...
+Run success!
 </pre>
 </div>
 </div>
@@ -321,8 +228,73 @@ running
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In production, we start plugins by making an API call to the pod, which in turn creates an environment for the plugin and starts it (currently on docker is supported). We can start this process using the CLI by provding <code>--from_pod==True</code> and providing a <code>--container</code> (the docker container used by the pod). <strong>Note that the provided docker container should be installed within the Pod environemnt (e.g. <code>docker build -t pymemri .</code> for this repo) in order to start it.</strong></p>
+<h3 id="Plugin-configuration">Plugin configuration<a class="anchor-link" href="#Plugin-configuration"> </a></h3><p>Often, plugins require some configuration for a run. For example, our <a href="/pymemri/plugin.pluginbase.html#ExamplePlugin"><code>ExamplePlugin</code></a> has a <code>dog_name</code> argument, which could be different for different runs.</p>
+<p>Pymemri handles plugin configuration by passing a dictionary of configuration values to the <code>__init__</code> method of the plugin. A possible configuration for the <a href="/pymemri/plugin.pluginbase.html#ExamplePlugin"><code>ExamplePlugin</code></a> could be:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;dog_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">}</span>
+</pre></div>
+<p>Configuration can be passed to the <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> CLI in two ways:</p>
+<ul>
+<li>Defined in the <code>PluginRun</code> item, as <code>config</code> property. This value should be a json serialized dictionary, which is deserialized and passed to the plugin by the CLI</li>
+<li>Defined in a json file and passed to <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> as a <code>--config_file</code> argument. If this option is used, the <code>config</code> property from the <code>PluginRun</code> is ignored.</li>
+</ul>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Run-from-pod">Run from pod<a class="anchor-link" href="#Run-from-pod"> </a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In production, we start plugins by making an API call to the pod, which in turn creates an environment for the plugin and starts it using docker containers, kubernetes containers or a shell script. We can start this process using the <a href="/pymemri/plugin.pluginbase.html#simulate_run_plugin_from_frontend"><code>simulate_run_plugin_from_frontend</code></a> CLI. <strong>Note that when using docker, provided container name should be built within the Pod environment (e.g. <code>docker build -t pymemri .</code> for this repo), or available on the memri gitlab container repository.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/pymemri/images/running_a_plugin.svg" alt="running a plugin"></p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="simulate_run_plugin_from_frontend" class="doc_header"><code>simulate_run_plugin_from_frontend</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/plugin/pluginbase.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>simulate_run_plugin_from_frontend</code>(<strong><code>pod_full_address</code></strong>:"The pod full address"=<em><code>'http://localhost:3030'</code></em>, <strong><code>database_key</code></strong>:"Database key of the pod"=<em><code>None</code></em>, <strong><code>owner_key</code></strong>:"Owner key of the pod"=<em><code>None</code></em>, <strong><code>container</code></strong>:"Pod container to run frod"=<em><code>None</code></em>, <strong><code>plugin_path</code></strong>:"Plugin path"=<em><code>None</code></em>, <strong><code>metadata</code></strong>:"metadata file for the PluginRun"=<em><code>None</code></em>, <strong><code>config_file</code></strong>:"A plugin configuration, overwrites the configuration of the PluginRun"=<em><code>None</code></em>, <strong><code>account_id</code></strong>:"Account id to be used inside the plugin"=<em><code>None</code></em>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Example-usage">Example usage<a class="anchor-link" href="#Example-usage"> </a></h3>
 </div>
 </div>
 </div>
@@ -333,8 +305,7 @@ running
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>run_plugin --pod_full_address<span class="o">=</span><span class="nv">$DEFAULT_POD_ADDRESS</span> --plugin_run_id<span class="o">=</span><span class="nv">$run</span>.id --owner_key<span class="o">=</span><span class="nv">$client</span>.owner_key <span class="err">\</span>
-            <span class="o">--</span><span class="n">database_key</span><span class="o">=</span><span class="err">$</span><span class="n">client</span><span class="o">.</span><span class="n">database_key</span> <span class="o">--</span><span class="n">from_pod</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">--</span><span class="n">container</span><span class="o">=</span><span class="s2">&quot;pymemri&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>simulate_run_plugin_from_frontend --metadata <span class="s2">&quot;../example_plugin.json&quot;</span>
 </pre></div>
 
     </div>
@@ -347,14 +318,14 @@ running
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Used arguments passed to `run_plugin()` (ignoring environment)
+<pre>reading database_key from /home/eelco/.pymemri/pod_keys/keys.json
+reading owner_key from /home/eelco/.pymemri/pod_keys/keys.json
 pod_full_address=http://localhost:3030
-plugin_run_id=0f32df2e21355877f6a7a5a52121ff9e
-owner_key=1818730013390615608004006544815007352548160219130568937676646480
-auth_json=None
+owner_key=0669504049511661364795770949641722972379709465482258592795264679
 
-calling the `create` api on http://localhost:3030 to make your Pod start a plugin with id 0f32df2e21355877f6a7a5a52121ff9e.
- *Check the pod log/console for debug output.*
+Created pluginrun with id DDDFb7dFDeFF5c5917e7f846BF5df099 on http://localhost:3030
+writing run info to /home/eelco/.pymemri/plugins/pymemri/current_run.json
+*Check the pod log/console for debug output.*
 </pre>
 </div>
 </div>
@@ -365,13 +336,6 @@ calling the `create` api on http://localhost:3030 to make your Pod start a plugi
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>{% include note.html content='The data that was created earlier (PluginRun, plugin) should be in the pod in order for this to work' %}</p>
-
-</div>
-</div>
-</div>
 </div>
  
 

@@ -1,8 +1,8 @@
 default: 
-  image: python:3.6 
+  image: python:3.6
   before_script:
   - apt-get update && apt-get install -y libsqlcipher-dev && apt-get install -y libgl1-mesa-glx
-  - pip install -e .
+  - pip install .
 
 read_notebooks:
   script:
@@ -24,7 +24,16 @@ check if there is diff library/nbs:
 
 run tests:
   stage: test
+  services:
+    - name: ${POD_IMAGE}
+      alias: pod
+      entrypoint:
+        - "/pod"
+        - "--owners=ANY"
+        - "--insecure-non-tls=0.0.0.0"
   script:
+  - curl http://pod:3030/version
+  - export POD_ADDRESS='http://pod:3030'
   - ./tools/test_in_ci.sh
 
 pages:
@@ -42,5 +51,14 @@ pages:
   artifacts:
     paths:
     - public
+
+memri-docs:
+  stage: deploy
+  only:
+    - dev
+  trigger: memri/docs.memri.io
+
+
+
 
  

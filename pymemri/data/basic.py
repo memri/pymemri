@@ -28,9 +28,9 @@ def read_json(path):
     with open(path) as json_file:
         return json.load(json_file)
 
-def write_json(obj, fname):
+def write_json(obj, fname, indent=4):
     with open(fname, 'w') as file_out:
-        json.dump(obj , file_out)
+        json.dump(obj , file_out, indent=indent)
 
 def unzip(f, dest):
     with zipfile.ZipFile(str(f)) as zf:

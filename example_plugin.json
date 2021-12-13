@@ -1,0 +1,13 @@
+{
+	"containerImage": "pymemri",
+	"pluginModule": "pymemri.plugin.pluginbase",
+	"plugin": "pymemri.plugin.pluginbase.ExamplePlugin",
+	"pluginName": "ExamplePlugin",
+	"state": "not started",
+	"account": {
+		"service": "facebook",
+		"identifier": "myusername",
+		"secret": "access_token", 
+		"refreshToken": "refresh_token"
+	}
+}
