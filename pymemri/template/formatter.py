@@ -5,6 +5,7 @@ __all__ = ['TEMPLATE_URL', 'TEMPLATE_BASE_PATH', 'get_remote_url', 'infer_git_in
            'TemplateFormatter', 'get_template_replace_dict', 'plugin_from_template']
 
 # Cell
+# hide
 from pathlib import Path
 from typing import Dict, Union, List
 from fastcore.script import call_parse, Param, store_true
@@ -24,6 +25,7 @@ TEMPLATE_BASE_PATH = "plugin-templates-dev"
 # Cell
 # hide
 
+# If the owner of the repository is one of these groups, the CLI requires an additional `user` argument
 GITLAB_GROUPS = ["memri", "plugins"]
 
 def get_remote_url(path="."):
@@ -37,7 +39,7 @@ def get_remote_url(path="."):
         repo_url = repo_url[:-4]
     return repo_url
 
-def infer_git_info(url, parsed=True):
+def infer_git_info(url):
     parsed = giturlparse.parse(url)
     return parsed.owner, parsed.repo
 
@@ -159,8 +161,8 @@ def plugin_from_template(
     repo_url: Param("The url of your empty Gitlab plugin repository", str) = None,
     plugin_name: Param("Display name of your plugin", str) = None,
     template_name: Param(
-        "Name of the template, see the Plugin Templates repository."
-    ) = None,
+        "Name of the template, use `list_templates` to see all available options"
+    ) = "basic",
     package_name: Param("Name of your plugin python package", str) = None,
     description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
@@ -170,10 +172,6 @@ def plugin_from_template(
         for template in get_templates():
             print(template)
         return
-
-    if template_name is None:
-        print("template name not defined, using the basic template.")
-        template_name = "basic"
 
     template = download_plugin_template(template_name)
 
@@ -188,3 +186,5 @@ def plugin_from_template(
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
     formatter.format()
+
+    print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
