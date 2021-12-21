@@ -103,13 +103,18 @@ class PodClient:
 
     def create_photo(self, photo):
         # create the file
-        file_success = self.create_photo_file(photo)
-        if not file_success:
-            raise ValueError("Could not create file")
+#         file_success = self.create_photo_file(photo)
+        file = photo.file[0]
+#         self.create(file)
+
         # create the photo
-        return self.bulk_action(
-            create_items=[photo], create_edges=photo.get_edges("file")
+        items_edges_success = self.bulk_action(
+            create_items=[photo, file], create_edges=photo.get_edges("file")
         )
+        if not items_edges_success:
+            raise ValueError("Could not create file or photo item")
+
+        return self._upload_image(photo.data)
 
     def _property_dicts_from_instance(self, node):
         create_items = []
@@ -161,11 +166,6 @@ class PodClient:
         except Exception as e:
             print(e)
             return False
-
-    def create_photo_file(self, photo):
-        file = photo.file[0]
-        self.create(file)
-        return self._upload_image(photo.data)
 
     def _upload_image(self, img):
         if isinstance(img, np.ndarray):
