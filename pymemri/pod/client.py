@@ -454,6 +454,8 @@ class PodClient:
                 edge_item = self.item_from_json(edge_json["_item"])
                 item.add_edge(edge_name, edge_item)
             except Exception as e:
+                print(f"Could not attach edge {edge_json['_item']} to {item}")
+                print(e)
                 continue
         return item
 
