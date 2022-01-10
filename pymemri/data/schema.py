@@ -1,6 +1,7 @@
 import random, string
 from .itembase import ItemBase, Edge, Item
 from .central_schema import *
+from .photo import Photo
 
 
 def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
