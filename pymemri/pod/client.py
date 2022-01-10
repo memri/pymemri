@@ -403,6 +403,9 @@ class PodClient:
             return False
 
     def search_paginate(self, fields_data, limit=50, include_edges=True):
+        if "ids" in fields_data:
+            raise NotImplementedError("Searching by multiple IDs is not implemented for paginated search.")
+
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
 
@@ -416,12 +419,26 @@ class PodClient:
     def search(self, fields_data, include_edges: bool = True):
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
-        try:
-            result = self.api.search(query)
-            result = [self._item_from_search(item) for item in result]
-            return self.filter_deleted(result)
-        except PodError as e:
-            print(e)
+
+        # Special key "ids" for searching a list of ids. Requires /bulk
+        # search instead of search
+        if "ids" in query:
+            ids = query.pop("ids")
+            bulk_query = [{"id": uid, **query} for uid in ids]
+            try:
+                result = self.api.bulk(search=bulk_query)["search"]
+            except PodError as e:
+                print(e)
+
+            result = [item for sublist in result for item in sublist]
+        else:
+            try:
+                result = self.api.search(query)
+            except PodError as e:
+                print(e)
+
+        result = [self._item_from_search(item) for item in result]
+        return self.filter_deleted(result)
 
     def _item_from_search(self, item_json: dict):
         # search returns different fields w.r.t. edges compared to `get` api,
