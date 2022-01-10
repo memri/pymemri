@@ -6,6 +6,7 @@ __all__ = ['Query']
 # hide
 from typing import Dict, List, Optional, Iterable, Any
 import pandas as pd
+import json
 
 from ..pod.client import PodClient
 from ..data.itembase import Item
@@ -65,24 +66,18 @@ class Query:
         prop = prop[-1]
         return edges, prop
 
-    @staticmethod
-    def convert_dtype(result, dtype):
+    def convert_dtype(self, result, dtype):
         if dtype == "dict":
             return result
+        elif dtype == "list":
+            return [result[prop] for prop in self.properties]
         elif dtype in {"pandas", "pd", "df"}:
             return pd.DataFrame.from_dict(result)
         else:
             raise ValueError(f"Unknown dtype: {dtype}")
 
-    def execute(
-        self, client: PodClient, items: List[Item], dtype="dict", include_ids=True
-    ) -> Any:
-        if "id" not in self.properties and include_ids:
-            properties = ["id"] + self.properties
-        else:
-            properties = self.properties
-
+    def execute(self, client: PodClient, items: List[Item], dtype="dict") -> Any:
         result = {
-            prop: self.get_property_values(client, prop, items) for prop in properties
+            prop: self.get_property_values(client, prop, items) for prop in self.properties
         }
         return self.convert_dtype(result, dtype)

@@ -6,7 +6,6 @@ __all__ = ['PodClient', 'Dog']
 from ..data.basic import *
 from ..data.schema import *
 from ..data.itembase import Edge, ItemBase, Item
-from ..data.photo import Photo, NUMPY, BYTES
 from ..imports import *
 from hashlib import sha256
 from .db import DB
@@ -75,6 +74,7 @@ class PodClient:
         return "".join([str(random.randint(0, 9)) for i in range(64)])
 
     def register_base_schemas(self):
+        print(Photo)
         assert self.add_to_schema(PluginRun, CVUStoredDefinition, Account, Photo)
 
     def add_to_db(self, node):
@@ -102,10 +102,7 @@ class PodClient:
             return False
 
     def create_photo(self, photo):
-        # create the file
-#         file_success = self.create_photo_file(photo)
         file = photo.file[0]
-#         self.create(file)
 
         # create the photo
         items_edges_success = self.bulk_action(
@@ -201,25 +198,9 @@ class PodClient:
                     f"Could not load data of {photo} attached file item does not have data in pod"
                 )
                 return
-            if photo.encoding == NUMPY:
-                data = np.frombuffer(file, dtype=np.uint8)
-                c = photo.channels
-                shape = (
-                    (photo.height, photo.width, c)
-                    if c is not None and c > 1
-                    else (photo.height, photo.width)
-                )
-                data = data.reshape(shape)
-                if size is not None:
-                    data = resize(data, size)
-                photo.data = data
-                return
-            elif photo.encoding == BYTES:
-                photo.data = file
-                return
-            else:
-                raise ValueError("Unsupported encoding")
-        print(f"could not load data of {photo}, no file attached")
+            photo.data = file
+        else:
+            print(f"could not load data of {photo}, no file attached")
 
     def create_if_external_id_not_exists(self, node):
         if not self.external_id_exists(node):
