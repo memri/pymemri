@@ -74,7 +74,6 @@ class PodClient:
         return "".join([str(random.randint(0, 9)) for i in range(64)])
 
     def register_base_schemas(self):
-        print(Photo)
         assert self.add_to_schema(PluginRun, CVUStoredDefinition, Account, Photo)
 
     def add_to_db(self, node):
