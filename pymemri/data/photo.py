@@ -147,7 +147,7 @@ class Photo(Item):
             w, h = size
             c = 1
         else:
-            raise Error
+            raise ValueError
         return encoding, mode, (w, h, c)
 
     def to_PIL(self):
