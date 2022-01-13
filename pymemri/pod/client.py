@@ -95,6 +95,7 @@ class PodClient:
             result = self.api.create_item(create_dict)
             node.id = result
             self.add_to_db(node)
+            node._set_client(self)
             return True
         except Exception as e:
             print(e)
@@ -216,7 +217,6 @@ class PodClient:
 
     def delete_items(self, items):
         return self.bulk_action(delete_items=items)
-
     def delete_all(self):
         items = self.get_all_items()
         self.delete_items(items)
@@ -243,11 +243,20 @@ class PodClient:
     def bulk_action(
         self, create_items=None, update_items=None, create_edges=None, delete_items=None
     ):
+        all_items = []
+        if create_items:
+            all_items += create_items
+        if update_items:
+            all_items += update_items
+        for item in all_items:
+            item._set_client(self)
+
         # we need to set the id to not lose the reference
         if create_items is not None:
             for c in create_items:
                 if c.id is None:
                     c.id = uuid.uuid4().hex
+
         create_items = (
             [self.get_create_dict(i) for i in create_items]
             if create_items is not None
@@ -317,6 +326,7 @@ class PodClient:
                 print("could not complete bulk action, aborting")
                 return False
         print(f"Completed Bulk action, written {n} items/edges")
+
         return True
 
     def get_create_edge_dict(self, edge):
@@ -387,6 +397,7 @@ class PodClient:
         data = self.get_update_dict(node)
         try:
             self.api.update_item(data)
+            node._set_client(self)
             return True
         except PodError as e:
             print(e)
@@ -402,7 +413,7 @@ class PodClient:
             print(e)
             return False
 
-    def search_paginate(self, fields_data, limit=50, include_edges=True):
+    def search_paginate(self, fields_data, limit=50, include_edges=True, add_to_local_db: bool = True):
         if "ids" in fields_data:
             raise NotImplementedError("Searching by multiple IDs is not implemented for paginated search.")
 
@@ -411,17 +422,17 @@ class PodClient:
 
         try:
             for page in self.api.search_paginate(query, limit):
-                result = [self._item_from_search(item) for item in page]
+                result = [self._item_from_search(item, add_to_local_db=add_to_local_db) for item in page]
                 yield self.filter_deleted(result)
         except PodError as e:
             print(e)
 
-    def search(self, fields_data, include_edges: bool = True):
+    def search(self, fields_data, include_edges: bool = True, add_to_local_db: bool = True):
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
 
-        # Special key "ids" for searching a list of ids. Requires /bulk
-        # search instead of search
+        # Special key "ids" for searching a list of ids.
+        # Requires /bulk search instead of /search.
         if "ids" in query:
             ids = query.pop("ids")
             bulk_query = [{"id": uid, **query} for uid in ids]
@@ -437,10 +448,10 @@ class PodClient:
             except PodError as e:
                 print(e)
 
-        result = [self._item_from_search(item) for item in result]
+        result = [self._item_from_search(item, add_to_local_db=add_to_local_db) for item in result]
         return self.filter_deleted(result)
 
-    def _item_from_search(self, item_json: dict):
+    def _item_from_search(self, item_json: dict, add_to_local_db: bool = True):
         # search returns different fields w.r.t. edges compared to `get` api,
         # different method to keep `self.get` clean.
         item = self.item_from_json(item_json)
@@ -464,7 +475,7 @@ class PodClient:
             query[f"{with_prop}=="] = with_val
         return self.search(query)[0]
 
-    def item_from_json(self, json):
+    def item_from_json(self, json, add_client_ref: bool = True):
         plugin_class = json.get("pluginClass", None)
         plugin_package = json.get("pluginPackage", None)
 
@@ -487,8 +498,10 @@ class PodClient:
 
             for prop_name in new_item.get_property_names():
                 existing.__setattr__(prop_name, new_item.__getattribute__(prop_name))
+            existing._set_client(self) if add_client_ref else None
             return existing
         else:
+            new_item._set_client(self) if add_client_ref else None
             return new_item
 
     def get_properties(self, expanded):

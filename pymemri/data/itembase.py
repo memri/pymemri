@@ -68,6 +68,12 @@ class ItemBase:
 
     def __init__(self, id: str = None):
         self.id: Optional[str] = id
+        self._client: Optional["PodClient"] = None
+
+    def _set_client(self, client: "PodClient"):
+        if self._client is not None and self._client != client:
+            raise ValueError(f"Attempted to overwrite existing client of item {self}")
+        self._client = client
 
     def __getattribute__(self, name):
         val = object.__getattribute__(self, name)
