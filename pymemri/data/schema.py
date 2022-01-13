@@ -1,6 +1,6 @@
 import random, string
 from .itembase import ItemBase, Edge, Item
-from .central_schema import *
+from ._central_schema import *
 from .photo import Photo
 
 
