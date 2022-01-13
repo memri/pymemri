@@ -90,12 +90,13 @@ class Dataset(Item):
     """
     Temporary dataset schema, remove when MVP2 is done.
     """
-    properties= Item.properties + ["queryStr"]
+    properties= Item.properties + ["name", "queryStr"]
     edges = Item.edges + ["item"]
 
-    def __init__(self, queryStr: str = None, item: list = None, **kwargs):
+    def __init__(self, name: str = None, queryStr: str = None, item: list = None, **kwargs):
         super().__init__(**kwargs)
         self.queryStr = queryStr
+        self.name = name
         self.item: list = item if item is not None else []
 
 # Cell
