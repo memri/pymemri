@@ -8,7 +8,6 @@ from typing import Dict, List, Optional, Iterable, Any
 import pandas as pd
 import json
 
-from ..pod.client import PodClient
 from ..data.itembase import Item
 
 # Cell
@@ -23,7 +22,7 @@ class Query:
         """
         self.properties = list(properties)
 
-    def traverse_edges(self, client: PodClient, items: List[Item], edges: List[str]) -> List[Item]:
+    def traverse_edges(self, client: "PodClient", items: List[Item], edges: List[str]) -> List[Item]:
         items = items.copy()
 
         for edge in edges:
@@ -54,7 +53,7 @@ class Query:
         return items
 
     def get_property_values(
-        self, client: PodClient, prop: str, items: List[Item]
+        self, client: "PodClient", prop: str, items: List[Item]
     ) -> list:
         edges, prop_name = self.parse_property(prop)
         target_items = self.traverse_edges(client, items, edges)
@@ -79,7 +78,7 @@ class Query:
         else:
             raise ValueError(f"Unknown dtype: {dtype}")
 
-    def execute(self, client: PodClient, items: List[Item], dtype="dict") -> Any:
+    def execute(self, client: "PodClient", items: List[Item], dtype="dict") -> Any:
         result = {
             prop: self.get_property_values(client, prop, items) for prop in self.properties
         }

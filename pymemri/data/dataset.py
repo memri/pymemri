@@ -21,12 +21,15 @@ def filter_rows(dataset: dict, filter_val=None) -> dict:
 # Cell
 class Dataset(Item):
     """
-    Temporary dataset schema, inherit from central schema when MVP2 is ready.
+    Temporary dataset schema, needs update when MVP2 is done.
     """
+    properties= Item.properties + ["name", "queryStr"]
     edges = Item.edges + ["item"]
 
-    def __init__(self, item: list = None, **kwargs):
+    def __init__(self, name: str = None, queryStr: str = None, item: list = None, **kwargs):
         super().__init__(**kwargs)
+        self.queryStr = queryStr
+        self.name = name
         self.item: list = item if item is not None else []
 
     def _get_items(self):
