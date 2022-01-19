@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'ItemBase', 'Item']
 
 # Cell
 # hide
-from typing import Optional, Dict
+from typing import Optional, Dict, List, Set
 from ..imports import *
 from datetime import datetime
 
@@ -65,15 +65,26 @@ class ItemBase:
     """Provides a base class for all items.
     All items in the schema inherit from this class, and it provides some
     basic functionality for consistency and to enable easier usage."""
+    properties: List[str] = list()
+    edges: List[str] = list()
 
     def __init__(self, id: str = None):
+        self._updated_properties: Set[str] = set()
+
         self.id: Optional[str] = id
         self._client: Optional["PodClient"] = None
+        self._in_pod: bool = False
 
     def _set_client(self, client: "PodClient"):
         if self._client is not None and self._client != client:
             raise ValueError(f"Attempted to overwrite existing client of item {self}")
         self._client = client
+
+    def __setattr__(self, name, value):
+        prev_val = getattr(self, name, None)
+        super(ItemBase, self).__setattr__(name, value)
+        if name in self.properties and value != prev_val:
+            self._updated_properties.add(name)
 
     def __getattribute__(self, name):
         val = object.__getattribute__(self, name)
@@ -85,6 +96,14 @@ class ItemBase:
             return [edge.traverse(start=self) for edge in edges]
         else:
             return val
+
+    def on_sync_to_pod(self, client):
+        """
+        on_sync_to_pod is called when self is created or updated (optionally via bulk) in the PodClient.
+        """
+        self._set_client(client)
+        self._updated_properties = set()
+        self._in_pod = True
 
     def add_edge(self, name, val):
         """Creates an edge of type name and makes it point to val"""
