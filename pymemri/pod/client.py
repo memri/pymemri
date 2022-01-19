@@ -6,7 +6,6 @@ __all__ = ['PodClient', 'Dog']
 from ..data.basic import *
 from ..data.schema import *
 from ..data.itembase import Edge, ItemBase, Item
-from ..data.photo import Photo, NUMPY, BYTES
 from ..imports import *
 from hashlib import sha256
 from .db import DB
@@ -96,20 +95,23 @@ class PodClient:
             result = self.api.create_item(create_dict)
             node.id = result
             self.add_to_db(node)
+            node.on_sync_to_pod(self)
             return True
         except Exception as e:
             print(e)
             return False
 
     def create_photo(self, photo):
-        # create the file
-        file_success = self.create_photo_file(photo)
-        if not file_success:
-            raise ValueError("Could not create file")
+        file = photo.file[0]
+
         # create the photo
-        return self.bulk_action(
-            create_items=[photo], create_edges=photo.get_edges("file")
+        items_edges_success = self.bulk_action(
+            create_items=[photo, file], create_edges=photo.get_edges("file")
         )
+        if not items_edges_success:
+            raise ValueError("Could not create file or photo item")
+
+        return self._upload_image(photo.data)
 
     def _property_dicts_from_instance(self, node):
         create_items = []
@@ -162,11 +164,6 @@ class PodClient:
             print(e)
             return False
 
-    def create_photo_file(self, photo):
-        file = photo.file[0]
-        self.create(file)
-        return self._upload_image(photo.data)
-
     def _upload_image(self, img):
         if isinstance(img, np.ndarray):
             return self.upload_file(img.tobytes())
@@ -201,25 +198,9 @@ class PodClient:
                     f"Could not load data of {photo} attached file item does not have data in pod"
                 )
                 return
-            if photo.encoding == NUMPY:
-                data = np.frombuffer(file, dtype=np.uint8)
-                c = photo.channels
-                shape = (
-                    (photo.height, photo.width, c)
-                    if c is not None and c > 1
-                    else (photo.height, photo.width)
-                )
-                data = data.reshape(shape)
-                if size is not None:
-                    data = resize(data, size)
-                photo.data = data
-                return
-            elif photo.encoding == BYTES:
-                photo.data = file
-                return
-            else:
-                raise ValueError("Unsupported encoding")
-        print(f"could not load data of {photo}, no file attached")
+            photo.data = file
+        else:
+            print(f"could not load data of {photo}, no file attached")
 
     def create_if_external_id_not_exists(self, node):
         if not self.external_id_exists(node):
@@ -236,7 +217,6 @@ class PodClient:
 
     def delete_items(self, items):
         return self.bulk_action(delete_items=items)
-
     def delete_all(self):
         items = self.get_all_items()
         self.delete_items(items)
@@ -261,20 +241,29 @@ class PodClient:
         return batch_items, idx, total_size
 
     def bulk_action(
-        self, create_items=None, update_items=None, create_edges=None, delete_items=None
+        self, create_items=None, update_items=None, create_edges=None, delete_items=None, partial_update=True
     ):
+        all_items = []
+        if create_items:
+            all_items += create_items
+        if update_items:
+            all_items += update_items
+        for item in all_items:
+            item._set_client(self)
+
         # we need to set the id to not lose the reference
         if create_items is not None:
             for c in create_items:
                 if c.id is None:
                     c.id = uuid.uuid4().hex
+
         create_items = (
             [self.get_create_dict(i) for i in create_items]
             if create_items is not None
             else []
         )
         update_items = (
-            [self.get_update_dict(i) for i in update_items]
+            [self.get_update_dict(i, partial_update=partial_update) for i in update_items]
             if update_items is not None
             else []
         )
@@ -337,6 +326,9 @@ class PodClient:
                 print("could not complete bulk action, aborting")
                 return False
         print(f"Completed Bulk action, written {n} items/edges")
+
+        for item in all_items:
+            item.on_sync_to_pod(self)
         return True
 
     def get_create_edge_dict(self, edge):
@@ -397,16 +389,18 @@ class PodClient:
             print(e)
             return
 
-    def get_update_dict(self, node):
+    def get_update_dict(self, node, partial_update=True):
         properties = node.to_json(dates=False)
         properties.pop("type", None)
         properties.pop("deleted", None)
+        properties = {k: v for k, v in properties.items() if k=="id" or k in node._updated_properties}
         return properties
 
-    def update_item(self, node):
-        data = self.get_update_dict(node)
+    def update_item(self, node, partial_update=True):
+        data = self.get_update_dict(node, partial_update=partial_update)
         try:
             self.api.update_item(data)
+            node.on_sync_to_pod(self)
             return True
         except PodError as e:
             print(e)
@@ -422,28 +416,45 @@ class PodClient:
             print(e)
             return False
 
-    def search_paginate(self, fields_data, limit=50, include_edges=True):
+    def search_paginate(self, fields_data, limit=50, include_edges=True, add_to_local_db: bool = True):
+        if "ids" in fields_data:
+            raise NotImplementedError("Searching by multiple IDs is not implemented for paginated search.")
+
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
 
         try:
             for page in self.api.search_paginate(query, limit):
-                result = [self._item_from_search(item) for item in page]
+                result = [self._item_from_search(item, add_to_local_db=add_to_local_db) for item in page]
                 yield self.filter_deleted(result)
         except PodError as e:
             print(e)
 
-    def search(self, fields_data, include_edges: bool = True):
+    def search(self, fields_data, include_edges: bool = True, add_to_local_db: bool = True):
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
-        try:
-            result = self.api.search(query)
-            result = [self._item_from_search(item) for item in result]
-            return self.filter_deleted(result)
-        except PodError as e:
-            print(e)
 
-    def _item_from_search(self, item_json: dict):
+        # Special key "ids" for searching a list of ids.
+        # Requires /bulk search instead of /search.
+        if "ids" in query:
+            ids = query.pop("ids")
+            bulk_query = [{"id": uid, **query} for uid in ids]
+            try:
+                result = self.api.bulk(search=bulk_query)["search"]
+            except PodError as e:
+                print(e)
+
+            result = [item for sublist in result for item in sublist]
+        else:
+            try:
+                result = self.api.search(query)
+            except PodError as e:
+                print(e)
+
+        result = [self._item_from_search(item, add_to_local_db=add_to_local_db) for item in result]
+        return self.filter_deleted(result)
+
+    def _item_from_search(self, item_json: dict, add_to_local_db: bool = True):
         # search returns different fields w.r.t. edges compared to `get` api,
         # different method to keep `self.get` clean.
         item = self.item_from_json(item_json)
@@ -454,6 +465,8 @@ class PodClient:
                 edge_item = self.item_from_json(edge_json["_item"])
                 item.add_edge(edge_name, edge_item)
             except Exception as e:
+                print(f"Could not attach edge {edge_json['_item']} to {item}")
+                print(e)
                 continue
         return item
 
@@ -465,7 +478,7 @@ class PodClient:
             query[f"{with_prop}=="] = with_val
         return self.search(query)[0]
 
-    def item_from_json(self, json):
+    def item_from_json(self, json, add_client_ref: bool = True, from_pod: bool = True):
         plugin_class = json.get("pluginClass", None)
         plugin_package = json.get("pluginPackage", None)
 
@@ -488,9 +501,15 @@ class PodClient:
 
             for prop_name in new_item.get_property_names():
                 existing.__setattr__(prop_name, new_item.__getattribute__(prop_name))
-            return existing
+            result = existing
         else:
-            return new_item
+            result = new_item
+
+        result._set_client(self) if add_client_ref else None
+        if from_pod:
+            result._in_pod = True
+            result._updated_properties = set()
+        return result
 
     def get_properties(self, expanded):
         properties = copy(expanded)

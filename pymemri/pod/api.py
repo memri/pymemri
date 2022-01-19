@@ -156,7 +156,7 @@ class PodAPI:
         update_items: List[dict] = None,
         create_edges: List[dict] = None,
         delete_items: List[str] = None,
-        search: dict = None,
+        search: List[dict] = None,
     ) -> Dict[str, Any]:
 
         payload = {

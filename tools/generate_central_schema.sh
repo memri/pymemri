@@ -1,9 +1,9 @@
 #!/bin/bash
 
 SCHEMA_REPO="https://gitlab.memri.io/memri/schema.git"
-BRANCH="schema-cleanup"
+BRANCH="dev"
 OUT_DIR="$(pwd)/pymemri/data"
-FILENAME="central_schema.py"
+FILENAME="_central_schema.py"
 
 if [ ! -d $OUT_DIR ];then
     echo "Run script from pymemri root folder."
@@ -14,11 +14,12 @@ mkdir -p /tmp/pymemri && cd /tmp/pymemri
 
 {
     cd schema
+    git checkout $BRANCH
     git pull
-} &> /dev/null || {
+} || {
     git clone -b $BRANCH $SCHEMA_REPO 
     cd schema
-} &> /dev/null
+}
 
 python tools/export_pymemri.py -o $OUT_DIR/$FILENAME
 

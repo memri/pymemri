@@ -33,6 +33,7 @@ class Account(Item):
         "ownCurrency",
         "owner",
         "trust",
+        "profilePicture",
     ]
 
     def __init__(
@@ -57,6 +58,7 @@ class Account(Item):
         ownCurrency: list = None,
         owner: list = None,
         trust: list = None,
+        profilePicture: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -78,12 +80,15 @@ class Account(Item):
 
         # Edges
         self.changelog: list = changelog if changelog is not None else []
-        self.cryptoTransaction: list = cryptoTransaction if cryptoTransaction is not None else []
+        self.cryptoTransaction: list = (
+            cryptoTransaction if cryptoTransaction is not None else []
+        )
         self.location: list = location if location is not None else []
         self.network: list = network if network is not None else []
         self.ownCurrency: list = ownCurrency if ownCurrency is not None else []
         self.owner: list = owner if owner is not None else []
         self.trust: list = trust if trust is not None else []
+        self.profilePicture: list = profilePicture if profilePicture is not None else []
 
 
 class AuditItem(Item):
@@ -114,7 +119,9 @@ class CVUStoredDefinition(Item):
         "itemType",
         "name",
         "querystr",
+        "renderer",
         "selector",
+        "type",
     ]
     edges = Item.edges + []
 
@@ -125,7 +132,9 @@ class CVUStoredDefinition(Item):
         itemType: str = None,
         name: str = None,
         querystr: str = None,
+        renderer: str = None,
         selector: str = None,
+        type: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -136,7 +145,9 @@ class CVUStoredDefinition(Item):
         self.itemType: Optional[str] = itemType
         self.name: Optional[str] = name
         self.querystr: Optional[str] = querystr
+        self.renderer: Optional[str] = renderer
         self.selector: Optional[str] = selector
+        self.type: Optional[str] = type
 
 
 class CreativeWork(Item):
@@ -182,9 +193,13 @@ class CreativeWork(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: list = contentLocation if contentLocation is not None else []
+        self.contentLocation: list = (
+            contentLocation if contentLocation is not None else []
+        )
         self.file: list = file if file is not None else []
-        self.locationCreated: list = locationCreated if locationCreated is not None else []
+        self.locationCreated: list = (
+            locationCreated if locationCreated is not None else []
+        )
         self.writtenBy: list = writtenBy if writtenBy is not None else []
 
 
@@ -210,7 +225,9 @@ class CryptoCurrency(Item):
         self.topic: Optional[str] = topic
 
         # Edges
-        self.currencySetting: list = currencySetting if currencySetting is not None else []
+        self.currencySetting: list = (
+            currencySetting if currencySetting is not None else []
+        )
         self.picture: list = picture if picture is not None else []
 
 
@@ -308,6 +325,19 @@ class CurrencySetting(Item):
         self.wallet: list = wallet if wallet is not None else []
 
 
+class Dataset(Item):
+    description = """A Dataset of items."""
+    properties = Item.properties + ["name", "querystr"]
+    edges = Item.edges + []
+
+    def __init__(self, name: str = None, querystr: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.querystr: Optional[str] = querystr
+
+
 class Diet(Item):
     description = """A strategy of regulating the intake of food to achieve or maintain a specific health-related goal."""
     properties = Item.properties + [
@@ -357,15 +387,19 @@ class Diet(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: list = contentLocation if contentLocation is not None else []
+        self.contentLocation: list = (
+            contentLocation if contentLocation is not None else []
+        )
         self.file: list = file if file is not None else []
-        self.locationCreated: list = locationCreated if locationCreated is not None else []
+        self.locationCreated: list = (
+            locationCreated if locationCreated is not None else []
+        )
         self.writtenBy: list = writtenBy if writtenBy is not None else []
 
 
 class File(Item):
     description = """Any file that can be stored on disk."""
-    properties = Item.properties + ["filename", "keystr", "nonce", "sha256"]
+    properties = Item.properties + ["filename", "keystr", "nonce", "sha256", "starred"]
     edges = Item.edges + []
 
     def __init__(
@@ -374,6 +408,7 @@ class File(Item):
         keystr: str = None,
         nonce: str = None,
         sha256: str = None,
+        starred: bool = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -383,6 +418,7 @@ class File(Item):
         self.keystr: Optional[str] = keystr
         self.nonce: Optional[str] = nonce
         self.sha256: Optional[str] = sha256
+        self.starred: Optional[bool] = starred
 
 
 class Integrator(Item):
@@ -471,6 +507,48 @@ class LabelAnnotation(Item):
 
         # Edges
         self.annotatedItem: list = annotatedItem if annotatedItem is not None else []
+
+
+class LabelingDataType(Item):
+    description = """A labelling data type definition."""
+    properties = Item.properties + ["name", "icon"]
+    edges = Item.edges + ["dataset"]
+
+    def __init__(
+        self, name: str = None, icon: str = None, dataset: list = None, **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.icon: Optional[str] = icon
+
+        # Edges
+        self.dataset: list = dataset if dataset is not None else []
+
+
+class LabelingTask(Item):
+    description = """A labelling task definition."""
+    properties = Item.properties + ["name"]
+    edges = Item.edges + ["labelOption", "dataset", "view"]
+
+    def __init__(
+        self,
+        name: str = None,
+        labelOption: list = None,
+        dataset: list = None,
+        view: list = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+
+        # Edges
+        self.labelOption: list = labelOption if labelOption is not None else []
+        self.dataset: list = dataset if dataset is not None else []
+        self.view: list = view if view is not None else []
 
 
 class Location(Item):
@@ -701,7 +779,9 @@ class Person(Item):
         self.hasPhoneNumber: list = hasPhoneNumber if hasPhoneNumber is not None else []
         self.label: list = label if label is not None else []
         self.me: list = me if me is not None else []
-        self.medicalCondition: list = medicalCondition if medicalCondition is not None else []
+        self.medicalCondition: list = (
+            medicalCondition if medicalCondition is not None else []
+        )
         self.mergedFrom: list = mergedFrom if mergedFrom is not None else []
         self.profilePicture: list = profilePicture if profilePicture is not None else []
         self.relationship: list = relationship if relationship is not None else []
@@ -1150,29 +1230,25 @@ class Note(WrittenWork):
 
 class EmailMessage(Message):
     description = """A single email message."""
-    properties = Message.properties + ["starred", "read"]
-    edges = Message.edges + ["bcc", "cc", "message", "replyTo", "inbox"]
+    properties = Message.properties + ["starred"]
+    edges = Message.edges + ["bcc", "cc", "message", "replyTo"]
 
     def __init__(
         self,
         starred: bool = None,
-        read: bool = None,
         bcc: list = None,
         cc: list = None,
         message: list = None,
         replyTo: list = None,
-        inbox: list = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
         self.starred: Optional[bool] = starred
-        self.read: Optional[bool] = read
 
         # Edges
         self.bcc: list = bcc if bcc is not None else []
         self.cc: list = cc if cc is not None else []
         self.message: list = message if message is not None else []
         self.replyTo: list = replyTo if replyTo is not None else []
-        self.inbox: list = inbox if inbox is not None else []

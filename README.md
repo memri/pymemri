@@ -5,6 +5,7 @@
 [![Gitlab pipeline status (self-hosted)](https://img.shields.io/gitlab/pipeline/memri/pymemri/dev?gitlab_url=https%3A%2F%2Fgitlab.memri.io&label=CI&logo=gitlab&style=plastic)](https://gitlab.memri.io/memri/pymemri/-/pipelines/latest)
 [![Discord](https://img.shields.io/discord/799216875480678430?color=blue&label=Discord&logo=discord&style=plastic)](https://discord.gg/BcRfajJk4k)
 [![Twitter URL](https://img.shields.io/twitter/url?label=%40YourMemri&logo=twitter&style=plastic&url=https%3A%2F%2Ftwitter.com%2FYourMemri)](https://twitter.com/YourMemri)
+<a href="https://pypi.org/project/pymemri/"><img src="https://pepy.tech/badge/pymemri" /></a>
 
 Plugins connect and add the information to your Pod. Plugins that <b>import your data from external services</b> are called **Importers** (Gmail, WhatsApp, etc.). Plugins that <b>connect new data to the existing data</b> are called  **indexers** (face recognition, spam detection, object detection, etc.). Lastly there are plugins that <b>execute actions</b> (sending messages, uploading files). This repository is built with [nbdev](https://github.com/fastai/nbdev), which means that the repo structure has a few differences compared to a standard python repo. 
 
@@ -64,8 +65,7 @@ This stores a random owner key and database key on your disk for future use, and
 
 ## Docs
 
-- [pymemri docs](http://memri.docs.memri.io/pymemri/pod.client.html#File-API)
-- [plugin tutorial](https://blog.memri.io/getting-started-building-a-plugin/)
+[pymemri docs](https://memri.docs.memri.io/docs.memri.io/component-architectures/plugins/readme/)
 
 ## Nbdev & Jupyter Notebooks
 The Python integrators are written in [nbdev](https://nbdev.fast.ai/) ([video](https://www.youtube.com/watch?v=9Q6sLbz37gk&t=1301s)). With nbdev, it is encouraged to write code in 
