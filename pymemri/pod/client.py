@@ -95,7 +95,7 @@ class PodClient:
             result = self.api.create_item(create_dict)
             node.id = result
             self.add_to_db(node)
-            node._set_client(self)
+            node.on_sync_to_pod(self)
             return True
         except Exception as e:
             print(e)
@@ -241,7 +241,7 @@ class PodClient:
         return batch_items, idx, total_size
 
     def bulk_action(
-        self, create_items=None, update_items=None, create_edges=None, delete_items=None
+        self, create_items=None, update_items=None, create_edges=None, delete_items=None, partial_update=True
     ):
         all_items = []
         if create_items:
@@ -263,7 +263,7 @@ class PodClient:
             else []
         )
         update_items = (
-            [self.get_update_dict(i) for i in update_items]
+            [self.get_update_dict(i, partial_update=partial_update) for i in update_items]
             if update_items is not None
             else []
         )
@@ -327,6 +327,8 @@ class PodClient:
                 return False
         print(f"Completed Bulk action, written {n} items/edges")
 
+        for item in all_items:
+            item.on_sync_to_pod(self)
         return True
 
     def get_create_edge_dict(self, edge):
@@ -387,17 +389,18 @@ class PodClient:
             print(e)
             return
 
-    def get_update_dict(self, node):
+    def get_update_dict(self, node, partial_update=True):
         properties = node.to_json(dates=False)
         properties.pop("type", None)
         properties.pop("deleted", None)
+        properties = {k: v for k, v in properties.items() if k=="id" or k in node._updated_properties}
         return properties
 
-    def update_item(self, node):
-        data = self.get_update_dict(node)
+    def update_item(self, node, partial_update=True):
+        data = self.get_update_dict(node, partial_update=partial_update)
         try:
             self.api.update_item(data)
-            node._set_client(self)
+            node.on_sync_to_pod(self)
             return True
         except PodError as e:
             print(e)
@@ -475,7 +478,7 @@ class PodClient:
             query[f"{with_prop}=="] = with_val
         return self.search(query)[0]
 
-    def item_from_json(self, json, add_client_ref: bool = True):
+    def item_from_json(self, json, add_client_ref: bool = True, from_pod: bool = True):
         plugin_class = json.get("pluginClass", None)
         plugin_package = json.get("pluginPackage", None)
 
@@ -498,11 +501,15 @@ class PodClient:
 
             for prop_name in new_item.get_property_names():
                 existing.__setattr__(prop_name, new_item.__getattribute__(prop_name))
-            existing._set_client(self) if add_client_ref else None
-            return existing
+            result = existing
         else:
-            new_item._set_client(self) if add_client_ref else None
-            return new_item
+            result = new_item
+
+        result._set_client(self) if add_client_ref else None
+        if from_pod:
+            result._in_pod = True
+            result._updated_properties = set()
+        return result
 
     def get_properties(self, expanded):
         properties = copy(expanded)
