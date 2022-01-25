@@ -60,6 +60,7 @@ class PodClient:
         self.local_db = DB()
         self.registered_classes = dict()
         self.register_base_schemas()
+        self.sync_store = list()
 
     @classmethod
     def from_local_keys(cls, path=DEFAULT_POD_KEY_PATH, **kwargs):
@@ -457,12 +458,12 @@ class PodClient:
     def _item_from_search(self, item_json: dict, add_to_local_db: bool = True):
         # search returns different fields w.r.t. edges compared to `get` api,
         # different method to keep `self.get` clean.
-        item = self.item_from_json(item_json)
+        item = self.item_from_json(item_json, add_to_local_db=add_to_local_db)
 
         for edge_json in item_json.get("[[edges]]", []):
             edge_name = edge_json["_edge"]
             try:
-                edge_item = self.item_from_json(edge_json["_item"])
+                edge_item = self.item_from_json(edge_json["_item"], add_to_local_db=add_to_local_db)
                 item.add_edge(edge_name, edge_item)
             except Exception as e:
                 print(f"Could not attach edge {edge_json['_item']} to {item}")
@@ -478,7 +479,7 @@ class PodClient:
             query[f"{with_prop}=="] = with_val
         return self.search(query)[0]
 
-    def item_from_json(self, json, add_client_ref: bool = True, from_pod: bool = True):
+    def item_from_json(self, json, add_client_ref: bool = True, from_pod: bool = True, add_to_local_db: bool = True):
         plugin_class = json.get("pluginClass", None)
         plugin_package = json.get("pluginPackage", None)
 
@@ -491,7 +492,7 @@ class PodClient:
         new_item = constructor.from_json(json)
         existing = self.local_db.get(new_item.id)
         # TODO: cleanup
-        if existing is not None:
+        if existing is not None and add_to_local_db:
             if not existing.is_expanded() and new_item.is_expanded():
                 for edge_name in new_item.get_all_edge_names():
                     edges = new_item.get_edges(edge_name)
@@ -525,6 +526,63 @@ class PodClient:
         except PodError as e:
             print(e)
             return False
+
+    def sync(self, priority=None):
+        create_items = []
+        update_items = []
+        update_ids = []
+
+        for item in self.sync_store:
+            if item._in_pod:
+                update_items.append(item)
+                if item.id is None:
+                    raise ValueError("Attempted to sync an existing item without item ID.")
+                update_ids.append(item.id)
+            else:
+                create_items.append(item)
+
+        existing_items = self.search({"ids": update_ids}, add_to_local_db=False)
+        existing_items = {item.id: item for item  in existing_items}
+
+        update_items = [self._resolve_existing_item(item, existing_items[item.id], priority)]
+
+        create_edges = []
+        for item in self.sync_store:
+            create_edges.extend(item._new_edges)
+            item._new_edges = list()
+
+        return self.bulk_action(
+            create_items=create_items,
+            update_items=update_items,
+            create_edges=create_edges,
+        )
+
+    def _resolve_existing_item(self, local_item, remote_item, priority=None):
+        if priority == None:
+            for prop in local_item.properties:
+                local_val = getattr(local_item, prop)
+                remote_val = getattr(remote_item, prop)
+                if local_val is not None and remote_val is not None and local_val != remote_val:
+                    raise ValueError("Difference between local and remote item")
+
+        elif priority.lower() == "remote":
+            for prop in local_item.properties:
+                local_val = getattr(local_item, prop)
+                remote_val = getattr(remote_item, prop)
+                if remote_val is not None:
+                    setattr(local_item, prop, remote_val)
+
+        elif priority.lower() == "local":
+            for prop in local_item.properties:
+                local_val = getattr(local_item, prop)
+                remote_val = getattr(remote_item, prop)
+                if local_val is None and remote_val is not None:
+                    setattr(local_item, prop, remote_val)
+
+        else:
+            raise ValueError(f"Unknown overwrite method: {overwrite}")
+
+        return local_item
 
 # Cell
 class Dog(Item):

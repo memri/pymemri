@@ -152,6 +152,11 @@ class ItemBase:
     def exists(self, api):
         return api.exists(self.id) if self.id else None
 
+    def store(self, client: "PodClient" = None):
+        if client:
+            self._set_client(client)
+        self._client.sync_store.append(self)
+
 #     def expand(self, api):
 #         """Expands a node (retrieves all directly connected nodes ands adds to object)."""
 #         self._expanded = True
