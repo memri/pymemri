@@ -60,7 +60,7 @@ class PodClient:
         self.local_db = DB()
         self.registered_classes = dict()
         self.register_base_schemas()
-        self.sync_store = list()
+        self.sync_store = dict()
 
     @classmethod
     def from_local_keys(cls, path=DEFAULT_POD_KEY_PATH, **kwargs):
@@ -218,6 +218,7 @@ class PodClient:
 
     def delete_items(self, items):
         return self.bulk_action(delete_items=items)
+
     def delete_all(self):
         items = self.get_all_items()
         self.delete_items(items)
@@ -527,27 +528,33 @@ class PodClient:
             print(e)
             return False
 
+    def add_to_sync(self, item):
+        item.create_id(overwrite=False)
+        self.sync_store[item.id] = item
+
     def sync(self, priority=None):
         create_items = []
         update_items = []
-        update_ids = []
+        update_ids = set()
 
-        for item in self.sync_store:
-            if item._in_pod:
+        for item in self.sync_store.values():
+            if item._in_pod and item not in update_ids:
                 update_items.append(item)
                 if item.id is None:
                     raise ValueError("Attempted to sync an existing item without item ID.")
-                update_ids.append(item.id)
+                update_ids.add(item.id)
             else:
                 create_items.append(item)
 
-        existing_items = self.search({"ids": update_ids}, add_to_local_db=False)
+        existing_items = self.search({"ids": list(update_ids)}, add_to_local_db=False)
         existing_items = {item.id: item for item  in existing_items}
 
-        update_items = [self._resolve_existing_item(item, existing_items[item.id], priority)]
+        update_items = [
+            self._resolve_existing_item(item, existing_items[item.id], priority) for item in update_items
+        ]
 
         create_edges = []
-        for item in self.sync_store:
+        for item in self.sync_store.values():
             create_edges.extend(item._new_edges)
             item._new_edges = list()
 

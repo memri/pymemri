@@ -7,6 +7,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'ItemBase', 'Item']
 from typing import Optional, Dict, List, Set
 from ..imports import *
 from datetime import datetime
+import uuid
 
 ALL_EDGES = "allEdges"
 SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE = "_source", "_target", "_type", "_type", "label", "sequence"
@@ -74,6 +75,7 @@ class ItemBase:
         self.id: Optional[str] = id
         self._client: Optional["PodClient"] = None
         self._in_pod: bool = False
+        self._new_edges = list()
 
     def _set_client(self, client: "PodClient"):
         if self._client is not None and self._client != client:
@@ -152,10 +154,15 @@ class ItemBase:
     def exists(self, api):
         return api.exists(self.id) if self.id else None
 
+    def create_id(self, overwrite=False):
+        if not overwrite and self.id is not None:
+            return
+        self.id = uuid.uuid4().hex
+
     def store(self, client: "PodClient" = None):
-        if client:
+        if client is not None:
             self._set_client(client)
-        self._client.sync_store.append(self)
+        self._client.add_to_sync(self)
 
 #     def expand(self, api):
 #         """Expands a node (retrieves all directly connected nodes ands adds to object)."""
