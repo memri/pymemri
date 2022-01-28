@@ -70,52 +70,55 @@ class ItemBase:
     edges: List[str] = list()
 
     def __init__(self, id: str = None):
-        self._updated_properties: Set[str] = set()
-
-        self.id: Optional[str] = id
-        self._client: Optional["PodClient"] = None
+        self._date_local_modified = dict()
         self._in_pod: bool = False
         self._new_edges = list()
+        self._original_properties = dict()
 
-    def _set_client(self, client: "PodClient"):
-        if self._client is not None and self._client != client:
-            raise ValueError(f"Attempted to overwrite existing client of item {self}")
-        self._client = client
+        self.id: Optional[str] = id
 
     def __setattr__(self, name, value):
         prev_val = getattr(self, name, None)
         super(ItemBase, self).__setattr__(name, value)
+
         if name in self.properties and value != prev_val:
-            self._updated_properties.add(name)
+            self._date_local_modified[name] = datetime.utcnow()
+            if name not in self._original_properties:
+                self._original_properties[name] = prev_val
+
+    @property
+    def _updated_properties(self):
+        return set(self._original_properties.keys())
 
     def __getattribute__(self, name):
         val = object.__getattribute__(self, name)
-        if isinstance(val, Edge):
-            edge = val
-            return edge.traverse(start=self)
-        if isinstance(val, list) and len(val) > 0 and isinstance(val[0], Edge):
-            edges = val
-            return [edge.traverse(start=self) for edge in edges]
+        if name in object.__getattribute__(self, "edges"):
+            if isinstance(val, Edge):
+                return val.traverse(start=self)
+            if isinstance(val, list) and len(val) > 0 and isinstance(val[0], Edge):
+                return [edge.traverse(start=self) for edge in val]
         else:
             return val
 
-    def on_sync_to_pod(self, client):
+    def on_sync(self):
         """
-        on_sync_to_pod is called when self is created or updated (optionally via bulk) in the PodClient.
+        on_sync is called when self is created or updated (optionally via bulk) in the PodClient.
         """
-        self._set_client(client)
-        self._updated_properties = set()
+        self._original_properties = dict()
+        self._date_local_modified = dict()
         self._in_pod = True
 
     def add_edge(self, name, val):
         """Creates an edge of type name and makes it point to val"""
-        val = Edge(self, val, name, created=True)
         if name not in self.__dict__:
             raise NameError(f"object {self} does not have edge with name {name}")
+
+        edge = Edge(self, val, name, created=True)
         existing = object.__getattribute__(self, name)
-        if val not in existing:
-            res = existing + [val]
+        if edge not in existing:
+            res = existing + [edge]
             self.__setattr__(name, res)
+            self._new_edges.append(edge)
 
     def is_expanded(self):
         """returns whether the node is expanded. An expanded node retrieved nodes that are
@@ -154,28 +157,12 @@ class ItemBase:
     def exists(self, api):
         return api.exists(self.id) if self.id else None
 
-    def create_id(self, overwrite=False):
-        if not overwrite and self.id is not None:
-            return
-        self.id = uuid.uuid4().hex
+    def create_id(self):
+        if self.id is None:
+            self.id = uuid.uuid4().hex
 
-    def store(self, client: "PodClient" = None):
-        if client is not None:
-            self._set_client(client)
-        self._client.add_to_sync(self)
-
-#     def expand(self, api):
-#         """Expands a node (retrieves all directly connected nodes ands adds to object)."""
-#         self._expanded = True
-#         res = api.get(self.id, expanded=True)
-#         for edge_name in res.get_all_edge_names():
-#             edges = res.get_edges(edge_name)
-#             for e in edges:
-#                 e.source = self
-#             self.__setattr__(edge_name, edges)
-
-#         # self.edges = res.edges
-#         return self
+    def store(self, client: "PodClient"):
+        return client.add_to_sync(self)
 
     def __repr__(self):
         id = self.id
@@ -200,12 +187,6 @@ class ItemBase:
             v.source = res
         return res
 
-#     def inherit_funcs(self, other):
-#         """This function can be used to inherit new functionalities from a subclass. This is a patch to solve
-#         the fact that python does provide extensions of classes that are defined in a different file that are
-#         dynamic enough for our use case."""
-#         assert issubclass(other, self.__class__)
-#         self.__class__ = other
 
 # Cell
 class Item(ItemBase):

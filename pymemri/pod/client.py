@@ -96,7 +96,7 @@ class PodClient:
             result = self.api.create_item(create_dict)
             node.id = result
             self.add_to_db(node)
-            node.on_sync_to_pod(self)
+            node.on_sync()
             return True
         except Exception as e:
             print(e)
@@ -250,8 +250,8 @@ class PodClient:
             all_items += create_items
         if update_items:
             all_items += update_items
-        for item in all_items:
-            item._set_client(self)
+#         for item in all_items:
+#             item._set_client(self)
 
         # we need to set the id to not lose the reference
         if create_items is not None:
@@ -330,7 +330,7 @@ class PodClient:
         print(f"Completed Bulk action, written {n} items/edges")
 
         for item in all_items:
-            item.on_sync_to_pod(self)
+            item.on_sync()
         return True
 
     def get_create_edge_dict(self, edge):
@@ -402,7 +402,7 @@ class PodClient:
         data = self.get_update_dict(node, partial_update=partial_update)
         try:
             self.api.update_item(data)
-            node.on_sync_to_pod(self)
+            node.on_sync()
             return True
         except PodError as e:
             print(e)
@@ -507,10 +507,8 @@ class PodClient:
         else:
             result = new_item
 
-        result._set_client(self) if add_client_ref else None
         if from_pod:
-            result._in_pod = True
-            result._updated_properties = set()
+            result.on_sync()
         return result
 
     def get_properties(self, expanded):
@@ -529,66 +527,81 @@ class PodClient:
             return False
 
     def add_to_sync(self, item):
-        item.create_id(overwrite=False)
+        item.create_id()
         self.sync_store[item.id] = item
 
-    def sync(self, priority=None):
+    def sync(self, priority="newest"):
+        all_items = list(self.sync_store.values())
+        all_ids = set(self.sync_store.keys())
+
         create_items = []
         update_items = []
-        update_ids = set()
+        create_edges = []
 
-        for item in self.sync_store.values():
-            if item._in_pod and item not in update_ids:
+        # Add items from sync store
+        for item in all_items:
+            if item._in_pod:
                 update_items.append(item)
-                if item.id is None:
-                    raise ValueError("Attempted to sync an existing item without item ID.")
-                update_ids.add(item.id)
             else:
                 create_items.append(item)
 
-        existing_items = self.search({"ids": list(update_ids)}, add_to_local_db=False)
+            # Add all edges where src and tgt exist
+            for edge in item._new_edges:
+                if edge.target.id in all_ids:
+                    create_edges.append(edge)
+                else:
+                    warnings.warn(f"Could not sync `{edge._type}` for {item}: edge target missing in sync.")
+
+        update_ids = [item.id for item in update_items]
+        existing_items = self.search({"ids": update_ids}, add_to_local_db=False)
         existing_items = {item.id: item for item  in existing_items}
 
         update_items = [
             self._resolve_existing_item(item, existing_items[item.id], priority) for item in update_items
         ]
 
-        create_edges = []
-        for item in self.sync_store.values():
-            create_edges.extend(item._new_edges)
-            item._new_edges = list()
-
-        return self.bulk_action(
+        success = self.bulk_action(
             create_items=create_items,
             update_items=update_items,
             create_edges=create_edges,
         )
 
-    def _resolve_existing_item(self, local_item, remote_item, priority=None):
-        if priority == None:
-            for prop in local_item.properties:
-                local_val = getattr(local_item, prop)
-                remote_val = getattr(remote_item, prop)
-                if local_val is not None and remote_val is not None and local_val != remote_val:
-                    raise ValueError("Difference between local and remote item")
+        if success:
+            self.sync_store = dict()
+        return success
 
-        elif priority.lower() == "remote":
-            for prop in local_item.properties:
-                local_val = getattr(local_item, prop)
-                remote_val = getattr(remote_item, prop)
-                if remote_val is not None:
+    def _resolve_existing_item(self, local_item: Item, remote_item: Item, priority: str):
+        for prop in local_item.properties:
+            if prop == ["dateServerModified"]:
+                setattr(local_item, prop, remote_val)
+                continue
+
+            local_val = getattr(local_item, prop)
+            remote_val = getattr(remote_item, prop)
+            orig_val = local_item._original_properties.get(prop, None)
+
+            # Property is not updated locally since last sync, always use remote
+            if prop not in local_item._original_properties:
+                setattr(local_item, prop, remote_val)
+
+            elif priority == "newest":
+                # Note: Pod does not have a DSM per property, so we compare against the Item DSM.
+                dateLocalModified = local_item._date_local_modified.get(prop, None)
+                if remote_val != orig_val and remote_item.dateServerModified > dateLocalModified:
                     setattr(local_item, prop, remote_val)
 
-        elif priority.lower() == "local":
-            for prop in local_item.properties:
-                local_val = getattr(local_item, prop)
-                remote_val = getattr(remote_item, prop)
-                if local_val is None and remote_val is not None:
+            elif priority == "remote":
+                if orig_val != remote_val:
                     setattr(local_item, prop, remote_val)
 
-        else:
-            raise ValueError(f"Unknown overwrite method: {overwrite}")
+            elif priority == "local":
+                continue
 
+            elif priority == "error" and orig_val != remote_val:
+                raise ValueError(f"Sync conflict on `{prop}` property for {local_item}")
+
+            else:
+                raise ValueError(f"Unknown sync priority: {priority}")
         return local_item
 
 # Cell
