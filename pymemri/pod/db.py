@@ -86,6 +86,10 @@ class DB:
             else:
                 raise ValueError(f"Unknown sync priority: {priority}")
 
+        self._merge_edges(local_item, remote_item)
+        return local_item
+
+    def _merge_edges(self, local_item, remote_item):
         for edge in local_item.edges:
             local_edges = object.__getattribute__(local_item, edge)
             remote_edges = object.__getattribute__(remote_item, edge)
@@ -94,4 +98,3 @@ class DB:
             )
             for edge in local_edges:
                 edge.source = local_item
-        return local_item
