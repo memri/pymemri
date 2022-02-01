@@ -4,14 +4,21 @@ __all__ = ['DB']
 
 # Cell
 # hide
-class DB():
+from ..data.itembase import Item
+from ..data.schema import File, Photo
+
+# Cell
+# hide
+class DB:
     def __init__(self):
         self.nodes = dict()
 
     def add(self, node):
         id = node.id
         if id in self.nodes:
-            print(f"Error trying to add node, but node with with id: {id} is already in database")
+            print(
+                f"Error trying to add node, but node with with id: {id} is already in database"
+            )
         self.nodes[id] = node
 
     def get(self, id):
@@ -19,17 +26,72 @@ class DB():
         return res
 
     def contains(self, node):
-        id = node.get_property("id")
-        return id in self.nodes
+        return node.id in self.nodes
 
-    def create(self, node):
-        existing = self.get(node.properties.get("id", None))
-
-        if existing is not None:
-            if not existing._expanded:
-                existing.edges = node.edges
-                existing._expanded = node.edges is not None
-            return existing
+    def create(self, node, priority):
+        if self.contains(node):
+            node = self._merge_item(self.get(node.id), node, priority)
         else:
             self.add(node)
-            return node
+        return node
+
+    def _merge_item(
+        self, local_item: Item, remote_item: Item, priority: str
+    ) -> Item:
+        """
+        Merge the properties and edges of `remote_item` into `local_item`, according to `priority`
+
+        Possible priorities:
+        "newest": In case of a conflict, use the local property
+                  if it was modified after remote_item.date_server_modified
+        "local": In case of a conflict, use the local property value
+        "remote": In case of a conflict, use the remote property value
+        "error": throw a `ValueError` on conflict
+        """
+        if not isinstance(remote_item, type(local_item)):
+            raise ValueError(f"Attempted to merge two items with different schema: {type(remote_item)}, {type(local_item)}")
+
+        for prop in local_item.properties:
+            if prop == ["dateServerModified"]:
+                setattr(local_item, prop, remote_val)
+                continue
+
+            local_val = getattr(local_item, prop)
+            remote_val = getattr(remote_item, prop)
+            orig_val = local_item._original_properties.get(prop, None)
+
+            # Property is not updated locally since last sync, always use remote
+            if prop not in local_item._original_properties:
+                setattr(local_item, prop, remote_val)
+
+            elif priority == "newest":
+                # Note: Pod does not have a DSM per property, so we compare against the Item DSM.
+                dateLocalModified = local_item._date_local_modified.get(prop, None)
+                if (
+                    remote_val != orig_val
+                    and remote_item.dateServerModified > dateLocalModified
+                ):
+                    setattr(local_item, prop, remote_val)
+
+            elif priority == "remote":
+                if orig_val != remote_val:
+                    setattr(local_item, prop, remote_val)
+
+            elif priority == "local":
+                continue
+
+            elif priority == "error" and orig_val != remote_val:
+                raise ValueError(f"Sync conflict on `{prop}` property for {local_item}")
+
+            else:
+                raise ValueError(f"Unknown sync priority: {priority}")
+
+        for edge in local_item.edges:
+            local_edges = object.__getattribute__(local_item, edge)
+            remote_edges = object.__getattribute__(remote_item, edge)
+            local_edges.extend(
+                [edge for edge in remote_edges if edge not in local_edges]
+            )
+            for edge in local_edges:
+                edge.source = local_item
+        return local_item

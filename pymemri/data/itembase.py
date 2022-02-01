@@ -97,8 +97,7 @@ class ItemBase:
                 return val.traverse(start=self)
             if isinstance(val, list) and len(val) > 0 and isinstance(val[0], Edge):
                 return [edge.traverse(start=self) for edge in val]
-        else:
-            return val
+        return val
 
     def on_sync(self):
         """
@@ -157,12 +156,12 @@ class ItemBase:
     def exists(self, api):
         return api.exists(self.id) if self.id else None
 
-    def create_id(self):
+    def ensure_id(self):
         if self.id is None:
             self.id = uuid.uuid4().hex
 
     def store(self, client: "PodClient"):
-        return client.add_to_sync(self)
+        return client.add_to_store(self)
 
     def __repr__(self):
         id = self.id
