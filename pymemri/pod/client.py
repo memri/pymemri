@@ -99,6 +99,8 @@ class PodClient:
             node.id = result
             self.add_to_store(node)
             node.on_sync()
+            if node._requires_client_ref:
+                node._client = self
             return True
         except Exception as e:
             print(e)
@@ -262,6 +264,8 @@ class PodClient:
         # we need to add to local_db to not lose reference.
         if create_items is not None:
             for c in create_items:
+                if c._requires_client_ref:
+                    c._client = self
                 if not self.local_db.contains(c):
                     self.add_to_store(c, priority=priority)
 
@@ -497,7 +501,6 @@ class PodClient:
     def item_from_json(
         self,
         json: dict,
-        add_client_ref: bool = False,
         add_to_local_db: bool = True,
         priority = None,
     ) -> Item:
@@ -514,8 +517,8 @@ class PodClient:
         new_item = item_class.from_json(json)
         if add_to_local_db:
             new_item = self.add_to_store(new_item, priority=priority)
-        if add_client_ref:
-            new_item._client = weakref.ref(self)
+        if new_item._requires_client_ref:
+            new_item._client = self
         return new_item
 
     def get_properties(self, expanded):

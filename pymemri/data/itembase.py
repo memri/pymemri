@@ -68,6 +68,7 @@ class ItemBase:
     basic functionality for consistency and to enable easier usage."""
     properties: List[str] = list()
     edges: List[str] = list()
+    _requires_client_ref = False
 
     def __init__(self, id: str = None):
         self._date_local_modified = dict()

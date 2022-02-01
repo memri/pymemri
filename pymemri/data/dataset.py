@@ -25,12 +25,14 @@ class Dataset(Item):
     """
     properties= Item.properties + ["name", "queryStr"]
     edges = Item.edges + ["item"]
+    _requires_client_ref = True
 
     def __init__(self, name: str = None, queryStr: str = None, item: list = None, **kwargs):
         super().__init__(**kwargs)
         self.queryStr = queryStr
         self.name = name
         self.item: list = item if item is not None else []
+        self._client = None
 
     def _get_items(self):
         if self._client is None:
