@@ -19,6 +19,7 @@ import uuid
 import urllib
 from datetime import datetime
 
+from queue import Queue
 from threading import Thread
 
 # Cell
@@ -32,6 +33,9 @@ class PodClient:
         float: "Real",
         datetime: "DateTime",
     }
+    MAX_UPLOADER_THREADS = 5
+    uploader_queue = Queue()
+    uploader_threads = []
 
     def __init__(
         self,
@@ -186,12 +190,20 @@ class PodClient:
                 return True
             return False
 
+    def create_uploader_thread(self):
+        def thread_fn():
+            while True:
+                file, callback = self.uploader_queue.get()
+                result = self.upload_file(file, asyncFlag=False)
+                if callback:
+                    callback(result)
+        uploader_thread = Thread(target=thread_fn, daemon=True).start()
+        self.uploader_threads.append(uploader_thread)
+
     def upload_file_async(self, file, callback=None):
-        def thread_fn(file, callback):
-            result = self.upload_file(file, asyncFlag=False)
-            if callback:
-                callback(result)
-        Thread(target=thread_fn, args=(file, callback)).start()
+        self.uploader_queue.put((file, callback))
+        if len(self.uploader_threads) < self.MAX_UPLOADER_THREADS and len(self.uploader_threads) < self.uploader_queue.qsize():
+            self.create_uploader_thread()
         return True
 
     def get_file(self, sha):
