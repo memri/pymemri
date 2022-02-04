@@ -18,7 +18,6 @@ from typing import List, Union
 import uuid
 import urllib
 from datetime import datetime
-import weakref
 
 from threading import Thread
 
@@ -120,6 +119,8 @@ class PodClient:
             raise ValueError("Could not create file or photo item")
 
         return self._upload_image(photo.data, asyncFlag=asyncFlag)
+
+        return self._upload_image(photo.data)
 
     def _property_dicts_from_instance(self, item):
         create_items = []
