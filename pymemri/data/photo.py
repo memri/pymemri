@@ -3,7 +3,7 @@
 __all__ = ['DEFAULT_ENCODING', 'show_images', 'Photo']
 
 # Cell
-from .schema import Item
+from .itembase import Item
 
 # Cell
 from .schema import *
