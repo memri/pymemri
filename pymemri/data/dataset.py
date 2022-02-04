@@ -25,7 +25,7 @@ class Dataset(Item):
     """
     properties= Item.properties + ["name", "queryStr"]
     edges = Item.edges + ["item"]
-    _requires_client_ref = True
+    requires_client_ref = True
 
     def __init__(self, name: str = None, queryStr: str = None, item: list = None, **kwargs):
         super().__init__(**kwargs)

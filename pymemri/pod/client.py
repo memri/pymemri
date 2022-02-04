@@ -8,7 +8,7 @@ from ..data.schema import *
 from ..data.itembase import Edge, ItemBase, Item
 from ..imports import *
 from hashlib import sha256
-from .db import DB
+from .db import DB, Priority
 from .utils import *
 from ..plugin.schema import *
 from ..test_utils import get_ci_variables
@@ -41,7 +41,7 @@ class PodClient:
         auth_json=None,
         register_base_schema=True,
         verbose=False,
-        default_priority="local",
+        default_priority=Priority.local,
     ):
         self.verbose = verbose
         self.database_key = (
@@ -58,7 +58,8 @@ class PodClient:
             auth_json=auth_json,
             verbose=verbose,
         )
-        self.default_priority = default_priority
+
+        self.default_priority = Priority(default_priority)
         self.api.test_connection()
         self.local_db = DB()
         self.registered_classes = dict()
@@ -79,28 +80,28 @@ class PodClient:
     def register_base_schemas(self):
         assert self.add_to_schema(PluginRun, CVUStoredDefinition, Account, Photo)
 
-    def add_to_store(self, node: Item, priority=None) -> Item:
-        node.ensure_id()
+    def add_to_store(self, item: Item, priority: Priority = None) -> Item:
+        item.create_id_if_not_exists()
         priority = priority if priority is not None else self.default_priority
-        return self.local_db.create(node, priority)
+        return self.local_db.merge(item, priority)
 
     def reset_local_db(self):
         self.local_db = DB()
 
-    def get_create_dict(self, node):
-        properties = node.to_json()
+    def get_create_dict(self, item):
+        properties = item.to_json()
         properties = {k: v for k, v in properties.items() if v != []}
         return properties
 
-    def create(self, node):
-        create_dict = self.get_create_dict(node)
+    def create(self, item):
+        self.add_to_store(item)
+        create_dict = self.get_create_dict(item)
         try:
             result = self.api.create_item(create_dict)
-            node.id = result
-            self.add_to_store(node)
-            node.on_sync()
-            if node._requires_client_ref:
-                node._client = self
+            item.id = result
+            item.reset_local_sync_state()
+            if getattr(item, "requires_client_ref", False):
+                item._client = self
             return True
         except Exception as e:
             print(e)
@@ -118,9 +119,9 @@ class PodClient:
 
         return self._upload_image(photo.data)
 
-    def _property_dicts_from_instance(self, node):
+    def _property_dicts_from_instance(self, item):
         create_items = []
-        attributes = node.to_json()
+        attributes = item.to_json()
         for k, v in attributes.items():
             if type(v) not in self.TYPE_TO_SCHEMA:
                 raise ValueError(f"Could not add property {k} with type {type(v)}")
@@ -207,14 +208,14 @@ class PodClient:
         else:
             print(f"could not load data of {photo}, no file attached")
 
-    def create_if_external_id_not_exists(self, node):
-        if not self.external_id_exists(node):
-            self.create(node)
+    def create_if_external_id_not_exists(self, item):
+        if not self.external_id_exists(item):
+            self.create(item)
 
-    def external_id_exists(self, node):
-        if node.externalId is None:
+    def external_id_exists(self, item):
+        if item.externalId is None:
             return False
-        existing = self.search({"externalId": node.externalId})
+        existing = self.search({"externalId": item.externalId})
         return len(existing) > 0
 
     def create_edges(self, edges):
@@ -253,8 +254,10 @@ class PodClient:
         create_edges=None,
         delete_items=None,
         partial_update=True,
-        priority=None
+        priority=None,
     ):
+        priority = Priority(priority) if priority else None
+
         all_items = []
         if create_items:
             all_items += create_items
@@ -264,7 +267,7 @@ class PodClient:
         # we need to add to local_db to not lose reference.
         if create_items is not None:
             for c in create_items:
-                if c._requires_client_ref:
+                if getattr(c, "requires_client_ref", False):
                     c._client = self
                 if not self.local_db.contains(c):
                     self.add_to_store(c, priority=priority)
@@ -275,7 +278,10 @@ class PodClient:
             else []
         )
         update_items = (
-            [self.get_update_dict(i, partial_update=partial_update) for i in update_items]
+            [
+                self.get_update_dict(i, partial_update=partial_update)
+                for i in update_items
+            ]
             if update_items is not None
             else []
         )
@@ -340,11 +346,15 @@ class PodClient:
         print(f"Completed Bulk action, written {n} items/edges")
 
         for item in all_items:
-            item.on_sync()
+            item.reset_local_sync_state()
         return True
 
     def get_create_edge_dict(self, edge):
-        return {"_source": edge.source.id, "_target": edge.target.id, "_name": edge._type}
+        return {
+            "_source": edge.source.id,
+            "_target": edge.target.id,
+            "_name": edge._type,
+        }
 
     def create_edge(self, edge):
         edge_dict = self.get_create_edge_dict(edge)
@@ -386,7 +396,7 @@ class PodClient:
             result = self.api.get_edges(id)
             for d in result:
                 edge_item = self.item_from_json(d["item"])
-                edge_item.on_sync()
+                edge_item.reset_local_sync_state()
                 d["item"] = edge_item
             return result
         except PodError as e:
@@ -399,25 +409,28 @@ class PodClient:
             if not len(result):
                 return
             item = self.item_from_json(result[0])
-            self.add_to_store(item)
-            item.on_sync()
+            item.reset_local_sync_state()
             return item
         except PodError as e:
             print(e)
             return
 
-    def get_update_dict(self, node, partial_update=True):
-        properties = node.to_json(dates=False)
+    def get_update_dict(self, item, partial_update=True):
+        properties = item.to_json(dates=False)
         properties.pop("type", None)
         properties.pop("deleted", None)
-        properties = {k: v for k, v in properties.items() if k=="id" or k in node._updated_properties}
+        properties = {
+            k: v
+            for k, v in properties.items()
+            if k == "id" or k in item._updated_properties
+        }
         return properties
 
-    def update_item(self, node, partial_update=True):
-        data = self.get_update_dict(node, partial_update=partial_update)
+    def update_item(self, item, partial_update=True):
+        data = self.get_update_dict(item, partial_update=partial_update)
         try:
             self.api.update_item(data)
-            node.on_sync()
+            item.reset_local_sync_state()
             return True
         except PodError as e:
             print(e)
@@ -433,21 +446,45 @@ class PodClient:
             print(e)
             return False
 
-    def search_paginate(self, fields_data, limit=50, include_edges=True, add_to_local_db: bool = True, priority = None):
+    def search_paginate(
+        self,
+        fields_data,
+        limit=50,
+        include_edges=True,
+        add_to_local_db: bool = True,
+        priority=None,
+    ):
+        priority = Priority(priority) if priority else None
+
         if "ids" in fields_data:
-            raise NotImplementedError("Searching by multiple IDs is not implemented for paginated search.")
+            raise NotImplementedError(
+                "Searching by multiple IDs is not implemented for paginated search."
+            )
 
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
 
         try:
             for page in self.api.search_paginate(query, limit):
-                result = [self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority) for item in page]
+                result = [
+                    self._item_from_search(
+                        item, add_to_local_db=add_to_local_db, priority=priority
+                    )
+                    for item in page
+                ]
                 yield self.filter_deleted(result)
         except PodError as e:
             print(e)
 
-    def search(self, fields_data, include_edges: bool = True, add_to_local_db: bool = True, priority = None):
+    def search(
+        self,
+        fields_data,
+        include_edges: bool = True,
+        add_to_local_db: bool = True,
+        priority=None,
+    ):
+        priority = Priority(priority) if priority else None
+
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
 
@@ -468,20 +505,33 @@ class PodClient:
             except PodError as e:
                 print(e)
 
-        result = [self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority) for item in result]
+        result = [
+            self._item_from_search(
+                item, add_to_local_db=add_to_local_db, priority=priority
+            )
+            for item in result
+        ]
         return self.filter_deleted(result)
 
-    def _item_from_search(self, item_json: dict, add_to_local_db: bool = True, priority=None):
+    def _item_from_search(
+        self, item_json: dict, add_to_local_db: bool = True, priority=None
+    ):
         # search returns different fields w.r.t. edges compared to `get` api,
         # different method to keep `self.get` clean.
-        item = self.item_from_json(item_json, add_to_local_db=add_to_local_db, priority=priority)
-        item.on_sync()
+        item = self.item_from_json(
+            item_json, add_to_local_db=add_to_local_db, priority=priority
+        )
+        item.reset_local_sync_state()
 
         for edge_json in item_json.get("[[edges]]", []):
             edge_name = edge_json["_edge"]
             try:
-                edge_item = self.item_from_json(edge_json["_item"], add_to_local_db=add_to_local_db, priority=priority)
-                edge_item.on_sync()
+                edge_item = self.item_from_json(
+                    edge_json["_item"],
+                    add_to_local_db=add_to_local_db,
+                    priority=priority,
+                )
+                edge_item.reset_local_sync_state()
                 item.add_edge(edge_name, edge_item)
             except Exception as e:
                 print(f"Could not attach edge {edge_json['_item']} to {item}")
@@ -497,13 +547,13 @@ class PodClient:
             query[f"{with_prop}=="] = with_val
         return self.search(query)[0]
 
-
     def item_from_json(
         self,
         json: dict,
         add_to_local_db: bool = True,
-        priority = None,
+        priority=None,
     ) -> Item:
+        priority = Priority(priority) if priority else None
 
         plugin_class = json.get("pluginClass", None)
         plugin_package = json.get("pluginPackage", None)
@@ -517,7 +567,7 @@ class PodClient:
         new_item = item_class.from_json(json)
         if add_to_local_db:
             new_item = self.add_to_store(new_item, priority=priority)
-        if new_item._requires_client_ref:
+        if getattr(new_item, "requires_client_ref", False):
             new_item._client = self
         return new_item
 
@@ -536,7 +586,8 @@ class PodClient:
             print(e)
             return False
 
-    def sync(self, priority: str = "newest"):
+    def sync(self, priority: str = Priority.newest):
+        priority = Priority(priority) if priority else None
         all_items = list(self.local_db.nodes.values())
         all_ids = set(self.local_db.nodes.keys())
 
@@ -558,19 +609,21 @@ class PodClient:
                 if edge.target.id in all_ids:
                     create_edges.append(edge)
                 else:
-                    warnings.warn(f"Could not sync `{edge._type}` for {item}: edge target missing in sync.")
+                    warnings.warn(
+                        f"Could not sync `{edge._type}` for {item}: edge target missing in sync."
+                    )
 
         update_ids = [item.id for item in update_items]
-        existing_items = self.search({"ids": update_ids}, add_to_local_db=True, priority=priority)
-        existing_items = {item.id: item for item  in existing_items}
+        existing_items = self.search(
+            {"ids": update_ids}, add_to_local_db=True, priority=priority
+        )
 
-        assert self.bulk_action(
+        return self.bulk_action(
             create_items=create_items,
             update_items=update_items,
             create_edges=create_edges,
-            priority=priority
+            priority=priority,
         )
-        return True
 
 
 # Cell

@@ -68,7 +68,6 @@ class ItemBase:
     basic functionality for consistency and to enable easier usage."""
     properties: List[str] = list()
     edges: List[str] = list()
-    _requires_client_ref = False
 
     def __init__(self, id: str = None):
         self._date_local_modified = dict()
@@ -100,9 +99,9 @@ class ItemBase:
                 return [edge.traverse(start=self) for edge in val]
         return val
 
-    def on_sync(self):
+    def reset_local_sync_state(self):
         """
-        on_sync is called when self is created or updated (optionally via bulk) in the PodClient.
+        reset_local_sync_state is called when self is created or updated (optionally via bulk) in the PodClient.
         """
         self._original_properties = dict()
         self._date_local_modified = dict()
@@ -157,7 +156,7 @@ class ItemBase:
     def exists(self, api):
         return api.exists(self.id) if self.id else None
 
-    def ensure_id(self):
+    def create_id_if_not_exists(self):
         if self.id is None:
             self.id = uuid.uuid4().hex
 
