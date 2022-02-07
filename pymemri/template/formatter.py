@@ -75,6 +75,7 @@ def get_templates(url: str = TEMPLATE_URL) -> List[str]:
     return result
 
 # Cell
+# hide
 class TemplateFormatter:
     def __init__(
         self,
@@ -167,6 +168,20 @@ def plugin_from_template(
     description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
 ):
+    """
+    CLI that fetches and formats a plugin template according to the arguments
+
+    Args:
+        list_templates (Param, optional): If True, only list available templates. Defaults to False.
+        user (Param, optional): Your GitLab username. Defaults to None.
+        repo_url (Param, optional): The url of your gitlab plugin repository. Defaults to None.
+        plugin_name (Param, optional): The name of your plugin. Defaults to None.
+        template_name (Param, optional): The name of the template used. To list all options, see `list_templates`.
+            Defaults to "basic".
+        package_name (Param, optional): The name of the python package of your plugin. Inferred if left blank. Defaults to None.
+        description (Param, optional): An optional plugin description. Defaults to None.
+        target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".
+    """
     if list_templates:
         print("Available templates:")
         for template in get_templates():
