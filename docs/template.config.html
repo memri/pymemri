@@ -58,6 +58,44 @@ nb_path: "nbs/template.config.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
+<h4 id="create_config" class="doc_header"><code>create_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L41" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_config</code>(<strong><code>plugin_cls</code></strong>:<code>type</code>)</p>
+</blockquote>
+<p>Returns a declarative plugin configuration, inferred from the <code>__init__</code> method signature of <code>plugin_cls</code>.
+This function is used internally by the <a href="/pymemri/template.config.html#create_plugin_config"><code>create_plugin_config</code></a> CLI. For general use, use the CLI instead.</p>
+<p>Arguments that start with <code>_</code>, untyped arguments or arguments that are not in <a href="/pymemri/template.config.html#ALLOWED_TYPES"><code>ALLOWED_TYPES</code></a> are skipped.</p>
+<p>Args:
+    plugin_cls (type): A plugin class, inherited from PluginBase.</p>
+<p>Returns:
+    List[dict]: A declarative configuration definition as list of dictionaries.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
 <h4 id="create_plugin_config" class="doc_header"><code>create_plugin_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_plugin_config</code>(<strong><code>metadata</code></strong>:"metadata.json of the plugin"=<em><code>'./metadata.json'</code></em>, <strong><code>tgt_file</code></strong>:"Filename of config file"=<em><code>'config.json'</code></em>)</p>
 </blockquote>
 <p>Creates a plugin configuration definition from the arguments of your plugin class.</p>

@@ -38,10 +38,10 @@ def get_param_config(name, dtype, is_optional, default):
     }
 
 # Cell
-# hide
 def create_config(plugin_cls: type) -> List[dict]:
     """
-    Creates a declarative plugin configuration from the `__init__` method signature of `plugin_cls`.
+    Returns a declarative plugin configuration, inferred from the `__init__` method signature of `plugin_cls`.
+    This function is used internally by the `create_plugin_config` CLI. For general use, use the CLI instead.
 
     Arguments that start with `_`, untyped arguments or arguments that are not in `ALLOWED_TYPES` are skipped.
 
