@@ -6,7 +6,7 @@ __all__ = ['DEFAULT_ENCODING', 'show_images', 'Photo']
 from .itembase import Item
 
 # Cell
-from .schema import *
+from ._central_schema import File
 from .basic import *
 from matplotlib.pyplot import imshow
 from matplotlib import patches
