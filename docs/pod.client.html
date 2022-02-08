@@ -95,51 +95,12 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="output_area">
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-74-d2c777855ca8&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>client <span class="ansi-blue-fg">=</span> PodClient<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> client<span class="ansi-blue-fg">.</span>registered_classes<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;Photo&#34;</span><span class="ansi-blue-fg">]</span>
 
-<span class="ansi-green-fg">&lt;ipython-input-73-9b8ed770974f&gt;</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, url, version, database_key, owner_key, auth_json, register_base_schema, verbose)</span>
-<span class="ansi-green-intense-fg ansi-bold">     39</span>         self<span class="ansi-blue-fg">.</span>local_db <span class="ansi-blue-fg">=</span> DB<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     40</span>         self<span class="ansi-blue-fg">.</span>registered_classes <span class="ansi-blue-fg">=</span> dict<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 41</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>register_base_schemas<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     42</span> 
-<span class="ansi-green-intense-fg ansi-bold">     43</span>     <span class="ansi-blue-fg">@</span>classmethod
 
-<span class="ansi-green-fg">&lt;ipython-input-73-9b8ed770974f&gt;</span> in <span class="ansi-cyan-fg">register_base_schemas</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">     54</span> 
-<span class="ansi-green-intense-fg ansi-bold">     55</span>     <span class="ansi-green-fg">def</span> register_base_schemas<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">---&gt; 56</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">assert</span> self<span class="ansi-blue-fg">.</span>add_to_schema<span class="ansi-blue-fg">(</span>PluginRun<span class="ansi-blue-fg">,</span> CVUStoredDefinition<span class="ansi-blue-fg">,</span> Account<span class="ansi-blue-fg">,</span> Photo<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     57</span> 
-<span class="ansi-green-intense-fg ansi-bold">     58</span>     <span class="ansi-green-fg">def</span> add_to_db<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> node<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-73-9b8ed770974f&gt;</span> in <span class="ansi-cyan-fg">add_to_schema</span><span class="ansi-blue-fg">(self, *items)</span>
-<span class="ansi-green-intense-fg ansi-bold">    130</span>         <span class="ansi-green-fg">for</span> item <span class="ansi-green-fg">in</span> items<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    131</span>             <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">,</span> type<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 132</span><span class="ansi-red-fg">                 </span>property_dicts <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_property_dicts_from_type<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    133</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    134</span>                 property_dicts <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_property_dicts_from_instance<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-73-9b8ed770974f&gt;</span> in <span class="ansi-cyan-fg">_property_dicts_from_type</span><span class="ansi-blue-fg">(self, item)</span>
-<span class="ansi-green-intense-fg ansi-bold">    113</span>     <span class="ansi-green-fg">def</span> _property_dicts_from_type<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> item<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    114</span>         create_items <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-fg">--&gt; 115</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">for</span> property<span class="ansi-blue-fg">,</span> p_type <span class="ansi-green-fg">in</span> item<span class="ansi-blue-fg">.</span>get_property_types<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    116</span>             p_type <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>TYPE_TO_SCHEMA<span class="ansi-blue-fg">[</span>p_type<span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">    117</span>             create_items.append(
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/itembase.py</span> in <span class="ansi-cyan-fg">get_property_types</span><span class="ansi-blue-fg">(cls, dates)</span>
-<span class="ansi-green-intense-fg ansi-bold">    291</span>         mro <span class="ansi-blue-fg">=</span> cls<span class="ansi-blue-fg">.</span>mro<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    292</span>         property_types <span class="ansi-blue-fg">=</span> dict<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 293</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">for</span> basecls <span class="ansi-green-fg">in</span> reversed<span class="ansi-blue-fg">(</span>mro<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span>mro<span class="ansi-blue-fg">.</span>index<span class="ansi-blue-fg">(</span>ItemBase<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    294</span>             property_types<span class="ansi-blue-fg">.</span>update<span class="ansi-blue-fg">(</span>basecls<span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">.</span>__annotations__<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    295</span>         property_types <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span>k<span class="ansi-blue-fg">:</span> v <span class="ansi-green-fg">for</span> k<span class="ansi-blue-fg">,</span> v <span class="ansi-green-fg">in</span> property_types<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">if</span> k <span class="ansi-green-fg">in</span> cls<span class="ansi-blue-fg">.</span>properties<span class="ansi-blue-fg">}</span>
-
-<span class="ansi-red-fg">ValueError</span>: &lt;class &#39;pymemri.data.itembase.ItemBase&#39;&gt; is not in list</pre>
+<div class="output_text output_subarea output_execute_result">
+<pre>pymemri.data.photo.Photo</pre>
 </div>
+
 </div>
 
 </div>
@@ -176,47 +137,6 @@ nb_path: "nbs/pod.client.ipynb"
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-77-98b00d989079&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">from</span> pymemri<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">.</span>schema <span class="ansi-green-fg">import</span> EmailMessage<span class="ansi-blue-fg">,</span> Address<span class="ansi-blue-fg">,</span> PhoneNumber
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>succes <span class="ansi-blue-fg">=</span> client<span class="ansi-blue-fg">.</span>add_to_schema<span class="ansi-blue-fg">(</span>EmailMessage<span class="ansi-blue-fg">,</span> Address<span class="ansi-blue-fg">,</span> PhoneNumber<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-3-382a129c03c6&gt;</span> in <span class="ansi-cyan-fg">add_to_schema</span><span class="ansi-blue-fg">(self, *items)</span>
-<span class="ansi-green-intense-fg ansi-bold">    130</span>         <span class="ansi-green-fg">for</span> item <span class="ansi-green-fg">in</span> items<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    131</span>             <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">,</span> type<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 132</span><span class="ansi-red-fg">                 </span>property_dicts <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_property_dicts_from_type<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    133</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    134</span>                 property_dicts <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_property_dicts_from_instance<span class="ansi-blue-fg">(</span>item<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-3-382a129c03c6&gt;</span> in <span class="ansi-cyan-fg">_property_dicts_from_type</span><span class="ansi-blue-fg">(self, item)</span>
-<span class="ansi-green-intense-fg ansi-bold">    113</span>     <span class="ansi-green-fg">def</span> _property_dicts_from_type<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> item<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    114</span>         create_items <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-fg">--&gt; 115</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">for</span> property<span class="ansi-blue-fg">,</span> p_type <span class="ansi-green-fg">in</span> item<span class="ansi-blue-fg">.</span>get_property_types<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    116</span>             p_type <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>TYPE_TO_SCHEMA<span class="ansi-blue-fg">[</span>p_type<span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">    117</span>             create_items.append(
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/itembase.py</span> in <span class="ansi-cyan-fg">get_property_types</span><span class="ansi-blue-fg">(cls, dates)</span>
-<span class="ansi-green-intense-fg ansi-bold">    291</span>         mro <span class="ansi-blue-fg">=</span> cls<span class="ansi-blue-fg">.</span>mro<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    292</span>         property_types <span class="ansi-blue-fg">=</span> dict<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 293</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">for</span> basecls <span class="ansi-green-fg">in</span> reversed<span class="ansi-blue-fg">(</span>mro<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span>mro<span class="ansi-blue-fg">.</span>index<span class="ansi-blue-fg">(</span>ItemBase<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    294</span>             property_types<span class="ansi-blue-fg">.</span>update<span class="ansi-blue-fg">(</span>basecls<span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">.</span>__annotations__<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    295</span>         property_types <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span>k<span class="ansi-blue-fg">:</span> v <span class="ansi-green-fg">for</span> k<span class="ansi-blue-fg">,</span> v <span class="ansi-green-fg">in</span> property_types<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">if</span> k <span class="ansi-green-fg">in</span> cls<span class="ansi-blue-fg">.</span>properties<span class="ansi-blue-fg">}</span>
-
-<span class="ansi-red-fg">ValueError</span>: &lt;class &#39;pymemri.data.itembase.ItemBase&#39;&gt; is not in list</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -249,7 +169,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>a94ef10fab243e30ba88ff856c7e1464
+<pre>29c0b7a3f8754d02a7d0e641523c25bb
 </pre>
 </div>
 </div>
@@ -399,8 +319,8 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;e7ecd79c5ca5ca166b7811e7ef5f62a0&#39;: EmailMessage (#e7ecd79c5ca5ca166b7811e7ef5f62a0),
- &#39;ffaa8f39aad6ee62b130b15500c4582b&#39;: Dog (#ffaa8f39aad6ee62b130b15500c4582b)}</pre>
+<pre>{&#39;29c0b7a3f8754d02a7d0e641523c25bb&#39;: EmailMessage (#29c0b7a3f8754d02a7d0e641523c25bb),
+ &#39;93d7acb23bdc4902bd8e4c44d49a3953&#39;: Dog (#93d7acb23bdc4902bd8e4c44d49a3953)}</pre>
 </div>
 
 </div>
@@ -436,7 +356,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[{&#39;item&#39;: Person (#c0050fe0b4cde00fa97f7bbab7a54c7f), &#39;name&#39;: &#39;sender&#39;}]
+<pre>[{&#39;item&#39;: Person (#5594a26fa6494f68a939eb610e34e7fe), &#39;name&#39;: &#39;sender&#39;}]
 </pre>
 </div>
 </div>
@@ -475,7 +395,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[Person (#c0050fe0b4cde00fa97f7bbab7a54c7f)]
+<pre>[Person (#5594a26fa6494f68a939eb610e34e7fe)]
 </pre>
 </div>
 </div>
@@ -548,10 +468,10 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>({&#39;id&#39;: &#39;ac0cd624dc0a84959e93c3be3bc05163&#39;,
-  &#39;dateCreated&#39;: 1643708277245,
-  &#39;dateModified&#39;: 1643708277245,
-  &#39;dateServerModified&#39;: 1643708277245,
+<pre>({&#39;id&#39;: &#39;1bdefab867c74f22ad156eebac482c1c&#39;,
+  &#39;dateCreated&#39;: 1644321461975,
+  &#39;dateModified&#39;: 1644321461975,
+  &#39;dateServerModified&#39;: 1644321461975,
   &#39;deleted&#39;: False,
   &#39;firstName&#39;: &#39;Alice&#39;,
   &#39;type&#39;: &#39;Person&#39;},
@@ -668,7 +588,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Person (#c89583bd1ae347488a97cb1779232592)</pre>
+<pre>Person (#e340f889884b4e4c91bc6711b38d9652)</pre>
 </div>
 
 </div>
@@ -775,20 +695,20 @@ Completed Bulk action, written 9 items/edges
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>BULK: Writing 3/3 items/edges
 Completed Bulk action, written 3 items/edges
-32ff90371e074a27ad7772bb39fc0a88 True
-c89583bd1ae347488a97cb1779232592 True
-280550239b0e4a8b9d23b8b0db27164f True
-960545fdf3f5451eb653c48078f1d783 True
-b056e46f4a9d4af88d4b4a70b23492ae True
-5291de6cf5f047e88e37e839838d3d40 False
-eae64695b7f7486a9f28c044e5c0be1a False
-3eeeb688147b45ebbd3546b6c3063813 False
-280550239b0e4a8b9d23b8b0db27164f True
-960545fdf3f5451eb653c48078f1d783 True
-b056e46f4a9d4af88d4b4a70b23492ae True
-5291de6cf5f047e88e37e839838d3d40 False
-eae64695b7f7486a9f28c044e5c0be1a False
-3eeeb688147b45ebbd3546b6c3063813 False
+4c2913f892c8463ebdd2ee2a8197cb8e True
+e340f889884b4e4c91bc6711b38d9652 True
+5411889908c44b4bbebf469308065b66 True
+a7d7e0687c36451bb105097e5c8bb304 True
+eb4c84d002ac4ffebfae69a9a4597b5e True
+a6f801efb04946b4885b9d62fb445a0f False
+c8bae9ccff19410099d7e5ed8ae0e954 False
+60e6e59dbf104d4b976f68fbbce8d325 False
+5411889908c44b4bbebf469308065b66 True
+a7d7e0687c36451bb105097e5c8bb304 True
+eb4c84d002ac4ffebfae69a9a4597b5e True
+a6f801efb04946b4885b9d62fb445a0f False
+c8bae9ccff19410099d7e5ed8ae0e954 False
+60e6e59dbf104d4b976f68fbbce8d325 False
 </pre>
 </div>
 </div>
@@ -1035,53 +955,9 @@ Completed Bulk action, written 100 items/edges
 
 <div class="output_area">
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-61-74d010dd6742&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> x <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>random<span class="ansi-blue-fg">.</span>randint<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">255</span><span class="ansi-blue-fg">+</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span> size<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">640</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">640</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">=</span>np<span class="ansi-blue-fg">.</span>uint8<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>photo <span class="ansi-blue-fg">=</span> Photo<span class="ansi-blue-fg">.</span>from_np<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> file <span class="ansi-blue-fg">=</span> photo<span class="ansi-blue-fg">.</span>file<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span> succes <span class="ansi-blue-fg">=</span> client<span class="ansi-blue-fg">.</span>create<span class="ansi-blue-fg">(</span>file<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> succes2 <span class="ansi-blue-fg">=</span> client<span class="ansi-blue-fg">.</span>_upload_image<span class="ansi-blue-fg">(</span>photo<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/photo.py</span> in <span class="ansi-cyan-fg">from_np</span><span class="ansi-blue-fg">(cls, data, size, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    114</span>         _bytes <span class="ansi-blue-fg">=</span> cls<span class="ansi-blue-fg">.</span>PIL_to_bytes<span class="ansi-blue-fg">(</span>pil_image<span class="ansi-blue-fg">,</span> encoding<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    115</span> 
-<span class="ansi-green-fg">--&gt; 116</span><span class="ansi-red-fg">         </span>res <span class="ansi-blue-fg">=</span> cls<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">=</span>_bytes<span class="ansi-blue-fg">,</span> height<span class="ansi-blue-fg">=</span>h<span class="ansi-blue-fg">,</span> width<span class="ansi-blue-fg">=</span>w<span class="ansi-blue-fg">,</span> channels<span class="ansi-blue-fg">=</span>c<span class="ansi-blue-fg">,</span> encoding<span class="ansi-blue-fg">=</span>encoding<span class="ansi-blue-fg">,</span> mode<span class="ansi-blue-fg">=</span>mode<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    117</span>         file <span class="ansi-blue-fg">=</span> File<span class="ansi-blue-fg">.</span>from_data<span class="ansi-blue-fg">(</span>sha256<span class="ansi-blue-fg">=</span>sha256<span class="ansi-blue-fg">(</span>_bytes<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>hexdigest<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    118</span>         res<span class="ansi-blue-fg">.</span>add_edge<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;file&#34;</span><span class="ansi-blue-fg">,</span> file<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/photo.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, data, includes, thumbnail, height, width, channels, encoding, mode, file, _file_created, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">     62</span>         <span class="ansi-blue-fg">**</span>kwargs
-<span class="ansi-green-intense-fg ansi-bold">     63</span>     ):
-<span class="ansi-green-fg">---&gt; 64</span><span class="ansi-red-fg">         </span>super<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     65</span>         self<span class="ansi-blue-fg">.</span>private <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;data&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;embedding&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;path&#34;</span><span class="ansi-blue-fg">]</span> <span class="ansi-red-fg">#TODO</span>
-<span class="ansi-green-intense-fg ansi-bold">     66</span>         self<span class="ansi-blue-fg">.</span>height <span class="ansi-blue-fg">=</span> height
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/itembase.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, dateCreated, dateModified, dateServerModified, deleted, externalId, itemDescription, starred, version, id, importJson, pluginClass, changelog, label, genericAttribute, measure, sharedWith)</span>
-<span class="ansi-green-intense-fg ansi-bold">    236</span>         sharedWith<span class="ansi-blue-fg">:</span> list <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">None</span>
-<span class="ansi-green-intense-fg ansi-bold">    237</span>     ):
-<span class="ansi-green-fg">--&gt; 238</span><span class="ansi-red-fg">         </span>super<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__init__<span class="ansi-blue-fg">(</span>id<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    239</span> 
-<span class="ansi-green-intense-fg ansi-bold">    240</span>         <span class="ansi-red-fg"># Properties</span>
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/itembase.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, id)</span>
-<span class="ansi-green-intense-fg ansi-bold">     70</span> 
-<span class="ansi-green-intense-fg ansi-bold">     71</span>     <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> id<span class="ansi-blue-fg">:</span> str <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">---&gt; 72</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>_updated_properties<span class="ansi-blue-fg">:</span> Set<span class="ansi-blue-fg">[</span>str<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> set<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     73</span> 
-<span class="ansi-green-intense-fg ansi-bold">     74</span>         self<span class="ansi-blue-fg">.</span>id<span class="ansi-blue-fg">:</span> Optional<span class="ansi-blue-fg">[</span>str<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> id
-
-<span class="ansi-green-fg">~/Documents/memri/pymemri/pymemri/data/itembase.py</span> in <span class="ansi-cyan-fg">__setattr__</span><span class="ansi-blue-fg">(self, name, value)</span>
-<span class="ansi-green-intense-fg ansi-bold">     83</span>     <span class="ansi-green-fg">def</span> __setattr__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">,</span> value<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">     84</span>         prev_val <span class="ansi-blue-fg">=</span> getattr<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> name<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 85</span><span class="ansi-red-fg">         </span>super<span class="ansi-blue-fg">(</span>ItemBase<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>__setattr__<span class="ansi-blue-fg">(</span>name<span class="ansi-blue-fg">,</span> value<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     86</span>         <span class="ansi-green-fg">if</span> name <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>properties <span class="ansi-green-fg">and</span> value <span class="ansi-blue-fg">!=</span> prev_val<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">     87</span>             self<span class="ansi-blue-fg">.</span>_updated_properties<span class="ansi-blue-fg">.</span>add<span class="ansi-blue-fg">(</span>name<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-red-fg">TypeError</span>: super(type, obj): obj must be an instance or subtype of type</pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>True
+</pre>
 </div>
 </div>
 
@@ -1144,7 +1020,7 @@ Completed Bulk action, written 3 items/edges
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[File (#c99b9f7fddee414aa08f0edcfc4e0876)]</pre>
+<pre>[File (#ac52d3a0a99f46499487750430649476)]</pre>
 </div>
 
 </div>
