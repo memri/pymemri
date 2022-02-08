@@ -10,6 +10,7 @@ from .itembase import Item
 from ..exporters.exporters import Query
 
 # Cell
+# hide
 def filter_rows(dataset: dict, filter_val=None) -> dict:
     missing_idx = set()
     for column in dataset.values():
@@ -29,7 +30,7 @@ class DatasetEntry(Item):
 
 class Dataset(Item):
     """
-    Temporary dataset schema, needs update when MVP2 is done.
+    The main Dataset class
     """
     properties= Item.properties + ["name", "queryStr"]
     edges = Item.edges + ["entry"]
@@ -65,8 +66,29 @@ class Dataset(Item):
         return query.convert_dtype(result, dtype)
 
     def to(self, dtype: str, columns: List[str], filter_missing: bool = True):
+        """
+        Converts Dataset to a different format.
+
+        Available formats:
+        list: a 2-dimensional list, containing one dataset entry per row
+        dict: a list of dicts, where each dict contains {column: value} for each column
+        pd: a Pandas dataframe
+
+
+        Args:
+            dtype (str): Datatype of the returned dataset
+            columns (List[str]): Column names of the dataset
+            filter_missing (bool, optional): If true, all rows that contain `None` values are omitted.
+                Defaults to True.
+
+        Returns:
+            Any: Dataset formatted according to `dtype`
+        """
         return self._get_data(dtype, columns, filter_missing)
 
     def save(self, path: Union[Path, str], columns: List[str], filter_missing: bool = True):
+        """
+        Save dataset to CSV.
+        """
         result = self._get_data("pandas", columns, filter_missing)
         result.to_csv(path, index=False)
