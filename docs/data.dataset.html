@@ -159,9 +159,41 @@ pd: a Pandas dataframe</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="o">.</span><span class="n">from_local_keys</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
 <span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">DatasetEntry</span><span class="p">)</span>
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;example-dataset&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;example-dataset&quot;</span><span class="p">)</span>
 
 <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data.content&quot;</span><span class="p">,</span> <span class="s2">&quot;data.sender.handle&quot;</span><span class="p">,</span> <span class="s2">&quot;annotation.name&quot;</span><span class="p">]</span>
 <span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
@@ -174,15 +206,6 @@ pd: a Pandas dataframe</p>
 
 <div class="output_wrapper">
 <div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>reading database_key from /home/eelco/.pymemri/pod_keys/keys.json
-reading owner_key from /home/eelco/.pymemri/pod_keys/keys.json
-</pre>
-</div>
-</div>
 
 <div class="output_area">
 
@@ -215,35 +238,35 @@ reading owner_key from /home/eelco/.pymemri/pod_keys/keys.json
   <tbody>
     <tr>
       <th>0</th>
-      <td>fdc8e7e0ccb247e8a3f91963f636708f</td>
+      <td>401bc17cde8d4ee99c25b0271858dc42</td>
       <td>content_0</td>
       <td>account_0</td>
       <td>label_0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>77bf661b853848f4b82c5c7f2716fb12</td>
+      <td>5af1155fc0f54eaeb8c116ebe2150670</td>
       <td>content_1</td>
       <td>account_1</td>
       <td>label_1</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>8cdfad5b1e3a4a42be7d08f524966db7</td>
+      <td>faff62d8a80241199b48ea957f22f40e</td>
       <td>content_2</td>
       <td>account_2</td>
       <td>label_2</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>def16b5f018146278bd4bf41e2d27bb1</td>
+      <td>52eb46dc4ac0450cb55ef0e446e6a30a</td>
       <td>content_3</td>
       <td>account_3</td>
       <td>label_3</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>f5ad890e4ca842ca9b7104e0d4f3fd68</td>
+      <td>dec3aeb9c09c46f4bd0150e5816ca49d</td>
       <td>content_4</td>
       <td>account_4</td>
       <td>label_4</td>
