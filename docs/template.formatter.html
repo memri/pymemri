@@ -1,6 +1,6 @@
 ---
 
-title: Template Formatter
+title: Creating plugins from a template
 
 
 keywords: fastai
@@ -32,19 +32,31 @@ nb_path: "nbs/template.formatter.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Pymemri offers a range of plugin templates to set up testing, docker and CI for you. This way, you can focus on building your plugin, and be sure it works within the Memri ecosystem.</p>
-<p>You can list the available templates with:</p>
-
-<pre><code>plugin_from_template --list</code></pre>
-<p>Then, you can start building your plugin from a template with:</p>
+<p>All plugins are hosted on our <a href="https://gitlab.memri.io/">GitLab</a>. In order to make your own plugin from a template,</p>
+<ol>
+<li>Create an account on <a href="https://gitlab.memri.io/">GitLab</a></li>
+<li>Create a <em>public</em> <a href="https://gitlab.memri.io/projects/new#blank_project">blank repository</a></li>
+<li>Clone the repository</li>
+<li>run the <a href="/pymemri/template.formatter.html#plugin_from_template"><code>plugin_from_template</code></a> CLI inside the repository folder.</li>
+</ol>
+<p>The CLI will infer most settings for you from your git account and repository name, only a template name and optional description are required.</p>
 
 <pre><code>plugin_from_template --template classifier_plugin --description "My Classifier Plugin"</code></pre>
+<p>To make sure all settings are correct, you can inspect <code>metadata.json</code>, which holds all information like your plugin name, and python package name.</p>
+<hr>
+<p>You can list the available templates with. All plugin templates are hosted <a href="https://gitlab.memri.io/memri/plugin-templates">here</a>.</p>
+
+<pre><code>plugin_from_template --list</code></pre>
+<p>The CLI has options to customize the plugin name, package name and other aspects of your plugin. For advanced use, run:</p>
+
+<pre><code>plugin_from_template --help</code></pre>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Template-CLI">Template CLI<a class="anchor-link" href="#Template-CLI"> </a></h2><p>With the <a href="/pymemri/template.formatter.html#plugin_from_template"><code>plugin_from_template</code></a> CLI, you can easily create a plugin where all CI pipelines, docker files, and test setups are configured for you. Multiple templates are available, to see the complete list use:</p>
+<h3 id="Plugin-Template-CLI">Plugin Template CLI<a class="anchor-link" href="#Plugin-Template-CLI"> </a></h3><p>With the <a href="/pymemri/template.formatter.html#plugin_from_template"><code>plugin_from_template</code></a> CLI, you can easily create a plugin where all CI pipelines, docker files, and test setups are configured for you. Multiple templates are available, to see the complete list use:</p>
 <p><code>plugin_from_template --list_templates</code></p>
 
 </div>
@@ -63,7 +75,7 @@ nb_path: "nbs/template.formatter.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="plugin_from_template" class="doc_header"><code>plugin_from_template</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/formatter.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plugin_from_template</code>(<strong><code>list_templates</code></strong>:"List available plugin templates"=<em><code>False</code></em>, <strong><code>user</code></strong>:"Your Gitlab username"=<em><code>None</code></em>, <strong><code>repo_url</code></strong>:"The url of your empty Gitlab plugin repository"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Display name of your plugin"=<em><code>None</code></em>, <strong><code>template_name</code></strong>:"Name of the template, use <code>list_templates</code> to see all available options"=<em><code>'basic'</code></em>, <strong><code>package_name</code></strong>:"Name of your plugin python package"=<em><code>None</code></em>, <strong><code>description</code></strong>:"Description of your plugin"=<em><code>None</code></em>, <strong><code>target_dir</code></strong>:"Directory to output the formatted template"=<em><code>'.'</code></em>)</p>
 </blockquote>
-<p>CLI that fetches and formats a plugin template according to the arguments</p>
+<p>CLI that downloads and formats a plugin template according to the arguments, and local git repository.</p>
 <p>Args:
     list_templates (Param, optional): If True, only list available templates. Defaults to False.
     user (Param, optional): Your GitLab username. Defaults to None.

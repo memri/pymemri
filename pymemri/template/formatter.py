@@ -169,7 +169,7 @@ def plugin_from_template(
     target_dir: Param("Directory to output the formatted template", str) = ".",
 ):
     """
-    CLI that fetches and formats a plugin template according to the arguments
+    CLI that downloads and formats a plugin template according to the arguments, and local git repository.
 
     Args:
         list_templates (Param, optional): If True, only list available templates. Defaults to False.

@@ -36,6 +36,17 @@ nb_path: "nbs/template.config.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Often, plugins require some configuration before running. For example you might want to run plugin on data from a specific service, or run a specific version of your machine learning model. To configure your plugin when running it from the front-end, plugins require a <code>config.json</code> in the root of the plugin repository. This file contains a declarative definition, which our front-end app uses to display a configuration screen.</p>
+<p>This module contains utilities to directly generate this config file from the plugin definition, by inferring all arguments from the plugin <code>__init__</code> method. All configuration fields are textboxes by default, which can be changed to different types in the future. For a full example, see our guide on <a href="https://memri.docs.memri.io/docs.memri.io/guides/build_and_deploy_your_model/">building plugins</a>.</p>
+<p>Usage:</p>
+
+<pre><code>create_plugin_config</code></pre>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -79,11 +90,6 @@ Args:
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Configuring-a-plugin">Configuring a plugin<a class="anchor-link" href="#Configuring-a-plugin"> </a></h2><p>Often, plugins require some configuration before running. For example, you might want to plugin on data from a specific importer, or run a specific machine learning model. To configure your plugin when running it from the front-end, plugins require a <code>config.json</code> in the root of the plugin repository. This module contains utilities to directly generate this config file from the plugin definition.</p>
-<p>The <a href="/pymemri/template.config.html#create_plugin_config"><code>create_plugin_config</code></a> CLI auto-generates this config file by inferring all arguments from the plugin definition. All configuration fields are textboxes by default, which can be changed to different types in the future.</p>
-<p>Usage:</p>
-
-<pre><code>create_plugin_config</code></pre>
 <h3 id="Example">Example<a class="anchor-link" href="#Example"> </a></h3><p>As example, we create a test plugin with various configuration arguments. The <a href="/pymemri/template.config.html#create_config"><code>create_config</code></a> method is called on the plugin, and generates a declarative configuration field for each plugin argument. Note that arguments that start with a <code>_</code>, and untyped arguments are skipped in the annotation.</p>
 
 </div>
