@@ -18,6 +18,7 @@ from typing import List, Union
 import uuid
 import urllib
 from datetime import datetime
+import warnings
 
 from threading import Thread
 
@@ -638,6 +639,13 @@ class PodClient:
             priority=priority,
         )
 
+    def get_dataset(self, name):
+        datasets = self.search({"type": "Dataset", "name": name})
+        if len(datasets) == 0:
+            raise PodError(f"No datasets found with name {name}")
+        elif len(datasets) > 1:
+            warnings.warn(f"Multiple datasets found with name {name}. Using the newest dataset.")
+        return datasets[-1]
 
 # Cell
 class Dog(Item):

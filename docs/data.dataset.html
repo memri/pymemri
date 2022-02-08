@@ -1,6 +1,6 @@
 ---
 
-title: Title
+title: Datasets
 
 
 keywords: fastai
@@ -29,6 +29,13 @@ nb_path: "nbs/data.dataset.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A dataset is a central item in the pod that organizes your project data and label annotations. To facilitate using <a href="/pymemri/data.dataset.html#Dataset"><code>Dataset</code></a> items in your datascience workflow, the <a href="/pymemri/data.dataset.html#Dataset"><code>Dataset</code></a> class contains methods to convert the data to a popular datascience format, or save a dataset to disk.</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -40,38 +47,7 @@ nb_path: "nbs/data.dataset.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="filter_rows" class="doc_header"><code>filter_rows</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L13" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>filter_rows</code>(<strong><code>dataset</code></strong>:<code>dict</code>, <strong><code>filter_val</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="DatasetEntry" class="doc_header"><code>class</code> <code>DatasetEntry</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L22" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DatasetEntry</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="DatasetEntry" class="doc_header"><code>class</code> <code>DatasetEntry</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L23" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DatasetEntry</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
 <p>Item is the baseclass for all of the data classes.</p>
 
@@ -96,9 +72,9 @@ nb_path: "nbs/data.dataset.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dataset" class="doc_header"><code>class</code> <code>Dataset</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L30" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dataset</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>queryStr</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>item</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="Dataset" class="doc_header"><code>class</code> <code>Dataset</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L31" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dataset</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>queryStr</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>item</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
-<p>Temporary dataset schema, needs update when MVP2 is done.</p>
+<p>The main Dataset class</p>
 
 </div>
 
@@ -113,6 +89,99 @@ nb_path: "nbs/data.dataset.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Dataset.to" class="doc_header"><code>Dataset.to</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L68" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dataset.to</code>(<strong><code>dtype</code></strong>:<code>str</code>, <strong><code>columns</code></strong>:<code>List</code>[<code>str</code>], <strong><code>filter_missing</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
+</blockquote>
+<p>Converts Dataset to a different format.</p>
+<p>Available formats:
+list: a 2-dimensional list, containing one dataset entry per row
+dict: a list of dicts, where each dict contains {column: value} for each column
+pd: a Pandas dataframe</p>
+<p>Args:
+    dtype (str): Datatype of the returned dataset
+    columns (List[str]): Column names of the dataset
+    filter_missing (bool, optional): If true, all rows that contain <code>None</code> values are omitted.
+        Defaults to True.</p>
+<p>Returns:
+    Any: Dataset formatted according to <code>dtype</code></p>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="Dataset.save" class="doc_header"><code>Dataset.save</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L89" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dataset.save</code>(<strong><code>path</code></strong>:<code>Union</code>[<code>Path</code>, <code>str</code>], <strong><code>columns</code></strong>:<code>List</code>[<code>str</code>], <strong><code>filter_missing</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
+</blockquote>
+<p>Save dataset to CSV.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Usage">Usage<a class="anchor-link" href="#Usage"> </a></h2><p>To convert the data in the pod to a different format, <a href="/pymemri/data.dataset.html#Dataset"><code>Dataset</code></a> implements the <a href="/pymemri/data.dataset.html#Dataset.to"><code>Dataset.to</code></a> method. In the <code>columns</code> argument, you can define which features will be included in your dataset. A <code>column</code> is either a property of an entry in the dataset, or a property of an item connected to an entry in the dataset.</p>
+<p>The Pod uses the following schema for Dataset items. Note that the <a href="/pymemri/data.dataset.html#DatasetEntry"><code>DatasetEntry</code></a> item is always included, and the actual data can be found by traversing the <code>entry.data</code> Edge.</p>
+<p>{% include image.html file="/pymemri/images/dataset-diagram.png" %}</p>
+<p>Now for example, if a dataset is a set of <code>Message</code> items, and the content has to be included as column, <code>data.content</code> would be the column name. If the name of the <code>sender</code> of a message has to be included, <code>data.sender.handle</code> would be a valid column name.</p>
+<p>The following example retrieves an example dataset of <code>Message</code> items, and formats them to a Pandas dataframe:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">add_to_schema</span><span class="p">(</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">DatasetEntry</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}
@@ -124,15 +193,91 @@ nb_path: "nbs/data.dataset.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># with tempfile.TemporaryFile(mode=&#39;w+&#39;) as f:</span>
-<span class="c1">#     dataset.save(f, columns=[&quot;content&quot;, &quot;sender.owner.firstName&quot;, &quot;label.name&quot;])</span>
-<span class="c1">#     f.seek(0)</span>
-<span class="c1">#     result = pd.read_csv(f)</span>
-    
-<span class="c1"># assert result.equals(dataframe)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="s2">&quot;example-dataset&quot;</span><span class="p">)</span>
+
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data.content&quot;</span><span class="p">,</span> <span class="s2">&quot;data.sender.handle&quot;</span><span class="p">,</span> <span class="s2">&quot;annotation.name&quot;</span><span class="p">]</span>
+<span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;pd&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">dataframe</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>data.content</th>
+      <th>data.sender.handle</th>
+      <th>annotation.name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>401bc17cde8d4ee99c25b0271858dc42</td>
+      <td>content_0</td>
+      <td>account_0</td>
+      <td>label_0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5af1155fc0f54eaeb8c116ebe2150670</td>
+      <td>content_1</td>
+      <td>account_1</td>
+      <td>label_1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>faff62d8a80241199b48ea957f22f40e</td>
+      <td>content_2</td>
+      <td>account_2</td>
+      <td>label_2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>52eb46dc4ac0450cb55ef0e446e6a30a</td>
+      <td>content_3</td>
+      <td>account_3</td>
+      <td>label_3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>dec3aeb9c09c46f4bd0150e5816ca49d</td>
+      <td>content_4</td>
+      <td>account_4</td>
+      <td>label_4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
 </div>
 </div>
 
