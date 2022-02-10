@@ -3,7 +3,7 @@
 __all__ = ['POD_FULL_ADDRESS_ENV', 'POD_TARGET_ITEM_ENV', 'POD_OWNER_KEY_ENV', 'POD_AUTH_JSON_ENV',
            'POD_PLUGIN_DNS_ENV', 'PluginBase', 'PluginError', 'ExamplePlugin', 'write_run_info', 'get_plugin_cls',
            'run_plugin_from_run_id', 'store_keys', 'parse_metadata', 'parse_config', 'create_run_expanded',
-           'run_plugin', 'simulate_run_plugin_from_frontend']
+           'run_plugin', 'simulate_run_plugin_from_frontend', 'get_plugin_schema']
 
 # Cell
 from ..data.schema import *
@@ -355,3 +355,11 @@ def simulate_run_plugin_from_frontend(
 
     print(f"*Check the pod log/console for debug output.*")
     return run
+
+# Cell
+def get_plugin_schema(plugin_cls):
+    schema = []
+    for item in plugin_cls.plugin_schema:
+        item_schema = PodClient._property_dicts_from_type(item)
+        schema.extend(item_schema)
+    return schema
