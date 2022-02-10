@@ -44,6 +44,8 @@ POD_PLUGIN_DNS_ENV          = 'PLUGIN_DNS'
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
+    plugin_schema = []
+
     def __init__(self, pluginRun=None, client=None, **kwargs):
         super().__init__()
         if pluginRun is None:
@@ -87,12 +89,12 @@ class PluginBase(metaclass=ABCMeta):
     def run(self):
         raise NotImplementedError()
 
-    @abc.abstractmethod
     def add_to_schema(self):
         """
         Add all schema classes required by the plugin to self.client here.
         """
-        raise NotImplementedError()
+        if len(self.plugin_schema):
+            self.client.add_to_schema(*self.plugin_schema)
 
 # Cell
 # hide
@@ -103,6 +105,7 @@ class PluginError(Exception):
 # Cell
 # hide
 class ExamplePlugin(PluginBase):
+    plugin_schema = [Dog]
 
     def __init__(self, dog_name: str = "Bob", **kwargs):
         super().__init__(**kwargs)
@@ -113,9 +116,6 @@ class ExamplePlugin(PluginBase):
         dog = Dog(self.dog_name, 10)
         self.client.create(dog)
         print("Run success!")
-
-    def add_to_schema(self):
-        self.client.add_to_schema(Dog)
 
 # Cell
 # hide
