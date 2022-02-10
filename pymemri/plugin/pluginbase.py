@@ -3,7 +3,7 @@
 __all__ = ['POD_FULL_ADDRESS_ENV', 'POD_TARGET_ITEM_ENV', 'POD_OWNER_KEY_ENV', 'POD_AUTH_JSON_ENV',
            'POD_PLUGIN_DNS_ENV', 'PluginBase', 'PluginError', 'ExamplePlugin', 'write_run_info', 'get_plugin_cls',
            'run_plugin_from_run_id', 'store_keys', 'parse_metadata', 'parse_config', 'create_run_expanded',
-           'run_plugin', 'simulate_run_plugin_from_frontend', 'get_plugin_schema']
+           'run_plugin', 'simulate_run_plugin_from_frontend']
 
 # Cell
 from ..data.schema import *
@@ -44,7 +44,7 @@ POD_PLUGIN_DNS_ENV          = 'PLUGIN_DNS'
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
-    plugin_schema = []
+    schema_classes = []
 
     def __init__(self, pluginRun=None, client=None, **kwargs):
         super().__init__()
@@ -93,8 +93,16 @@ class PluginBase(metaclass=ABCMeta):
         """
         Add all schema classes required by the plugin to self.client here.
         """
-        if len(self.plugin_schema):
-            self.client.add_to_schema(*self.plugin_schema)
+        if len(self.schema_classes):
+            self.client.add_to_schema(*self.schema_classes)
+
+    @classmethod
+    def get_schema_properties(cls):
+        schema = []
+        for item in cls.schema_classes:
+            item_schema = PodClient._property_dicts_from_type(item)
+            schema.extend(item_schema)
+        return schema
 
 # Cell
 # hide
@@ -105,7 +113,7 @@ class PluginError(Exception):
 # Cell
 # hide
 class ExamplePlugin(PluginBase):
-    plugin_schema = [Dog]
+    schema_classes = [Dog]
 
     def __init__(self, dog_name: str = "Bob", **kwargs):
         super().__init__(**kwargs)
@@ -355,11 +363,3 @@ def simulate_run_plugin_from_frontend(
 
     print(f"*Check the pod log/console for debug output.*")
     return run
-
-# Cell
-def get_plugin_schema(plugin_cls):
-    schema = []
-    for item in plugin_cls.plugin_schema:
-        item_schema = PodClient._property_dicts_from_type(item)
-        schema.extend(item_schema)
-    return schema
