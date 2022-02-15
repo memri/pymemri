@@ -4,9 +4,9 @@ __all__ = ['filter_rows', 'DatasetEntry', 'Dataset']
 
 # Cell
 # hide
-from typing import List, Union
+from typing import List, Union, Any
 from pathlib import Path
-from .itembase import Item
+from .itembase import Item, EdgeList
 from ..exporters.exporters import Query
 
 # Cell
@@ -16,7 +16,8 @@ def filter_rows(dataset: dict, filter_val=None) -> dict:
     for column in dataset.values():
         missing_idx.update([i for i, val in enumerate(column) if val == filter_val])
     return {
-        k: [item for i, item in enumerate(v) if i not in missing_idx] for k, v in dataset.items()
+        k: [item for i, item in enumerate(v) if i not in missing_idx]
+        for k, v in dataset.items()
     }
 
 # Cell
@@ -25,22 +26,30 @@ class DatasetEntry(Item):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.data: list = list()
-        self.annotation: list = list()
+        self.data: EdgeList[Any] = EdgeList()
+        self.annotation: EdgeList[Any] = EdgeList()
+
 
 class Dataset(Item):
     """
     The main Dataset class
     """
-    properties= Item.properties + ["name", "queryStr"]
+
+    properties = Item.properties + ["name", "queryStr"]
     edges = Item.edges + ["entry"]
     requires_client_ref = True
 
-    def __init__(self, name: str = None, queryStr: str = None, item: list = None, **kwargs):
+    def __init__(
+        self,
+        name: str = None,
+        queryStr: str = None,
+        entry: EdgeList[DatasetEntry] = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
         self.queryStr = queryStr
         self.name = name
-        self.entry: list = item if item is not None else []
+        self.entry: list = entry if entry is not None else []
         self.labellingTask: list = list()
         self._client = None
 
@@ -86,7 +95,9 @@ class Dataset(Item):
         """
         return self._get_data(dtype, columns, filter_missing)
 
-    def save(self, path: Union[Path, str], columns: List[str], filter_missing: bool = True):
+    def save(
+        self, path: Union[Path, str], columns: List[str], filter_missing: bool = True
+    ):
         """
         Save dataset to CSV.
         """

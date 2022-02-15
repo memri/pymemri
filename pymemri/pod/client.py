@@ -400,8 +400,8 @@ class PodClient:
     def filter_deleted(self, items):
         return [i for i in items if not i.deleted == True]
 
-    def _get_item_expanded(self, id, include_deleted=False):
-        item = self.get(id, expanded=False, include_deleted=include_deleted)
+    def _get_item_expanded(self, id):
+        item = self._get_item_with_properties(id)
         edges = self.get_edges(id)
         for e in edges:
             item.add_edge(e["name"], e["item"])
