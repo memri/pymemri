@@ -104,6 +104,29 @@ class PluginBase(metaclass=ABCMeta):
             schema.extend(item_schema)
         return schema
 
+    @classmethod
+    def get_schema_edges(cls):
+        schema = []
+        for item in cls.schema_classes:
+            edge_types = item.get_edge_types()
+            edge_schema = [
+                {"type": "ItemEdgeSchema",
+                 "edgeName": k,
+                 "sourceType": v[0],
+                 "targetType": v[1]}
+                for k, v in edge_types.items()
+            ]
+            schema.extend(edge_schema)
+        return schema
+
+    @classmethod
+    def get_schema(cls, include_edges: bool = True):
+        schema = cls.get_schema_properties()
+        if include_edges:
+            edges = cls.get_schema_edges()
+            schema.extend(edges)
+        return schema
+
 # Cell
 # hide
 class PluginError(Exception):
@@ -113,7 +136,7 @@ class PluginError(Exception):
 # Cell
 # hide
 class ExamplePlugin(PluginBase):
-    schema_classes = [Dog]
+    schema_classes = [Dog, Message]
 
     def __init__(self, dog_name: str = "Bob", **kwargs):
         super().__init__(**kwargs)
