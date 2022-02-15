@@ -334,7 +334,7 @@ class Item(ItemBase):
 
 
 # Cell
-class EdgeList(list):
+class EdgeList(List[Item]):
     def __init__(
         self,
         items: List[Edge] = None,
