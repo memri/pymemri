@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'ItemBase', 'Item', 'EdgeList']
 
 # Cell
 # hide
-from typing import Optional, Dict, List, Set
+from typing import Optional, Dict, List, Set, Any
 from ..imports import *
 from datetime import datetime
 import uuid
