@@ -60,13 +60,17 @@ nb_path: "nbs/template.config.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="create_config" class="doc_header"><code>create_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L41" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_config</code>(<strong><code>plugin_cls</code></strong>:<code>type</code>)</p>
 </blockquote>
-<p>Returns a declarative plugin configuration, inferred from the <code>__init__</code> method signature of <code>plugin_cls</code>.
-This function is used internally by the <a href="/pymemri/template.config.html#create_plugin_config"><code>create_plugin_config</code></a> CLI. For general use, use the CLI instead.</p>
-<p>Arguments that start with <code>_</code>, untyped arguments or arguments that are not in <a href="/pymemri/template.config.html#ALLOWED_TYPES"><code>ALLOWED_TYPES</code></a> are skipped.</p>
-<p>Args:
-    plugin_cls (type): A plugin class, inherited from PluginBase.</p>
-<p>Returns:
-    List[dict]: A declarative configuration definition as list of dictionaries.</p>
+
+<pre><code>Returns a declarative plugin configuration, inferred from the `__init__` method signature of `plugin_cls`.
+This function is used internally by the `create_plugin_config` CLI. For general use, use the CLI instead.
+
+Arguments that start with `_`, untyped arguments or arguments that are not in `ALLOWED_TYPES` are skipped.
+
+Args:
+    plugin_cls (type): A plugin class, inherited from PluginBase.
+
+Returns:
+    List[dict]: A declarative configuration definition as list of dictionaries.</code></pre>
 
 </div>
 
@@ -96,18 +100,20 @@ This function is used internally by the <a href="/pymemri/template.config.html#c
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="create_plugin_config" class="doc_header"><code>create_plugin_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_plugin_config</code>(<strong><code>metadata</code></strong>:"metadata.json of the plugin"=<em><code>'./metadata.json'</code></em>, <strong><code>tgt_file</code></strong>:"Filename of config file"=<em><code>'config.json'</code></em>)</p>
+<h4 id="create_plugin_config" class="doc_header"><code>create_plugin_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_plugin_config</code>(<strong><code>metadata</code></strong>:"metadata.json of the plugin"=<em><code>'./metadata.json'</code></em>, <strong><code>tgt_file</code></strong>:"Filename of config file"=<em><code>'config.json'</code></em>, <strong><code>schema_file</code></strong>:"Filename of exported plugin schema"=<em><code>'schema.json'</code></em>)</p>
 </blockquote>
-<p>Creates a plugin configuration definition from the arguments of your plugin class.</p>
-<p>Configuration arguments are inferred from the arguments of your plugin <code>__init__</code> method.
-Arguments that start with <code>_</code>, untyped arguments or arguments that are not in <a href="/pymemri/template.config.html#ALLOWED_TYPES"><code>ALLOWED_TYPES</code></a> are skipped.
+
+<pre><code>Creates a plugin configuration definition from the arguments of your plugin class.
+
+Configuration arguments are inferred from the arguments of your plugin `__init__` method.
+Arguments that start with `_`, untyped arguments or arguments that are not in `ALLOWED_TYPES` are skipped.
 All generated fields are "textbox" by default, in the future our front-end will support more
 types of fields.
 Args:
     metadata (Param, optional): Location of the "metadata.json" file,
         Defaults to "./metadata.json"
     tgt_file (Param, optional): File the config definition is saved to.
-        Defaults to "config.json".</p>
+        Defaults to "config.json".</code></pre>
 
 </div>
 

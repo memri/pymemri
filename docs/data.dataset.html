@@ -47,9 +47,10 @@ nb_path: "nbs/data.dataset.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DatasetEntry" class="doc_header"><code>class</code> <code>DatasetEntry</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L23" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DatasetEntry</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="DatasetEntry" class="doc_header"><code>class</code> <code>DatasetEntry</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L24" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DatasetEntry</code>(<strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
-<p>Item is the baseclass for all of the data classes.</p>
+
+<pre><code>Item is the baseclass for all of the data classes.</code></pre>
 
 </div>
 
@@ -72,9 +73,10 @@ nb_path: "nbs/data.dataset.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dataset" class="doc_header"><code>class</code> <code>Dataset</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L31" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dataset</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>queryStr</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>item</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="Dataset" class="doc_header"><code>class</code> <code>Dataset</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L33" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dataset</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>queryStr</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>entry</code></strong>:<a href="/pymemri/itembase.html#EdgeList"><code>EdgeList</code></a>[<a href="/pymemri/data.dataset.html#DatasetEntry"><code>DatasetEntry</code></a>]=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
-<p>The main Dataset class</p>
+
+<pre><code>The main Dataset class</code></pre>
 
 </div>
 
@@ -104,20 +106,25 @@ nb_path: "nbs/data.dataset.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dataset.to" class="doc_header"><code>Dataset.to</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L68" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dataset.to</code>(<strong><code>dtype</code></strong>:<code>str</code>, <strong><code>columns</code></strong>:<code>List</code>[<code>str</code>], <strong><code>filter_missing</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
+<h4 id="Dataset.to" class="doc_header"><code>Dataset.to</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L77" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dataset.to</code>(<strong><code>dtype</code></strong>:<code>str</code>, <strong><code>columns</code></strong>:<code>List</code>[<code>str</code>], <strong><code>filter_missing</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
 </blockquote>
-<p>Converts Dataset to a different format.</p>
-<p>Available formats:
+
+<pre><code>Converts Dataset to a different format.
+
+Available formats:
 list: a 2-dimensional list, containing one dataset entry per row
 dict: a list of dicts, where each dict contains {column: value} for each column
-pd: a Pandas dataframe</p>
-<p>Args:
+pd: a Pandas dataframe
+
+
+Args:
     dtype (str): Datatype of the returned dataset
     columns (List[str]): Column names of the dataset
-    filter_missing (bool, optional): If true, all rows that contain <code>None</code> values are omitted.
-        Defaults to True.</p>
-<p>Returns:
-    Any: Dataset formatted according to <code>dtype</code></p>
+    filter_missing (bool, optional): If true, all rows that contain `None` values are omitted.
+        Defaults to True.
+
+Returns:
+    Any: Dataset formatted according to `dtype`</code></pre>
 
 </div>
 
@@ -127,9 +134,10 @@ pd: a Pandas dataframe</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Dataset.save" class="doc_header"><code>Dataset.save</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L89" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dataset.save</code>(<strong><code>path</code></strong>:<code>Union</code>[<code>Path</code>, <code>str</code>], <strong><code>columns</code></strong>:<code>List</code>[<code>str</code>], <strong><code>filter_missing</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
+<h4 id="Dataset.save" class="doc_header"><code>Dataset.save</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/dataset.py#L98" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Dataset.save</code>(<strong><code>path</code></strong>:<code>Union</code>[<code>Path</code>, <code>str</code>], <strong><code>columns</code></strong>:<code>List</code>[<code>str</code>], <strong><code>filter_missing</code></strong>:<code>bool</code>=<em><code>True</code></em>)</p>
 </blockquote>
-<p>Save dataset to CSV.</p>
+
+<pre><code>Save dataset to CSV.</code></pre>
 
 </div>
 

@@ -75,17 +75,19 @@ nb_path: "nbs/template.formatter.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="plugin_from_template" class="doc_header"><code>plugin_from_template</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/formatter.py#L158" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>plugin_from_template</code>(<strong><code>list_templates</code></strong>:"List available plugin templates"=<em><code>False</code></em>, <strong><code>user</code></strong>:"Your Gitlab username"=<em><code>None</code></em>, <strong><code>repo_url</code></strong>:"The url of your empty Gitlab plugin repository"=<em><code>None</code></em>, <strong><code>plugin_name</code></strong>:"Display name of your plugin"=<em><code>None</code></em>, <strong><code>template_name</code></strong>:"Name of the template, use <code>list_templates</code> to see all available options"=<em><code>'basic'</code></em>, <strong><code>package_name</code></strong>:"Name of your plugin python package"=<em><code>None</code></em>, <strong><code>description</code></strong>:"Description of your plugin"=<em><code>None</code></em>, <strong><code>target_dir</code></strong>:"Directory to output the formatted template"=<em><code>'.'</code></em>)</p>
 </blockquote>
-<p>CLI that downloads and formats a plugin template according to the arguments, and local git repository.</p>
-<p>Args:
+
+<pre><code>CLI that downloads and formats a plugin template according to the arguments, and local git repository.
+
+Args:
     list_templates (Param, optional): If True, only list available templates. Defaults to False.
     user (Param, optional): Your GitLab username. Defaults to None.
     repo_url (Param, optional): The url of your gitlab plugin repository. Defaults to None.
     plugin_name (Param, optional): The name of your plugin. Defaults to None.
-    template_name (Param, optional): The name of the template used. To list all options, see <code>list_templates</code>.
+    template_name (Param, optional): The name of the template used. To list all options, see `list_templates`.
         Defaults to "basic".
     package_name (Param, optional): The name of the python package of your plugin. Inferred if left blank. Defaults to None.
     description (Param, optional): An optional plugin description. Defaults to None.
-    target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".</p>
+    target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".</code></pre>
 
 </div>
 
