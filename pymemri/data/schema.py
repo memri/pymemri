@@ -9,7 +9,11 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
     from .photo import Photo
     import pymemri.integrator_registry
 
-    if _type == "Indexer" and plugin_class is not None and hasattr(pymemri.integrator_registry, plugin_class):
+    if (
+        _type == "Indexer"
+        and plugin_class is not None
+        and hasattr(pymemri.integrator_registry, plugin_class)
+    ):
         return getattr(pymemri.integrator_registry, plugin_class)
     if plugin_class is not None and plugin_package is not None:
         try:
@@ -32,7 +36,9 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
             else:
                 constructor = classes[_type]
     else:
-        raise TypeError(f"Could not initialize item, type {_type} not registered in PodClient")
+        raise TypeError(
+            f"Could not initialize item, type {_type} not registered in PodClient"
+        )
     return constructor
 
 
@@ -62,10 +68,10 @@ class PluginRun(Item):
         error: str = None,
         config: str = None,
         progress: float = None,
-        plugin: list = None,
-        view: list = None,
-        account: list = None,
-        **kwargs
+        plugin: EdgeList[Plugin] = None,
+        view: EdgeList[CVUStoredDefinition] = None,
+        account: EdgeList[Account] = None,
+        **kwargs,
     ):
         super().__init__(**kwargs)
         id_ = (
@@ -87,6 +93,8 @@ class PluginRun(Item):
         self.progress: Optional[float] = progress
 
         # Edges
-        self.plugin: list = plugin if plugin is not None else []
-        self.view: list = view if view is not None else []
-        self.account: list = account if account is not None else []
+        self.plugin: EdgeList[Plugin] = plugin if plugin is not None else EdgeList()
+        self.view: EdgeList[CVUStoredDefinition] = (
+            view if view is not None else EdgeList()
+        )
+        self.account: EdgeList[Account] = account if account is not None else EdgeList()
