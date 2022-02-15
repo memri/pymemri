@@ -72,7 +72,9 @@ def create_config(plugin_cls: type) -> List[dict]:
 @call_parse
 def create_plugin_config(
     metadata: Param("metadata.json of the plugin", str) = "./metadata.json",
-    tgt_file: Param("Filename of config file", str) = "config.json"):
+    tgt_file: Param("Filename of config file", str) = "config.json",
+    schema_file: Param("Filename of exported plugin schema", str) = "schema.json"
+):
     """
     Creates a plugin configuration definition from the arguments of your plugin class.
 
@@ -108,3 +110,7 @@ def create_plugin_config(
     with open(tgt_file, "w") as f:
         json.dump(config, f, indent=2)
     print(f"Config saved to {Path(tgt_file)}")
+
+    plugin_schema = plugin_cls.get_schema()
+    with open(config_file, "w") as f:
+        json.dump(plugin_schema, f, indent=2)

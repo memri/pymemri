@@ -123,13 +123,14 @@ class PodClient:
 
         return self._upload_image(photo.data)
 
-    def _property_dicts_from_instance(self, item):
+    @classmethod
+    def _property_dicts_from_instance(cls, item):
         create_items = []
         attributes = item.to_json()
         for k, v in attributes.items():
-            if type(v) not in self.TYPE_TO_SCHEMA:
+            if type(v) not in cls.TYPE_TO_SCHEMA:
                 raise ValueError(f"Could not add property {k} with type {type(v)}")
-            value_type = self.TYPE_TO_SCHEMA[type(v)]
+            value_type = cls.TYPE_TO_SCHEMA[type(v)]
 
             create_items.append(
                 {
@@ -141,10 +142,11 @@ class PodClient:
             )
         return create_items
 
-    def _property_dicts_from_type(self, item):
+    @classmethod
+    def _property_dicts_from_type(cls, item):
         create_items = []
         for property, p_type in item.get_property_types().items():
-            p_type = self.TYPE_TO_SCHEMA[p_type]
+            p_type = cls.TYPE_TO_SCHEMA[p_type]
             create_items.append(
                 {
                     "type": "ItemPropertySchema",

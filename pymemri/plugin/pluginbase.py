@@ -44,6 +44,8 @@ POD_PLUGIN_DNS_ENV          = 'PLUGIN_DNS'
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
+    schema_classes = []
+
     def __init__(self, pluginRun=None, client=None, **kwargs):
         super().__init__()
         if pluginRun is None:
@@ -87,12 +89,43 @@ class PluginBase(metaclass=ABCMeta):
     def run(self):
         raise NotImplementedError()
 
-    @abc.abstractmethod
     def add_to_schema(self):
         """
         Add all schema classes required by the plugin to self.client here.
         """
-        raise NotImplementedError()
+        if len(self.schema_classes):
+            self.client.add_to_schema(*self.schema_classes)
+
+    @classmethod
+    def get_schema_properties(cls):
+        schema = []
+        for item in cls.schema_classes:
+            item_schema = PodClient._property_dicts_from_type(item)
+            schema.extend(item_schema)
+        return schema
+
+    @classmethod
+    def get_schema_edges(cls):
+        schema = []
+        for item in cls.schema_classes:
+            edge_types = item.get_edge_types()
+            edge_schema = [
+                {"type": "ItemEdgeSchema",
+                 "edgeName": k,
+                 "sourceType": v[0],
+                 "targetType": v[1]}
+                for k, v in edge_types.items()
+            ]
+            schema.extend(edge_schema)
+        return schema
+
+    @classmethod
+    def get_schema(cls, include_edges: bool = True):
+        schema = cls.get_schema_properties()
+        if include_edges:
+            edges = cls.get_schema_edges()
+            schema.extend(edges)
+        return schema
 
 # Cell
 # hide
@@ -103,6 +136,7 @@ class PluginError(Exception):
 # Cell
 # hide
 class ExamplePlugin(PluginBase):
+    schema_classes = [Dog, Message]
 
     def __init__(self, dog_name: str = "Bob", **kwargs):
         super().__init__(**kwargs)
@@ -113,9 +147,6 @@ class ExamplePlugin(PluginBase):
         dog = Dog(self.dog_name, 10)
         self.client.create(dog)
         print("Run success!")
-
-    def add_to_schema(self):
-        self.client.add_to_schema(Dog)
 
 # Cell
 # hide
