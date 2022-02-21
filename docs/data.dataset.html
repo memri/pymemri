@@ -153,7 +153,7 @@ Returns:
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Usage">Usage<a class="anchor-link" href="#Usage"> </a></h2><p>To convert the data in the pod to a different format, <a href="/pymemri/data.dataset.html#Dataset"><code>Dataset</code></a> implements the <a href="/pymemri/data.dataset.html#Dataset.to"><code>Dataset.to</code></a> method. In the <code>columns</code> argument, you can define which features will be included in your dataset. A <code>column</code> is either a property of an entry in the dataset, or a property of an item connected to an entry in the dataset.</p>
 <p>The Pod uses the following schema for Dataset items. Note that the <a href="/pymemri/data.dataset.html#DatasetEntry"><code>DatasetEntry</code></a> item is always included, and the actual data can be found by traversing the <code>entry.data</code> Edge.</p>
-<p>{% include image.html file="/pymemri/images/dataset-diagram.png" %}</p>
+<p><img src="/pymemri/images/dataset-diagram.png" alt="dataset schema"></p>
 <p>Now for example, if a dataset is a set of <code>Message</code> items, and the content has to be included as column, <code>data.content</code> would be the column name. If the name of the <code>sender</code> of a message has to be included, <code>data.sender.handle</code> would be a valid column name.</p>
 <p>The following example retrieves an example dataset of <code>Message</code> items, and formats them to a Pandas dataframe:</p>
 
