@@ -380,20 +380,20 @@ class Dataset(Item):
 class DatasetEntry(Item):
     description = """Entry item of dataset."""
     properties = Item.properties + []
-    edges = Item.edges + ["data", "labelAnnotation"]
+    edges = Item.edges + ["data", "annotation"]
 
     def __init__(
         self,
         data: EdgeList["Any"] = None,
-        labelAnnotation: EdgeList["CategoricalLabel"] = None,
+        annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Edges
         self.data: EdgeList["Any"] = data if data is not None else EdgeList()
-        self.labelAnnotation: EdgeList["CategoricalLabel"] = (
-            labelAnnotation if labelAnnotation is not None else EdgeList()
+        self.annotation: EdgeList["CategoricalLabel"] = (
+            annotation if annotation is not None else EdgeList()
         )
 
 
@@ -573,25 +573,14 @@ class Label(Item):
 class LabelAnnotation(Item):
     description = """"""
     properties = Item.properties + ["allowSharing", "isSubmitted"]
-    edges = Item.edges + ["annotatedItem"]
+    edges = Item.edges + []
 
-    def __init__(
-        self,
-        allowSharing: bool = None,
-        isSubmitted: bool = None,
-        annotatedItem: EdgeList["Any"] = None,
-        **kwargs
-    ):
+    def __init__(self, allowSharing: bool = None, isSubmitted: bool = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.allowSharing: Optional[bool] = allowSharing
         self.isSubmitted: Optional[bool] = isSubmitted
-
-        # Edges
-        self.annotatedItem: EdgeList["Any"] = (
-            annotatedItem if annotatedItem is not None else EdgeList()
-        )
 
 
 class LabelOption(Item):
