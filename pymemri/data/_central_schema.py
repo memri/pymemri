@@ -128,10 +128,10 @@ class CVUStoredDefinition(Item):
         "domain",
         "itemType",
         "name",
-        "querystr",
+        "queryStr",
         "renderer",
         "selector",
-        "type",
+        "definitionType",
     ]
     edges = Item.edges + []
 
@@ -141,10 +141,10 @@ class CVUStoredDefinition(Item):
         domain: str = None,
         itemType: str = None,
         name: str = None,
-        querystr: str = None,
+        queryStr: str = None,
         renderer: str = None,
         selector: str = None,
-        type: str = None,
+        definitionType: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -154,10 +154,10 @@ class CVUStoredDefinition(Item):
         self.domain: Optional[str] = domain
         self.itemType: Optional[str] = itemType
         self.name: Optional[str] = name
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
         self.renderer: Optional[str] = renderer
         self.selector: Optional[str] = selector
-        self.type: Optional[str] = type
+        self.definitionType: Optional[str] = definitionType
 
 
 class CreativeWork(Item):
@@ -345,15 +345,78 @@ class CurrencySetting(Item):
 
 class Dataset(Item):
     description = """A Dataset of items."""
-    properties = Item.properties + ["name", "querystr"]
-    edges = Item.edges + []
+    properties = Item.properties + ["name", "queryStr"]
+    edges = Item.edges + ["entry", "feature", "labellingTask", "datasetType"]
 
-    def __init__(self, name: str = None, querystr: str = None, **kwargs):
+    def __init__(
+        self,
+        name: str = None,
+        queryStr: str = None,
+        entry: EdgeList["DatasetEntry"] = None,
+        feature: EdgeList["Any"] = None,
+        labellingTask: EdgeList["LabellingTask"] = None,
+        datasetType: EdgeList["DatasetType"] = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
+
+        # Edges
+        self.entry: EdgeList["DatasetEntry"] = (
+            entry if entry is not None else EdgeList()
+        )
+        self.feature: EdgeList["Any"] = feature if feature is not None else EdgeList()
+        self.labellingTask: EdgeList["LabellingTask"] = (
+            labellingTask if labellingTask is not None else EdgeList()
+        )
+        self.datasetType: EdgeList["DatasetType"] = (
+            datasetType if datasetType is not None else EdgeList()
+        )
+
+
+class DatasetEntry(Item):
+    description = """Entry item of dataset."""
+    properties = Item.properties + []
+    edges = Item.edges + ["data", "labelAnnotation"]
+
+    def __init__(
+        self,
+        data: EdgeList["Any"] = None,
+        labelAnnotation: EdgeList["CategoricalLabel"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Edges
+        self.data: EdgeList["Any"] = data if data is not None else EdgeList()
+        self.labelAnnotation: EdgeList["CategoricalLabel"] = (
+            labelAnnotation if labelAnnotation is not None else EdgeList()
+        )
+
+
+class DatasetType(Item):
+    description = """Fixed dictionary for datasets."""
+    properties = Item.properties + ["name", "queryStr"]
+    edges = Item.edges + ["plugin"]
+
+    def __init__(
+        self,
+        name: str = None,
+        queryStr: str = None,
+        plugin: EdgeList["Plugin"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.queryStr: Optional[str] = queryStr
+
+        # Edges
+        self.plugin: EdgeList["Plugin"] = plugin if plugin is not None else EdgeList()
 
 
 class Diet(Item):
@@ -509,13 +572,13 @@ class Label(Item):
 
 class LabelAnnotation(Item):
     description = """"""
-    properties = Item.properties + ["allowSharing", "labels"]
+    properties = Item.properties + ["allowSharing", "isSubmitted"]
     edges = Item.edges + ["annotatedItem"]
 
     def __init__(
         self,
         allowSharing: bool = None,
-        labels: str = None,
+        isSubmitted: bool = None,
         annotatedItem: EdgeList["Any"] = None,
         **kwargs
     ):
@@ -523,7 +586,7 @@ class LabelAnnotation(Item):
 
         # Properties
         self.allowSharing: Optional[bool] = allowSharing
-        self.labels: Optional[str] = labels
+        self.isSubmitted: Optional[bool] = isSubmitted
 
         # Edges
         self.annotatedItem: EdgeList["Any"] = (
@@ -531,40 +594,43 @@ class LabelAnnotation(Item):
         )
 
 
-class LabelingDataType(Item):
-    description = """A labelling data type definition."""
-    properties = Item.properties + ["name", "icon"]
-    edges = Item.edges + ["dataset"]
+class LabelOption(Item):
+    description = """Attached to an Item, to mark it to be something."""
+    properties = Item.properties + ["color", "name"]
+    edges = Item.edges + []
 
-    def __init__(
-        self,
-        name: str = None,
-        icon: str = None,
-        dataset: EdgeList["Dataset"] = None,
-        **kwargs
-    ):
+    def __init__(self, color: str = None, name: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.color: Optional[str] = color
+        self.name: Optional[str] = name
+
+
+class LabellingDataType(Item):
+    description = """A labelling data type definition."""
+    properties = Item.properties + ["name", "labelType"]
+    edges = Item.edges + []
+
+    def __init__(self, name: str = None, labelType: str = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
-        self.icon: Optional[str] = icon
-
-        # Edges
-        self.dataset: EdgeList["Dataset"] = (
-            dataset if dataset is not None else EdgeList()
-        )
+        self.labelType: Optional[str] = labelType
 
 
-class LabelingTask(Item):
+class LabellingTask(Item):
     description = """A labelling task definition."""
-    properties = Item.properties + ["name"]
-    edges = Item.edges + ["labelOption", "dataset", "view"]
+    properties = Item.properties + ["name", "currentLabelOption"]
+    edges = Item.edges + ["taskType", "labelOption", "view"]
 
     def __init__(
         self,
         name: str = None,
-        labelOption: EdgeList["Label"] = None,
-        dataset: EdgeList["Dataset"] = None,
+        currentLabelOption: str = None,
+        taskType: EdgeList["Any"] = None,
+        labelOption: EdgeList["LabelOption"] = None,
         view: EdgeList["CVUStoredDefinition"] = None,
         **kwargs
     ):
@@ -572,13 +638,14 @@ class LabelingTask(Item):
 
         # Properties
         self.name: Optional[str] = name
+        self.currentLabelOption: Optional[str] = currentLabelOption
 
         # Edges
-        self.labelOption: EdgeList["Label"] = (
-            labelOption if labelOption is not None else EdgeList()
+        self.taskType: EdgeList["Any"] = (
+            taskType if taskType is not None else EdgeList()
         )
-        self.dataset: EdgeList["Dataset"] = (
-            dataset if dataset is not None else EdgeList()
+        self.labelOption: EdgeList["LabelOption"] = (
+            labelOption if labelOption is not None else EdgeList()
         )
         self.view: EdgeList["CVUStoredDefinition"] = (
             view if view is not None else EdgeList()
@@ -864,28 +931,34 @@ class Plugin(Item):
     description = """Information about a Plugin"""
     properties = Item.properties + [
         "bundleImage",
-        "container",
+        "containerImage",
+        "configJson",
+        "config",
         "dataType",
         "icon",
-        "itemDescription",
+        "pluginDescription",
         "name",
         "pluginModule",
         "pluginName",
         "pluginType",
+        "gitProjectId",
     ]
     edges = Item.edges + ["view"]
 
     def __init__(
         self,
         bundleImage: str = None,
-        container: str = None,
+        containerImage: str = None,
+        configJson: str = None,
+        config: str = None,
         dataType: str = None,
         icon: str = None,
-        itemDescription: str = None,
+        pluginDescription: str = None,
         name: str = None,
         pluginModule: str = None,
         pluginName: str = None,
         pluginType: str = None,
+        gitProjectId: int = None,
         view: EdgeList["CVUStoredDefinition"] = None,
         **kwargs
     ):
@@ -893,14 +966,17 @@ class Plugin(Item):
 
         # Properties
         self.bundleImage: Optional[str] = bundleImage
-        self.container: Optional[str] = container
+        self.containerImage: Optional[str] = containerImage
+        self.configJson: Optional[str] = configJson
+        self.config: Optional[str] = config
         self.dataType: Optional[str] = dataType
         self.icon: Optional[str] = icon
-        self.itemDescription: Optional[str] = itemDescription
+        self.pluginDescription: Optional[str] = pluginDescription
         self.name: Optional[str] = name
         self.pluginModule: Optional[str] = pluginModule
         self.pluginName: Optional[str] = pluginName
         self.pluginType: Optional[str] = pluginType
+        self.gitProjectId: Optional[int] = gitProjectId
 
         # Edges
         self.view: EdgeList["CVUStoredDefinition"] = (
@@ -910,7 +986,7 @@ class Plugin(Item):
 
 class Post(Item):
     description = """Post from social media"""
-    properties = Item.properties + ["externalId", "message", "postDate", "type"]
+    properties = Item.properties + ["externalId", "message", "postDate", "postType"]
     edges = Item.edges + ["author", "comment", "parent", "photo"]
 
     def __init__(
@@ -918,7 +994,7 @@ class Post(Item):
         externalId: str = None,
         message: str = None,
         postDate: datetime = None,
-        type: str = None,
+        postType: str = None,
         author: EdgeList["Account"] = None,
         comment: EdgeList["Post"] = None,
         parent: EdgeList["Post"] = None,
@@ -931,13 +1007,41 @@ class Post(Item):
         self.externalId: Optional[str] = externalId
         self.message: Optional[str] = message
         self.postDate: Optional[datetime] = postDate
-        self.type: Optional[str] = type
+        self.postType: Optional[str] = postType
 
         # Edges
         self.author: EdgeList["Account"] = author if author is not None else EdgeList()
         self.comment: EdgeList["Post"] = comment if comment is not None else EdgeList()
         self.parent: EdgeList["Post"] = parent if parent is not None else EdgeList()
         self.photo: EdgeList["Photo"] = photo if photo is not None else EdgeList()
+
+
+class Project(Item):
+    description = """Labelling project"""
+    properties = Item.properties + ["name", "gitlabUrl"]
+    edges = Item.edges + ["dataset", "labellingPlugin"]
+
+    def __init__(
+        self,
+        name: str = None,
+        gitlabUrl: str = None,
+        dataset: EdgeList["Dataset"] = None,
+        labellingPlugin: EdgeList["Plugin"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.gitlabUrl: Optional[str] = gitlabUrl
+
+        # Edges
+        self.dataset: EdgeList["Dataset"] = (
+            dataset if dataset is not None else EdgeList()
+        )
+        self.labellingPlugin: EdgeList["Plugin"] = (
+            labellingPlugin if labellingPlugin is not None else EdgeList()
+        )
 
 
 class Receipt(Item):
@@ -1085,7 +1189,7 @@ class Indexer(Integrator):
         "icon",
         "indexerClass",
         "itemDescription",
-        "querystr",
+        "queryStr",
         "runDestination",
     ]
     edges = Integrator.edges + ["indexerRun"]
@@ -1096,7 +1200,7 @@ class Indexer(Integrator):
         icon: str = None,
         indexerClass: str = None,
         itemDescription: str = None,
-        querystr: str = None,
+        queryStr: str = None,
         runDestination: str = None,
         indexerRun: EdgeList["IndexerRun"] = None,
         **kwargs
@@ -1108,7 +1212,7 @@ class Indexer(Integrator):
         self.icon: Optional[str] = icon
         self.indexerClass: Optional[str] = indexerClass
         self.itemDescription: Optional[str] = itemDescription
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
         self.runDestination: Optional[str] = runDestination
 
         # Edges
@@ -1123,7 +1227,7 @@ class IndexerRun(Integrator):
         "errorMessage",
         "progress",
         "progressMessage",
-        "querystr",
+        "queryStr",
         "runStatus",
         "targetDataType",
     ]
@@ -1134,7 +1238,7 @@ class IndexerRun(Integrator):
         errorMessage: str = None,
         progress: float = None,
         progressMessage: str = None,
-        querystr: str = None,
+        queryStr: str = None,
         runStatus: str = None,
         targetDataType: str = None,
         indexer: EdgeList["Indexer"] = None,
@@ -1146,7 +1250,7 @@ class IndexerRun(Integrator):
         self.errorMessage: Optional[str] = errorMessage
         self.progress: Optional[float] = progress
         self.progressMessage: Optional[str] = progressMessage
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
         self.runStatus: Optional[str] = runStatus
         self.targetDataType: Optional[str] = targetDataType
 
@@ -1154,6 +1258,27 @@ class IndexerRun(Integrator):
         self.indexer: EdgeList["Indexer"] = (
             indexer if indexer is not None else EdgeList()
         )
+
+
+class CategoricalLabel(LabelAnnotation):
+    description = """"""
+    properties = LabelAnnotation.properties + ["labelValue"]
+    edges = LabelAnnotation.edges + []
+
+    def __init__(self, labelValue: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.labelValue: Optional[str] = labelValue
+
+
+class TextClassification(LabellingDataType):
+    description = """Text classification option"""
+    properties = LabellingDataType.properties + []
+    edges = LabellingDataType.edges + []
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 
 class Address(Location):
