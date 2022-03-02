@@ -112,5 +112,5 @@ def create_plugin_config(
     print(f"Config saved to {Path(tgt_file)}")
 
     plugin_schema = plugin_cls.get_schema()
-    with open(config_file, "w") as f:
+    with open(schema_file, "w") as f:
         json.dump(plugin_schema, f, indent=2)
