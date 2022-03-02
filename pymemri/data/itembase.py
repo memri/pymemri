@@ -226,6 +226,7 @@ class Item(ItemBase):
         "id",
         "importJson",
         "pluginClass",
+        "isMock",
     ]
     edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
 
@@ -244,6 +245,7 @@ class Item(ItemBase):
         id: str = None,
         importJson: str = None,
         pluginClass: str = None,
+        isMock: bool = None,
         changelog: list = None,
         label: list = None,
         genericAttribute: list = None,
@@ -263,6 +265,7 @@ class Item(ItemBase):
         self.version: Optional[str] = version
         self.importJson: Optional[str] = importJson
         self.pluginClass: Optional[str] = pluginClass
+        self.isMock: Optional[bool] = isMock
 
         # Edges
         self.changelog: list = changelog if changelog is not None else []
