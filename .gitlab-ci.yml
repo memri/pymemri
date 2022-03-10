@@ -2,7 +2,6 @@ default:
   image: python:3.7
   before_script:
   - apt-get update && apt-get install -y libsqlcipher-dev && apt-get install -y libgl1-mesa-glx
-  - pip install --upgrade pip
   - pip install .
 
 read_notebooks:

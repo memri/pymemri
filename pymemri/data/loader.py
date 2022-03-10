@@ -9,7 +9,6 @@ __all__ = ['MEMRI_PATH', 'ACCESS_TOKEN_PATH', 'GITLAB_API_BASE_URL', 'DEFAULT_PL
 # Cell
 from fastprogress.fastprogress import progress_bar
 from pathlib import Path
-import torch
 import requests
 import os, sys
 from getpass import getpass
@@ -151,6 +150,7 @@ def write_model_to_package_registry(model, project_name=None):
     project_name = project_name if project_name is not None else find_git_repo()
     if type(model).__module__.startswith("transformers"):
         import transformers
+        import torch
     if isinstance(model, transformers.PreTrainedModel):
         write_huggingface_model_to_package_registry(project_name, model)
     else:
