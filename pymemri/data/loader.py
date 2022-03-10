@@ -134,6 +134,7 @@ def project_id_from_name(project_name, api_key):
 
 # Cell
 def write_huggingface_model_to_package_registry(project_name, model):
+    import torch
     api_key = get_registry_api_key()
     project_id = project_id_from_name(project_name, api_key)
     local_save_dir = Path("/tmp")
