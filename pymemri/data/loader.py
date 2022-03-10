@@ -182,9 +182,9 @@ def download_package_file(filename, project_name=None, out_dir=None, package_nam
     return out_dir
 
 # Cell
-def download_huggingface_model_for_project(files=None):
+def download_huggingface_model_for_project(project=None, files=None):
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
     for f in files:
-        out_dir = download_package_file(f)
+        out_dir = download_package_file(f, project_name=project)
     return out_dir
