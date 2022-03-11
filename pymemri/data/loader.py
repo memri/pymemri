@@ -124,7 +124,7 @@ def project_id_from_name(project_name, api_key, job_token=None):
     if api_key:
         headers = {"PRIVATE-TOKEN": api_key}
     else:
-        headers = {"JOB-TOKEN": job_token"}
+        headers = {"JOB-TOKEN": job_token}
     res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
                        headers=headers,
                        params={
