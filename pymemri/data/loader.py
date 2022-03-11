@@ -4,7 +4,8 @@ __all__ = ['MEMRI_PATH', 'ACCESS_TOKEN_PATH', 'GITLAB_API_BASE_URL', 'DEFAULT_PL
            'DEFAULT_PYTORCH_MODEL_NAME', 'DEFAULT_HUGGINFACE_CONFIG_NAME', 'DEFAULT_PACKAGE_VERSION',
            'TIME_FORMAT_GITLAB', 'find_git_repo', 'get_registry_api_key', 'upload_in_chunks', 'IterableToFileAdapter',
            'write_file_to_package_registry', 'project_id_from_name', 'write_huggingface_model_to_package_registry',
-           'write_model_to_package_registry', 'download_package_file', 'download_huggingface_model_for_project']
+           'write_model_to_package_registry', 'download_package_file', 'download_huggingface_model_for_project',
+           'load_huggingface_model_for_project']
 
 # Cell
 from fastprogress.fastprogress import progress_bar
@@ -159,7 +160,7 @@ def write_model_to_package_registry(model, project_name=None):
 
 # Cell
 def download_package_file(filename, project_name=None, out_dir=None, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME,
-                          package_version=DEFAULT_PACKAGE_VERSION):
+                          package_version=DEFAULT_PACKAGE_VERSION, download_if_exists=False):
     if project_name is None:
         try:
             project_name = find_git_repo()
@@ -170,6 +171,12 @@ def download_package_file(filename, project_name=None, out_dir=None, package_nam
     out_dir.mkdir(parents=True, exist_ok=True)
     api_key = get_registry_api_key()
     project_id = project_id_from_name(project_name, api_key)
+    file_path = out_dir / filename
+
+    if file_path.exists() and not download_if_exists:
+        print(f"{file_path} already exists, and `download_if_exists`==False, using cached version")
+        return out_dir
+
     print(f"downloading {filename} from project {project_name}, package {package_name}")
 
     res = requests.get(
@@ -179,12 +186,19 @@ def download_package_file(filename, project_name=None, out_dir=None, package_nam
     with open(out_dir / filename, "wb") as f:
         print(f"writing {filename} to {out_dir}")
         f.write(res.content)
-    return out_dir
+    return file_path
 
 # Cell
-def download_huggingface_model_for_project(project=None, files=None):
+def download_huggingface_model_for_project(project=None, files=None, download_if_exists=False):
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
     for f in files:
-        out_dir = download_package_file(f, project_name=project)
-    return out_dir
+        out_file_path = download_package_file(f, project_name=project)
+    return out_file_path.parent
+
+# Cell
+def load_huggingface_model_for_project(project=None, files=None, download_if_exists=False):
+    out_dir = download_huggingface_model_for_project(project, files, download_if_exists)
+    from transformers import AutoModelForSequenceClassification
+    model = AutoModelForSequenceClassification.from_pretrained("distilroberta-base", num_labels=10)
+    return model
