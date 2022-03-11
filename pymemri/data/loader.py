@@ -4,8 +4,9 @@ __all__ = ['MEMRI_PATH', 'MEMRI_GITLAB_BASE_URL', 'ACCESS_TOKEN_PATH', 'GITLAB_A
            'DEFAULT_PLUGIN_MODEL_PACKAGE_NAME', 'DEFAULT_PYTORCH_MODEL_NAME', 'DEFAULT_HUGGINFACE_CONFIG_NAME',
            'DEFAULT_PACKAGE_VERSION', 'TIME_FORMAT_GITLAB', 'PROJET_ID_PATTERN', 'find_git_repo',
            'get_registry_api_key', 'upload_in_chunks', 'IterableToFileAdapter', 'write_file_to_package_registry',
-           'project_id_from_name', 'write_huggingface_model_to_package_registry', 'write_model_to_package_registry',
-           'download_package_file', 'download_huggingface_model_for_project', 'load_huggingface_model_for_project']
+           'project_id_from_name', 'get_project_id_from_project_path_unsafe',
+           'write_huggingface_model_to_package_registry', 'write_model_to_package_registry', 'download_package_file',
+           'download_huggingface_model_for_project', 'load_huggingface_model_for_project']
 
 # Cell
 from fastprogress.fastprogress import progress_bar
@@ -138,6 +139,15 @@ def project_id_from_name(project_name, api_key, job_token=None):
         raise ValueError(f"No plugin found with name {project_name}")
     else:
         return res[0]
+
+# Cell
+def get_project_id_from_project_path_unsafe(project_path):
+    try:
+        res = requests.get(f"{MEMRI_GITLAB_BASE_URL}/{project_path}")
+        match = re.search(PROJET_ID_PATTERN, html)
+        return match.group()
+    except Exception:
+        raise ValueError(f"Could not find project with name {project_path}")
 
 # Cell
 def write_huggingface_model_to_package_registry(project_name, model):
