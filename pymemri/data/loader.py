@@ -16,6 +16,7 @@ import os, sys
 from getpass import getpass
 from datetime import datetime
 from git import Repo
+import re
 
 # Cell
 MEMRI_PATH = Path.home() / ".memri"
@@ -144,6 +145,7 @@ def project_id_from_name(project_name, api_key, job_token=None):
 def get_project_id_from_project_path_unsafe(project_path):
     try:
         res = requests.get(f"{MEMRI_GITLAB_BASE_URL}/{project_path}")
+        html = str(res.content)
         match = re.search(PROJET_ID_PATTERN, html)
         return match.group()
     except Exception:
@@ -192,7 +194,7 @@ def download_package_file(filename, project_path=None, out_dir=None, package_nam
 #         api_key=None
 #         job_token = os.environ.get("CI_JOB_TOKEN")
 
-    project_id = get_project_id_from_project_name_unsafe(project_path)
+    project_id = get_project_id_from_project_path_unsafe(project_path)
 
 #     project_id = project_id_from_name(project_name, api_key, job_token)
     file_path = out_dir / filename
