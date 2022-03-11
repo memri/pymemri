@@ -124,7 +124,7 @@ def project_id_from_name(project_name, api_key, job_token=None):
     if api_key:
         headers = {"PRIVATE-TOKEN": api_key}
     else:
-        headers = {"JOB-TOKEN: $CI_JOB_TOKEN"}
+        headers = {"JOB-TOKEN": job_token"}
     res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
                        headers=headers,
                        params={
@@ -178,7 +178,7 @@ def download_package_file(filename, project_name=None, out_dir=None, package_nam
         job_token = None
     else:
         api_key=None
-        job_token = os.environ.get("JOB-TOKEN")
+        job_token = os.environ.get("CI_JOB_TOKEN")
 
     project_id = project_id_from_name(project_name, api_key, job_token)
     file_path = out_dir / filename
