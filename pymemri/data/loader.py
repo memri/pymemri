@@ -120,9 +120,13 @@ def write_file_to_package_registry(project_id, file_path, api_key, version=DEFAU
         print(f"Succesfully uploaded {file_path}")
 
 # Cell
-def project_id_from_name(project_name, api_key):
+def project_id_from_name(project_name, api_key, job_token=None):
+    if api_key:
+        headers = {"PRIVATE-TOKEN": api_key}
+    else:
+        headers = {"JOB-TOKEN: $CI_JOB_TOKEN"}
     res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
-                       headers={"PRIVATE-TOKEN": api_key},
+                       headers=headers,
                        params={
                            "owned": True,
                            "search": project_name
@@ -169,8 +173,14 @@ def download_package_file(filename, project_name=None, out_dir=None, package_nam
 
     out_dir = out_dir if out_dir is not None else MEMRI_PATH / "projects" / project_name
     out_dir.mkdir(parents=True, exist_ok=True)
-    api_key = get_registry_api_key()
-    project_id = project_id_from_name(project_name, api_key)
+    if os.environ.get("CI", False):
+        api_key = get_registry_api_key()
+        job_token = None
+    else:
+        api_key=None
+        job_token = os.environ.get("JOB-TOKEN")
+
+    project_id = project_id_from_name(project_name, api_key, job_token)
     file_path = out_dir / filename
 
     if file_path.exists() and not download_if_exists:
