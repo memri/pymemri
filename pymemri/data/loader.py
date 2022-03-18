@@ -29,7 +29,7 @@ DEFAULT_HUGGINFACE_CONFIG_NAME = "config.json"
 DEFAULT_PACKAGE_VERSION = "0.0.1"
 
 TIME_FORMAT_GITLAB = '%Y-%m-%dT%H:%M:%S.%fZ'
-PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )159(?=</span>)'
+PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )[0-9]+(?=</span>)'
 
 # Cell
 def find_git_repo():
