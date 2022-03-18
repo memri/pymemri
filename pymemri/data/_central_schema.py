@@ -3,9 +3,9 @@
 # Visit https://gitlab.memri.io/memri/schema to learn more
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 
-from pymemri.data.itembase import Item
+from pymemri.data.itembase import Item, EdgeList
 
 
 class Account(Item):
@@ -51,14 +51,14 @@ class Account(Item):
         service: str = None,
         accessToken: str = None,
         refreshToken: str = None,
-        changelog: list = None,
-        cryptoTransaction: list = None,
-        location: list = None,
-        network: list = None,
-        ownCurrency: list = None,
-        owner: list = None,
-        trust: list = None,
-        profilePicture: list = None,
+        changelog: EdgeList["AuditItem"] = None,
+        cryptoTransaction: EdgeList["CryptoTransaction"] = None,
+        location: EdgeList["Location"] = None,
+        network: EdgeList["Network"] = None,
+        ownCurrency: EdgeList["CryptoCurrency"] = None,
+        owner: EdgeList["Person"] = None,
+        trust: EdgeList["Account"] = None,
+        profilePicture: EdgeList["Photo"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -79,16 +79,26 @@ class Account(Item):
         self.refreshToken: Optional[str] = refreshToken
 
         # Edges
-        self.changelog: list = changelog if changelog is not None else []
-        self.cryptoTransaction: list = (
-            cryptoTransaction if cryptoTransaction is not None else []
+        self.changelog: EdgeList["AuditItem"] = (
+            changelog if changelog is not None else EdgeList()
         )
-        self.location: list = location if location is not None else []
-        self.network: list = network if network is not None else []
-        self.ownCurrency: list = ownCurrency if ownCurrency is not None else []
-        self.owner: list = owner if owner is not None else []
-        self.trust: list = trust if trust is not None else []
-        self.profilePicture: list = profilePicture if profilePicture is not None else []
+        self.cryptoTransaction: EdgeList["CryptoTransaction"] = (
+            cryptoTransaction if cryptoTransaction is not None else EdgeList()
+        )
+        self.location: EdgeList["Location"] = (
+            location if location is not None else EdgeList()
+        )
+        self.network: EdgeList["Network"] = (
+            network if network is not None else EdgeList()
+        )
+        self.ownCurrency: EdgeList["CryptoCurrency"] = (
+            ownCurrency if ownCurrency is not None else EdgeList()
+        )
+        self.owner: EdgeList["Person"] = owner if owner is not None else EdgeList()
+        self.trust: EdgeList["Account"] = trust if trust is not None else EdgeList()
+        self.profilePicture: EdgeList["Photo"] = (
+            profilePicture if profilePicture is not None else EdgeList()
+        )
 
 
 class AuditItem(Item):
@@ -118,10 +128,10 @@ class CVUStoredDefinition(Item):
         "domain",
         "itemType",
         "name",
-        "querystr",
+        "queryStr",
         "renderer",
         "selector",
-        "type",
+        "definitionType",
     ]
     edges = Item.edges + []
 
@@ -131,10 +141,10 @@ class CVUStoredDefinition(Item):
         domain: str = None,
         itemType: str = None,
         name: str = None,
-        querystr: str = None,
+        queryStr: str = None,
         renderer: str = None,
         selector: str = None,
-        type: str = None,
+        definitionType: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -144,10 +154,10 @@ class CVUStoredDefinition(Item):
         self.domain: Optional[str] = domain
         self.itemType: Optional[str] = itemType
         self.name: Optional[str] = name
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
         self.renderer: Optional[str] = renderer
         self.selector: Optional[str] = selector
-        self.type: Optional[str] = type
+        self.definitionType: Optional[str] = definitionType
 
 
 class CreativeWork(Item):
@@ -174,10 +184,10 @@ class CreativeWork(Item):
         textContent: str = None,
         title: str = None,
         transcript: str = None,
-        contentLocation: list = None,
-        file: list = None,
-        locationCreated: list = None,
-        writtenBy: list = None,
+        contentLocation: EdgeList["Location"] = None,
+        file: EdgeList["File"] = None,
+        locationCreated: EdgeList["Location"] = None,
+        writtenBy: EdgeList["Person"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -193,14 +203,16 @@ class CreativeWork(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: list = (
-            contentLocation if contentLocation is not None else []
+        self.contentLocation: EdgeList["Location"] = (
+            contentLocation if contentLocation is not None else EdgeList()
         )
-        self.file: list = file if file is not None else []
-        self.locationCreated: list = (
-            locationCreated if locationCreated is not None else []
+        self.file: EdgeList["File"] = file if file is not None else EdgeList()
+        self.locationCreated: EdgeList["Location"] = (
+            locationCreated if locationCreated is not None else EdgeList()
         )
-        self.writtenBy: list = writtenBy if writtenBy is not None else []
+        self.writtenBy: EdgeList["Person"] = (
+            writtenBy if writtenBy is not None else EdgeList()
+        )
 
 
 class CryptoCurrency(Item):
@@ -213,8 +225,8 @@ class CryptoCurrency(Item):
         myToken: float = None,
         name: str = None,
         topic: str = None,
-        currencySetting: list = None,
-        picture: list = None,
+        currencySetting: EdgeList["CurrencySetting"] = None,
+        picture: EdgeList["Photo"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -225,10 +237,10 @@ class CryptoCurrency(Item):
         self.topic: Optional[str] = topic
 
         # Edges
-        self.currencySetting: list = (
-            currencySetting if currencySetting is not None else []
+        self.currencySetting: EdgeList["CurrencySetting"] = (
+            currencySetting if currencySetting is not None else EdgeList()
         )
-        self.picture: list = picture if picture is not None else []
+        self.picture: EdgeList["Photo"] = picture if picture is not None else EdgeList()
 
 
 class CryptoKey(Item):
@@ -251,7 +263,7 @@ class CryptoKey(Item):
         name: str = None,
         role: str = None,
         starred: bool = None,
-        owner: list = None,
+        owner: EdgeList["Person"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -265,7 +277,7 @@ class CryptoKey(Item):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.owner: list = owner if owner is not None else []
+        self.owner: EdgeList["Person"] = owner if owner is not None else EdgeList()
 
 
 class CryptoTransaction(Item):
@@ -277,9 +289,9 @@ class CryptoTransaction(Item):
         self,
         outward: bool = None,
         quantity: float = None,
-        cryptoCurrency: list = None,
-        relateToOther: list = None,
-        relateToOwner: list = None,
+        cryptoCurrency: EdgeList["CryptoCurrency"] = None,
+        relateToOther: EdgeList["Account"] = None,
+        relateToOwner: EdgeList["Account"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -289,9 +301,15 @@ class CryptoTransaction(Item):
         self.quantity: Optional[float] = quantity
 
         # Edges
-        self.cryptoCurrency: list = cryptoCurrency if cryptoCurrency is not None else []
-        self.relateToOther: list = relateToOther if relateToOther is not None else []
-        self.relateToOwner: list = relateToOwner if relateToOwner is not None else []
+        self.cryptoCurrency: EdgeList["CryptoCurrency"] = (
+            cryptoCurrency if cryptoCurrency is not None else EdgeList()
+        )
+        self.relateToOther: EdgeList["Account"] = (
+            relateToOther if relateToOther is not None else EdgeList()
+        )
+        self.relateToOwner: EdgeList["Account"] = (
+            relateToOwner if relateToOwner is not None else EdgeList()
+        )
 
 
 class CurrencySetting(Item):
@@ -310,7 +328,7 @@ class CurrencySetting(Item):
         profileAddress: str = None,
         seedPhrase: str = None,
         tokenAddress: str = None,
-        wallet: list = None,
+        wallet: EdgeList["Wallet"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -322,20 +340,83 @@ class CurrencySetting(Item):
         self.tokenAddress: Optional[str] = tokenAddress
 
         # Edges
-        self.wallet: list = wallet if wallet is not None else []
+        self.wallet: EdgeList["Wallet"] = wallet if wallet is not None else EdgeList()
 
 
 class Dataset(Item):
     description = """A Dataset of items."""
-    properties = Item.properties + ["name", "querystr"]
-    edges = Item.edges + []
+    properties = Item.properties + ["name", "queryStr"]
+    edges = Item.edges + ["entry", "feature", "labellingTask", "datasetType"]
 
-    def __init__(self, name: str = None, querystr: str = None, **kwargs):
+    def __init__(
+        self,
+        name: str = None,
+        queryStr: str = None,
+        entry: EdgeList["DatasetEntry"] = None,
+        feature: EdgeList["Any"] = None,
+        labellingTask: EdgeList["LabellingTask"] = None,
+        datasetType: EdgeList["DatasetType"] = None,
+        **kwargs
+    ):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
+
+        # Edges
+        self.entry: EdgeList["DatasetEntry"] = (
+            entry if entry is not None else EdgeList()
+        )
+        self.feature: EdgeList["Any"] = feature if feature is not None else EdgeList()
+        self.labellingTask: EdgeList["LabellingTask"] = (
+            labellingTask if labellingTask is not None else EdgeList()
+        )
+        self.datasetType: EdgeList["DatasetType"] = (
+            datasetType if datasetType is not None else EdgeList()
+        )
+
+
+class DatasetEntry(Item):
+    description = """Entry item of dataset."""
+    properties = Item.properties + []
+    edges = Item.edges + ["data", "annotation"]
+
+    def __init__(
+        self,
+        data: EdgeList["Any"] = None,
+        annotation: EdgeList["CategoricalLabel"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Edges
+        self.data: EdgeList["Any"] = data if data is not None else EdgeList()
+        self.annotation: EdgeList["CategoricalLabel"] = (
+            annotation if annotation is not None else EdgeList()
+        )
+
+
+class DatasetType(Item):
+    description = """Fixed dictionary for datasets."""
+    properties = Item.properties + ["name", "queryStr"]
+    edges = Item.edges + ["plugin"]
+
+    def __init__(
+        self,
+        name: str = None,
+        queryStr: str = None,
+        plugin: EdgeList["Plugin"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.queryStr: Optional[str] = queryStr
+
+        # Edges
+        self.plugin: EdgeList["Plugin"] = plugin if plugin is not None else EdgeList()
 
 
 class Diet(Item):
@@ -366,10 +447,10 @@ class Diet(Item):
         textContent: str = None,
         title: str = None,
         transcript: str = None,
-        contentLocation: list = None,
-        file: list = None,
-        locationCreated: list = None,
-        writtenBy: list = None,
+        contentLocation: EdgeList["Location"] = None,
+        file: EdgeList["File"] = None,
+        locationCreated: EdgeList["Location"] = None,
+        writtenBy: EdgeList["Person"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -387,14 +468,16 @@ class Diet(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: list = (
-            contentLocation if contentLocation is not None else []
+        self.contentLocation: EdgeList["Location"] = (
+            contentLocation if contentLocation is not None else EdgeList()
         )
-        self.file: list = file if file is not None else []
-        self.locationCreated: list = (
-            locationCreated if locationCreated is not None else []
+        self.file: EdgeList["File"] = file if file is not None else EdgeList()
+        self.locationCreated: EdgeList["Location"] = (
+            locationCreated if locationCreated is not None else EdgeList()
         )
-        self.writtenBy: list = writtenBy if writtenBy is not None else []
+        self.writtenBy: EdgeList["Person"] = (
+            writtenBy if writtenBy is not None else EdgeList()
+        )
 
 
 class File(Item):
@@ -489,66 +572,73 @@ class Label(Item):
 
 class LabelAnnotation(Item):
     description = """"""
-    properties = Item.properties + ["allowSharing", "labels"]
-    edges = Item.edges + ["annotatedItem"]
+    properties = Item.properties + ["allowSharing", "isSubmitted"]
+    edges = Item.edges + []
 
-    def __init__(
-        self,
-        allowSharing: bool = None,
-        labels: str = None,
-        annotatedItem: list = None,
-        **kwargs
-    ):
+    def __init__(self, allowSharing: bool = None, isSubmitted: bool = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.allowSharing: Optional[bool] = allowSharing
-        self.labels: Optional[str] = labels
-
-        # Edges
-        self.annotatedItem: list = annotatedItem if annotatedItem is not None else []
+        self.isSubmitted: Optional[bool] = isSubmitted
 
 
-class LabelingDataType(Item):
+class LabelOption(Item):
+    description = """Attached to an Item, to mark it to be something."""
+    properties = Item.properties + ["color", "name"]
+    edges = Item.edges + []
+
+    def __init__(self, color: str = None, name: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.color: Optional[str] = color
+        self.name: Optional[str] = name
+
+
+class LabellingDataType(Item):
     description = """A labelling data type definition."""
-    properties = Item.properties + ["name", "icon"]
-    edges = Item.edges + ["dataset"]
+    properties = Item.properties + ["name", "labelType"]
+    edges = Item.edges + []
 
-    def __init__(
-        self, name: str = None, icon: str = None, dataset: list = None, **kwargs
-    ):
+    def __init__(self, name: str = None, labelType: str = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
-        self.icon: Optional[str] = icon
-
-        # Edges
-        self.dataset: list = dataset if dataset is not None else []
+        self.labelType: Optional[str] = labelType
 
 
-class LabelingTask(Item):
+class LabellingTask(Item):
     description = """A labelling task definition."""
-    properties = Item.properties + ["name"]
-    edges = Item.edges + ["labelOption", "dataset", "view"]
+    properties = Item.properties + ["name", "currentLabelOption"]
+    edges = Item.edges + ["taskType", "labelOption", "view"]
 
     def __init__(
         self,
         name: str = None,
-        labelOption: list = None,
-        dataset: list = None,
-        view: list = None,
+        currentLabelOption: str = None,
+        taskType: EdgeList["Any"] = None,
+        labelOption: EdgeList["LabelOption"] = None,
+        view: EdgeList["CVUStoredDefinition"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
+        self.currentLabelOption: Optional[str] = currentLabelOption
 
         # Edges
-        self.labelOption: list = labelOption if labelOption is not None else []
-        self.dataset: list = dataset if dataset is not None else []
-        self.view: list = view if view is not None else []
+        self.taskType: EdgeList["Any"] = (
+            taskType if taskType is not None else EdgeList()
+        )
+        self.labelOption: EdgeList["LabelOption"] = (
+            labelOption if labelOption is not None else EdgeList()
+        )
+        self.view: EdgeList["CVUStoredDefinition"] = (
+            view if view is not None else EdgeList()
+        )
 
 
 class Location(Item):
@@ -582,8 +672,8 @@ class MediaObject(Item):
         endTime: datetime = None,
         fileLocation: str = None,
         startTime: datetime = None,
-        file: list = None,
-        includes: list = None,
+        file: EdgeList["File"] = None,
+        includes: EdgeList["Person"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -596,8 +686,10 @@ class MediaObject(Item):
         self.startTime: Optional[datetime] = startTime
 
         # Edges
-        self.file: list = file if file is not None else []
-        self.includes: list = includes if includes is not None else []
+        self.file: EdgeList["File"] = file if file is not None else EdgeList()
+        self.includes: EdgeList["Person"] = (
+            includes if includes is not None else EdgeList()
+        )
 
 
 class MedicalCondition(Item):
@@ -631,8 +723,8 @@ class MessageChannel(Item):
         externalId: str = None,
         name: str = None,
         topic: str = None,
-        photo: list = None,
-        receiver: list = None,
+        photo: EdgeList["Photo"] = None,
+        receiver: EdgeList["Account"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -644,8 +736,10 @@ class MessageChannel(Item):
         self.topic: Optional[str] = topic
 
         # Edges
-        self.photo: list = photo if photo is not None else []
-        self.receiver: list = receiver if receiver is not None else []
+        self.photo: EdgeList["Photo"] = photo if photo is not None else EdgeList()
+        self.receiver: EdgeList["Account"] = (
+            receiver if receiver is not None else EdgeList()
+        )
 
 
 class NavigationItem(Item):
@@ -683,14 +777,16 @@ class Network(Item):
     properties = Item.properties + ["name"]
     edges = Item.edges + ["website"]
 
-    def __init__(self, name: str = None, website: list = None, **kwargs):
+    def __init__(self, name: str = None, website: EdgeList["Website"] = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
 
         # Edges
-        self.website: list = website if website is not None else []
+        self.website: EdgeList["Website"] = (
+            website if website is not None else EdgeList()
+        )
 
 
 class Person(Item):
@@ -738,20 +834,20 @@ class Person(Item):
         role: str = None,
         sexualOrientation: str = None,
         starred: bool = None,
-        account: list = None,
-        address: list = None,
-        birthPlace: list = None,
-        cryptoKey: list = None,
-        deathPlace: list = None,
-        diet: list = None,
-        hasPhoneNumber: list = None,
-        label: list = None,
-        me: list = None,
-        medicalCondition: list = None,
-        mergedFrom: list = None,
-        profilePicture: list = None,
-        relationship: list = None,
-        website: list = None,
+        account: EdgeList["Account"] = None,
+        address: EdgeList["Address"] = None,
+        birthPlace: EdgeList["Location"] = None,
+        cryptoKey: EdgeList["CryptoKey"] = None,
+        deathPlace: EdgeList["Location"] = None,
+        diet: EdgeList["Diet"] = None,
+        hasPhoneNumber: EdgeList["PhoneNumber"] = None,
+        label: EdgeList["Label"] = None,
+        me: EdgeList["Person"] = None,
+        medicalCondition: EdgeList["MedicalCondition"] = None,
+        mergedFrom: EdgeList["Any"] = None,
+        profilePicture: EdgeList["Photo"] = None,
+        relationship: EdgeList["Relationship"] = None,
+        website: EdgeList["Website"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -770,22 +866,42 @@ class Person(Item):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.account: list = account if account is not None else []
-        self.address: list = address if address is not None else []
-        self.birthPlace: list = birthPlace if birthPlace is not None else []
-        self.cryptoKey: list = cryptoKey if cryptoKey is not None else []
-        self.deathPlace: list = deathPlace if deathPlace is not None else []
-        self.diet: list = diet if diet is not None else []
-        self.hasPhoneNumber: list = hasPhoneNumber if hasPhoneNumber is not None else []
-        self.label: list = label if label is not None else []
-        self.me: list = me if me is not None else []
-        self.medicalCondition: list = (
-            medicalCondition if medicalCondition is not None else []
+        self.account: EdgeList["Account"] = (
+            account if account is not None else EdgeList()
         )
-        self.mergedFrom: list = mergedFrom if mergedFrom is not None else []
-        self.profilePicture: list = profilePicture if profilePicture is not None else []
-        self.relationship: list = relationship if relationship is not None else []
-        self.website: list = website if website is not None else []
+        self.address: EdgeList["Address"] = (
+            address if address is not None else EdgeList()
+        )
+        self.birthPlace: EdgeList["Location"] = (
+            birthPlace if birthPlace is not None else EdgeList()
+        )
+        self.cryptoKey: EdgeList["CryptoKey"] = (
+            cryptoKey if cryptoKey is not None else EdgeList()
+        )
+        self.deathPlace: EdgeList["Location"] = (
+            deathPlace if deathPlace is not None else EdgeList()
+        )
+        self.diet: EdgeList["Diet"] = diet if diet is not None else EdgeList()
+        self.hasPhoneNumber: EdgeList["PhoneNumber"] = (
+            hasPhoneNumber if hasPhoneNumber is not None else EdgeList()
+        )
+        self.label: EdgeList["Label"] = label if label is not None else EdgeList()
+        self.me: EdgeList["Person"] = me if me is not None else EdgeList()
+        self.medicalCondition: EdgeList["MedicalCondition"] = (
+            medicalCondition if medicalCondition is not None else EdgeList()
+        )
+        self.mergedFrom: EdgeList["Any"] = (
+            mergedFrom if mergedFrom is not None else EdgeList()
+        )
+        self.profilePicture: EdgeList["Photo"] = (
+            profilePicture if profilePicture is not None else EdgeList()
+        )
+        self.relationship: EdgeList["Relationship"] = (
+            relationship if relationship is not None else EdgeList()
+        )
+        self.website: EdgeList["Website"] = (
+            website if website is not None else EdgeList()
+        )
 
 
 class PhoneNumber(Item):
@@ -804,51 +920,62 @@ class Plugin(Item):
     description = """Information about a Plugin"""
     properties = Item.properties + [
         "bundleImage",
-        "container",
+        "containerImage",
+        "configJson",
+        "config",
         "dataType",
         "icon",
-        "itemDescription",
+        "pluginDescription",
         "name",
         "pluginModule",
         "pluginName",
         "pluginType",
+        "gitProjectId",
     ]
     edges = Item.edges + ["view"]
 
     def __init__(
         self,
         bundleImage: str = None,
-        container: str = None,
+        containerImage: str = None,
+        configJson: str = None,
+        config: str = None,
         dataType: str = None,
         icon: str = None,
-        itemDescription: str = None,
+        pluginDescription: str = None,
         name: str = None,
         pluginModule: str = None,
         pluginName: str = None,
         pluginType: str = None,
-        view: list = None,
+        gitProjectId: int = None,
+        view: EdgeList["CVUStoredDefinition"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Properties
         self.bundleImage: Optional[str] = bundleImage
-        self.container: Optional[str] = container
+        self.containerImage: Optional[str] = containerImage
+        self.configJson: Optional[str] = configJson
+        self.config: Optional[str] = config
         self.dataType: Optional[str] = dataType
         self.icon: Optional[str] = icon
-        self.itemDescription: Optional[str] = itemDescription
+        self.pluginDescription: Optional[str] = pluginDescription
         self.name: Optional[str] = name
         self.pluginModule: Optional[str] = pluginModule
         self.pluginName: Optional[str] = pluginName
         self.pluginType: Optional[str] = pluginType
+        self.gitProjectId: Optional[int] = gitProjectId
 
         # Edges
-        self.view: list = view if view is not None else []
+        self.view: EdgeList["CVUStoredDefinition"] = (
+            view if view is not None else EdgeList()
+        )
 
 
 class Post(Item):
     description = """Post from social media"""
-    properties = Item.properties + ["externalId", "message", "postDate", "type"]
+    properties = Item.properties + ["externalId", "message", "postDate", "postType"]
     edges = Item.edges + ["author", "comment", "parent", "photo"]
 
     def __init__(
@@ -856,11 +983,11 @@ class Post(Item):
         externalId: str = None,
         message: str = None,
         postDate: datetime = None,
-        type: str = None,
-        author: list = None,
-        comment: list = None,
-        parent: list = None,
-        photo: list = None,
+        postType: str = None,
+        author: EdgeList["Account"] = None,
+        comment: EdgeList["Post"] = None,
+        parent: EdgeList["Post"] = None,
+        photo: EdgeList["Photo"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -869,13 +996,41 @@ class Post(Item):
         self.externalId: Optional[str] = externalId
         self.message: Optional[str] = message
         self.postDate: Optional[datetime] = postDate
-        self.type: Optional[str] = type
+        self.postType: Optional[str] = postType
 
         # Edges
-        self.author: list = author if author is not None else []
-        self.comment: list = comment if comment is not None else []
-        self.parent: list = parent if parent is not None else []
-        self.photo: list = photo if photo is not None else []
+        self.author: EdgeList["Account"] = author if author is not None else EdgeList()
+        self.comment: EdgeList["Post"] = comment if comment is not None else EdgeList()
+        self.parent: EdgeList["Post"] = parent if parent is not None else EdgeList()
+        self.photo: EdgeList["Photo"] = photo if photo is not None else EdgeList()
+
+
+class Project(Item):
+    description = """Labelling project"""
+    properties = Item.properties + ["name", "gitlabUrl"]
+    edges = Item.edges + ["dataset", "labellingPlugin"]
+
+    def __init__(
+        self,
+        name: str = None,
+        gitlabUrl: str = None,
+        dataset: EdgeList["Dataset"] = None,
+        labellingPlugin: EdgeList["Plugin"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.gitlabUrl: Optional[str] = gitlabUrl
+
+        # Edges
+        self.dataset: EdgeList["Dataset"] = (
+            dataset if dataset is not None else EdgeList()
+        )
+        self.labellingPlugin: EdgeList["Plugin"] = (
+            labellingPlugin if labellingPlugin is not None else EdgeList()
+        )
 
 
 class Receipt(Item):
@@ -888,8 +1043,8 @@ class Receipt(Item):
         category: str = None,
         store: str = None,
         totalCost: float = None,
-        file: list = None,
-        photo: list = None,
+        file: EdgeList["File"] = None,
+        photo: EdgeList["Photo"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -900,8 +1055,8 @@ class Receipt(Item):
         self.totalCost: Optional[float] = totalCost
 
         # Edges
-        self.file: list = file if file is not None else []
-        self.photo: list = photo if photo is not None else []
+        self.file: EdgeList["File"] = file if file is not None else EdgeList()
+        self.photo: EdgeList["Photo"] = photo if photo is not None else EdgeList()
 
 
 class Relationship(Item):
@@ -912,7 +1067,11 @@ class Relationship(Item):
     edges = Item.edges + ["relationship"]
 
     def __init__(
-        self, label: str = None, value: int = None, relationship: list = None, **kwargs
+        self,
+        label: str = None,
+        value: int = None,
+        relationship: EdgeList["Person"] = None,
+        **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -921,7 +1080,9 @@ class Relationship(Item):
         self.value: Optional[int] = value
 
         # Edges
-        self.relationship: list = relationship if relationship is not None else []
+        self.relationship: EdgeList["Person"] = (
+            relationship if relationship is not None else EdgeList()
+        )
 
 
 class Setting(Item):
@@ -943,7 +1104,11 @@ class SuggestedMerge(Item):
     edges = Item.edges + ["mergeFrom"]
 
     def __init__(
-        self, score: float = None, task: str = None, mergeFrom: list = None, **kwargs
+        self,
+        score: float = None,
+        task: str = None,
+        mergeFrom: EdgeList["Any"] = None,
+        **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -952,7 +1117,9 @@ class SuggestedMerge(Item):
         self.task: Optional[str] = task
 
         # Edges
-        self.mergeFrom: list = mergeFrom if mergeFrom is not None else []
+        self.mergeFrom: EdgeList["Any"] = (
+            mergeFrom if mergeFrom is not None else EdgeList()
+        )
 
 
 class VoteAction(Item):
@@ -972,14 +1139,14 @@ class Wallet(Item):
     properties = Item.properties + ["name"]
     edges = Item.edges + ["picture"]
 
-    def __init__(self, name: str = None, picture: list = None, **kwargs):
+    def __init__(self, name: str = None, picture: EdgeList["Photo"] = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.name: Optional[str] = name
 
         # Edges
-        self.picture: list = picture if picture is not None else []
+        self.picture: EdgeList["Photo"] = picture if picture is not None else EdgeList()
 
 
 class Website(Item):
@@ -1011,7 +1178,7 @@ class Indexer(Integrator):
         "icon",
         "indexerClass",
         "itemDescription",
-        "querystr",
+        "queryStr",
         "runDestination",
     ]
     edges = Integrator.edges + ["indexerRun"]
@@ -1022,9 +1189,9 @@ class Indexer(Integrator):
         icon: str = None,
         indexerClass: str = None,
         itemDescription: str = None,
-        querystr: str = None,
+        queryStr: str = None,
         runDestination: str = None,
-        indexerRun: list = None,
+        indexerRun: EdgeList["IndexerRun"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1034,11 +1201,13 @@ class Indexer(Integrator):
         self.icon: Optional[str] = icon
         self.indexerClass: Optional[str] = indexerClass
         self.itemDescription: Optional[str] = itemDescription
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
         self.runDestination: Optional[str] = runDestination
 
         # Edges
-        self.indexerRun: list = indexerRun if indexerRun is not None else []
+        self.indexerRun: EdgeList["IndexerRun"] = (
+            indexerRun if indexerRun is not None else EdgeList()
+        )
 
 
 class IndexerRun(Integrator):
@@ -1047,7 +1216,7 @@ class IndexerRun(Integrator):
         "errorMessage",
         "progress",
         "progressMessage",
-        "querystr",
+        "queryStr",
         "runStatus",
         "targetDataType",
     ]
@@ -1058,10 +1227,10 @@ class IndexerRun(Integrator):
         errorMessage: str = None,
         progress: float = None,
         progressMessage: str = None,
-        querystr: str = None,
+        queryStr: str = None,
         runStatus: str = None,
         targetDataType: str = None,
-        indexer: list = None,
+        indexer: EdgeList["Indexer"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1070,12 +1239,35 @@ class IndexerRun(Integrator):
         self.errorMessage: Optional[str] = errorMessage
         self.progress: Optional[float] = progress
         self.progressMessage: Optional[str] = progressMessage
-        self.querystr: Optional[str] = querystr
+        self.queryStr: Optional[str] = queryStr
         self.runStatus: Optional[str] = runStatus
         self.targetDataType: Optional[str] = targetDataType
 
         # Edges
-        self.indexer: list = indexer if indexer is not None else []
+        self.indexer: EdgeList["Indexer"] = (
+            indexer if indexer is not None else EdgeList()
+        )
+
+
+class CategoricalLabel(LabelAnnotation):
+    description = """"""
+    properties = LabelAnnotation.properties + ["labelValue"]
+    edges = LabelAnnotation.edges + []
+
+    def __init__(self, labelValue: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.labelValue: Optional[str] = labelValue
+
+
+class TextClassification(LabellingDataType):
+    description = """Text classification option"""
+    properties = LabellingDataType.properties + []
+    edges = LabellingDataType.edges + []
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 
 class Address(Location):
@@ -1098,9 +1290,9 @@ class Address(Location):
         postalCode: str = None,
         state: str = None,
         street: str = None,
-        changelog: list = None,
-        country: list = None,
-        location: list = None,
+        changelog: EdgeList["AuditItem"] = None,
+        country: EdgeList["Country"] = None,
+        location: EdgeList["Location"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1114,9 +1306,15 @@ class Address(Location):
         self.street: Optional[str] = street
 
         # Edges
-        self.changelog: list = changelog if changelog is not None else []
-        self.country: list = country if country is not None else []
-        self.location: list = location if location is not None else []
+        self.changelog: EdgeList["AuditItem"] = (
+            changelog if changelog is not None else EdgeList()
+        )
+        self.country: EdgeList["Country"] = (
+            country if country is not None else EdgeList()
+        )
+        self.location: EdgeList["Location"] = (
+            location if location is not None else EdgeList()
+        )
 
 
 class Country(Location):
@@ -1125,7 +1323,11 @@ class Country(Location):
     edges = Location.edges + ["flag", "location"]
 
     def __init__(
-        self, name: str = None, flag: list = None, location: list = None, **kwargs
+        self,
+        name: str = None,
+        flag: EdgeList["Photo"] = None,
+        location: EdgeList["Location"] = None,
+        **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -1133,8 +1335,10 @@ class Country(Location):
         self.name: Optional[str] = name
 
         # Edges
-        self.flag: list = flag if flag is not None else []
-        self.location: list = location if location is not None else []
+        self.flag: EdgeList["Photo"] = flag if flag is not None else EdgeList()
+        self.location: EdgeList["Location"] = (
+            location if location is not None else EdgeList()
+        )
 
 
 class Photo(MediaObject):
@@ -1147,9 +1351,9 @@ class Photo(MediaObject):
         caption: str = None,
         exifData: str = None,
         name: str = None,
-        changelog: list = None,
-        label: list = None,
-        thumbnail: list = None,
+        changelog: EdgeList["AuditItem"] = None,
+        label: EdgeList["Label"] = None,
+        thumbnail: EdgeList["File"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1160,9 +1364,13 @@ class Photo(MediaObject):
         self.name: Optional[str] = name
 
         # Edges
-        self.changelog: list = changelog if changelog is not None else []
-        self.label: list = label if label is not None else []
-        self.thumbnail: list = thumbnail if thumbnail is not None else []
+        self.changelog: EdgeList["AuditItem"] = (
+            changelog if changelog is not None else EdgeList()
+        )
+        self.label: EdgeList["Label"] = label if label is not None else EdgeList()
+        self.thumbnail: EdgeList["File"] = (
+            thumbnail if thumbnail is not None else EdgeList()
+        )
 
 
 class Message(WrittenWork):
@@ -1189,11 +1397,11 @@ class Message(WrittenWork):
         externalId: str = None,
         service: str = None,
         subject: str = None,
-        message: list = None,
-        messageChannel: list = None,
-        photo: list = None,
-        receiver: list = None,
-        sender: list = None,
+        message: EdgeList["Message"] = None,
+        messageChannel: EdgeList["MessageChannel"] = None,
+        photo: EdgeList["Photo"] = None,
+        receiver: EdgeList["Account"] = None,
+        sender: EdgeList["Account"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1206,11 +1414,17 @@ class Message(WrittenWork):
         self.subject: Optional[str] = subject
 
         # Edges
-        self.message: list = message if message is not None else []
-        self.messageChannel: list = messageChannel if messageChannel is not None else []
-        self.photo: list = photo if photo is not None else []
-        self.receiver: list = receiver if receiver is not None else []
-        self.sender: list = sender if sender is not None else []
+        self.message: EdgeList["Message"] = (
+            message if message is not None else EdgeList()
+        )
+        self.messageChannel: EdgeList["MessageChannel"] = (
+            messageChannel if messageChannel is not None else EdgeList()
+        )
+        self.photo: EdgeList["Photo"] = photo if photo is not None else EdgeList()
+        self.receiver: EdgeList["Account"] = (
+            receiver if receiver is not None else EdgeList()
+        )
+        self.sender: EdgeList["Account"] = sender if sender is not None else EdgeList()
 
 
 class Note(WrittenWork):
@@ -1218,14 +1432,14 @@ class Note(WrittenWork):
     properties = WrittenWork.properties + ["starred"]
     edges = WrittenWork.edges + ["label"]
 
-    def __init__(self, starred: bool = None, label: list = None, **kwargs):
+    def __init__(self, starred: bool = None, label: EdgeList["Label"] = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.label: list = label if label is not None else []
+        self.label: EdgeList["Label"] = label if label is not None else EdgeList()
 
 
 class EmailMessage(Message):
@@ -1236,10 +1450,10 @@ class EmailMessage(Message):
     def __init__(
         self,
         starred: bool = None,
-        bcc: list = None,
-        cc: list = None,
-        message: list = None,
-        replyTo: list = None,
+        bcc: EdgeList["Account"] = None,
+        cc: EdgeList["Account"] = None,
+        message: EdgeList["EmailMessage"] = None,
+        replyTo: EdgeList["Account"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1248,7 +1462,11 @@ class EmailMessage(Message):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.bcc: list = bcc if bcc is not None else []
-        self.cc: list = cc if cc is not None else []
-        self.message: list = message if message is not None else []
-        self.replyTo: list = replyTo if replyTo is not None else []
+        self.bcc: EdgeList["Account"] = bcc if bcc is not None else EdgeList()
+        self.cc: EdgeList["Account"] = cc if cc is not None else EdgeList()
+        self.message: EdgeList["EmailMessage"] = (
+            message if message is not None else EdgeList()
+        )
+        self.replyTo: EdgeList["Account"] = (
+            replyTo if replyTo is not None else EdgeList()
+        )

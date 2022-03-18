@@ -32,7 +32,7 @@ def get_remote_url(path="."):
     path = Path(path)
     url = subprocess.getoutput([f"cd {path} && git config --get remote.origin.url"])
     if not url:
-        raise ValueError(f"'{path}' is not an initialized git repository")
+        raise ValueError(f"You can only run this from a initialized gitlab repository, and '{path}' is not an initialized git repository")
     parsed = giturlparse.parse(url)
     repo_url = parsed.url2https
     if repo_url.endswith(".git"):
@@ -75,6 +75,7 @@ def get_templates(url: str = TEMPLATE_URL) -> List[str]:
     return result
 
 # Cell
+# hide
 class TemplateFormatter:
     def __init__(
         self,
@@ -104,9 +105,31 @@ class TemplateFormatter:
         with open(new_path, "w", encoding="utf-8") as f:
             f.write(new_content)
 
+    def get_files(self):
+        return [self.format_path(filename) for filename in self.template_dict.keys()]
+
     def format(self):
         for filename, content in self.template_dict.items():
             self.format_file(filename, content)
+
+    def print_filetree(self):
+        previous_prefix = None
+        res = "Created the following files"
+
+        for path in sorted([x.relative_to(self.tgt_path) for x in self.get_files()],
+                           key=lambda item: 100 * str(item).count("/")):
+            n_slashes = str(path).count("/")
+            new_prefix = path.parent
+            if previous_prefix != new_prefix and str(new_prefix) != ".":
+                res = f"{res}\n├── {new_prefix}"
+            if n_slashes == 0:
+                res = f"{res}\n├── {path}"
+            elif n_slashes == 1:
+                res = f"{res}\n│   ├── {path.name}"
+
+            previous_prefix=new_prefix
+
+        print(res.strip() + "\n")
 
 # Cell
 # hide
@@ -167,6 +190,20 @@ def plugin_from_template(
     description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
 ):
+    """
+    CLI that downloads and formats a plugin template according to the arguments, and local git repository.
+
+    Args:
+        list_templates (Param, optional): If True, only list available templates. Defaults to False.
+        user (Param, optional): Your GitLab username. Defaults to None.
+        repo_url (Param, optional): The url of your gitlab plugin repository. Defaults to None.
+        plugin_name (Param, optional): The name of your plugin. Defaults to None.
+        template_name (Param, optional): The name of the template used. To list all options, see `list_templates`.
+            Defaults to "basic".
+        package_name (Param, optional): The name of the python package of your plugin. Inferred if left blank. Defaults to None.
+        description (Param, optional): An optional plugin description. Defaults to None.
+        target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".
+    """
     if list_templates:
         print("Available templates:")
         for template in get_templates():
@@ -186,5 +223,7 @@ def plugin_from_template(
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
     formatter.format()
+    formatter.print_filetree()
+
 
     print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")

@@ -4,43 +4,43 @@ __all__ = ['filter_rows', 'Dataset']
 
 # Cell
 # hide
-from typing import List, Union
+from typing import List, Union, Any
 from pathlib import Path
-from .itembase import Item
+from .itembase import Item, EdgeList
 from ..exporters.exporters import Query
+from . import _central_schema
 
 # Cell
+# hide
 def filter_rows(dataset: dict, filter_val=None) -> dict:
     missing_idx = set()
     for column in dataset.values():
         missing_idx.update([i for i, val in enumerate(column) if val == filter_val])
     return {
-        k: [item for i, item in enumerate(v) if i not in missing_idx] for k, v in dataset.items()
+        k: [item for i, item in enumerate(v) if i not in missing_idx]
+        for k, v in dataset.items()
     }
 
 # Cell
-class Dataset(Item):
+class Dataset(_central_schema.Dataset):
     """
-    Temporary dataset schema, needs update when MVP2 is done.
+    The main Dataset class
     """
-    properties= Item.properties + ["name", "queryStr"]
-    edges = Item.edges + ["item"]
+    requires_client_ref = True
 
-    def __init__(self, name: str = None, queryStr: str = None, item: list = None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.queryStr = queryStr
-        self.name = name
-        self.item: list = item if item is not None else []
+        self._client = None
 
     def _get_items(self):
         if self._client is None:
             raise ValueError("Dataset does not have associated PodClient.")
-        if not len(self.item):
+        if not len(self.entry):
             edges = self._client.get_edges(self.id)
             for e in self._client.get_edges(self.id):
                 self.add_edge(e["name"], e["item"])
 
-        return self.item
+        return self.entry
 
     def _get_data(self, dtype: str, columns: List[str], filter_missing: bool = True):
         if self._client is None:
@@ -54,8 +54,31 @@ class Dataset(Item):
         return query.convert_dtype(result, dtype)
 
     def to(self, dtype: str, columns: List[str], filter_missing: bool = True):
+        """
+        Converts Dataset to a different format.
+
+        Available formats:
+        list: a 2-dimensional list, containing one dataset entry per row
+        dict: a list of dicts, where each dict contains {column: value} for each column
+        pd: a Pandas dataframe
+
+
+        Args:
+            dtype (str): Datatype of the returned dataset
+            columns (List[str]): Column names of the dataset
+            filter_missing (bool, optional): If true, all rows that contain `None` values are omitted.
+                Defaults to True.
+
+        Returns:
+            Any: Dataset formatted according to `dtype`
+        """
         return self._get_data(dtype, columns, filter_missing)
 
-    def save(self, path: Union[Path, str], columns: List[str], filter_missing: bool = True):
+    def save(
+        self, path: Union[Path, str], columns: List[str], filter_missing: bool = True
+    ):
+        """
+        Save dataset to CSV.
+        """
         result = self._get_data("pandas", columns, filter_missing)
         result.to_csv(path, index=False)

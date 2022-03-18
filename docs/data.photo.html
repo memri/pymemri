@@ -47,13 +47,6 @@ nb_path: "nbs/data.photo.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
 <div class="output_wrapper">
 <div class="output">
 
@@ -61,79 +54,7 @@ nb_path: "nbs/data.photo.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="show_images" class="doc_header"><code>show_images</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/photo.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_images</code>(<strong><code>images</code></strong>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>titles</code></strong>=<em><code>None</code></em>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_size" class="doc_header"><code>get_size</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/basic.py#L43" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_size</code>(<strong><code>img</code></strong>, <strong><code>maxsize</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="resize" class="doc_header"><code>resize</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/basic.py#L39" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>resize</code>(<strong><code>img</code></strong>, <strong><code>maxsize</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_height_width_channels" class="doc_header"><code>get_height_width_channels</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/photo.py#L55" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_height_width_channels</code>(<strong><code>img</code></strong>)</p>
+<h4 id="show_images" class="doc_header"><code>show_images</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/photo.py#L26" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>show_images</code>(<strong><code>images</code></strong>, <strong><code>cols</code></strong>=<em><code>3</code></em>, <strong><code>titles</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 
 </div>
@@ -164,9 +85,10 @@ nb_path: "nbs/data.photo.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Photo" class="doc_header"><code>class</code> <code>Photo</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/central_schema.py#L1060" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Photo</code>(<strong><code>caption</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>exifData</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>changelog</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>label</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong><code>thumbnail</code></strong>:<code>list</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <code>MediaObject</code></p>
+<h2 id="Photo" class="doc_header"><code>class</code> <code>Photo</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/data/photo.py#L43" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Photo</code>(<strong><code>data</code></strong>:<code>Any</code>=<em><code>None</code></em>, <strong><code>includes</code></strong>:<code>Any</code>=<em><code>None</code></em>, <strong><code>thumbnail</code></strong>:<code>Any</code>=<em><code>None</code></em>, <strong><code>height</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>width</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>channels</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>encoding</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>mode</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>file</code></strong>:<code>EdgeList'&gt;</code>[<code>File</code>]=<em><code>None</code></em>, <strong><code>_file_created</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
-<p>Item is the baseclass for all of the data classes.</p>
+
+<pre><code>Item is the baseclass for all of the data classes.</code></pre>
 
 </div>
 
@@ -192,74 +114,73 @@ nb_path: "nbs/data.photo.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># class IPhoto(Photo):</span>
-<span class="c1">#     properties = Item.properties + [</span>
-<span class="c1">#         &quot;service&quot;,</span>
-<span class="c1">#         &quot;identifier&quot;,</span>
-<span class="c1">#         &quot;secret&quot;,</span>
-<span class="c1">#         &quot;code&quot;,</span>
-<span class="c1">#         &quot;handle&quot;,</span>
-<span class="c1">#         &quot;refreshToken&quot;,</span>
-<span class="c1">#         &quot;errorMessage&quot;,</span>
-<span class="c1">#         &quot;accessToken&quot;,</span>
-<span class="c1">#         &quot;displayName&quot;</span>
-<span class="c1">#     ]</span>
-<span class="c1">#     edges = Item.edges + [&#39;belongsTo&#39;, &#39;contact&#39;]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">photo_path</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="s2">&quot;images/labrador.jpg&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">photo_path</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="s2">&quot;JPEG&quot;</span>
+<span class="k">assert</span> <span class="n">photo_path</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;RGB&quot;</span>
+</pre></div>
 
-<span class="c1">#     def __init__(self, data=None, embedding=None,path=None, encoding=None, *args, **kwargs):</span>
-<span class="c1">#         self.private = [&quot;data&quot;, &quot;embedding&quot;, &quot;path&quot;]</span>
-<span class="c1">#         super().__init__(*args, **kwargs)</span>
-<span class="c1">#         self.data=data</span>
-<span class="c1">#         self.embedding=embedding</span>
-<span class="c1">#         self.path=path</span>
-<span class="c1">#         self.encoding=encoding</span>
+    </div>
+</div>
+</div>
 
-<span class="c1">#     def draw_boxes(self, boxes):</span>
-<span class="c1">#         print(f&quot;Plotting {len(boxes)} face boundingboxes&quot;)</span>
-<span class="c1">#         fig,ax = plt.subplots(1)</span>
-<span class="c1">#         fig.set_figheight(15)</span>
-<span class="c1">#         fig.set_figwidth(15)</span>
-<span class="c1">#         ax.axis(&#39;off&#39;)</span>
+</div>
+    {% endraw %}
 
-<span class="c1">#         # Display the image</span>
-<span class="c1">#         ax.imshow(self.data[:,:,::-1])</span>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-<span class="c1">#         ps = []</span>
-<span class="c1">#         # Create a Rectangle patch</span>
-<span class="c1">#         for b in boxes:</span>
-<span class="c1">#             rect = self.box_to_rect(b)</span>
-<span class="c1">#             ax.add_patch(rect)</span>
-<span class="c1">#             ps.append(rect)</span>
-<span class="c1">#         fig.set_size_inches((6,6))</span>
-<span class="c1">#         plt.show()</span>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;images/labrador.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    
+<span class="n">photo_bytes</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">photo_bytes</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="s2">&quot;JPEG&quot;</span>
+<span class="k">assert</span> <span class="n">photo_bytes</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;RGB&quot;</span>
+</pre></div>
 
-<span class="c1">#     def get_crop(self, box, landmark=None):</span>
-<span class="c1">#         b = [max(0, int(x)) for x in box]</span>
-<span class="c1">#         if landmark is not None:</span>
-<span class="c1">#             return face_align.norm_crop(self.data, landmark=landmark)</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             return self.data[b[1]:b[3], b[0]:b[2], :]</span>
+    </div>
+</div>
+</div>
 
-<span class="c1">#     def get_crops(self, boxes, landmarks=None):</span>
-<span class="c1">#         crops = []</span>
-<span class="c1">#         if landmarks is None:</span>
-<span class="c1">#             print(&quot;you are getting unnormalized crops, which are lower quality for recognition&quot;)</span>
-<span class="c1">#         for i, b in enumerate(boxes):</span>
-<span class="c1">#             crop = self.get_crop(b, landmarks[i] if landmarks is not None else None)</span>
-<span class="c1">#             crops.append(crop)</span>
-<span class="c1">#         return crops</span>
+</div>
+    {% endraw %}
 
-<span class="c1">#     def plot_crops(self, boxes, landmarks=None):</span>
-<span class="c1">#         crops = self.get_crops(boxes, landmarks)</span>
-<span class="c1">#         show_images(crops, cols=3)</span>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-<span class="c1">#     @staticmethod</span>
-<span class="c1">#     def box_to_rect(box):</span>
-<span class="c1">#         x = box[0]</span>
-<span class="c1">#         y = box[1]</span>
-<span class="c1">#         w = box[2]-box[0]</span>
-<span class="c1">#         h = box[3]-box[1]</span>
-<span class="c1">#         return patches.Rectangle((x,y),w,h, linewidth=2,edgecolor=&#39;r&#39;,facecolor=&#39;none&#39;)</span>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;images/labrador.jpg&quot;</span><span class="p">))</span>
+<span class="n">photo_np</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">from_np</span><span class="p">(</span><span class="n">np_image</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">photo_np</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="n">DEFAULT_ENCODING</span>
+<span class="k">assert</span> <span class="n">photo_np</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;RGB&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grayscale_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">])</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+<span class="n">photo</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">from_np</span><span class="p">(</span><span class="n">grayscale_img</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">photo</span><span class="o">.</span><span class="n">channels</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">photo</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span>
 </pre></div>
 
     </div>

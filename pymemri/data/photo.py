@@ -3,10 +3,8 @@
 __all__ = ['DEFAULT_ENCODING', 'show_images', 'Photo']
 
 # Cell
-from .schema import Item
-
-# Cell
-from .schema import *
+from .itembase import Item, EdgeList
+from ._central_schema import File
 from .basic import *
 from matplotlib.pyplot import imshow
 from matplotlib import patches
@@ -49,20 +47,20 @@ class Photo(Item):
 
     def __init__(
         self,
-        data: Any=None,
-        includes: Any=None,  # TODO
-        thumbnail: Any=None, # TODO
-        height: int=None,
-        width: int=None,
-        channels: int=None,
-        encoding: str=None,
-        mode: str=None,
-        file: list=None,
-        _file_created: bool=False,
+        data: Any = None,
+        includes: Any = None,  # TODO
+        thumbnail: Any = None,  # TODO
+        height: int = None,
+        width: int = None,
+        channels: int = None,
+        encoding: str = None,
+        mode: str = None,
+        file: EdgeList[File] = None,
+        _file_created: bool = False,
         **kwargs
     ):
         super().__init__(**kwargs)
-        self.private = ["data", "embedding", "path"] #TODO
+        self.private = ["data", "embedding", "path"]  # TODO
         self.height = height
         self.width = width
         self.channels = channels
@@ -99,7 +97,9 @@ class Photo(Item):
         w, h, c = shape
         _bytes = cls.PIL_to_bytes(pil_image, encoding)
 
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
+        res = cls(
+            data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode
+        )
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
@@ -113,7 +113,9 @@ class Photo(Item):
         w, h, c = shape
         _bytes = cls.PIL_to_bytes(pil_image, encoding)
 
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
+        res = cls(
+            data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode
+        )
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
@@ -125,7 +127,9 @@ class Photo(Item):
         encoding, mode, shape = cls.infer_PIL_metadata(pil_image)
         w, h, c = shape
 
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
+        res = cls(
+            data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode
+        )
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res

@@ -1,6 +1,6 @@
 ---
 
-title: Template Configuration formatter
+title: Plugin Configuration
 
 
 keywords: fastai
@@ -36,37 +36,17 @@ nb_path: "nbs/template.config.ipynb"
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Often, plugins require some configuration before running. For example you might want to run plugin on data from a specific service, or run a specific version of your machine learning model. To configure your plugin when running it from the front-end, plugins require a <code>config.json</code> in the root of the plugin repository. This file contains a declarative definition, which our front-end app uses to display a configuration screen.</p>
+<p>This module contains utilities to directly generate this config file from the plugin definition, by inferring all arguments from the plugin <code>__init__</code> method. All configuration fields are textboxes by default, which can be changed to different types in the future. For a full example, see our guide on <a href="https://memri.docs.memri.io/docs.memri.io/guides/build_and_deploy_your_model/">building plugins</a>.</p>
+<p>Usage:</p>
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_params" class="doc_header"><code>get_params</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L22" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_params</code>()</p>
-</blockquote>
-
-</div>
-
-</div>
+<pre><code>create_plugin_config</code></pre>
 
 </div>
 </div>
-
 </div>
-    {% endraw %}
-
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -78,56 +58,19 @@ nb_path: "nbs/template.config.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="identifier_to_displayname" class="doc_header"><code>identifier_to_displayname</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L26" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>identifier_to_displayname</code>(<strong><code>identifier</code></strong>:<code>str</code>)</p>
+<h4 id="create_config" class="doc_header"><code>create_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L41" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_config</code>(<strong><code>plugin_cls</code></strong>:<code>type</code>)</p>
 </blockquote>
 
-</div>
+<pre><code>Returns a declarative plugin configuration, inferred from the `__init__` method signature of `plugin_cls`.
+This function is used internally by the `create_plugin_config` CLI. For general use, use the CLI instead.
 
-</div>
+Arguments that start with `_`, untyped arguments or arguments that are not in `ALLOWED_TYPES` are skipped.
 
-</div>
-</div>
+Args:
+    plugin_cls (type): A plugin class, inherited from PluginBase.
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_param_config" class="doc_header"><code>get_param_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_param_config</code>(<strong><code>name</code></strong>, <strong><code>dtype</code></strong>, <strong><code>is_optional</code></strong>, <strong><code>default</code></strong>)</p>
-</blockquote>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="create_config" class="doc_header"><code>create_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L39" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_config</code>(<strong><code>plugin_cls</code></strong>:<code>type</code>)</p>
-</blockquote>
+Returns:
+    List[dict]: A declarative configuration definition as list of dictionaries.</code></pre>
 
 </div>
 
@@ -157,8 +100,20 @@ nb_path: "nbs/template.config.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="create_plugin_config" class="doc_header"><code>create_plugin_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L58" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_plugin_config</code>(<strong><code>metadata</code></strong>:"metadata.json of the plugin"=<em><code>None</code></em>, <strong><code>tgt_file</code></strong>:"Filename of config file"=<em><code>'config.json'</code></em>)</p>
+<h4 id="create_plugin_config" class="doc_header"><code>create_plugin_config</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/template/config.py#L72" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>create_plugin_config</code>(<strong><code>metadata</code></strong>:"metadata.json of the plugin"=<em><code>'./metadata.json'</code></em>, <strong><code>tgt_file</code></strong>:"Filename of config file"=<em><code>'config.json'</code></em>, <strong><code>schema_file</code></strong>:"Filename of exported plugin schema"=<em><code>'schema.json'</code></em>)</p>
 </blockquote>
+
+<pre><code>Creates a plugin configuration definition from the arguments of your plugin class.
+
+Configuration arguments are inferred from the arguments of your plugin `__init__` method.
+Arguments that start with `_`, untyped arguments or arguments that are not in `ALLOWED_TYPES` are skipped.
+All generated fields are "textbox" by default, in the future our front-end will support more
+types of fields.
+Args:
+    metadata (Param, optional): Location of the "metadata.json" file,
+        Defaults to "./metadata.json"
+    tgt_file (Param, optional): File the config definition is saved to.
+        Defaults to "config.json".</code></pre>
 
 </div>
 
@@ -177,6 +132,13 @@ nb_path: "nbs/template.config.ipynb"
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Example">Example<a class="anchor-link" href="#Example"> </a></h3><p>As example, we create a test plugin with various configuration arguments. The <a href="/pymemri/template.config.html#create_config"><code>create_config</code></a> method is called on the plugin, and generates a declarative configuration field for each plugin argument. Note that arguments that start with a <code>_</code>, and untyped arguments are skipped in the annotation.</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -185,12 +147,21 @@ nb_path: "nbs/template.config.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">MyPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">my_arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">my_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">my_int</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">my_float</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unannotated</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_private</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">my_arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">my_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">my_int</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">my_float</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">unannotated</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">_private</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    
+
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
-    
+
     <span class="k">def</span> <span class="nf">add_to_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 </pre></div>
@@ -210,7 +181,8 @@ nb_path: "nbs/template.config.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">create_config</span><span class="p">(</span><span class="n">MyPlugin</span><span class="p">)</span>
-<span class="n">pprint</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;display&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;data_type&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span> 
 </pre></div>
 
     </div>
@@ -224,30 +196,10 @@ nb_path: "nbs/template.config.ipynb"
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Skipping unannotated parameter `unannotated`
-[{&#39;data_type&#39;: &#39;Text&#39;,
-  &#39;default&#39;: None,
-  &#39;display&#39;: &#39;My Arg&#39;,
-  &#39;name&#39;: &#39;my_arg&#39;,
-  &#39;optional&#39;: False,
-  &#39;type&#39;: &#39;textbox&#39;},
- {&#39;data_type&#39;: &#39;Text&#39;,
-  &#39;default&#39;: None,
-  &#39;display&#39;: &#39;My Str&#39;,
-  &#39;name&#39;: &#39;my_str&#39;,
-  &#39;optional&#39;: True,
-  &#39;type&#39;: &#39;textbox&#39;},
- {&#39;data_type&#39;: &#39;Integer&#39;,
-  &#39;default&#39;: None,
-  &#39;display&#39;: &#39;My Int&#39;,
-  &#39;name&#39;: &#39;my_int&#39;,
-  &#39;optional&#39;: True,
-  &#39;type&#39;: &#39;textbox&#39;},
- {&#39;data_type&#39;: &#39;Real&#39;,
-  &#39;default&#39;: None,
-  &#39;display&#39;: &#39;My Float&#39;,
-  &#39;name&#39;: &#39;my_float&#39;,
-  &#39;optional&#39;: True,
-  &#39;type&#39;: &#39;textbox&#39;}]
+My Arg (Text)
+My Str (Text)
+My Int (Integer)
+My Float (Real)
 </pre>
 </div>
 </div>

@@ -47,7 +47,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L24" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v4'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>, <strong><code>register_base_schema</code></strong>=<em><code>True</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>)</p>
+<h2 id="PodClient" class="doc_header"><code>class</code> <code>PodClient</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L26" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>PodClient</code>(<strong><code>url</code></strong>=<em><code>'http://localhost:3030'</code></em>, <strong><code>version</code></strong>=<em><code>'v4'</code></em>, <strong><code>database_key</code></strong>=<em><code>None</code></em>, <strong><code>owner_key</code></strong>=<em><code>None</code></em>, <strong><code>auth_json</code></strong>=<em><code>None</code></em>, <strong><code>register_base_schema</code></strong>=<em><code>True</code></em>, <strong><code>verbose</code></strong>=<em><code>False</code></em>, <strong><code>default_priority</code></strong>=<em><code>&lt;Priority.local: 'local'&gt;</code></em>)</p>
 </blockquote>
 
 </div>
@@ -83,9 +83,26 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">PodClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">registered_classes</span><span class="p">[</span><span class="s2">&quot;Photo&quot;</span><span class="p">]</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pymemri.data.photo.Photo</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -152,7 +169,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>bda24d7b1d611716b2036349b65ebc74
+<pre>29c0b7a3f8754d02a7d0e641523c25bb
 </pre>
 </div>
 </div>
@@ -182,9 +199,10 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L511" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>age</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>bites</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>weight</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L653" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>age</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>bites</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>weight</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
-<p>Item is the baseclass for all of the data classes.</p>
+
+<pre><code>Item is the baseclass for all of the data classes.</code></pre>
 
 </div>
 
@@ -254,6 +272,73 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">local_db</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">email_item</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">local_db</span><span class="o">.</span><span class="n">nodes</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;29c0b7a3f8754d02a7d0e641523c25bb&#39;: EmailMessage (#29c0b7a3f8754d02a7d0e641523c25bb),
+ &#39;93d7acb23bdc4902bd8e4c44d49a3953&#39;: Dog (#93d7acb23bdc4902bd8e4c44d49a3953)}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">lastName</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
 <span class="n">item_succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">person_item</span><span class="p">)</span>
 <span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">email_item</span><span class="p">,</span> <span class="n">person_item</span><span class="p">,</span> <span class="s2">&quot;sender&quot;</span><span class="p">)</span>
@@ -272,7 +357,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[{&#39;item&#39;: Person (#c95c1c89663c06971de7560462e7ce3d), &#39;name&#39;: &#39;sender&#39;}]
+<pre>[{&#39;item&#39;: Person (#5594a26fa6494f68a939eb610e34e7fe), &#39;name&#39;: &#39;sender&#39;}]
 </pre>
 </div>
 </div>
@@ -311,7 +396,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[Person (#c95c1c89663c06971de7560462e7ce3d)]
+<pre>[Person (#5594a26fa6494f68a939eb610e34e7fe)]
 </pre>
 </div>
 </div>
@@ -353,6 +438,68 @@ nb_path: "nbs/pod.client.ipynb"
 
 <span class="c1"># Retrieve person from Pod</span>
 <span class="n">person_from_db</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">person_item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item</span><span class="o">.</span><span class="n">to_json</span><span class="p">(),</span> <span class="n">person_item</span><span class="o">.</span><span class="n">_in_pod</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>({&#39;id&#39;: &#39;1bdefab867c74f22ad156eebac482c1c&#39;,
+  &#39;dateCreated&#39;: 1644321461975,
+  &#39;dateModified&#39;: 1644321461975,
+  &#39;dateServerModified&#39;: 1644321461975,
+  &#39;deleted&#39;: False,
+  &#39;firstName&#39;: &#39;Alice&#39;,
+  &#39;type&#39;: &#39;Person&#39;},
+ True)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">person_item</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">person_from_db</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">v</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">person_from_db</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -405,11 +552,174 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>When we don't know the ids of the items we want to fetch, we can also search by property. We can use this for instance when we want to query all items from a particular type to perform some indexing on. We can get all <code>Person</code> Items from the db by:</p>
+<h2 id="Sync">Sync<a class="anchor-link" href="#Sync"> </a></h2><p>the <a href="/pymemri/pod.client.html#PodClient"><code>PodClient</code></a> can automatically sync your local items with the Pod with the <a href="/pymemri/pod.client.html#PodClient.sync"><code>PodClient.sync</code></a> method. This method has a <code>priority</code> argument to resolve sync conflicts. The available strategies are:</p>
+<ul>
+<li><code>"local"</code>: Use the local value if a sync conflict is detected</li>
+<li><code>"remote"</code>: Use the remote value if a sync conflict is detected</li>
+<li><code>"newest"</code>: Use the last updated value if a sync conflict is detected. Warning: the pod only stores when a full item is updated. This strategy could lead to unexpected behaviour in cases where sync conflicts happen with a high frequency.</li>
+<li><code>"error"</code>: Throw a <code>ValueError</code> when a sync conflict is detected.</li>
+</ul>
+<p>You can simply add new items to the sync with:</p>
 
 </div>
 </div>
 </div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">account</span> <span class="o">=</span> <span class="n">Account</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span><span class="p">)</span>
+<span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
+<span class="n">account</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="n">person</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Person (#e340f889884b4e4c91bc6711b38d9652)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>sync</code> also synchronizes edges if both the source and target item are stored for syncing:</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">account</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="n">person</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>BULK: Writing 9/9 items/edges
+Completed Bulk action, written 9 items/edges
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">reset_local_db</span><span class="p">()</span>
+<span class="n">account</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">account</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">account</span><span class="o">.</span><span class="n">owner</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">person</span><span class="o">.</span><span class="n">id</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_items</span> <span class="o">=</span> <span class="n">setup_sync_test</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+<span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">local_db</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">_in_pod</span><span class="p">)</span>
+    
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">all_items</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">_in_pod</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>BULK: Writing 3/3 items/edges
+Completed Bulk action, written 3 items/edges
+4c2913f892c8463ebdd2ee2a8197cb8e True
+e340f889884b4e4c91bc6711b38d9652 True
+5411889908c44b4bbebf469308065b66 True
+a7d7e0687c36451bb105097e5c8bb304 True
+eb4c84d002ac4ffebfae69a9a4597b5e True
+a6f801efb04946b4885b9d62fb445a0f False
+c8bae9ccff19410099d7e5ed8ae0e954 False
+60e6e59dbf104d4b976f68fbbce8d325 False
+5411889908c44b4bbebf469308065b66 True
+a7d7e0687c36451bb105097e5c8bb304 True
+eb4c84d002ac4ffebfae69a9a4597b5e True
+a6f801efb04946b4885b9d62fb445a0f False
+c8bae9ccff19410099d7e5ed8ae0e954 False
+60e6e59dbf104d4b976f68fbbce8d325 False
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Search">Search<a class="anchor-link" href="#Search"> </a></h2>
@@ -483,11 +793,30 @@ Completed Bulk action, written 1 items/edges
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Number of results: 3
+<pre>Number of results: 5
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">person</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">all_people</span><span class="p">]</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search</span><span class="p">({</span><span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">ids</span><span class="p">})</span>
+<span class="k">assert</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span> <span class="o">==</span> <span class="n">ids</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -608,16 +937,31 @@ Completed Bulk action, written 100 items/edges
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.data.photo</span> <span class="kn">import</span> <span class="n">Photo</span>
-
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
 <span class="n">photo</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">from_np</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">file</span> <span class="o">=</span> <span class="n">photo</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-<span class="n">succes2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">_upload_image</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">succes2</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">_upload_image</span><span class="p">(</span><span class="n">photo</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">cb</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">succes3</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">_upload_image</span><span class="p">(</span><span class="n">photo</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">asyncFlag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">cb</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>True
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -644,9 +988,15 @@ Completed Bulk action, written 100 items/edges
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">registered_classes</span><span class="p">[</span><span class="s2">&quot;Photo&quot;</span><span class="p">])</span>
+
+<span class="c1"># client.add_to_schema(Photo)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
 <span class="n">photo</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">from_np</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">create_photo</span><span class="p">(</span><span class="n">photo</span><span class="p">);</span>
+
+<span class="n">photo</span><span class="o">.</span><span class="n">file</span>
 </pre></div>
 
     </div>
@@ -659,10 +1009,21 @@ Completed Bulk action, written 100 items/edges
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>BULK: Writing 3/3 items/edges
+<pre>&lt;class &#39;pymemri.data.photo.Photo&#39;&gt;
+BULK: Writing 3/3 items/edges
 Completed Bulk action, written 3 items/edges
 </pre>
 </div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[File (#ac52d3a0a99f46499487750430649476)]</pre>
+</div>
+
 </div>
 
 </div>

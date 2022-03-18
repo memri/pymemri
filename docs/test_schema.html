@@ -44,21 +44,6 @@ nb_path: "nbs/test_schema.ipynb"
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -70,7 +55,7 @@ nb_path: "nbs/test_schema.ipynb"
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">pymemri.data</span> <span class="kn">import</span> <span class="n">central_schema</span>
+<span class="kn">from</span> <span class="nn">pymemri.data</span> <span class="kn">import</span> <span class="n">_central_schema</span>
 <span class="kn">from</span> <span class="nn">pymemri.pod.client</span> <span class="kn">import</span> <span class="n">PodClient</span>
 </pre></div>
 
@@ -90,8 +75,8 @@ nb_path: "nbs/test_schema.ipynb"
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">central_schema</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">central_schema</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="s2">&quot;pymemri.data.central_schema&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">_central_schema</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="s2">&quot;pymemri.data._central_schema&quot;</span>
 <span class="p">}</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;num schema classes:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">central_schema</span><span class="p">))</span>
 </pre></div>
@@ -106,7 +91,7 @@ nb_path: "nbs/test_schema.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>num schema classes: 42
+<pre>num schema classes: 44
 </pre>
 </div>
 </div>
@@ -144,7 +129,7 @@ nb_path: "nbs/test_schema.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.data.central_schema</span> <span class="kn">import</span> <span class="n">EmailMessage</span><span class="p">,</span> <span class="n">Country</span><span class="p">,</span> <span class="n">Receipt</span><span class="p">,</span> <span class="n">Account</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pymemri.data.schema</span> <span class="kn">import</span> <span class="n">EmailMessage</span><span class="p">,</span> <span class="n">Country</span><span class="p">,</span> <span class="n">Receipt</span><span class="p">,</span> <span class="n">Account</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="n">item_1</span> <span class="o">=</span> <span class="n">EmailMessage</span><span class="p">(</span><span class="n">starred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s2">&quot;This is a test&quot;</span><span class="p">,</span> <span class="n">dateSent</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
@@ -155,6 +140,21 @@ nb_path: "nbs/test_schema.ipynb"
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>BULK: Writing 4/4 items/edges
+Completed Bulk action, written 4 items/edges
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
