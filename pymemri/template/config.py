@@ -17,7 +17,7 @@ from ..pod.client import PodClient
 
 # Cell
 # hide
-ALLOWED_TYPES = [int, str, float]
+ALLOWED_TYPES = [int, str, float, bool]
 
 # export
 def get_params(cls):
