@@ -135,7 +135,8 @@ def project_id_from_name(project_name, api_key, job_token=None):
                            "owned": True,
                            "search": project_name
                        })
-    res =  [x.get("id") for x in res.json()]
+    # we need this extra filter (search is not exact match)
+    res = [x.get("id") for x in res.json() if x.get("name", None) == project_name]
     if len(res) == 0:
         raise ValueError(f"No plugin found with name {project_name}")
     else:

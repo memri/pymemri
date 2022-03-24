@@ -134,7 +134,7 @@ class TemplateFormatter:
 # Cell
 # hide
 def get_template_replace_dict(
-    repo_url=None, user=None, plugin_name=None, package_name=None, description=None
+    repo_url=None, user=None, plugin_name=None, package_name=None, description=None, install_requires=None
 ):
     if repo_url is None:
         repo_url = get_remote_url()
@@ -166,6 +166,11 @@ def get_template_replace_dict(
             package_name = None
         else:
             package_name = str_to_identifier(repo_name)
+    if install_requires is None:
+        install_requires = ""
+    else:
+        install_requires = "\n    ".join([x.strip() for x in install_requires.split(",")
+                                if x.strip() != "" and x.strip() not in ["pymemri", "pytest"]])
 
     return {
         "user": user,
@@ -174,6 +179,7 @@ def get_template_replace_dict(
         "repo_name": repo_name,
         "repo_url": repo_url,
         "description": str(description),
+        "install_requires": install_requires
     }
 
 # Cell
@@ -189,6 +195,7 @@ def plugin_from_template(
     package_name: Param("Name of your plugin python package", str) = None,
     description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
+    install_requires: Param("Extra packages to install, provided as comma separated, e.g. pymemri,requests", str)=""
 ):
     """
     CLI that downloads and formats a plugin template according to the arguments, and local git repository.
@@ -204,6 +211,7 @@ def plugin_from_template(
         description (Param, optional): An optional plugin description. Defaults to None.
         target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".
     """
+
     if list_templates:
         print("Available templates:")
         for template in get_templates():
@@ -219,6 +227,7 @@ def plugin_from_template(
         plugin_name=plugin_name,
         package_name=package_name,
         description=description,
+        install_requires=install_requires
     )
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
