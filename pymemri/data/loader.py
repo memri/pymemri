@@ -66,18 +66,19 @@ def get_registry_api_key():
 
 # Cell
 class upload_in_chunks(object):
-    def __init__(self, filename, chunksize=1 << 13):
+    def __init__(self, filename, chunksize=1 << 14):
         self.filename = filename
         self.chunksize = chunksize
         self.totalsize = os.path.getsize(filename)
         self.readsofar = 0
 
     def __iter__(self):
-        n = 1000
+        n = 100
         pb = progress_bar(range(n))
         pb_iter = iter(pb)
         i = 1
         delta = 1 / n
+        next(pb_iter, None)
 
         with open(self.filename, 'rb') as file:
             while True:
