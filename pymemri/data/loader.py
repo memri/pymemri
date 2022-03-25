@@ -115,7 +115,7 @@ def write_file_to_package_registry(project_id, file_path, api_key, version=DEFAU
 
     url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{DEFAULT_PLUGIN_MODEL_PACKAGE_NAME}/{version}/{file_name}"
     print(f"uploading {file_path}")
-    it = upload_in_chunks(file_path, 10)
+    it = upload_in_chunks(file_path)
     res = requests.put(url=url, data=IterableToFileAdapter(it),
                      headers={"PRIVATE-TOKEN": api_key})
 
