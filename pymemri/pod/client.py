@@ -593,6 +593,9 @@ class PodClient:
             del properties[ALL_EDGES]
         return properties
 
+    def get_logs(self, run_id):
+        return self.api.plugin_run_logs(run_id)
+
     def send_email(self, to, subject="", body=""):
         try:
             self.api.send_email(to, subject, body)

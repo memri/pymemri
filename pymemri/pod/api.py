@@ -198,3 +198,6 @@ class PodAPI:
     def send_email(self, to: str, subject: str = "", body: str = "") -> Any:
         payload = {"to": to, "subject": subject, "body": body}
         return self.post("send_email", payload)
+
+    def plugin_run_logs(self, run_id: str) -> Any:
+        return self.post("get_pluginrun_log", run_id).json()

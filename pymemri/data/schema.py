@@ -54,12 +54,14 @@ class PluginRun(Item):
         "error",
         "config",
         "progress",
+        "containerId"
     ]
     edges = Item.edges + ["plugin", "view", "account"]
 
     def __init__(
         self,
         containerImage: str = None,
+        containerId: str = None,
         authUrl: str = None,
         pluginModule: str = None,
         pluginName: str = None,
@@ -83,6 +85,7 @@ class PluginRun(Item):
 
         # Properties
         self.containerImage: Optional[str] = containerImage
+        self.containerId: Optional[str] = containerId
         self.authUrl: Optional[str] = authUrl
         self.pluginModule: Optional[str] = pluginModule
         self.pluginName: Optional[str] = pluginName
