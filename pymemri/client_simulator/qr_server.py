@@ -29,7 +29,7 @@ def run_app(client, plugin_run, auth_url, qr_dict, host="0.0.0.0", port=8080):
     global qr_code_dict
     qr_code_dict = qr_dict
 
-    Thread(check_status, args=(plugin_run, client, auth_url), daemon=True).start()
+    Thread(target=check_status, args=(plugin_run, client, auth_url), daemon=True).start()
     app.run(host=host, port=port)
 
 def check_status(plugin_run, client, auth_url):
