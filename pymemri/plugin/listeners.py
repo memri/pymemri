@@ -56,5 +56,4 @@ def get_abort_plugin_listener(client, run_id, **kwargs):
         target=listener.run,
     )
     thread.start()
-
     return listener

@@ -1,7 +1,6 @@
 __all__ = ['Priority', 'DB']
 
 from ..data.itembase import Item
-from ..data.schema import File, Photo
 from enum import Enum
 
 class Priority(Enum):
