@@ -16,10 +16,8 @@ from PIL import Image
 from hashlib import sha256
 from typing import Any
 
-# Cell
 DEFAULT_ENCODING = "PNG"
 
-# Cell
 def show_images(images, cols = 3, titles = None):
     image_list = [x.data for x in images] if isinstance(images[0], Photo) else images
     assert((titles is None) or (len(image_list) == len(titles)))
@@ -148,7 +146,7 @@ class Photo(Item):
             w, h = size
             c = 1
         else:
-            raise Error
+            raise ValueError()
         return encoding, mode, (w, h, c)
 
     def to_PIL(self):
