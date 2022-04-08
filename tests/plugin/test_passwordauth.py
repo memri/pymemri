@@ -44,6 +44,5 @@ def test_password_plugin(client):
     time.sleep(0.5)
     set_account_credentials(client, run.id, "username", "password")
     time.sleep(0.5)
-
     thread.join()
     assert plugin.logged_in
