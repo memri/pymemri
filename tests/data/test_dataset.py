@@ -1,4 +1,3 @@
-from venv import create
 import pytest
 from pymemri.pod.client import PodClient
 from pymemri.data.schema import Dataset, DatasetEntry, Account, Person, Message, Label
