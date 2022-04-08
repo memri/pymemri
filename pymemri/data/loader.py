@@ -8,7 +8,6 @@ __all__ = ['MEMRI_PATH', 'MEMRI_GITLAB_BASE_URL', 'ACCESS_TOKEN_PATH', 'GITLAB_A
            'write_huggingface_model_to_package_registry', 'write_model_to_package_registry', 'download_package_file',
            'download_huggingface_model_for_project', 'load_huggingface_model_for_project']
 
-# Cell
 from fastprogress.fastprogress import progress_bar
 from pathlib import Path
 import requests
@@ -18,7 +17,6 @@ from datetime import datetime
 from git import Repo
 import re
 
-# Cell
 MEMRI_PATH = Path.home() / ".memri"
 MEMRI_GITLAB_BASE_URL = "https://gitlab.memri.io"
 ACCESS_TOKEN_PATH = Path.home() / ".memri/access_token/access_token.txt"
@@ -31,7 +29,6 @@ DEFAULT_PACKAGE_VERSION = "0.0.1"
 TIME_FORMAT_GITLAB = '%Y-%m-%dT%H:%M:%S.%fZ'
 PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )[0-9]+(?=</span>)'
 
-# Cell
 def find_git_repo():
     path = "."
     for i in range(10):
@@ -47,7 +44,6 @@ def find_git_repo():
     repo_name = repo.remotes.origin.url.split('.git')[0].split('/')[-1]
     return repo_name
 
-# Cell
 def get_registry_api_key():
     ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
     if ACCESS_TOKEN_PATH.is_file():
@@ -64,7 +60,6 @@ def get_registry_api_key():
             f.write(access_token)
         return access_token
 
-# Cell
 class upload_in_chunks(object):
     def __init__(self, filename, chunksize=1 << 14):
         self.filename = filename
@@ -108,7 +103,6 @@ class IterableToFileAdapter(object):
     def __len__(self):
         return self.length
 
-# Cell
 def write_file_to_package_registry(project_id, file_path, api_key, version=DEFAULT_PACKAGE_VERSION):
     file_path = Path(file_path)
     file_name = file_path.name
@@ -124,7 +118,6 @@ def write_file_to_package_registry(project_id, file_path, api_key, version=DEFAU
     else:
         print(f"Succesfully uploaded {file_path}")
 
-# Cell
 def project_id_from_name(project_name, api_key, job_token=None):
     if api_key:
         headers = {"PRIVATE-TOKEN": api_key}
@@ -143,7 +136,6 @@ def project_id_from_name(project_name, api_key, job_token=None):
     else:
         return res[0]
 
-# Cell
 def get_project_id_from_project_path_unsafe(project_path):
     try:
         res = requests.get(f"{MEMRI_GITLAB_BASE_URL}/{project_path}")
@@ -153,7 +145,6 @@ def get_project_id_from_project_path_unsafe(project_path):
     except Exception:
         raise ValueError(f"Could not find project with name {project_path}")
 
-# Cell
 def write_huggingface_model_to_package_registry(project_name, model):
     import torch
     api_key = get_registry_api_key()
@@ -167,7 +158,6 @@ def write_huggingface_model_to_package_registry(project_name, model):
         print(f"writing {f} to package registry of {project_name} with project id {project_id}")
         write_file_to_package_registry(project_id, file_path, api_key)
 
-# Cell
 def write_model_to_package_registry(model, project_name=None):
     project_name = project_name if project_name is not None else find_git_repo()
     if type(model).__module__.startswith("transformers"):
@@ -178,7 +168,6 @@ def write_model_to_package_registry(model, project_name=None):
     else:
         raise ValueError(f"Model type not supported: {type(model)}")
 
-# Cell
 def download_package_file(filename, project_path=None, out_dir=None, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME,
                           package_version=DEFAULT_PACKAGE_VERSION, download_if_exists=False):
 #     if project_name is None:
@@ -216,7 +205,6 @@ def download_package_file(filename, project_path=None, out_dir=None, package_nam
         f.write(res.content)
     return file_path
 
-# Cell
 def download_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
@@ -224,7 +212,6 @@ def download_huggingface_model_for_project(project_path=None, files=None, downlo
         out_file_path = download_package_file(f, project_path=project_path)
     return out_file_path.parent
 
-# Cell
 def load_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
     out_dir = download_huggingface_model_for_project(project_path, files, download_if_exists)
     from transformers import AutoModelForSequenceClassification

@@ -2,9 +2,6 @@
 
 __all__ = ['PasswordAuthenticator', 'set_account_credentials', 'simulate_enter_credentials']
 
-# Cell
-# hide
-
 import abc
 from time import sleep
 from pathlib import Path
@@ -26,8 +23,6 @@ from ..schema import PluginRun, Account
 from ...pod.client import PodClient
 import threading
 
-# Cell
-# hide
 
 class PasswordAuthenticator:
     DEFAULT_CVU = "password_auth.cvu"
@@ -93,7 +88,6 @@ class PasswordAuthenticator:
                 account = self.pluginRun.account[0]
                 return account.identifier, account.secret
 
-# Cell
 def set_account_credentials(pod_client, run_id, username, password):
     run = pod_client.get(run_id)
     account = run.account[0]
@@ -105,7 +99,6 @@ def set_account_credentials(pod_client, run_id, username, password):
     pod_client.update_item(run)
     print(f"Setting username and password for {run_id}'s Account'")
 
-# Cell
 from .credentials import PLUGIN_DIR
 from ...pod.client import PodClient, DEFAULT_POD_ADDRESS
 from .credentials import *

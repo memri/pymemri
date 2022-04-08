@@ -5,8 +5,6 @@ from pathlib import Path
 from ..exporters.exporters import Query
 from . import _central_schema
 
-# Cell
-# hide
 def filter_rows(dataset: dict, filter_val=None) -> dict:
     missing_idx = set()
     for column in dataset.values():
@@ -16,7 +14,7 @@ def filter_rows(dataset: dict, filter_val=None) -> dict:
         for k, v in dataset.items()
     }
 
-# Cell
+
 class Dataset(_central_schema.Dataset):
     """
     The main Dataset class
