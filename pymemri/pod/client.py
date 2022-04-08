@@ -11,7 +11,6 @@ from hashlib import sha256
 from .db import DB, Priority
 from .utils import *
 from ..plugin.schema import *
-from ..test_utils import get_ci_variables
 from .api import PodAPI, PodError, DEFAULT_POD_ADDRESS, POD_VERSION
 
 from typing import List, Union

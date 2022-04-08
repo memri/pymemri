@@ -6,15 +6,6 @@ from .dataset import Dataset
 
 
 def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
-    from .photo import Photo
-    import pymemri.integrator_registry
-
-    if (
-        _type == "Indexer"
-        and plugin_class is not None
-        and hasattr(pymemri.integrator_registry, plugin_class)
-    ):
-        return getattr(pymemri.integrator_registry, plugin_class)
     if plugin_class is not None and plugin_package is not None:
         try:
             mod = __import__(plugin_package, fromlist=[plugin_class])

@@ -216,8 +216,8 @@ def _parse_env():
 def store_keys(path:Param("path to store the keys", str)=DEFAULT_POD_KEY_PATH,
                database_key:Param("Database key of the pod", str)=None,
                owner_key:Param("Owner key of the pod", str)=None,
-               replace: Param("Replace existing stored keys", str)=True):
-
+               replace: Param("Replace existing stored keys", bool_arg)=True):
+    print(replace, type(replace))
     if not replace:
         try:
             read_pod_key("database_key")
