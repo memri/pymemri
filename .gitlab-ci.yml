@@ -19,24 +19,9 @@ run tests:
   - export POD_ADDRESS='http://pod:3030'
   - ./tools/test_in_ci.sh
 
-# pages:
-#   only:
-#     - dev
-#   inherit:
-#     default: false
-#   image: ruby:2.7
-#   stage: deploy  
-#   before_script: 
-#   script:
-#   - cd docs
-#   - bundle install
-#   - bundle exec jekyll build -d ../public
-#   artifacts:
-#     paths:
-#     - public
 
-# memri-docs:
-#   stage: deploy
-#   only:
-#     - dev
-#   trigger: memri/docs.memri.io
+memri-docs:
+  stage: deploy
+  only:
+    - dev
+  trigger: memri/docs.memri.io
