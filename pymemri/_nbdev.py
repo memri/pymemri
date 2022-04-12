@@ -116,7 +116,8 @@ index = {"read_file": "basic.ipynb",
          "TemplateFormatter": "template.formatter.ipynb",
          "get_template_replace_dict": "template.formatter.ipynb",
          "plugin_from_template": "template.formatter.ipynb",
-         "get_ci_variables": "test_utils.ipynb"}
+         "get_ci_variables": "test_utils.ipynb",
+         "get_project_root": "test_utils.ipynb"}
 
 modules = ["data/basic.py",
            "cvu/utils.py",
