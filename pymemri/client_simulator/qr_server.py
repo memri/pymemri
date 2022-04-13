@@ -87,7 +87,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
                                       kwargs={"host": host, "port": port}, daemon=True)
     process.start()
     # give time to start
-    sleep(0.5)
+    sleep(1.0)
 
     print(f"GO TO {full_user_auth_url} and scan the code")
 
