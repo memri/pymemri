@@ -160,6 +160,30 @@ class CVUStoredDefinition(Item):
         self.definitionType: Optional[str] = definitionType
 
 
+class CategoricalPrediction(Item):
+    description = """"""
+    properties = Item.properties + ["source", "value", "probs"]
+    edges = Item.edges + ["model"]
+
+    def __init__(
+        self,
+        source: str = None,
+        value: str = None,
+        probs: str = None,
+        model: EdgeList["Model"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.source: Optional[str] = source
+        self.value: Optional[str] = value
+        self.probs: Optional[str] = probs
+
+        # Edges
+        self.model: EdgeList["Model"] = model if model is not None else EdgeList()
+
+
 class CreativeWork(Item):
     description = """The most generic kind of creative work, including books, movies, photographs, software programs, etc."""
     properties = Item.properties + [
@@ -400,13 +424,13 @@ class DatasetEntry(Item):
 class DatasetType(Item):
     description = """Fixed dictionary for datasets."""
     properties = Item.properties + ["name", "queryStr"]
-    edges = Item.edges + ["plugin"]
+    edges = Item.edges + ["datasetPlugin"]
 
     def __init__(
         self,
         name: str = None,
         queryStr: str = None,
-        plugin: EdgeList["Plugin"] = None,
+        datasetPlugin: EdgeList["Plugin"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -416,7 +440,9 @@ class DatasetType(Item):
         self.queryStr: Optional[str] = queryStr
 
         # Edges
-        self.plugin: EdgeList["Plugin"] = plugin if plugin is not None else EdgeList()
+        self.datasetPlugin: EdgeList["Plugin"] = (
+            datasetPlugin if datasetPlugin is not None else EdgeList()
+        )
 
 
 class Diet(Item):
@@ -742,6 +768,19 @@ class MessageChannel(Item):
         )
 
 
+class Model(Item):
+    description = """A Machine learning model"""
+    properties = Item.properties + ["name", "version"]
+    edges = Item.edges + []
+
+    def __init__(self, name: str = None, version: str = None, **kwargs):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: Optional[str] = name
+        self.version: Optional[str] = version
+
+
 class NavigationItem(Item):
     description = """TBD"""
     properties = Item.properties + [
@@ -975,7 +1014,13 @@ class Plugin(Item):
 
 class Post(Item):
     description = """Post from social media"""
-    properties = Item.properties + ["externalId", "message", "postDate", "postType"]
+    properties = Item.properties + [
+        "externalId",
+        "message",
+        "postDate",
+        "postType",
+        "isMock",
+    ]
     edges = Item.edges + ["author", "comment", "parent", "photo"]
 
     def __init__(
@@ -984,6 +1029,7 @@ class Post(Item):
         message: str = None,
         postDate: datetime = None,
         postType: str = None,
+        isMock: bool = None,
         author: EdgeList["Account"] = None,
         comment: EdgeList["Post"] = None,
         parent: EdgeList["Post"] = None,
@@ -997,6 +1043,7 @@ class Post(Item):
         self.message: Optional[str] = message
         self.postDate: Optional[datetime] = postDate
         self.postType: Optional[str] = postType
+        self.isMock: Optional[bool] = isMock
 
         # Edges
         self.author: EdgeList["Account"] = author if author is not None else EdgeList()
@@ -1063,13 +1110,13 @@ class Relationship(Item):
     description = (
         """Relation of people, that indicates type of relationship and its value"""
     )
-    properties = Item.properties + ["label", "value"]
+    properties = Item.properties + ["label", "proximityValue"]
     edges = Item.edges + ["relationship"]
 
     def __init__(
         self,
         label: str = None,
-        value: int = None,
+        proximityValue: int = None,
         relationship: EdgeList["Person"] = None,
         **kwargs
     ):
@@ -1077,7 +1124,7 @@ class Relationship(Item):
 
         # Properties
         self.label: Optional[str] = label
-        self.value: Optional[int] = value
+        self.proximityValue: Optional[int] = proximityValue
 
         # Edges
         self.relationship: EdgeList["Person"] = (
@@ -1381,6 +1428,7 @@ class Message(WrittenWork):
         "externalId",
         "service",
         "subject",
+        "isMock",
     ]
     edges = WrittenWork.edges + [
         "message",
@@ -1397,6 +1445,7 @@ class Message(WrittenWork):
         externalId: str = None,
         service: str = None,
         subject: str = None,
+        isMock: bool = None,
         message: EdgeList["Message"] = None,
         messageChannel: EdgeList["MessageChannel"] = None,
         photo: EdgeList["Photo"] = None,
@@ -1412,6 +1461,7 @@ class Message(WrittenWork):
         self.externalId: Optional[str] = externalId
         self.service: Optional[str] = service
         self.subject: Optional[str] = subject
+        self.isMock: Optional[bool] = isMock
 
         # Edges
         self.message: EdgeList["Message"] = (

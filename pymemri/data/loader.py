@@ -66,18 +66,19 @@ def get_registry_api_key():
 
 # Cell
 class upload_in_chunks(object):
-    def __init__(self, filename, chunksize=1 << 13):
+    def __init__(self, filename, chunksize=1 << 14):
         self.filename = filename
         self.chunksize = chunksize
         self.totalsize = os.path.getsize(filename)
         self.readsofar = 0
 
     def __iter__(self):
-        n = 1000
+        n = 100
         pb = progress_bar(range(n))
         pb_iter = iter(pb)
         i = 1
         delta = 1 / n
+        next(pb_iter, None)
 
         with open(self.filename, 'rb') as file:
             while True:
@@ -114,7 +115,7 @@ def write_file_to_package_registry(project_id, file_path, api_key, version=DEFAU
 
     url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{DEFAULT_PLUGIN_MODEL_PACKAGE_NAME}/{version}/{file_name}"
     print(f"uploading {file_path}")
-    it = upload_in_chunks(file_path, 10)
+    it = upload_in_chunks(file_path)
     res = requests.put(url=url, data=IterableToFileAdapter(it),
                      headers={"PRIVATE-TOKEN": api_key})
 
@@ -136,9 +137,9 @@ def project_id_from_name(project_name, api_key, job_token=None):
                            "search": project_name
                        })
     # we need this extra filter (search is not exact match)
-    res = [x.get("id") for x in res.json() if x.get("name", None) == project_name]
+    res = [x.get("id") for x in res.json() if x.get("path", None) == project_name]
     if len(res) == 0:
-        raise ValueError(f"No plugin found with name {project_name}")
+        raise ValueError(f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo")
     else:
         return res[0]
 
@@ -180,29 +181,19 @@ def write_model_to_package_registry(model, project_name=None):
 # Cell
 def download_package_file(filename, project_path=None, out_dir=None, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME,
                           package_version=DEFAULT_PACKAGE_VERSION, download_if_exists=False):
-#     if project_name is None:
-#         try:
-#             project_name = find_git_repo()
-#         except Exception as e:
-#             raise ValueError("no project name provided, but could also not find a git repo to infer project name") from None
+
     project_name = str(project_path).split("/")[-1]
     out_dir = out_dir if out_dir is not None else MEMRI_PATH / "projects" / project_name
     out_dir.mkdir(parents=True, exist_ok=True)
-#     if os.environ.get("CI", False):
-#         api_key = get_registry_api_key()
-#         job_token = None
-#     else:
-#         api_key=None
-#         job_token = os.environ.get("CI_JOB_TOKEN")
 
     project_id = get_project_id_from_project_path_unsafe(project_path)
 
-#     project_id = project_id_from_name(project_name, api_key, job_token)
     file_path = out_dir / filename
+    print(file_path)
 
     if file_path.exists() and not download_if_exists:
         print(f"{file_path} already exists, and `download_if_exists`==False, using cached version")
-        return out_dir
+        return file_path
 
     print(f"downloading {filename} from project {project_path}, package {package_name}")
 
@@ -227,5 +218,5 @@ def download_huggingface_model_for_project(project_path=None, files=None, downlo
 def load_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
     out_dir = download_huggingface_model_for_project(project_path, files, download_if_exists)
     from transformers import AutoModelForSequenceClassification
-    model = AutoModelForSequenceClassification.from_pretrained("distilroberta-base", num_labels=10)
+    model = AutoModelForSequenceClassification.from_pretrained(out_dir)
     return model
