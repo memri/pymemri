@@ -95,7 +95,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     # give time to start
     ready = False
     while not ready:
-        ready = requests.get(f"http://{host}:{port}/qr").status_code not in [200, 201]
+        ready = requests.get(f"http://{host}:{port}/qr").status_code in [200, 201]
         sleep(0.2)
 
     print(f"GO TO {full_user_auth_url} and scan the code")
