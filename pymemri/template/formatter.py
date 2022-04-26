@@ -16,8 +16,7 @@ from string import Template
 import re
 import os
 import pymemri
-cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
-os.environ["REQUESTS_CA_BUNDLE"] = str(cert_path)
+# cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
 import giturlparse
 import certifi
 import ssl
@@ -62,7 +61,8 @@ def reponame_to_displayname(reponame: str) -> str:
     return re.sub("[-_]+", " ", reponame).title()
 
 def download_file(url, fname=None):
-    r = requests.get(url, stream=True)
+    cert_path = Path(pymemri.__file__).parent.parent / "cert" / "consolidate.pem"
+    r = requests.get(url, stream=True, verify=cert_path)
     # r = requests.get(url, stream=True, verify=True)
     # r = requests.get(url, stream=True, verify=True)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
