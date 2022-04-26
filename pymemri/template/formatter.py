@@ -14,6 +14,10 @@ import tempfile
 import urllib
 from string import Template
 import re
+import os
+import pymemri
+cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
+os.environ["REQUEST_CA_BUNDLE"] = str(cert_path)
 import giturlparse
 import certifi
 import ssl
@@ -58,8 +62,9 @@ def reponame_to_displayname(reponame: str) -> str:
     return re.sub("[-_]+", " ", reponame).title()
 
 def download_file(url, fname=None):
-    # r = requests.get(url, stream=True, context=ssl.create_default_context(cafile=certifi.where()))
-    r = requests.get(url, stream=True, verify=True)
+    r = requests.get(url, stream=True)
+    # r = requests.get(url, stream=True, verify=True)
+    # r = requests.get(url, stream=True, verify=True)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
     with open(fname, 'wb') as fd:
         for chunk in r.iter_content(chunk_size=128):
