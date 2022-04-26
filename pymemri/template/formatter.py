@@ -17,7 +17,7 @@ import re
 import os
 import pymemri
 cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
-os.environ["REQUEST_CA_BUNDLE"] = str(cert_path)
+os.environ["REQUESTS_CA_BUNDLE"] = str(cert_path)
 import giturlparse
 import certifi
 import ssl
