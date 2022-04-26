@@ -16,6 +16,7 @@ from string import Template
 import re
 import giturlparse
 import subprocess
+import requests
 
 # Cell
 # hide
@@ -54,11 +55,19 @@ def str_to_identifier(s, lower=True):
 def reponame_to_displayname(reponame: str) -> str:
     return re.sub("[-_]+", " ", reponame).title()
 
+def download_file(url, fname=None):
+    r = requests.get(url, stream=True)
+    fname = url.rsplit('/', 1)[1] if fname is None else fname
+    with open(fname, 'wb') as fd:
+        for chunk in r.iter_content(chunk_size=128):
+            fd.write(chunk)
+    return fname
+
 def download_plugin_template(
     template_name: str, url: str = TEMPLATE_URL, base_path: str = TEMPLATE_BASE_PATH
 ):
     base_path = str(Path(base_path) / template_name)
-    zip_path, _ = urllib.request.urlretrieve(url)
+    zip_path = download_file(url)
     with zipfile.ZipFile(zip_path, "r") as f:
         result = {name: f.read(name) for name in f.namelist() if base_path in name}
     if len(result) == 0:
@@ -68,7 +77,7 @@ def download_plugin_template(
 
 
 def get_templates(url: str = TEMPLATE_URL) -> List[str]:
-    zip_path, _ = urllib.request.urlretrieve(url)
+    zip_path = download_file(url)
     with zipfile.ZipFile(zip_path, "r") as f:
         files_split = [name.split("/") for name in f.namelist()]
         result = [fn[1] for fn in files_split if fn[-1] == '' and len(fn) == 3]
