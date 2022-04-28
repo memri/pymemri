@@ -10,20 +10,14 @@ from pathlib import Path
 from typing import Dict, Union, List
 from fastcore.script import call_parse, Param, store_true
 import zipfile
-import tempfile
-import urllib
 from string import Template
 import re
-import os
 import pymemri
 from pathlib import PurePosixPath
 # cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
 import giturlparse
-import certifi
-import ssl
 import subprocess
 import requests
-from giturlparse.platforms import PLATFORMS
 
 # Cell
 # hide
@@ -64,10 +58,6 @@ def reponame_to_displayname(reponame: str) -> str:
 
 def download_file(url, fname=None):
     cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
-    if sys.platform == 'win32':
-        import certifi_win32
-        os.environ['REQUESTS_CA_BUNDLE'] = certifi_win32.wincerts.where()
-        certifi_win32.generate_pem()
     r = requests.get(url, stream=True, verify=cert_path)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
     print(fname)
