@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import Dict, Union, List
 from fastcore.script import call_parse, Param, store_true
 import zipfile
-import tempfile
-import urllib
 from string import Template
 import re
 import os
@@ -19,8 +17,12 @@ import pymemri
 from pathlib import PurePosixPath
 # cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
 import giturlparse
-import ssl
 import subprocess
+import sys
+if sys.platform == 'win32':
+    import certifi_win32
+    os.environ['REQUESTS_CA_BUNDLE'] = certifi_win32.wincerts.where()
+    certifi_win32.generate_pem()
 import requests
 from giturlparse.platforms import PLATFORMS
 
