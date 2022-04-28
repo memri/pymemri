@@ -16,12 +16,14 @@ from string import Template
 import re
 import os
 import pymemri
+from pathlib import PurePosixPath
 # cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
 import giturlparse
 import certifi
 import ssl
 import subprocess
 import requests
+from giturlparse.platforms import PLATFORMS
 
 # Cell
 # hide
@@ -34,12 +36,12 @@ TEMPLATE_BASE_PATH = "plugin-templates-dev"
 # If the owner of the repository is one of these groups, the CLI requires an additional `user` argument
 GITLAB_GROUPS = ["memri", "plugins"]
 
-def get_remote_url(path="."):
-    path = Path(path)
-    url = subprocess.getoutput([f"cd {path} && git config --get remote.origin.url"])
+def get_remote_url():
+    path = Path(".")
+    url = subprocess.getoutput(f'git config --get remote.origin.url')
     if not url:
         raise ValueError(f"You can only run this from a initialized gitlab repository, and '{path}' is not an initialized git repository")
-    parsed = giturlparse.parse(url)
+    parsed = giturlparse.parse(url)   
     repo_url = parsed.url2https
     if repo_url.endswith(".git"):
         repo_url = repo_url[:-4]
@@ -61,11 +63,10 @@ def reponame_to_displayname(reponame: str) -> str:
     return re.sub("[-_]+", " ", reponame).title()
 
 def download_file(url, fname=None):
-    cert_path = Path(pymemri.__file__).parent.parent / "cert" / "consolidate.pem"
+    cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
     r = requests.get(url, stream=True, verify=cert_path)
-    # r = requests.get(url, stream=True, verify=True)
-    # r = requests.get(url, stream=True, verify=True)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
+    print(fname)
     with open(fname, 'wb') as fd:
         for chunk in r.iter_content(chunk_size=128):
             fd.write(chunk)
@@ -74,13 +75,16 @@ def download_file(url, fname=None):
 def download_plugin_template(
     template_name: str, url: str = TEMPLATE_URL, base_path: str = TEMPLATE_BASE_PATH
 ):
-    base_path = str(Path(base_path) / template_name)
+    base_path = Path(base_path) / template_name
     zip_path = download_file(url)
     with zipfile.ZipFile(zip_path, "r") as f:
-        result = {name: f.read(name) for name in f.namelist() if base_path in name}
+        result = {name: f.read(name) for name in f.namelist() if base_path in Path(name).parents}
+
     if len(result) == 0:
         raise ValueError(f"Could not find template: {template_name}")
-    result = {k.replace(base_path, "").strip("/"): v.decode("utf-8") for k, v in result.items() if v}
+
+    result = {str(PurePosixPath(k).relative_to(PurePosixPath(base_path))): v.decode("utf-8") for k, v in result.items() if v}
+    Path(zip_path).unlink()
     return result
 
 
@@ -158,6 +162,7 @@ def get_template_replace_dict(
 
     try:
         repo_owner, repo_name = infer_git_info(repo_url)
+
     except ValueError:
         url_inf, owner_inf, name_inf = None, None, None
         print("Could not infer git information from current directory, no initialized repository found.")
@@ -173,7 +178,6 @@ def get_template_replace_dict(
 
     if plugin_name is None:
         if repo_name is None:
-            print("henk")
             plugin_name = None
         else:
             plugin_name = reponame_to_displayname(repo_name)
@@ -236,7 +240,6 @@ def plugin_from_template(
         return
 
     template = download_plugin_template(template_name)
-
     tgt_path = Path(target_dir)
     replace_dict = get_template_replace_dict(
         repo_url=repo_url,
