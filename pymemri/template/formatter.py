@@ -19,7 +19,6 @@ import pymemri
 from pathlib import PurePosixPath
 # cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
 import giturlparse
-import certifi
 import ssl
 import subprocess
 import requests
@@ -64,9 +63,8 @@ def reponame_to_displayname(reponame: str) -> str:
 
 def download_file(url, fname=None):
     cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
-    r = requests.get(url, stream=True, verify=cert_path)
+    r = requests.get(url, stream=True)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
-    print(fname)
     with open(fname, 'wb') as fd:
         for chunk in r.iter_content(chunk_size=128):
             fd.write(chunk)
