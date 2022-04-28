@@ -49,7 +49,7 @@ def infer_git_info(url):
 # hide
 
 def download_file(url, fname=None):
-    cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
+    cert_path = Path(pymemri.__file__).parent / "cert" / "gitlab.memri.io.pem"
     r = requests.get(url, stream=True, verify=cert_path)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
     with open(fname, 'wb') as fd:
