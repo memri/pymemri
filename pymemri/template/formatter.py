@@ -64,6 +64,10 @@ def reponame_to_displayname(reponame: str) -> str:
 
 def download_file(url, fname=None):
     cert_path = Path(pymemri.__file__).parent.parent / "cert" / "gitlab.memri.io.pem"
+    if sys.platform == 'win32':
+        import certifi_win32
+        os.environ['REQUESTS_CA_BUNDLE'] = certifi_win32.wincerts.where()
+        certifi_win32.generate_pem()
     r = requests.get(url, stream=True, verify=cert_path)
     fname = url.rsplit('/', 1)[1] if fname is None else fname
     print(fname)
