@@ -4,7 +4,7 @@ import uuid
 
 from pymemri.pod.api import PodAPI
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Account, Person
+from pymemri.data.schema import Account, Person, Message
 from pymemri.data.itembase import Edge
 
 
@@ -14,6 +14,20 @@ def api():
     Setup pod account with some dummy data, return API with account keys.
     """
     client = PodClient()
+    client.add_to_schema(Account, Person, Message)
+
+    client.api.create_item({
+        "type": "ItemEdgeSchema",
+        "edgeName": "sender",
+        "sourceType": "Message",
+        "targetType": "Account",
+    })
+    client.api.create_item({
+        "type": "ItemEdgeSchema",
+        "edgeName": "owner",
+        "sourceType": "Account",
+        "targetType": "Person",
+    })
 
     # Create dummy data
     person = Person(displayName="Alice")
@@ -23,10 +37,10 @@ def api():
         Account(identifier="Alice", service="gmail"),
     ]
 
+    message = Message(service="whatsapp", subject="Hello")
     edges = [Edge(account, person, "owner") for account in accounts]
-
-    client.add_to_schema(Account, Person)
-    client.bulk_action(create_items=[person] + accounts, create_edges=edges)
+    edges += [Edge(message, accounts[0], "sender")]
+    client.bulk_action(create_items=accounts + [person, message], create_edges=edges)
 
     # Create data for search
     search_accounts = [Account(identifier=str(i), service="search") for i in range(100)]
@@ -96,3 +110,39 @@ def test_update_item(api: PodAPI):
     assert result["type"] == "Person"
     assert result["prop1"] == "Bob"
     assert result["prop2"] == 10
+
+
+def test_graphql(api: PodAPI):
+   
+    # query = """
+    #     query {
+    #         Person {
+    #             id
+    #             displayName
+    #             ~owner  ??
+    #         }
+    #     }
+    # """
+    query = """
+        query {
+            Message {
+                id
+                subject
+                service
+                sender {
+                    id
+                    displayName
+                    identifier
+                    owner {
+                        id
+                        displayName
+                    }
+                }
+            }
+        }
+    """
+    print(api.owner_key, api.database_key)
+    res = api.post("graphql", query).json()
+    assert res[0]["subject"] == "Hello"
+    assert res[0]["sender"][0]["identifier"] == "Alice"
+    assert res[0]["sender"][0]["owner"][0]["displayName"] == "Alice"
