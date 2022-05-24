@@ -2,7 +2,7 @@ import pytest
 import random
 import uuid
 
-from pymemri.pod.api import PodAPI
+from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
 from pymemri.data.schema import Account, Person, Message
 from pymemri.data.itembase import Edge
@@ -112,7 +112,7 @@ def test_update_item(api: PodAPI):
     assert result["prop2"] == 10
 
 
-def test_graphql(api: PodAPI):
+def test_graphql_1(api: PodAPI):
    
     # query = """
     #     query {
@@ -141,8 +141,38 @@ def test_graphql(api: PodAPI):
             }
         }
     """
-    print(api.owner_key, api.database_key)
+
     res = api.post("graphql", query).json()
+    # check selections
     assert res[0]["subject"] == "Hello"
     assert res[0]["sender"][0]["identifier"] == "Alice"
     assert res[0]["sender"][0]["owner"][0]["displayName"] == "Alice"
+    # check non-selections
+    assert "dateCreated" not in res[0]["sender"][0]
+
+
+def test_graphql_2(api: PodAPI):
+   
+    query = """
+        query { 
+            Message {
+                id
+                subject
+                sender {
+                    id
+                    identifier
+                    non_existent_value
+                }
+            }
+        }
+    """
+
+    try:
+        api.post("graphql", query)
+        assert False
+    except PodError as e:
+        assert e.status == 400
+        assert e.message == "Failure: Property non_existent_value does not exist in schema"
+
+
+    
