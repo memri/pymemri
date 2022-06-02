@@ -155,8 +155,13 @@ class PodClient:
                     "valueType": p_type,
                 }
             )
+        return create_items
+
+    @classmethod
+    def _edge_dicts_from_type_or_instance(cls, item):
+        edge_items = []
         for edge_name, (source_type, target_type) in item.get_edge_types().items():
-            create_items.append(
+            edge_items.append(
                 {
                     "type": "ItemEdgeSchema",
                     "edgeName": edge_name,
@@ -164,22 +169,24 @@ class PodClient:
                     "targetType": target_type,
                 }
             )
-        return create_items
+        return edge_items
 
     def add_to_schema(self, *items: List[Union[object, type]]):
         create_items = []
-
+        edge_items = []
         for item in items:
             if isinstance(item, type):
                 property_dicts = self._property_dicts_from_type(item)
             else:
                 property_dicts = self._property_dicts_from_instance(item)
                 item = type(item)
+            edge_items.extend(self._edge_dicts_from_type_or_instance(item))
             create_items.extend(property_dicts)
             self.registered_classes[item.__name__] = item
 
         try:
             self.api.bulk(create_items=create_items)
+            self.api.bulk(create_items=edge_items)
             return True
         except Exception as e:
             print(e)
