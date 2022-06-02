@@ -155,6 +155,15 @@ class PodClient:
                     "valueType": p_type,
                 }
             )
+        for edge_name, (source_type, target_type) in item.get_edge_types().items():
+            create_items.append(
+                {
+                    "type": "ItemEdgeSchema",
+                    "edgeName": edge_name,
+                    "sourceType": source_type,
+                    "targetType": target_type,
+                }
+            )
         return create_items
 
     def add_to_schema(self, *items: List[Union[object, type]]):
