@@ -32,9 +32,9 @@ def api():
     # Create dummy data
     person = Person(displayName="Alice")
     accounts = [
-        Account(identifier="Alice", service="whatsapp"),
-        Account(identifier="Alice", service="instagram"),
-        Account(identifier="Alice", service="gmail"),
+        Account(displayName="Alice", service="whatsapp"),
+        Account(displayName="Alice", service="instagram"),
+        Account(displayName="Alice", service="gmail"),
     ]
 
     message = Message(service="whatsapp", subject="Hello")
@@ -43,7 +43,7 @@ def api():
     client.bulk_action(create_items=accounts + [person, message], create_edges=edges)
 
     # Create data for search
-    search_accounts = [Account(identifier=str(i), service="search") for i in range(100)]
+    search_accounts = [Account(displayName=str(i), service="search") for i in range(100)]
     client.bulk_action(create_items=search_accounts)
 
     return PodAPI(database_key=client.database_key, owner_key=client.owner_key)
@@ -114,25 +114,15 @@ def test_update_item(api: PodAPI):
 
 def test_graphql_1(api: PodAPI):
    
-    # query = """
-    #     query {
-    #         Person {
-    #             id
-    #             displayName
-    #             ~owner  ??
-    #         }
-    #     }
-    # """
     query = """
         query {
             Message {
                 id
                 subject
-                service
                 sender {
                     id
                     displayName
-                    identifier
+                    service
                     owner {
                         id
                         displayName
@@ -143,12 +133,13 @@ def test_graphql_1(api: PodAPI):
     """
 
     res = api.post("graphql", query).json()
+    message = res["data"][0]
     # check selections
-    assert res[0]["subject"] == "Hello"
-    assert res[0]["sender"][0]["identifier"] == "Alice"
-    assert res[0]["sender"][0]["owner"][0]["displayName"] == "Alice"
+    assert message["subject"] == "Hello"
+    assert message["sender"][0]["displayName"] == "Alice"
+    assert message["sender"][0]["owner"][0]["displayName"] == "Alice"
     # check non-selections
-    assert "dateCreated" not in res[0]["sender"][0]
+    assert "dateCreated" not in message
 
 
 def test_graphql_2(api: PodAPI):
@@ -160,7 +151,7 @@ def test_graphql_2(api: PodAPI):
                 subject
                 sender {
                     id
-                    identifier
+                    displayName
                     non_existent_value
                 }
             }
@@ -172,7 +163,35 @@ def test_graphql_2(api: PodAPI):
         assert False
     except PodError as e:
         assert e.status == 400
-        assert e.message == "Failure: Property non_existent_value does not exist in schema"
 
+def test_graphql_3(api: PodAPI):
+
+    query = """
+        query {
+            Person {
+                id
+                displayName
+                ~owner {
+                    id
+                    displayName
+                    service
+                    ~sender {
+                        id
+                        subject
+                    }
+                }
+            }
+        }
+    """
+
+    res = api.post("graphql", query).json()
+    print("RES1", res)
+    # check reverse edges
+    person = None
+    for p in res["data"]:
+        if p["~owner"][0]["service"] == "whatsapp":
+            assert p["~owner"][0]["~sender"][0]["subject"] == "Hello"
+            return
+    assert False
 
     
