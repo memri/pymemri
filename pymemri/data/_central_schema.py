@@ -377,7 +377,7 @@ class Dataset(Item):
         name: str = None,
         queryStr: str = None,
         entry: EdgeList["DatasetEntry"] = None,
-        feature: EdgeList["Any"] = None,
+        feature: EdgeList["ItemPropertySchema"] = None,
         labellingTask: EdgeList["LabellingTask"] = None,
         datasetType: EdgeList["DatasetType"] = None,
         **kwargs
@@ -392,7 +392,9 @@ class Dataset(Item):
         self.entry: EdgeList["DatasetEntry"] = (
             entry if entry is not None else EdgeList()
         )
-        self.feature: EdgeList["Any"] = feature if feature is not None else EdgeList()
+        self.feature: EdgeList["ItemPropertySchema"] = (
+            feature if feature is not None else EdgeList()
+        )
         self.labellingTask: EdgeList["LabellingTask"] = (
             labellingTask if labellingTask is not None else EdgeList()
         )
@@ -408,14 +410,14 @@ class DatasetEntry(Item):
 
     def __init__(
         self,
-        data: EdgeList["Any"] = None,
+        data: EdgeList["Message"] = None,
         annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Edges
-        self.data: EdgeList["Any"] = data if data is not None else EdgeList()
+        self.data: EdgeList["Message"] = data if data is not None else EdgeList()
         self.annotation: EdgeList["CategoricalLabel"] = (
             annotation if annotation is not None else EdgeList()
         )
@@ -644,7 +646,7 @@ class LabellingTask(Item):
         self,
         name: str = None,
         currentLabelOption: str = None,
-        taskType: EdgeList["Any"] = None,
+        taskType: EdgeList["TextClassification"] = None,
         labelOption: EdgeList["LabelOption"] = None,
         view: EdgeList["CVUStoredDefinition"] = None,
         **kwargs
@@ -656,7 +658,7 @@ class LabellingTask(Item):
         self.currentLabelOption: Optional[str] = currentLabelOption
 
         # Edges
-        self.taskType: EdgeList["Any"] = (
+        self.taskType: EdgeList["TextClassification"] = (
             taskType if taskType is not None else EdgeList()
         )
         self.labelOption: EdgeList["LabelOption"] = (
@@ -883,7 +885,7 @@ class Person(Item):
         label: EdgeList["Label"] = None,
         me: EdgeList["Person"] = None,
         medicalCondition: EdgeList["MedicalCondition"] = None,
-        mergedFrom: EdgeList["Any"] = None,
+        mergedFrom: EdgeList["Person"] = None,
         profilePicture: EdgeList["Photo"] = None,
         relationship: EdgeList["Relationship"] = None,
         website: EdgeList["Website"] = None,
@@ -929,7 +931,7 @@ class Person(Item):
         self.medicalCondition: EdgeList["MedicalCondition"] = (
             medicalCondition if medicalCondition is not None else EdgeList()
         )
-        self.mergedFrom: EdgeList["Any"] = (
+        self.mergedFrom: EdgeList["Person"] = (
             mergedFrom if mergedFrom is not None else EdgeList()
         )
         self.profilePicture: EdgeList["Photo"] = (
@@ -1154,7 +1156,7 @@ class SuggestedMerge(Item):
         self,
         score: float = None,
         task: str = None,
-        mergeFrom: EdgeList["Any"] = None,
+        mergeFrom: EdgeList["Person"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1164,7 +1166,7 @@ class SuggestedMerge(Item):
         self.task: Optional[str] = task
 
         # Edges
-        self.mergeFrom: EdgeList["Any"] = (
+        self.mergeFrom: EdgeList["Person"] = (
             mergeFrom if mergeFrom is not None else EdgeList()
         )
 
