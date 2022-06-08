@@ -85,7 +85,7 @@ def check_target_type(fn):
 class EdgeList(UserList, Generic[T]):
     def __init__(
         self,
-        target_type: Union[type, str] = None,
+        target_type: Union[type, str],
         data: List[Edge] = None,
     ) -> None:
 
@@ -287,7 +287,7 @@ class Item(ItemBase):
         "pluginClass",
         "isMock",
     ]
-    edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
+    edges = ["label"]
 
     DATE_PROPERTIES = ['dateCreated', 'dateModified', 'dateServerModified']
 
@@ -305,11 +305,7 @@ class Item(ItemBase):
         importJson: str = None,
         pluginClass: str = None,
         isMock: bool = None,
-        changelog: list = None,
-        label: list = None,
-        genericAttribute: list = None,
-        measure: list = None,
-        sharedWith: list = None
+        label: EdgeList["CategoricalLabel"] = None,
     ):
         super().__init__(id)
 
@@ -327,11 +323,8 @@ class Item(ItemBase):
         self.isMock: Optional[bool] = isMock
 
         # Edges
-        self.changelog: list = changelog if changelog is not None else []
-        self.label: list = label if label is not None else []
-        self.genericAttribute: list = genericAttribute if genericAttribute is not None else []
-        self.measure: list = measure if measure is not None else []
-        self.sharedWith: list = sharedWith if sharedWith is not None else []
+        self.label: EdgeList["CategoricalLabel"] = self._init_edge("CategoricalLabel", label)
+
 
     @classmethod
     def parse_json(self, cls, json):

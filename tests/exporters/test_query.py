@@ -1,6 +1,6 @@
 import pytest
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Account, Person, Message, Label
+from pymemri.data.schema import Account, Person, Message, CategoricalLabel
 from pymemri.data.itembase import Edge
 from pymemri.exporters.exporters import Query
 import random
@@ -10,7 +10,7 @@ import pandas as pd
 @pytest.fixture
 def client():
     client = PodClient()
-    client.add_to_schema(Account, Person, Message, Label)
+    client.add_to_schema(Account, Person, Message, CategoricalLabel)
     return client
 
 
@@ -22,7 +22,7 @@ def create_dummy_dataset(client: PodClient, num_items=10):
         msg = Message(content=f"content_{i}", service="my_service")
         account = Account(handle=f"account_{i}")
         person = Person(firstName=f"firstname_{i}")
-        label = Label(name=f"label_{i}")
+        label = CategoricalLabel(labelValue=f"label_{i}")
         items.extend([msg, account, person, label])
         edges.extend([
             Edge(msg, account, "sender"),
