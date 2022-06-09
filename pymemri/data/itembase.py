@@ -64,6 +64,8 @@ class Edge():
 
 # Cell
 T = TypeVar('T')
+
+from .itembase import Edge
 def check_target_type(fn):
     """
     Decorator to perform type check the target type of the first argument, or list of arguments.
@@ -166,14 +168,11 @@ class ItemBase:
     def _updated_properties(self):
         return set(self._original_properties.keys())
 
-    def __getattribute__(self, name):
-        val = object.__getattribute__(self, name)
-        if name in object.__getattribute__(self, "edges"):
-            if isinstance(val, Edge):
-                return val.traverse(start=self)
-            if isinstance(val, list) and len(val) > 0 and isinstance(val[0], Edge):
-                return [edge.traverse(start=self) for edge in val]
-        return val
+#     def __getattribute__(self, name):
+#         val = object.__getattribute__(self, name)
+#         if isinstance(val, EdgeList):
+#             return val.targets
+#         return val
 
     def reset_local_sync_state(self):
         """

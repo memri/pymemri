@@ -30,7 +30,6 @@ class Query:
             query_item_idx = list()
             for i in range(len(items)):
                 item = items[i]
-                print(item)
                 if item is None:
                     continue
                 # Replace item with target item. If the edge is empty, it has to be queried again.
@@ -39,7 +38,6 @@ class Query:
                         items[i] = None
                     else:
                         items[i] = getattr(item, edge)[0]
-                        print("GETATTR", item, getattr(item, edge)[0])
                 except Exception:
                     ids_to_query.append(item.id)
                     query_item_idx.append(i)
