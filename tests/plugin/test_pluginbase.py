@@ -35,9 +35,12 @@ def test_run_from_id(client):
     )
     account = Account(identifier="login", secret="password")
     run.add_edge("account", account)
+
     assert client.create(run)
     assert client.create(account)
     assert client.create_edge(run.get_edges("account")[0])
+
+    print(client.get(run.id))
     pluginbase.run_plugin_from_run_id(run.id, client)
 
     client.reset_local_db()
