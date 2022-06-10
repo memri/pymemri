@@ -1,13 +1,13 @@
 import pytest
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Dataset, DatasetEntry, Account, Person, Message, Label
+from pymemri.data.schema import Dataset, DatasetEntry, Account, Person, Message, CategoricalLabel
 from pymemri.data.itembase import Edge
 import pandas as pd
 
 @pytest.fixture
 def client():
     client = PodClient()
-    client.add_to_schema(Account, Person, Message, Dataset, DatasetEntry, Label)
+    client.add_to_schema(Account, Person, Message, Dataset, DatasetEntry, CategoricalLabel)
     return client
 
 
@@ -23,7 +23,7 @@ def create_dummy_dataset(client, num_items):
         msg = Message(content=f"content_{i}", service="my_service")
         account = Account(handle=f"account_{i}")
         person = Person(firstName=f"firstname_{i}")
-        label = Label(name=f"label_{i}")
+        label = CategoricalLabel(labelValue=f"label_{i}")
         items.extend([entry, msg, account, person, label])
         edges.extend([
             Edge(dataset, entry, "entry"),
@@ -44,7 +44,7 @@ def test_dataset(client):
     num_items = 10
     create_dummy_dataset(client, num_items)
     dataset = client.get_dataset("example-dataset")
-    columns = ["data.content", "data.sender.handle", "annotation.name"]
+    columns = ["data.content", "data.sender.handle", "annotation.labelValue"]
     dataframe = dataset.to("pd", columns=columns)
     assert isinstance(dataframe, pd.DataFrame)
     assert len(dataframe) == num_items

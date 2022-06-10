@@ -83,7 +83,7 @@ class EdgeList(list, Generic[T]):
         return True
 
     @property
-    def targets(self):
+    def targets(self) -> List["Item"]:
         return [edge.target for edge in self]
 
 # Cell
