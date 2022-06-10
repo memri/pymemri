@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'EdgeList', 'T', 'ItemBase', 'Item']
 
 # Cell
 # hide
-from typing import Optional, Dict, List, Set, Any, Generic, TypeVar, Tuple
+from typing import Optional, Dict, List, Set, Any, Generic, TypeVar, Tuple, Union
 from ..imports import *
 from datetime import datetime
 import uuid
@@ -66,22 +66,25 @@ T = TypeVar('T')
 class EdgeList(list, Generic[T]):
     def __init__(
         self,
-        items: List[Edge] = None,
-        target_type: type = None,
+        name: str,
+        target_type: Union[type, str],
+        data: List[Edge] = None,
     ) -> None:
-        self.target_type = target_type if target_type is not None else Any
-        super().__init__(items if items is not None else list())
+        self.name = name
+        if isinstance(target_type, type):
+            target_type = target_type.__name__
+        self.target_type = target_type
+        super().__init__(data if data is not None else list())
+
+    def is_valid_type(self, *edges: List[Edge]):
+        for edge in edges:
+            if edge._type != self.name or type(edge.target).__name__ != self.target_type:
+                return False
+        return True
 
     @property
-    def targets(self):
+    def targets(self) -> List["Item"]:
         return [edge.target for edge in self]
-
-#     @property
-#     def target_type(self):
-#         tgt_types = [type(edge.target) for edge in self]
-#         if tgt_types.count(tgt_types[0]) == len(tgt_types):
-#             return tgt_types[0]
-#         return Any
 
 # Cell
 # hide
@@ -89,6 +92,7 @@ class ItemBase:
     """Provides a base class for all items.
     All items in the schema inherit from this class, and it provides some
     basic functionality for consistency and to enable easier usage."""
+
     properties: List[str] = list()
     edges: List[str] = list()
 
@@ -99,6 +103,16 @@ class ItemBase:
         self._original_properties = dict()
 
         self.id: Optional[str] = id
+
+    def _init_edge(
+        self, edge_name: str, target_type: str, init_value: Optional[List[Edge]] = None
+    ):
+        edge_list = EdgeList(edge_name, target_type, init_value)
+        if init_value:
+            if not edge_list.is_valid_type(*init_value):
+                raise TypeError("Attempted to insert edge with invalid type")
+            edge_list.extend(init_value)
+        return edge_list
 
     def __setattr__(self, name, value):
         prev_val = getattr(self, name, None)
@@ -118,7 +132,7 @@ class ItemBase:
         if name in object.__getattribute__(self, "edges"):
             if isinstance(val, Edge):
                 return val.traverse(start=self)
-            if isinstance(val, list) and len(val) > 0 and isinstance(val[0], Edge):
+            if isinstance(val, EdgeList):
                 return [edge.traverse(start=self) for edge in val]
         return val
 
@@ -132,14 +146,20 @@ class ItemBase:
 
     def add_edge(self, name, val):
         """Creates an edge of type name and makes it point to val"""
-        if name not in self.__dict__:
+        if name not in self.edges:
             raise NameError(f"object {self} does not have edge with name {name}")
 
-        edge = Edge(self, val, name, created=True)
         existing = object.__getattribute__(self, name)
+        edge = Edge(self, val, name, created=True)
+        if not existing.is_valid_type(edge):
+            raise TypeError(
+                "Attempted to add edge with incorrect target type: found {} expected {}".format(
+                    existing.target_type, type(val.target).__name__
+                )
+            )
+
         if edge not in existing:
-            res = existing + [edge]
-            self.__setattr__(name, res)
+            existing.append(edge)
             self._new_edges.append(edge)
 
     def is_expanded(self):
@@ -152,17 +172,22 @@ class ItemBase:
         return object.__getattribute__(self, name)
 
     def get_all_edges(self):
-        return [e for attr in self.__dict__.values() if self.attr_is_edge(attr) for e in attr]
+        return [
+            e
+            for attr in self.__dict__.values()
+            if self.attr_is_edge(attr)
+            for e in attr
+        ]
 
     def get_all_edge_names(self):
-        return [k for k,v in self.__dict__.items() if self.attr_is_edge(v)]
+        return [k for k, v in self.__dict__.items() if self.attr_is_edge(v)]
 
     def get_property_names(self):
         return [k for k, v in self.__dict__.items() if not type(v) == list]
 
     @staticmethod
     def attr_is_edge(attr):
-        return isinstance(attr, list) and len(attr)>0 and isinstance(attr[0], Edge)
+        return isinstance(attr, list) and len(attr) > 0 and isinstance(attr[0], Edge)
 
     def update(self, api, edges=True, create_if_not_exists=True, skip_nodes=False):
 
@@ -209,7 +234,6 @@ class ItemBase:
             v.source = res
         return res
 
-
 # Cell
 class Item(ItemBase):
     """Item is the baseclass for all of the data classes."""
@@ -228,7 +252,7 @@ class Item(ItemBase):
         "pluginClass",
         "isMock",
     ]
-    edges = ["changelog", "label", "genericAttribute", "measure", "sharedWith"]
+    edges = ["label"]
 
     DATE_PROPERTIES = ['dateCreated', 'dateModified', 'dateServerModified']
 
@@ -246,11 +270,7 @@ class Item(ItemBase):
         importJson: str = None,
         pluginClass: str = None,
         isMock: bool = None,
-        changelog: list = None,
-        label: list = None,
-        genericAttribute: list = None,
-        measure: list = None,
-        sharedWith: list = None
+        label: EdgeList["CategoricalLabel"] = None,
     ):
         super().__init__(id)
 
@@ -268,11 +288,9 @@ class Item(ItemBase):
         self.isMock: Optional[bool] = isMock
 
         # Edges
-        self.changelog: list = changelog if changelog is not None else []
-        self.label: list = label if label is not None else []
-        self.genericAttribute: list = genericAttribute if genericAttribute is not None else []
-        self.measure: list = measure if measure is not None else []
-        self.sharedWith: list = sharedWith if sharedWith is not None else []
+        self.label: EdgeList["CategoricalLabel"] = self._init_edge(
+            "label", "CategoricalLabel", init_value=label
+        )
 
     @classmethod
     def parse_json(self, cls, json):

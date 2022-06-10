@@ -66,9 +66,10 @@ class Photo(Item):
         self.channels = channels
         self.encoding = encoding
         self.mode = mode
-        self.file = file if file is not None else []
         self.data = data
         self._file_created = _file_created
+
+        self.file = self._init_edge("file", "File", file)
 
     def show(self):
         fig, ax = plt.subplots(1)

@@ -1,4 +1,5 @@
 from time import time
+from pymemri.data.itembase import EdgeList
 from pymemri.plugin import pluginbase
 from pymemri.plugin import states
 from pymemri.pod.client import PodClient
@@ -25,7 +26,6 @@ def test_plugin_schema():
     assert isinstance(example_schema, list)
     assert len(example_schema)
 
-
 def test_run_from_id(client):
     run = PluginRun(
         containerImage="",
@@ -35,9 +35,11 @@ def test_run_from_id(client):
     )
     account = Account(identifier="login", secret="password")
     run.add_edge("account", account)
+
     assert client.create(run)
     assert client.create(account)
     assert client.create_edge(run.get_edges("account")[0])
+
     pluginbase.run_plugin_from_run_id(run.id, client)
 
     client.reset_local_db()
