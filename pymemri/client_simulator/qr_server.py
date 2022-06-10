@@ -93,6 +93,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     process.start()
 
     # give time to start
+    sleep(0.1)
     ready = False
     while not ready:
         ready = requests.get(f"http://{host}:{port}/qr").status_code in [200, 201]
