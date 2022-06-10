@@ -132,7 +132,7 @@ class ItemBase:
         if name in object.__getattribute__(self, "edges"):
             if isinstance(val, Edge):
                 return val.traverse(start=self)
-            if isinstance(val, list) and len(val) > 0 and isinstance(val[0], Edge):
+            if isinstance(val, EdgeList):
                 return [edge.traverse(start=self) for edge in val]
         return val
 
@@ -159,8 +159,7 @@ class ItemBase:
             )
 
         if edge not in existing:
-            res = existing + [edge]
-            self.__setattr__(name, res)
+            existing.append(edge)
             self._new_edges.append(edge)
 
     def is_expanded(self):
