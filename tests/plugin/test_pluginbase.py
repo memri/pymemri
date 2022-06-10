@@ -26,28 +26,6 @@ def test_plugin_schema():
     assert isinstance(example_schema, list)
     assert len(example_schema)
 
-def test_pluginrun(client):   
-    run = PluginRun(
-        containerImage="",
-        pluginModule="pymemri.plugin.pluginbase",
-        pluginName="ExamplePlugin",
-        status="not started",
-    )
-    
-    def get_edgelist(item, name):
-        return object.__getattribute__(item, name)
-
-    account = Account(identifier="login", secret="password")
-    run.add_edge("account", account)
-    assert isinstance(get_edgelist(run, "account"), EdgeList), type(run.account)
-
-    assert client.create(run)
-    assert client.create(account)
-    assert client.create_edge(run.get_edges("account")[0])
-
-    r = client.get(run.id)
-    assert isinstance(get_edgelist(run, "account"), EdgeList), type(r.account)
-
 def test_run_from_id(client):
     run = PluginRun(
         containerImage="",
