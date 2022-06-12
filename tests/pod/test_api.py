@@ -165,18 +165,32 @@ def test_graphql_2(api: PodAPI):
         assert e.status == 400
 
 def test_graphql_3(api: PodAPI):
+   
+    query = """
+        query { 
+            count
+            total
+        }
+    """
+
+    try:
+        api.post("graphql", query)
+        assert False
+    except PodError as e:
+        assert e.status == 400
+
+def test_graphql_4(api: PodAPI):
 
     query = """
         query {
             Person {
                 id
                 displayName
-                ~owner {
+                ~owner (filter: {service: {eq: "whatsapp"}}) {
                     id
                     displayName
                     service
                     ~sender {
-                        id
                         subject
                     }
                 }
@@ -185,13 +199,31 @@ def test_graphql_3(api: PodAPI):
     """
 
     res = api.post("graphql", query).json()
-    print("RES1", res)
     # check reverse edges
-    person = None
     for p in res["data"]:
         if p["~owner"][0]["service"] == "whatsapp":
             assert p["~owner"][0]["~sender"][0]["subject"] == "Hello"
             return
     assert False
+
+def test_graphql_5(api: PodAPI):
+
+    query = """
+        query {
+            Account (filter: {dateCreated: {gte: 1654784703}}, limit: 10) {
+                id
+                displayName
+            }
+            count
+            total
+        }
+    """
+
+    res = api.post("graphql", query).json()
+    # count and total
+    try:
+        assert res["count"] == 10 and res["total"] == 103
+    except:
+        assert False
 
     
