@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'EdgeList', 'T', 'ItemBase', 'Item']
 
 # Cell
 # hide
-from typing import Optional, Dict, List, Set, Any, Generic, TypeVar, Tuple, Union
+from typing import Optional, Dict, List, Generic, TypeVar, Tuple, Union, Iterable
 from ..imports import *
 from datetime import datetime
 import uuid
@@ -63,6 +63,23 @@ class Edge():
 # Cell
 T = TypeVar('T')
 
+def check_target_type(fn):
+    """
+    Decorator to perform type check the target type of the first argument, or list of arguments.
+    """
+    def _check_type_wrapper(self, arg):
+        if isinstance(arg, Iterable):
+            for item in arg:
+                if type(item.target).__name__ != self.target_type:
+                    raise TypeError("Attempted to insert edge with invalid target type")
+        elif isinstance(arg, Edge):
+            if type(arg.target).__name__ != self.target_type:
+                raise TypeError("Attempted to insert edge with invalid target type")
+        else:
+            raise TypeError("Attempted to insert edge with invalid type")
+        return fn(self, arg)
+    return _check_type_wrapper
+
 class EdgeList(list, Generic[T]):
     def __init__(
         self,
@@ -70,21 +87,53 @@ class EdgeList(list, Generic[T]):
         target_type: Union[type, str],
         data: List[Edge] = None,
     ) -> None:
+        super().__init__()
         self.name = name
+
         if isinstance(target_type, type):
             target_type = target_type.__name__
         self.target_type = target_type
-        super().__init__(data if data is not None else list())
 
-    def is_valid_type(self, *edges: List[Edge]):
-        for edge in edges:
-            if edge._type != self.name or type(edge.target).__name__ != self.target_type:
-                return False
-        return True
+        if data is not None:
+            self.extend(data)
 
     @property
     def targets(self) -> List["Item"]:
         return [edge.target for edge in self]
+
+    # Wrap all append, extend and add methods
+    @check_target_type
+    def append(self, item: Edge) -> None:
+        return super().append(item)
+
+    @check_target_type
+    def extend(self, other: Iterable[Edge]) -> None:
+        return super().extend(other)
+
+    @check_target_type
+    def __add__(self, other: Iterable[Edge]) -> "EdgeList":
+        return super().__add__(other)
+
+    @check_target_type
+    def __iadd__(self, other: Iterable[Edge]) -> "EdgeList":
+        return super().__iadd__(other)
+
+    def __setitem__(self, i:  int, item: Edge) -> None:
+        if isinstance(item, Edge):
+            if type(item.target).__name__ != self.target_type:
+                raise TypeError("Attempted to insert edge with invalid target type")
+        else:
+            raise TypeError("Attempted to insert edge with invalid type")
+        return super().__setitem__(i, item)
+
+    def insert(self, i: int, item: Edge) -> None:
+        if isinstance(item, Edge):
+            if type(item.target).__name__ != self.target_type:
+                raise TypeError("Attempted to insert edge with invalid target type")
+        else:
+            raise TypeError("Attempted to insert edge with invalid type")
+        return super().insert(i, item)
+
 
 # Cell
 # hide
@@ -103,16 +152,6 @@ class ItemBase:
         self._original_properties = dict()
 
         self.id: Optional[str] = id
-
-    def _init_edge(
-        self, edge_name: str, target_type: str, init_value: Optional[List[Edge]] = None
-    ):
-        edge_list = EdgeList(edge_name, target_type, init_value)
-        if init_value:
-            if not edge_list.is_valid_type(*init_value):
-                raise TypeError("Attempted to insert edge with invalid type")
-            edge_list.extend(init_value)
-        return edge_list
 
     def __setattr__(self, name, value):
         prev_val = getattr(self, name, None)
@@ -151,13 +190,6 @@ class ItemBase:
 
         existing = object.__getattribute__(self, name)
         edge = Edge(self, val, name, created=True)
-        if not existing.is_valid_type(edge):
-            raise TypeError(
-                "Attempted to add edge with incorrect target type: found {} expected {}".format(
-                    existing.target_type, type(val.target).__name__
-                )
-            )
-
         if edge not in existing:
             existing.append(edge)
             self._new_edges.append(edge)
@@ -288,8 +320,8 @@ class Item(ItemBase):
         self.isMock: Optional[bool] = isMock
 
         # Edges
-        self.label: EdgeList["CategoricalLabel"] = self._init_edge(
-            "label", "CategoricalLabel", init_value=label
+        self.label: EdgeList["CategoricalLabel"] = EdgeList(
+            "label", "CategoricalLabel", label
         )
 
     @classmethod

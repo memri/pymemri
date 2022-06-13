@@ -79,29 +79,21 @@ class Account(Item):
         self.refreshToken: Optional[str] = refreshToken
 
         # Edges
-        self.changelog: EdgeList["AuditItem"] = self._init_edge(
-            "changelog", "AuditItem", init_value=changelog
+        self.changelog: EdgeList["AuditItem"] = EdgeList(
+            "changelog", "AuditItem", changelog
         )
-        self.cryptoTransaction: EdgeList["CryptoTransaction"] = self._init_edge(
-            "cryptoTransaction", "CryptoTransaction", init_value=cryptoTransaction
+        self.cryptoTransaction: EdgeList["CryptoTransaction"] = EdgeList(
+            "cryptoTransaction", "CryptoTransaction", cryptoTransaction
         )
-        self.location: EdgeList["Location"] = self._init_edge(
-            "location", "Location", init_value=location
+        self.location: EdgeList["Location"] = EdgeList("location", "Location", location)
+        self.network: EdgeList["Network"] = EdgeList("network", "Network", network)
+        self.ownCurrency: EdgeList["CryptoCurrency"] = EdgeList(
+            "ownCurrency", "CryptoCurrency", ownCurrency
         )
-        self.network: EdgeList["Network"] = self._init_edge(
-            "network", "Network", init_value=network
-        )
-        self.ownCurrency: EdgeList["CryptoCurrency"] = self._init_edge(
-            "ownCurrency", "CryptoCurrency", init_value=ownCurrency
-        )
-        self.owner: EdgeList["Person"] = self._init_edge(
-            "owner", "Person", init_value=owner
-        )
-        self.trust: EdgeList["Account"] = self._init_edge(
-            "trust", "Account", init_value=trust
-        )
-        self.profilePicture: EdgeList["Photo"] = self._init_edge(
-            "profilePicture", "Photo", init_value=profilePicture
+        self.owner: EdgeList["Person"] = EdgeList("owner", "Person", owner)
+        self.trust: EdgeList["Account"] = EdgeList("trust", "Account", trust)
+        self.profilePicture: EdgeList["Photo"] = EdgeList(
+            "profilePicture", "Photo", profilePicture
         )
 
 
@@ -185,9 +177,7 @@ class CategoricalPrediction(Item):
         self.probs: Optional[str] = probs
 
         # Edges
-        self.model: EdgeList["Model"] = self._init_edge(
-            "model", "Model", init_value=model
-        )
+        self.model: EdgeList["Model"] = EdgeList("model", "Model", model)
 
 
 class CreativeWork(Item):
@@ -233,16 +223,14 @@ class CreativeWork(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: EdgeList["Location"] = self._init_edge(
-            "contentLocation", "Location", init_value=contentLocation
+        self.contentLocation: EdgeList["Location"] = EdgeList(
+            "contentLocation", "Location", contentLocation
         )
-        self.file: EdgeList["File"] = self._init_edge("file", "File", init_value=file)
-        self.locationCreated: EdgeList["Location"] = self._init_edge(
-            "locationCreated", "Location", init_value=locationCreated
+        self.file: EdgeList["File"] = EdgeList("file", "File", file)
+        self.locationCreated: EdgeList["Location"] = EdgeList(
+            "locationCreated", "Location", locationCreated
         )
-        self.writtenBy: EdgeList["Person"] = self._init_edge(
-            "writtenBy", "Person", init_value=writtenBy
-        )
+        self.writtenBy: EdgeList["Person"] = EdgeList("writtenBy", "Person", writtenBy)
 
 
 class CryptoCurrency(Item):
@@ -267,12 +255,10 @@ class CryptoCurrency(Item):
         self.topic: Optional[str] = topic
 
         # Edges
-        self.currencySetting: EdgeList["CurrencySetting"] = self._init_edge(
-            "currencySetting", "CurrencySetting", init_value=currencySetting
+        self.currencySetting: EdgeList["CurrencySetting"] = EdgeList(
+            "currencySetting", "CurrencySetting", currencySetting
         )
-        self.picture: EdgeList["Photo"] = self._init_edge(
-            "picture", "Photo", init_value=picture
-        )
+        self.picture: EdgeList["Photo"] = EdgeList("picture", "Photo", picture)
 
 
 class CryptoKey(Item):
@@ -309,9 +295,7 @@ class CryptoKey(Item):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.owner: EdgeList["Person"] = self._init_edge(
-            "owner", "Person", init_value=owner
-        )
+        self.owner: EdgeList["Person"] = EdgeList("owner", "Person", owner)
 
 
 class CryptoTransaction(Item):
@@ -335,14 +319,14 @@ class CryptoTransaction(Item):
         self.quantity: Optional[float] = quantity
 
         # Edges
-        self.cryptoCurrency: EdgeList["CryptoCurrency"] = self._init_edge(
-            "cryptoCurrency", "CryptoCurrency", init_value=cryptoCurrency
+        self.cryptoCurrency: EdgeList["CryptoCurrency"] = EdgeList(
+            "cryptoCurrency", "CryptoCurrency", cryptoCurrency
         )
-        self.relateToOther: EdgeList["Account"] = self._init_edge(
-            "relateToOther", "Account", init_value=relateToOther
+        self.relateToOther: EdgeList["Account"] = EdgeList(
+            "relateToOther", "Account", relateToOther
         )
-        self.relateToOwner: EdgeList["Account"] = self._init_edge(
-            "relateToOwner", "Account", init_value=relateToOwner
+        self.relateToOwner: EdgeList["Account"] = EdgeList(
+            "relateToOwner", "Account", relateToOwner
         )
 
 
@@ -374,9 +358,7 @@ class CurrencySetting(Item):
         self.tokenAddress: Optional[str] = tokenAddress
 
         # Edges
-        self.wallet: EdgeList["Wallet"] = self._init_edge(
-            "wallet", "Wallet", init_value=wallet
-        )
+        self.wallet: EdgeList["Wallet"] = EdgeList("wallet", "Wallet", wallet)
 
 
 class Dataset(Item):
@@ -401,17 +383,15 @@ class Dataset(Item):
         self.queryStr: Optional[str] = queryStr
 
         # Edges
-        self.entry: EdgeList["DatasetEntry"] = self._init_edge(
-            "entry", "DatasetEntry", init_value=entry
+        self.entry: EdgeList["DatasetEntry"] = EdgeList("entry", "DatasetEntry", entry)
+        self.feature: EdgeList["ItemPropertySchema"] = EdgeList(
+            "feature", "ItemPropertySchema", feature
         )
-        self.feature: EdgeList["ItemPropertySchema"] = self._init_edge(
-            "feature", "ItemPropertySchema", init_value=feature
+        self.labellingTask: EdgeList["LabellingTask"] = EdgeList(
+            "labellingTask", "LabellingTask", labellingTask
         )
-        self.labellingTask: EdgeList["LabellingTask"] = self._init_edge(
-            "labellingTask", "LabellingTask", init_value=labellingTask
-        )
-        self.datasetType: EdgeList["DatasetType"] = self._init_edge(
-            "datasetType", "DatasetType", init_value=datasetType
+        self.datasetType: EdgeList["DatasetType"] = EdgeList(
+            "datasetType", "DatasetType", datasetType
         )
 
 
@@ -429,11 +409,9 @@ class DatasetEntry(Item):
         super().__init__(**kwargs)
 
         # Edges
-        self.data: EdgeList["Message"] = self._init_edge(
-            "data", "Message", init_value=data
-        )
-        self.annotation: EdgeList["CategoricalLabel"] = self._init_edge(
-            "annotation", "CategoricalLabel", init_value=annotation
+        self.data: EdgeList["Message"] = EdgeList("data", "Message", data)
+        self.annotation: EdgeList["CategoricalLabel"] = EdgeList(
+            "annotation", "CategoricalLabel", annotation
         )
 
 
@@ -456,8 +434,8 @@ class DatasetType(Item):
         self.queryStr: Optional[str] = queryStr
 
         # Edges
-        self.datasetPlugin: EdgeList["Plugin"] = self._init_edge(
-            "datasetPlugin", "Plugin", init_value=datasetPlugin
+        self.datasetPlugin: EdgeList["Plugin"] = EdgeList(
+            "datasetPlugin", "Plugin", datasetPlugin
         )
 
 
@@ -510,16 +488,14 @@ class Diet(Item):
         self.transcript: Optional[str] = transcript
 
         # Edges
-        self.contentLocation: EdgeList["Location"] = self._init_edge(
-            "contentLocation", "Location", init_value=contentLocation
+        self.contentLocation: EdgeList["Location"] = EdgeList(
+            "contentLocation", "Location", contentLocation
         )
-        self.file: EdgeList["File"] = self._init_edge("file", "File", init_value=file)
-        self.locationCreated: EdgeList["Location"] = self._init_edge(
-            "locationCreated", "Location", init_value=locationCreated
+        self.file: EdgeList["File"] = EdgeList("file", "File", file)
+        self.locationCreated: EdgeList["Location"] = EdgeList(
+            "locationCreated", "Location", locationCreated
         )
-        self.writtenBy: EdgeList["Person"] = self._init_edge(
-            "writtenBy", "Person", init_value=writtenBy
-        )
+        self.writtenBy: EdgeList["Person"] = EdgeList("writtenBy", "Person", writtenBy)
 
 
 class File(Item):
@@ -672,14 +648,14 @@ class LabellingTask(Item):
         self.currentLabelOption: Optional[str] = currentLabelOption
 
         # Edges
-        self.taskType: EdgeList["TextClassification"] = self._init_edge(
-            "taskType", "TextClassification", init_value=taskType
+        self.taskType: EdgeList["TextClassification"] = EdgeList(
+            "taskType", "TextClassification", taskType
         )
-        self.labelOption: EdgeList["LabelOption"] = self._init_edge(
-            "labelOption", "LabelOption", init_value=labelOption
+        self.labelOption: EdgeList["LabelOption"] = EdgeList(
+            "labelOption", "LabelOption", labelOption
         )
-        self.view: EdgeList["CVUStoredDefinition"] = self._init_edge(
-            "view", "CVUStoredDefinition", init_value=view
+        self.view: EdgeList["CVUStoredDefinition"] = EdgeList(
+            "view", "CVUStoredDefinition", view
         )
 
 
@@ -728,10 +704,8 @@ class MediaObject(Item):
         self.startTime: Optional[datetime] = startTime
 
         # Edges
-        self.file: EdgeList["File"] = self._init_edge("file", "File", init_value=file)
-        self.includes: EdgeList["Person"] = self._init_edge(
-            "includes", "Person", init_value=includes
-        )
+        self.file: EdgeList["File"] = EdgeList("file", "File", file)
+        self.includes: EdgeList["Person"] = EdgeList("includes", "Person", includes)
 
 
 class MedicalCondition(Item):
@@ -778,12 +752,8 @@ class MessageChannel(Item):
         self.topic: Optional[str] = topic
 
         # Edges
-        self.photo: EdgeList["Photo"] = self._init_edge(
-            "photo", "Photo", init_value=photo
-        )
-        self.receiver: EdgeList["Account"] = self._init_edge(
-            "receiver", "Account", init_value=receiver
-        )
+        self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
+        self.receiver: EdgeList["Account"] = EdgeList("receiver", "Account", receiver)
 
 
 class Model(Item):
@@ -841,9 +811,7 @@ class Network(Item):
         self.name: Optional[str] = name
 
         # Edges
-        self.website: EdgeList["Website"] = self._init_edge(
-            "website", "Website", init_value=website
-        )
+        self.website: EdgeList["Website"] = EdgeList("website", "Website", website)
 
 
 class Person(Item):
@@ -923,44 +891,36 @@ class Person(Item):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.account: EdgeList["Account"] = self._init_edge(
-            "account", "Account", init_value=account
+        self.account: EdgeList["Account"] = EdgeList("account", "Account", account)
+        self.address: EdgeList["Address"] = EdgeList("address", "Address", address)
+        self.birthPlace: EdgeList["Location"] = EdgeList(
+            "birthPlace", "Location", birthPlace
         )
-        self.address: EdgeList["Address"] = self._init_edge(
-            "address", "Address", init_value=address
+        self.cryptoKey: EdgeList["CryptoKey"] = EdgeList(
+            "cryptoKey", "CryptoKey", cryptoKey
         )
-        self.birthPlace: EdgeList["Location"] = self._init_edge(
-            "birthPlace", "Location", init_value=birthPlace
+        self.deathPlace: EdgeList["Location"] = EdgeList(
+            "deathPlace", "Location", deathPlace
         )
-        self.cryptoKey: EdgeList["CryptoKey"] = self._init_edge(
-            "cryptoKey", "CryptoKey", init_value=cryptoKey
+        self.diet: EdgeList["Diet"] = EdgeList("diet", "Diet", diet)
+        self.hasPhoneNumber: EdgeList["PhoneNumber"] = EdgeList(
+            "hasPhoneNumber", "PhoneNumber", hasPhoneNumber
         )
-        self.deathPlace: EdgeList["Location"] = self._init_edge(
-            "deathPlace", "Location", init_value=deathPlace
+        self.label: EdgeList["Label"] = EdgeList("label", "Label", label)
+        self.me: EdgeList["Person"] = EdgeList("me", "Person", me)
+        self.medicalCondition: EdgeList["MedicalCondition"] = EdgeList(
+            "medicalCondition", "MedicalCondition", medicalCondition
         )
-        self.diet: EdgeList["Diet"] = self._init_edge("diet", "Diet", init_value=diet)
-        self.hasPhoneNumber: EdgeList["PhoneNumber"] = self._init_edge(
-            "hasPhoneNumber", "PhoneNumber", init_value=hasPhoneNumber
+        self.mergedFrom: EdgeList["Person"] = EdgeList(
+            "mergedFrom", "Person", mergedFrom
         )
-        self.label: EdgeList["Label"] = self._init_edge(
-            "label", "Label", init_value=label
+        self.profilePicture: EdgeList["Photo"] = EdgeList(
+            "profilePicture", "Photo", profilePicture
         )
-        self.me: EdgeList["Person"] = self._init_edge("me", "Person", init_value=me)
-        self.medicalCondition: EdgeList["MedicalCondition"] = self._init_edge(
-            "medicalCondition", "MedicalCondition", init_value=medicalCondition
+        self.relationship: EdgeList["Relationship"] = EdgeList(
+            "relationship", "Relationship", relationship
         )
-        self.mergedFrom: EdgeList["Person"] = self._init_edge(
-            "mergedFrom", "Person", init_value=mergedFrom
-        )
-        self.profilePicture: EdgeList["Photo"] = self._init_edge(
-            "profilePicture", "Photo", init_value=profilePicture
-        )
-        self.relationship: EdgeList["Relationship"] = self._init_edge(
-            "relationship", "Relationship", init_value=relationship
-        )
-        self.website: EdgeList["Website"] = self._init_edge(
-            "website", "Website", init_value=website
-        )
+        self.website: EdgeList["Website"] = EdgeList("website", "Website", website)
 
 
 class PhoneNumber(Item):
@@ -1027,8 +987,8 @@ class Plugin(Item):
         self.gitProjectId: Optional[int] = gitProjectId
 
         # Edges
-        self.view: EdgeList["CVUStoredDefinition"] = self._init_edge(
-            "view", "CVUStoredDefinition", init_value=view
+        self.view: EdgeList["CVUStoredDefinition"] = EdgeList(
+            "view", "CVUStoredDefinition", view
         )
 
 
@@ -1066,18 +1026,10 @@ class Post(Item):
         self.isMock: Optional[bool] = isMock
 
         # Edges
-        self.author: EdgeList["Account"] = self._init_edge(
-            "author", "Account", init_value=author
-        )
-        self.comment: EdgeList["Post"] = self._init_edge(
-            "comment", "Post", init_value=comment
-        )
-        self.parent: EdgeList["Post"] = self._init_edge(
-            "parent", "Post", init_value=parent
-        )
-        self.photo: EdgeList["Photo"] = self._init_edge(
-            "photo", "Photo", init_value=photo
-        )
+        self.author: EdgeList["Account"] = EdgeList("author", "Account", author)
+        self.comment: EdgeList["Post"] = EdgeList("comment", "Post", comment)
+        self.parent: EdgeList["Post"] = EdgeList("parent", "Post", parent)
+        self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
 
 
 class Project(Item):
@@ -1100,11 +1052,9 @@ class Project(Item):
         self.gitlabUrl: Optional[str] = gitlabUrl
 
         # Edges
-        self.dataset: EdgeList["Dataset"] = self._init_edge(
-            "dataset", "Dataset", init_value=dataset
-        )
-        self.labellingPlugin: EdgeList["Plugin"] = self._init_edge(
-            "labellingPlugin", "Plugin", init_value=labellingPlugin
+        self.dataset: EdgeList["Dataset"] = EdgeList("dataset", "Dataset", dataset)
+        self.labellingPlugin: EdgeList["Plugin"] = EdgeList(
+            "labellingPlugin", "Plugin", labellingPlugin
         )
 
 
@@ -1130,10 +1080,8 @@ class Receipt(Item):
         self.totalCost: Optional[float] = totalCost
 
         # Edges
-        self.file: EdgeList["File"] = self._init_edge("file", "File", init_value=file)
-        self.photo: EdgeList["Photo"] = self._init_edge(
-            "photo", "Photo", init_value=photo
-        )
+        self.file: EdgeList["File"] = EdgeList("file", "File", file)
+        self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
 
 
 class Relationship(Item):
@@ -1157,8 +1105,8 @@ class Relationship(Item):
         self.proximityValue: Optional[int] = proximityValue
 
         # Edges
-        self.relationship: EdgeList["Person"] = self._init_edge(
-            "relationship", "Person", init_value=relationship
+        self.relationship: EdgeList["Person"] = EdgeList(
+            "relationship", "Person", relationship
         )
 
 
@@ -1194,9 +1142,7 @@ class SuggestedMerge(Item):
         self.task: Optional[str] = task
 
         # Edges
-        self.mergeFrom: EdgeList["Person"] = self._init_edge(
-            "mergeFrom", "Person", init_value=mergeFrom
-        )
+        self.mergeFrom: EdgeList["Person"] = EdgeList("mergeFrom", "Person", mergeFrom)
 
 
 class VoteAction(Item):
@@ -1223,9 +1169,7 @@ class Wallet(Item):
         self.name: Optional[str] = name
 
         # Edges
-        self.picture: EdgeList["Photo"] = self._init_edge(
-            "picture", "Photo", init_value=picture
-        )
+        self.picture: EdgeList["Photo"] = EdgeList("picture", "Photo", picture)
 
 
 class Website(Item):
@@ -1284,8 +1228,8 @@ class Indexer(Integrator):
         self.runDestination: Optional[str] = runDestination
 
         # Edges
-        self.indexerRun: EdgeList["IndexerRun"] = self._init_edge(
-            "indexerRun", "IndexerRun", init_value=indexerRun
+        self.indexerRun: EdgeList["IndexerRun"] = EdgeList(
+            "indexerRun", "IndexerRun", indexerRun
         )
 
 
@@ -1323,9 +1267,7 @@ class IndexerRun(Integrator):
         self.targetDataType: Optional[str] = targetDataType
 
         # Edges
-        self.indexer: EdgeList["Indexer"] = self._init_edge(
-            "indexer", "Indexer", init_value=indexer
-        )
+        self.indexer: EdgeList["Indexer"] = EdgeList("indexer", "Indexer", indexer)
 
 
 class CategoricalLabel(LabelAnnotation):
@@ -1385,15 +1327,11 @@ class Address(Location):
         self.street: Optional[str] = street
 
         # Edges
-        self.changelog: EdgeList["AuditItem"] = self._init_edge(
-            "changelog", "AuditItem", init_value=changelog
+        self.changelog: EdgeList["AuditItem"] = EdgeList(
+            "changelog", "AuditItem", changelog
         )
-        self.country: EdgeList["Country"] = self._init_edge(
-            "country", "Country", init_value=country
-        )
-        self.location: EdgeList["Location"] = self._init_edge(
-            "location", "Location", init_value=location
-        )
+        self.country: EdgeList["Country"] = EdgeList("country", "Country", country)
+        self.location: EdgeList["Location"] = EdgeList("location", "Location", location)
 
 
 class Country(Location):
@@ -1414,10 +1352,8 @@ class Country(Location):
         self.name: Optional[str] = name
 
         # Edges
-        self.flag: EdgeList["Photo"] = self._init_edge("flag", "Photo", init_value=flag)
-        self.location: EdgeList["Location"] = self._init_edge(
-            "location", "Location", init_value=location
-        )
+        self.flag: EdgeList["Photo"] = EdgeList("flag", "Photo", flag)
+        self.location: EdgeList["Location"] = EdgeList("location", "Location", location)
 
 
 class Photo(MediaObject):
@@ -1443,15 +1379,11 @@ class Photo(MediaObject):
         self.name: Optional[str] = name
 
         # Edges
-        self.changelog: EdgeList["AuditItem"] = self._init_edge(
-            "changelog", "AuditItem", init_value=changelog
+        self.changelog: EdgeList["AuditItem"] = EdgeList(
+            "changelog", "AuditItem", changelog
         )
-        self.label: EdgeList["Label"] = self._init_edge(
-            "label", "Label", init_value=label
-        )
-        self.thumbnail: EdgeList["File"] = self._init_edge(
-            "thumbnail", "File", init_value=thumbnail
-        )
+        self.label: EdgeList["Label"] = EdgeList("label", "Label", label)
+        self.thumbnail: EdgeList["File"] = EdgeList("thumbnail", "File", thumbnail)
 
 
 class Message(WrittenWork):
@@ -1498,21 +1430,13 @@ class Message(WrittenWork):
         self.isMock: Optional[bool] = isMock
 
         # Edges
-        self.message: EdgeList["Message"] = self._init_edge(
-            "message", "Message", init_value=message
+        self.message: EdgeList["Message"] = EdgeList("message", "Message", message)
+        self.messageChannel: EdgeList["MessageChannel"] = EdgeList(
+            "messageChannel", "MessageChannel", messageChannel
         )
-        self.messageChannel: EdgeList["MessageChannel"] = self._init_edge(
-            "messageChannel", "MessageChannel", init_value=messageChannel
-        )
-        self.photo: EdgeList["Photo"] = self._init_edge(
-            "photo", "Photo", init_value=photo
-        )
-        self.receiver: EdgeList["Account"] = self._init_edge(
-            "receiver", "Account", init_value=receiver
-        )
-        self.sender: EdgeList["Account"] = self._init_edge(
-            "sender", "Account", init_value=sender
-        )
+        self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
+        self.receiver: EdgeList["Account"] = EdgeList("receiver", "Account", receiver)
+        self.sender: EdgeList["Account"] = EdgeList("sender", "Account", sender)
 
 
 class Note(WrittenWork):
@@ -1527,9 +1451,7 @@ class Note(WrittenWork):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.label: EdgeList["Label"] = self._init_edge(
-            "label", "Label", init_value=label
-        )
+        self.label: EdgeList["Label"] = EdgeList("label", "Label", label)
 
 
 class EmailMessage(Message):
@@ -1552,13 +1474,9 @@ class EmailMessage(Message):
         self.starred: Optional[bool] = starred
 
         # Edges
-        self.bcc: EdgeList["Account"] = self._init_edge(
-            "bcc", "Account", init_value=bcc
+        self.bcc: EdgeList["Account"] = EdgeList("bcc", "Account", bcc)
+        self.cc: EdgeList["Account"] = EdgeList("cc", "Account", cc)
+        self.message: EdgeList["EmailMessage"] = EdgeList(
+            "message", "EmailMessage", message
         )
-        self.cc: EdgeList["Account"] = self._init_edge("cc", "Account", init_value=cc)
-        self.message: EdgeList["EmailMessage"] = self._init_edge(
-            "message", "EmailMessage", init_value=message
-        )
-        self.replyTo: EdgeList["Account"] = self._init_edge(
-            "replyTo", "Account", init_value=replyTo
-        )
+        self.replyTo: EdgeList["Account"] = EdgeList("replyTo", "Account", replyTo)
