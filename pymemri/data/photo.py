@@ -69,7 +69,7 @@ class Photo(Item):
         self.data = data
         self._file_created = _file_created
 
-        self.file = self._init_edge("file", "File", file)
+        self.file = EdgeList("file", "File", file)
 
     def show(self):
         fig, ax = plt.subplots(1)

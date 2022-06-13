@@ -24,7 +24,7 @@ class Dog(Item):
         self.bites = bites
         self.weight = weight
 
-        self.owner = self._init_edge("owner", "Person", owner)
+        self.owner = EdgeList("owner", "Person", owner)
 
 
 @pytest.fixture(scope="module")

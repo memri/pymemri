@@ -93,6 +93,6 @@ class PluginRun(Item):
         self.progress: Optional[float] = progress
 
         # Edges
-        self.plugin: EdgeList[Plugin] = self._init_edge("plugin", "Plugin", plugin)
-        self.view: EdgeList[CVUStoredDefinition] = self._init_edge("view", "CVUStoredDefinition", view)
-        self.account: EdgeList[Account] = self._init_edge("account", "Account", account)
+        self.plugin: EdgeList[Plugin] = EdgeList("plugin", "Plugin", plugin)
+        self.view: EdgeList[CVUStoredDefinition] = EdgeList("view", "CVUStoredDefinition", view)
+        self.account: EdgeList[Account] = EdgeList("account", "Account", account)
