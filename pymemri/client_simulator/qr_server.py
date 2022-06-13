@@ -39,12 +39,12 @@ def _run_on_start():
 def send_email(plugin_run, client, full_user_auth_url):
     # To make auth possible without email, attach url to pluginrun.
     plugin_run.authUrl = full_user_auth_url
-    
+
     # Gather email
     plugin_run.status = RUN_USER_ACTION_NEEDED
     email_cvu = get_default_cvu("request_email.cvu")
     client.bulk_action(
-        create_items=[email_cvu], 
+        create_items=[email_cvu],
         create_edges=[Edge(plugin_run, email_cvu, "view")]
     )
     client.update_item(plugin_run)
@@ -65,8 +65,8 @@ def send_email(plugin_run, client, full_user_auth_url):
         email_sent = True
     except Exception as e:
         email_sent = False
-        print(f"failed to send email:\n{e}")  
-    
+        print(f"failed to send email:\n{e}")
+
     # depending on whether email was a success, either show qr link, or message that link was sent to email
     if not email_sent:
         # NOTE Theres currently no documented way to delete edges, so client will have to pick the last added cvu.
@@ -96,14 +96,18 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     sleep(0.1)
     ready = False
     while not ready:
-        ready = requests.get(f"http://{host}:{port}/qr").status_code in [200, 201]
+        try:
+            ready = requests.get(f"http://{host}:{port}/qr").status_code in [200, 201]
+        except Exception as e:
+            print(f"The QR server is not ready yet: '{e}'")
+
         sleep(0.2)
 
     print(f"GO TO {full_user_auth_url} and scan the code")
 
     process_email = multiprocessing.Process(target=send_email, args=(plugin_run, client, full_user_auth_url), daemon=True)
     process_email.start()
-    
+
     return process, process_dict
 
 if __name__ == "__main__":
@@ -125,4 +129,3 @@ if __name__ == "__main__":
         i+=1
         sleep(1)
         print("waiting")
-    
