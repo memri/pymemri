@@ -25,7 +25,7 @@ def test_edge_insert_correct_target():
     owner_edgelist[0] = owner_edge
     owner_edgelist.insert(0, owner_edge)
 
-    # Length 5: append, extend, +=, insert
+    # Length 5: add_edge, append, extend, +=, insert
     assert len(account.owner) == 5
 
 
