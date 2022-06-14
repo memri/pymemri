@@ -141,9 +141,8 @@ def test_graphql_1(api: PodAPI):
     # check non-selections
     assert "dateCreated" not in message
 
-
+@pytest.mark.skip(reason="TODO /graphQL should error on out-of-schema values")
 def test_graphql_2(api: PodAPI):
-   
     query = """
         query { 
             Message {
@@ -164,6 +163,7 @@ def test_graphql_2(api: PodAPI):
     except PodError as e:
         assert e.status == 400
 
+@pytest.mark.skip(reason="TODO /graphQL should support query aggregate functions")
 def test_graphql_3(api: PodAPI):
    
     query = """
@@ -178,6 +178,7 @@ def test_graphql_3(api: PodAPI):
         assert False
     except PodError as e:
         assert e.status == 400
+
 
 def test_graphql_4(api: PodAPI):
 
@@ -206,6 +207,7 @@ def test_graphql_4(api: PodAPI):
             return
     assert False
 
+@pytest.mark.skip(reason="TODO /graphQL should support query aggregate functions")
 def test_graphql_5(api: PodAPI):
 
     query = """
@@ -225,5 +227,3 @@ def test_graphql_5(api: PodAPI):
         assert res["count"] == 10 and res["total"] == 103
     except:
         assert False
-
-    
