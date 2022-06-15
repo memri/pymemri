@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'check_target_type', 'EdgeList', 'T', 'ItemBase'
 
 # Cell
 # hide
-from typing import Optional, Dict, List, Generic, TypeVar, Tuple, Union, Iterable
+from typing import Optional, Dict, List, Generic, TypeVar, Tuple, Union, Iterable, ForwardRef
 from ..imports import *
 from datetime import datetime
 import uuid
@@ -84,7 +84,7 @@ class EdgeList(list, Generic[T]):
     def __init__(
         self,
         name: str,
-        target_type: Union[type, str],
+        target_type: Union[type, str, ForwardRef],
         data: List[Edge] = None,
     ) -> None:
         super().__init__()
@@ -92,6 +92,8 @@ class EdgeList(list, Generic[T]):
 
         if isinstance(target_type, type):
             target_type = target_type.__name__
+        elif isinstance(target_type, ForwardRef):
+            self.target_type = target_type.__forward_arg__
         self.target_type = target_type
 
         if data is not None:
@@ -389,6 +391,8 @@ class Item(ItemBase):
                 v = v.__args__[0]
                 if isinstance(v, type):
                     v = v.__name__
+                elif isinstance(v, ForwardRef):
+                    v = v.__forward_arg__
             else:
                 v = "Any"
             res[k] = (cls.__name__, v)
