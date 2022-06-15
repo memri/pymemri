@@ -25,7 +25,7 @@ check if there is diff library/nbs:
 run tests:
   stage: test
   services:
-    - name: ${POD_IMAGE}
+    - name: gitlab.memri.io:5050/memri/pod:graphql-latest
       alias: pod
       entrypoint:
         - "/pod"
