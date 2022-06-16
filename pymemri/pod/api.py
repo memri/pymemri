@@ -4,12 +4,15 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodError', 'PodAPI']
 
 # Cell
 import os
-from typing import Any, Dict, List, Generator, Deque
+from typing import Any, Dict, List, Generator, Deque, Union
 import requests
 import urllib
 from hashlib import sha256
 from collections import deque
 import json
+
+from .graphql_utils import GQLQuery
+from ..data.itembase import Item
 
 # Cell
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
@@ -168,6 +171,11 @@ class PodAPI:
         }
         payload = {k: v for k, v in payload.items() if v is not None}
         return self.post("bulk", payload).json()
+
+    def graphql(self, query: Union[str, GQLQuery]) -> List[dict]:
+        if isinstance(query, GQLQuery):
+            query = query.data
+        return self.post("graphql", query).json()
 
     def upload_file(self, file: bytes) -> Any:
         if self.auth_json.get("type") == "PluginAuth":

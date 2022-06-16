@@ -6,6 +6,7 @@ from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
 from pymemri.data.schema import Account, Person, Message
 from pymemri.data.itembase import Edge
+from pymemri.pod.graphql_utils import gql
 
 
 @pytest.fixture(scope="module")
@@ -47,6 +48,19 @@ def api():
     client.bulk_action(create_items=search_accounts)
 
     return PodAPI(database_key=client.database_key, owner_key=client.owner_key)
+
+def test_format_query():
+    query = gql(
+    """query {
+        Account(filter: {eq: {service: "$service"}})
+    }
+    """)
+
+    q = query.format({"service": "test"})
+    assert query == """query {
+        Account(filter: {eq: {service: "test"}})
+    }
+    """
 
 def test_graphql_1(api: PodAPI):
    
@@ -118,12 +132,12 @@ def test_graphql_3(api: PodAPI):
 
 def test_graphql_4(api: PodAPI):
 
-    query = """
+    query = gql("""
         query {
             Person {
                 id
                 displayName
-                ~owner (filter: {service: {eq: "whatsapp"}}) {
+                ~owner (filter: {service: {eq: "$service"}}) {
                     id
                     displayName
                     service
@@ -133,9 +147,10 @@ def test_graphql_4(api: PodAPI):
                 }
             }
         }
-    """
+    """)
+    query.format(service="whatsapp")
 
-    res = api.post("graphql", query).json()
+    res = api.graphql(query)
     # check reverse edges
     for p in res["data"]:
         if p["~owner"][0]["service"] == "whatsapp":

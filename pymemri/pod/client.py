@@ -13,8 +13,9 @@ from .utils import *
 from ..plugin.schema import *
 from ..test_utils import get_ci_variables
 from .api import PodAPI, PodError, DEFAULT_POD_ADDRESS, POD_VERSION
+from .graphql_utils import GQLQuery, gql
 
-from typing import List, Union
+from typing import List, Dict, Union
 import uuid
 import urllib
 from datetime import datetime
@@ -606,6 +607,11 @@ class PodClient:
         if ALL_EDGES in properties:
             del properties[ALL_EDGES]
         return properties
+
+    def search_graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[Item]:
+        query = gql(query, variables)
+        result = self.api.graphql(query)
+        return result
 
     def send_email(self, to, subject="", body=""):
         try:
