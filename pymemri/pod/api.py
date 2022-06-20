@@ -4,7 +4,7 @@ __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodError', 'PodAPI']
 
 # Cell
 import os
-from typing import Any, Dict, List, Generator, Deque, Union
+from typing import Any, Dict, List, Generator, Deque, Union, Optional
 import requests
 import urllib
 from hashlib import sha256
@@ -172,10 +172,11 @@ class PodAPI:
         payload = {k: v for k, v in payload.items() if v is not None}
         return self.post("bulk", payload).json()
 
-    def graphql(self, query: Union[str, GQLQuery]) -> List[dict]:
-        if isinstance(query, GQLQuery):
-            query = query.data
-        return self.post("graphql", query).json()
+    def graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[dict]:
+        if isinstance(query, str):
+            query = GQLQuery(query)
+        query.format(variables)
+        return self.post("graphql", query.data).json()
 
     def upload_file(self, file: bytes) -> Any:
         if self.auth_json.get("type") == "PluginAuth":

@@ -13,7 +13,7 @@ from .utils import *
 from ..plugin.schema import *
 from ..test_utils import get_ci_variables
 from .api import PodAPI, PodError, DEFAULT_POD_ADDRESS, POD_VERSION
-from .graphql_utils import GQLQuery, gql
+from .graphql_utils import GQLQuery
 
 from typing import List, Dict, Union
 import uuid
@@ -609,8 +609,7 @@ class PodClient:
         return properties
 
     def search_graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[Item]:
-        query = gql(query, variables)
-        result = self.api.graphql(query)
+        result = self.api.graphql(query, variables)
         return result
 
     def send_email(self, to, subject="", body=""):

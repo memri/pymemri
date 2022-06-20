@@ -6,7 +6,7 @@ from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
 from pymemri.data.schema import Account, Person, Message
 from pymemri.data.itembase import Edge
-from pymemri.pod.graphql_utils import gql
+from pymemri.pod.graphql_utils import GQLQuery
 
 
 @pytest.fixture(scope="module")
@@ -50,7 +50,7 @@ def api():
     return PodAPI(database_key=client.database_key, owner_key=client.owner_key)
 
 def test_format_query():
-    query = gql(
+    query = GQLQuery(
     """query {
         Account(filter: {eq: {service: "$service"}})
     }
@@ -132,7 +132,7 @@ def test_graphql_3(api: PodAPI):
 
 def test_graphql_4(api: PodAPI):
 
-    query = gql("""
+    query = GQLQuery("""
         query {
             Person {
                 id
