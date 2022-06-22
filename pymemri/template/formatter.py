@@ -212,6 +212,7 @@ def plugin_from_template(
     package_name: Param("Name of your plugin python package", str) = None,
     description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
+    verbose: Param("Should print out dir", bool) = True,
     install_requires: Param("Extra packages to install, provided as comma separated, e.g. pymemri,requests", str)=""
 ):
     """
@@ -249,7 +250,8 @@ def plugin_from_template(
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
     formatter.format()
-    formatter.print_filetree()
+    if verbose:
+        formatter.print_filetree()
 
 
     print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
