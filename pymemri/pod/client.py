@@ -608,8 +608,22 @@ class PodClient:
             del properties[ALL_EDGES]
         return properties
 
+    def _item_from_graphql(self, data):
+        item = self.item_from_json(data)
+        for prop in item.edges:
+            if prop in data:
+                for edge in data[prop]:
+                    edge_item = self._item_from_graphql(edge)
+                    item.add_edge(prop, edge_item)
+        return item
+
     def search_graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[Item]:
-        result = self.api.graphql(query, variables)
+        response = self.api.graphql(query, variables)
+        data = response['data']
+        result = []
+        for d in data:
+            item = self._item_from_graphql(d)
+            result.append(item)
         return result
 
     def send_email(self, to, subject="", body=""):
