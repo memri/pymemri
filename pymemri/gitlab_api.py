@@ -4,7 +4,7 @@ __all__ = ['MEMRI_PATH', 'MEMRI_GITLAB_BASE_URL', 'ACCESS_TOKEN_PATH', 'GITLAB_A
            'TIME_FORMAT_GITLAB', 'PROJET_ID_PATTERN', 'find_git_repo', 'get_registry_api_key', 'upload_in_chunks',
            'IterableToFileAdapter', 'write_file_to_package_registry', 'project_id_from_name',
            'get_project_id_from_project_path_unsafe', 'download_package_file', 'create_repo', 'get_current_username',
-           'commit_file']
+           'commit_file', 'rm_tree', 'write_files_to_git', 'create_new_project']
 
 # Cell
 from fastprogress.fastprogress import progress_bar
@@ -16,6 +16,8 @@ from datetime import datetime
 from git import Repo
 import re
 from .data.basic import *
+from .template.formatter import plugin_from_template
+import urllib
 
 # Cell
 MEMRI_PATH = Path.home() / ".memri"
@@ -200,20 +202,66 @@ def get_current_username():
         return username
 
 # Cell
-def commit_file(project_name, file_in_path, file_out_path, branch="main"):
+def commit_file(project_name, path_in2out, branch="main"):
     api_key = get_registry_api_key()
     project_id = project_id_from_name(repo, api_key)
-    file_out_path_escaped = urllib.parse.quote(file_out_path, safe='')
+#     file_out_path_escaped = urllib.parse.quote(file_out_path, safe='')
 
-    content = read_file(file_in_path)
+    actions = []
 
-    url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/repository/files/{file_out_path_escaped}"
-    payload = {"branch": branch, "commit_message": "automated commit", "content": content}
+    for file_in_path, file_out_path in path_in2out.items():
+        content = read_file(file_in_path)
+        action_payload = {"action": "create", "file_path": file_out_path, "content": content}
+        actions.append(action_payload)
+
+    url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/repository/commits"
+    payload = {"branch": branch, "commit_message": "automated commit", "content": content, "actions": actions}
+
     res = requests.post(url=url, json=payload,
                         headers={"PRIVATE-TOKEN": api_key})
+    files_in = list(path_in2out.keys())
     if res.status_code not in [200, 201, 202]:
-        raise ValueError(f"failed to commit file:\n {res.text}")
-    print(f"committed file {file_in_path}")
+        raise ValueError(f"failed to make commit with files {files_in}:\n {res.text}")
+    print(f"committed files {files_in}")
 
 #      --data '{"branch": "master", "author_email": "author@example.com", "author_name": "Firstname Lastname",
 #                "content": "some content", "commit_message": "create a new file"}' \
+
+
+# Cell
+def rm_tree(pth):
+    pth = Path(pth)
+    for child in pth.glob('*'):
+        if child.is_file():
+            child.unlink()
+        else:
+            rm_tree(child)
+
+    try:
+        pth.rmdir()
+    except FileNotFoundError as e:
+        pass
+
+# Cell
+def write_files_to_git(repo, target_dir):
+    path_in2out = dict()
+    for p in target_dir.rglob("*"):
+        if p.is_file():
+            path_in_repo = p.relative_to(target_dir)
+            path_in2out[str(p)] = str(path_in_repo)
+    commit_file(str(repo), path_in2out)
+
+
+def create_new_project(project_name):
+    tmp_dir = Path("/tmp/test") / project_name
+    rm_tree(tmp_dir)
+
+    plugin_from_template(
+        template_name="classifier_plugin",
+        description="A transformer based sentiment analyis plugin",
+        install_requires="transformers,sentencepiece,protobuf,torch==1.10.0",
+        target_dir=str(tmp_dir),
+        repo_url=f"{MEMRI_GITLAB_BASE_URL}/plugins/{project_name}",
+        verbose=False
+    )
+    write_files_to_git(project_name, tmp_dir)
