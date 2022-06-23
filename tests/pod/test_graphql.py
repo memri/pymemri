@@ -67,14 +67,11 @@ def test_graphql_1(api: PodAPI):
     query = """
         query {
             Message {
-                id
                 subject
                 sender {
-                    id
                     displayName
                     service
                     owner {
-                        id
                         displayName
                     }
                 }
@@ -82,14 +79,20 @@ def test_graphql_1(api: PodAPI):
         }
     """
 
-    res = api.post("graphql", query).json()
-    message = res["data"][0]
+    client = PodClient()
+    client.api = api
+    items = client.search_graphql(query)
+    message = items[0]
+    # check item type
+    assert type(message).__name__ == "Message"
     # check selections
-    assert message["subject"] == "Hello"
-    assert message["sender"][0]["displayName"] == "Alice"
-    assert message["sender"][0]["owner"][0]["displayName"] == "Alice"
-    # check non-selections
-    assert "dateCreated" not in message
+    assert message.subject == "Hello"
+    assert message.sender[0].displayName == "Alice"
+    assert message.sender[0].owner[0].displayName == "Alice"
+    # base properties should exist
+    assert getattr(message, "dateCreated", None)
+    # non-selections should be absent
+    assert getattr(message, "service", None) == None
 
 @pytest.mark.skip(reason="TODO /graphQL should error on out-of-schema values")
 def test_graphql_2(api: PodAPI):
