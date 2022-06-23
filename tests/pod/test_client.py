@@ -3,7 +3,7 @@ from pymemri.pod.client import PodClient
 from pymemri.data.schema import Item, Edge, EdgeList
 import pytest
 from pymemri.data.schema import EmailMessage, Person, Account
-from pymemri.pod.graphql_utils import gql
+from pymemri.pod.graphql_utils import GQLQuery
 
 
 class Dog(Item):
@@ -274,9 +274,9 @@ def test_search_gql(client: PodClient):
     all_persons = client.search({"type": "Person"}, include_edges=False)
     person_ids = [p.id for p in all_persons]
 
-    query = gql("query{Person{id}}")
-    result = client.search_graphql(query)
-    result_ids = [r["id"] for r in result["data"]]
+    query = GQLQuery("query{Person{id}}")
+    items = client.search_graphql(query)
+    result_ids = [r.id for r in items]
     assert person_ids == result_ids
 
 
