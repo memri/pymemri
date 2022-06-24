@@ -82,7 +82,7 @@ def send_email(plugin_run, client, full_user_auth_url):
 def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     manager = multiprocessing.Manager()
     process_dict = manager.dict()
-    process_dict["qr_code"] = _qr_code_data
+    process_dict[QR_CODE_KEY] = _qr_code_data
     process_dict["authenticated"] = False
     host = "0.0.0.0"
     port = 8080

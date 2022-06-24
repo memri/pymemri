@@ -54,6 +54,7 @@ class PluginRun(Item):
         "error",
         "config",
         "progress",
+        "webserverPort"
     ]
     edges = Item.edges + ["plugin", "view", "account"]
 
@@ -71,6 +72,7 @@ class PluginRun(Item):
         plugin: EdgeList[Plugin] = None,
         view: EdgeList[CVUStoredDefinition] = None,
         account: EdgeList[Account] = None,
+        webserverPort: int = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -91,6 +93,7 @@ class PluginRun(Item):
         self.error: Optional[str] = error
         self.config: Optional[str] = config
         self.progress: Optional[float] = progress
+        self.webserverPort: Optional[int] = webserverPort
 
         # Edges
         self.plugin: EdgeList[Plugin] = plugin if plugin is not None else EdgeList()
