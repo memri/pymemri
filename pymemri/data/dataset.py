@@ -42,18 +42,15 @@ class Dataset(_central_schema.Dataset):
 
         return self.entry
 
-    def _get_data(self, dtype: str, columns: List[str], filter_missing: bool = True):
+    def _get_data(self, dtype: str, columns: List[str]):
         if self._client is None:
             raise ValueError("Dataset does not have associated PodClient.")
         items = self._get_items()
 
         query = Query("id", *columns)
-        result = query.execute(self._client, items)
-        if filter_missing:
-            result = filter_rows(result, filter_val=None)
-        return query.convert_dtype(result, dtype)
+        return query.execute(self._client, items, dtype)
 
-    def to(self, dtype: str, columns: List[str], filter_missing: bool = True):
+    def to(self, dtype: str, columns: List[str]):
         """
         Converts Dataset to a different format.
 
@@ -66,19 +63,16 @@ class Dataset(_central_schema.Dataset):
         Args:
             dtype (str): Datatype of the returned dataset
             columns (List[str]): Column names of the dataset
-            filter_missing (bool, optional): If true, all rows that contain `None` values are omitted.
-                Defaults to True.
 
         Returns:
             Any: Dataset formatted according to `dtype`
         """
-        return self._get_data(dtype, columns, filter_missing)
+        return self._get_data(dtype, columns)
 
     def save(
-        self, path: Union[Path, str], columns: List[str], filter_missing: bool = True
-    ):
+        self, path: Union[Path, str], columns: List[str]):
         """
         Save dataset to CSV.
         """
-        result = self._get_data("pandas", columns, filter_missing)
+        result = self._get_data("pandas", columns)
         result.to_csv(path, index=False)
