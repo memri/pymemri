@@ -75,7 +75,7 @@ def test_graphql_1(api: PodAPI):
     assert message["sender"][0]["displayName"] == "Alice"
     assert message["sender"][0]["owner"][0]["displayName"] == "Alice"
     # base properties should exist
-    assert getattr(message, "dateCreated", None)
+    assert "dateCreated" in message
 
 @pytest.mark.skip(reason="TODO /graphQL should error on out-of-schema values")
 def test_graphql_2(api: PodAPI):
