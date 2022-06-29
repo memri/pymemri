@@ -10,6 +10,37 @@ from pymemri.pod.client import PodClient
 app = Flask(__name__)
 TRIGGER_HANDLER = "trigger_handler"
 
+# pluggable view is per endpoint
+# app.add_url_rule("endpoint", view_func=ShowUsers.as_view())
+# pluggable view is created upon every request!
+
+# blueprints can define whole set of endpoints
+
+class TriggerInterface:
+    @abc.abstractmethod
+    def do_trigger():
+        raise NotImplementedError()
+
+class TriggerApi(MethodView):
+    def __init__(self, ctx : TriggerInterface):
+        self._ctx = ctx
+
+    def post(self, body):
+        ctx.do_tirgger()
+
+class TriggerWorker(TriggerInterface):
+    def do_trigger():
+        pass
+
+class PluginBase:
+    def register_endpoint(self, endpoint: str, handler: Type[MethodView], ctx):
+        app.add_url_rule(endpoint, view_func=handler.as_view(ctx))
+class MyPlugin(PluginBase):
+    trigger_worker = TriggerWorker()
+
+    def __init__(self):
+        super().register_endpoint("/trigger", TriggerApi, trigger_worker)
+
 
 @app.route("/v1/item/trigger", methods=["POST"])
 def trigger():

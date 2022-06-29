@@ -16,6 +16,27 @@ qr_code_dict = None
 
 QR_CODE_KEY = "qr_code"
 
+class QRApi(MethodView):
+    def __init__(self, ctx : QRInterface):
+        self.ctx = qr_code_dict
+    def get():
+        return ctx.do_qr()
+
+class QRInterface:
+    pass
+class QRImplementation(QRInterface):
+    def __init__(self, the_dict):
+        self.qr_code_dict = the_dict
+
+    def do_qr(self):
+
+        qr_code_data = self.qr_code_dict[QR_CODE_KEY]
+        done = self.qr_code_dict.get("authenticated", False)
+        if done:
+            return render_template("success.html")
+        else:
+            return render_template('images.html', chart_output=qr_code_data)
+
 
 @app.route('/qr')
 def index():
