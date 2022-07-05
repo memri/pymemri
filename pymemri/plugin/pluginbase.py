@@ -12,6 +12,7 @@ from ..imports import *
 from .states import *
 from ..pod.utils import *
 from .listeners import get_abort_plugin_listener
+from ..webserver.webserver import WebServer
 
 from os import environ
 from abc import ABCMeta
@@ -59,6 +60,7 @@ class PluginBase(metaclass=ABCMeta):
         self.client = client
         self._status_listeners = []
         self._config_dict = kwargs
+        self._webserver = WebServer()
 
     def set_run_status(self, status):
         # TODO sync before setting status (requires pod_client.sync())
@@ -75,6 +77,8 @@ class PluginBase(metaclass=ABCMeta):
         if self.client and self.pluginRun:
             status_abort_listener = get_abort_plugin_listener(self.client, self.pluginRun.id)
             self._status_listeners.append(status_abort_listener)
+
+        self._webserver.run()
 
     def teardown(self):
         for listener in self._status_listeners:
