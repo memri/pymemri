@@ -1,16 +1,13 @@
 import requests
 from pymemri.data.itembase import Edge
-from pymemri.plugin.schema import Account, PluginRun
+from pymemri.plugin.schema import  PluginRun
 from pymemri.pod.client import PodClient
 import multiprocessing
 from time import sleep
 import os
 from pymemri.plugin.states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED
-from pymemri.plugin.pluginbase import POD_PLUGIN_DNS_ENV, PluginBase
+from pymemri.plugin.pluginbase import POD_PLUGIN_DNS_ENV
 from pymemri.cvu.utils import get_default_cvu
-
-
-# TODO: rename file
 
 def send_email(plugin_run, client, full_user_auth_url):
     # To make auth possible without email, attach url to pluginrun.
@@ -59,6 +56,7 @@ def run_qr_flow(client: PodClient, plugin_run: PluginRun):
     host = "0.0.0.0"
     port = 8080
     # give time to start
+    print("Checking if webservice is ready...")
     ready = False
     while not ready:
         try:
@@ -72,8 +70,6 @@ def run_qr_flow(client: PodClient, plugin_run: PluginRun):
     full_user_auth_url = f"{user_host}/qr"
 
     print(f"GO TO {full_user_auth_url} and scan the code")
-
-    print("DEBUG tested the endpoint, start email service")
 
     process_email = multiprocessing.Process(target=send_email, args=(plugin_run, client, full_user_auth_url), daemon=True)
     process_email.start()
