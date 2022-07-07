@@ -54,7 +54,7 @@ def send_email(plugin_run, client, full_user_auth_url):
 
 def run_qr_flow(client: PodClient, plugin_run: PluginRun):
     host = "0.0.0.0"
-    port = 8080
+    port = plugin_run.webserverPort or 8080
     # give time to start
     print("Checking if webservice is ready...")
     ready = False

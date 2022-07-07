@@ -1,4 +1,5 @@
-import random, string
+import random
+import string
 from .itembase import ItemBase, Edge, Item
 from ._central_schema import *
 from .photo import Photo

@@ -60,7 +60,7 @@ class PluginBase(metaclass=ABCMeta):
         self.client = client
         self._status_listeners = []
         self._config_dict = kwargs
-        self._webserver = WebServer()
+        self._webserver = WebServer(pluginRun.webserverPort or 8080)
 
     def set_run_status(self, status):
         # TODO sync before setting status (requires pod_client.sync())

@@ -30,8 +30,6 @@ def qr(request: Request):
     qr_code_data = qr_code_dict.get(QR_CODE_KEY, None)
     done = qr_code_dict.get(AUTHENTICATED, False)
 
-    print(f"DEBUG: done {done} qr code: {qr_code_data}")
-    print(f"CWD{os.getcwd()}")
     if done:
         return templates.TemplateResponse("success.html", {"request": request})
     else:

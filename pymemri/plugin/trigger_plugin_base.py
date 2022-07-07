@@ -4,6 +4,7 @@ from .pluginbase import PluginBase
 import abc
 import threading
 
+
 class TriggerPluginBase(PluginBase):
     """Base class for plugins that are expected to expose HTTP interface used by the POD.
        Current use case is to notify the plugin about arrival of new data."""
@@ -40,14 +41,3 @@ class TriggerPluginBase(PluginBase):
         @throws Exception in any error encountered
         """
         raise NotImplementedError()
-
-
-class ConcreteTrigger(TriggerPluginBase):
-    def __init__(self, pluginRun=None, client=None, **kwargs):
-        super().__init__(pluginRun=pluginRun, client=client,  **kwargs)
-
-    def trigger(self, req: TriggerReq):
-        print(f"Got triggered with item {req.item_id}, look no closure!")
-
-    def run():
-        print("Run from ConcreteTrigger called!")
