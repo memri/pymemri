@@ -48,10 +48,11 @@ def write_model_to_package_registry(model, project_name=None):
 
 # Cell
 def download_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
+    api = GitlabAPI()
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
     for f in files:
-        out_file_path = download_package_file(f, project_path=project_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME)
+        out_file_path = api.download_package_file(f, project_path=project_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME)
     return out_file_path.parent
 
 # Cell
