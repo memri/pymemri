@@ -200,6 +200,35 @@ def get_template_replace_dict(
     }
 
 # Cell
+def _plugin_from_template(list_templates=False, user=None,repo_url=None,plugin_name=None,template_name="basic",
+                          package_name=None,description=None,target_dir=".",verbose=True,install_requires=""):
+    if list_templates:
+        print("Available templates:")
+        for template in get_templates():
+            print(template)
+        return
+
+    template = download_plugin_template(template_name)
+
+    tgt_path = Path(target_dir)
+    replace_dict = get_template_replace_dict(
+        repo_url=repo_url,
+        user=user,
+        plugin_name=plugin_name,
+        package_name=package_name,
+        description=description,
+        install_requires=install_requires
+    )
+
+    formatter = TemplateFormatter(template, replace_dict, tgt_path)
+    formatter.format()
+    if verbose:
+        formatter.print_filetree()
+
+
+    print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
+
+# Cell
 @call_parse
 def plugin_from_template(
     list_templates: Param("List available plugin templates", store_true) = False,
@@ -229,29 +258,5 @@ def plugin_from_template(
         description (Param, optional): An optional plugin description. Defaults to None.
         target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".
     """
-
-    if list_templates:
-        print("Available templates:")
-        for template in get_templates():
-            print(template)
-        return
-
-    template = download_plugin_template(template_name)
-
-    tgt_path = Path(target_dir)
-    replace_dict = get_template_replace_dict(
-        repo_url=repo_url,
-        user=user,
-        plugin_name=plugin_name,
-        package_name=package_name,
-        description=description,
-        install_requires=install_requires
-    )
-
-    formatter = TemplateFormatter(template, replace_dict, tgt_path)
-    formatter.format()
-    if verbose:
-        formatter.print_filetree()
-
-
-    print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
+    _plugin_from_template(list_templates, user,repo_url,plugin_name,template_name,package_name,description,target_dir,
+                          verbose,install_requires)

@@ -657,6 +657,13 @@ class PodClient:
             print(f"Failed to send trigger status to the POD, reason {e}")
             return False
 
+    def get_oauth_item(self):
+        oauth_items = sorted([x for x in self.search({"type": "OauthFlow"})], key=lambda x: x.dateCreated)
+        if len(oauth_items) > 0:
+            return oauth_items[0]
+        else:
+            return None
+
 
 # Cell
 class Dog(Item):

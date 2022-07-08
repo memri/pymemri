@@ -16,7 +16,7 @@ from datetime import datetime
 from git import Repo
 import re
 from .data.basic import *
-from .template.formatter import plugin_from_template
+from .template.formatter import _plugin_from_template
 import urllib
 
 # Cell
@@ -204,7 +204,7 @@ def get_current_username():
 # Cell
 def commit_file(project_name, path_in2out, branch="main"):
     api_key = get_registry_api_key()
-    project_id = project_id_from_name(repo, api_key)
+    project_id = project_id_from_name(project_name, api_key)
 #     file_out_path_escaped = urllib.parse.quote(file_out_path, safe='')
 
     actions = []
@@ -256,7 +256,7 @@ def create_new_project(project_name):
     tmp_dir = Path("/tmp/test") / project_name
     rm_tree(tmp_dir)
 
-    plugin_from_template(
+    _plugin_from_template(
         template_name="classifier_plugin",
         description="A transformer based sentiment analyis plugin",
         install_requires="transformers,sentencepiece,protobuf,torch==1.10.0",
