@@ -660,7 +660,7 @@ class PodClient:
     def get_oauth_item(self):
         oauth_items = sorted([x for x in self.search({"type": "OauthFlow"})], key=lambda x: x.dateCreated)
         if len(oauth_items) > 0:
-            return oauth_items[0]
+            return oauth_items[-1]
         else:
             return None
 
