@@ -14,8 +14,7 @@ from datetime import datetime
 from git import Repo
 import re
 from ..gitlab_api import MEMRI_PATH, MEMRI_GITLAB_BASE_URL, ACCESS_TOKEN_PATH, GITLAB_API_BASE_URL, TIME_FORMAT_GITLAB, \
-PROJET_ID_PATTERN, DEFAULT_PACKAGE_VERSION, download_package_file, project_id_from_name, write_file_to_package_registry, \
-get_registry_api_key
+PROJET_ID_PATTERN, DEFAULT_PACKAGE_VERSION
 
 # Cell
 DEFAULT_PLUGIN_MODEL_PACKAGE_NAME = "plugin-model-package"
@@ -25,8 +24,8 @@ DEFAULT_HUGGINFACE_CONFIG_NAME = "config.json"
 # Cell
 def write_huggingface_model_to_package_registry(project_name, model, version=DEFAULT_PACKAGE_VERSION):
     import torch
-    api_key = get_registry_api_key()
-    project_id = project_id_from_name(project_name, api_key)
+    api = GitlabAPI()
+    project_id = api.project_id_from_name(project_name)
     local_save_dir = Path("/tmp")
     torch.save(model.state_dict(), local_save_dir / DEFAULT_PYTORCH_MODEL_NAME)
     model.config.to_json_file(local_save_dir / DEFAULT_HUGGINFACE_CONFIG_NAME)
@@ -34,7 +33,7 @@ def write_huggingface_model_to_package_registry(project_name, model, version=DEF
     for f in [DEFAULT_HUGGINFACE_CONFIG_NAME, DEFAULT_PYTORCH_MODEL_NAME]:
         file_path = local_save_dir / f
         print(f"writing {f} to package registry of {project_name} with project id {project_id}")
-        write_file_to_package_registry(project_id, file_path, api_key, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version)
+        api.write_file_to_package_registry(project_id, file_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version)
 
 # Cell
 def write_model_to_package_registry(model, project_name=None):
@@ -49,10 +48,11 @@ def write_model_to_package_registry(model, project_name=None):
 
 # Cell
 def download_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
+    api = GitlabAPI()
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
     for f in files:
-        out_file_path = download_package_file(f, project_path=project_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME)
+        out_file_path = api.download_package_file(f, project_path=project_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME)
     return out_file_path.parent
 
 # Cell
