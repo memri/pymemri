@@ -185,7 +185,7 @@ class GitlabAPI():
         self.commit_file(str(repo), path_in2out, **kwargs)
 
 
-    def create_new_project(self, project_name):
+    def create_new_project(self, project_name, user=None):
         tmp_dir = Path("/tmp/test") / project_name
         rm_tree(tmp_dir)
 
@@ -195,7 +195,8 @@ class GitlabAPI():
             install_requires="transformers,sentencepiece,protobuf,torch==1.10.0",
             target_dir=str(tmp_dir),
             repo_url=f"{MEMRI_GITLAB_BASE_URL}/plugins/{project_name}",
-            verbose=False
+            verbose=False,
+            user=user
         )
         self.write_files_to_git(project_name, tmp_dir)
 
