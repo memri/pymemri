@@ -188,13 +188,14 @@ class GitlabAPI():
     def create_new_project(self, project_name, user=None):
         tmp_dir = Path("/tmp/test") / project_name
         rm_tree(tmp_dir)
+        repo_url = f"{MEMRI_GITLAB_BASE_URL}/{user}/{project_name}" if user is not None else f"{MEMRI_GITLAB_BASE_URL}/plugins/{project_name}"
 
         _plugin_from_template(
             template_name="classifier_plugin",
             description="A transformer based sentiment analyis plugin",
             install_requires="transformers,sentencepiece,protobuf,torch==1.10.0",
             target_dir=str(tmp_dir),
-            repo_url=f"{MEMRI_GITLAB_BASE_URL}/plugins/{project_name}",
+            repo_url=repo_url,
             verbose=False,
             user=user
         )
