@@ -36,19 +36,19 @@ def write_huggingface_model_to_package_registry(project_name, model, version=DEF
         api.write_file_to_package_registry(project_id, file_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version)
 
 # Cell
-def write_model_to_package_registry(model, project_name=None):
+def write_model_to_package_registry(model, project_name=None, client=None):
     project_name = project_name if project_name is not None else find_git_repo()
     if type(model).__module__.startswith("transformers"):
         import transformers
         import torch
     if isinstance(model, transformers.PreTrainedModel):
-        write_huggingface_model_to_package_registry(project_name, model)
+        write_huggingface_model_to_package_registry(project_name, model, client=client)
     else:
         raise ValueError(f"Model type not supported: {type(model)}")
 
 # Cell
-def download_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
-    api = GitlabAPI()
+def download_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False, client=None):
+    api = GitlabAPI(client=client)
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
     for f in files:
@@ -56,8 +56,8 @@ def download_huggingface_model_for_project(project_path=None, files=None, downlo
     return out_file_path.parent
 
 # Cell
-def load_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False):
-    out_dir = download_huggingface_model_for_project(project_path, files, download_if_exists)
+def load_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False, client=None):
+    out_dir = download_huggingface_model_for_project(project_path, files, download_if_exists, client=client)
     from transformers import AutoModelForSequenceClassification
     model = AutoModelForSequenceClassification.from_pretrained(out_dir)
     return model
