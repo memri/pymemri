@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 class WebServer:
     def __init__(self, port: int):
-        self._app = FastAPI(title="Plugin Webserver", redoc_url=None,
+        self._app = FastAPI(title="Plugin Webserver", redoc_url=None, debug=True,
                             swagger_ui_oauth2_redirect_url=None)
         self._server_handle = None
         self._port = port
