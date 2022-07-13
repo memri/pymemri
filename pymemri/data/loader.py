@@ -14,7 +14,7 @@ from datetime import datetime
 from git import Repo
 import re
 from ..gitlab_api import MEMRI_PATH, MEMRI_GITLAB_BASE_URL, ACCESS_TOKEN_PATH, GITLAB_API_BASE_URL, TIME_FORMAT_GITLAB, \
-PROJET_ID_PATTERN, DEFAULT_PACKAGE_VERSION
+PROJET_ID_PATTERN, DEFAULT_PACKAGE_VERSION, GitlabAPI
 
 # Cell
 DEFAULT_PLUGIN_MODEL_PACKAGE_NAME = "plugin-model-package"
@@ -22,9 +22,9 @@ DEFAULT_PYTORCH_MODEL_NAME = "pytorch_model.bin"
 DEFAULT_HUGGINFACE_CONFIG_NAME = "config.json"
 
 # Cell
-def write_huggingface_model_to_package_registry(project_name, model, version=DEFAULT_PACKAGE_VERSION):
+def write_huggingface_model_to_package_registry(project_name, model, version=DEFAULT_PACKAGE_VERSION, client=None):
     import torch
-    api = GitlabAPI()
+    api = GitlabAPI(client=client)
     project_id = api.project_id_from_name(project_name)
     local_save_dir = Path("/tmp")
     torch.save(model.state_dict(), local_save_dir / DEFAULT_PYTORCH_MODEL_NAME)
