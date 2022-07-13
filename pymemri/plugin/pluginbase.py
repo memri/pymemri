@@ -309,8 +309,9 @@ def run_plugin(
         if owner_key is None:
             owner_key = read_pod_key("owner_key")
         pod_auth_json = None
+
     if POD_PLUGIN_DNS_ENV in os.environ:
-        print(f"Plugin accesible via {os.environ.get(POD_PLUGIN_DNS_ENV)}:8080")
+        print(f"Plugin accessible via {os.environ.get(POD_PLUGIN_DNS_ENV)}:8080")
 
     client = PodClient(
         url=pod_full_address,
@@ -326,6 +327,7 @@ def run_plugin(
         plugin_run_id = run.id
     else:
         run = client.get(plugin_run_id)
+
     plugin_config = parse_config(run.config, config_file)
 
     try:
