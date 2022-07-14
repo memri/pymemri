@@ -229,7 +229,7 @@ Run success!
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Plugin-configuration">Plugin configuration<a class="anchor-link" href="#Plugin-configuration"> </a></h3><p>Often, plugins require some configuration for a run. For example, our <a href="/pymemri/plugin.pluginbase.html#ExamplePlugin"><code>ExamplePlugin</code></a> has a <code>dog_name</code> argument, which could be different for different runs.</p>
 <p>Pymemri handles plugin configuration by passing a dictionary of configuration values to the <code>__init__</code> method of the plugin. A possible configuration for the <a href="/pymemri/plugin.pluginbase.html#ExamplePlugin"><code>ExamplePlugin</code></a> could be:</p>
-<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;dog_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;dog_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 <p>Configuration can be passed to the <a href="/pymemri/plugin.pluginbase.html#run_plugin"><code>run_plugin</code></a> CLI in two ways:</p>
 <ul>

@@ -65,7 +65,7 @@ This stores a random owner key and database key on your disk for future use, and
 
 ## Docs
 
-[pymemri docs](https://memri.docs.memri.io/docs.memri.io/component-architectures/plugins/readme/)
+[pymemri docs](https://docs.memri.io/component-architectures/plugins/readme/)
 
 ## Nbdev & Jupyter Notebooks
 The Python integrators are written in [nbdev](https://nbdev.fast.ai/) ([video](https://www.youtube.com/watch?v=9Q6sLbz37gk&t=1301s)). With nbdev, it is encouraged to write code in 

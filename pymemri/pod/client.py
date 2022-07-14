@@ -663,13 +663,31 @@ class PodClient:
             warnings.warn(f"Multiple datasets found with name {name}. Using the newest dataset.")
         return datasets[-1]
 
+    def send_trigger_status(self, item_id, trigger_id, status):
+        try:
+            self.api.send_trigger_status(item_id, trigger_id, status)
+            return True
+        except Exception as e:
+            print(f"Failed to send trigger status to the POD, reason {e}")
+            return False
+
+    def get_oauth_item(self):
+        oauth_items = sorted([x for x in self.search({"type": "OauthFlow"})], key=lambda x: x.dateCreated)
+        if len(oauth_items) > 0:
+            return oauth_items[-1]
+        else:
+            return None
+
+
 # Cell
 class Dog(Item):
     properties = Item.properties + ["name", "age", "bites", "weight"]
+    edges = Item.edges + ["friend"]
 
-    def __init__(self, name: str=None, age: int=None, bites: bool=False, weight: float=None, **kwargs):
+    def __init__(self, name: str=None, age: int=None, bites: bool=False, weight: float=None, friend: EdgeList["Person"]=None, **kwargs):
         super().__init__(**kwargs)
         self.name = name
         self.age = age
         self.bites = bites
         self.weight = weight
+        self.friend = EdgeList("friend", "Person", friend)
