@@ -1444,7 +1444,7 @@ class Message(WrittenWork):
         photo: EdgeList["Photo"] = None,
         receiver: EdgeList["Account"] = None,
         sender: EdgeList["Account"] = None,
-        label: EdgeList["CategoricalLabel"] = None,
+        label: EdgeList["CategoricalPrediction"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1466,8 +1466,8 @@ class Message(WrittenWork):
         self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
         self.receiver: EdgeList["Account"] = EdgeList("receiver", "Account", receiver)
         self.sender: EdgeList["Account"] = EdgeList("sender", "Account", sender)
-        self.label: EdgeList["CategoricalLabel"] = EdgeList(
-            "label", "CategoricalLabel", label
+        self.label: EdgeList["CategoricalPrediction"] = EdgeList(
+            "label", "CategoricalPrediction", label
         )
 
 
