@@ -397,16 +397,20 @@ class Dataset(Item):
 
 class DatasetEntry(Item):
     description = """Entry item of dataset."""
-    properties = Item.properties + []
+    properties = Item.properties + ["skippedByLabeller"]
     edges = Item.edges + ["data", "annotation"]
 
     def __init__(
         self,
+        skippedByLabeller: bool = None,
         data: EdgeList["Message"] = None,
         annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
+
+        # Properties
+        self.skippedByLabeller: Optional[bool] = skippedByLabeller
 
         # Edges
         self.data: EdgeList["Message"] = EdgeList("data", "Message", data)
@@ -812,6 +816,26 @@ class Network(Item):
 
         # Edges
         self.website: EdgeList["Website"] = EdgeList("website", "Website", website)
+
+
+class OauthFlow(Item):
+    description = """"""
+    properties = Item.properties + ["accessToken", "refreshToken", "service"]
+    edges = Item.edges + []
+
+    def __init__(
+        self,
+        accessToken: str = None,
+        refreshToken: str = None,
+        service: str = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.accessToken: Optional[str] = accessToken
+        self.refreshToken: Optional[str] = refreshToken
+        self.service: Optional[str] = service
 
 
 class Person(Item):
@@ -1394,6 +1418,7 @@ class Message(WrittenWork):
         "externalId",
         "service",
         "subject",
+        "sourceProject",
         "isMock",
     ]
     edges = WrittenWork.edges + [
@@ -1402,6 +1427,7 @@ class Message(WrittenWork):
         "photo",
         "receiver",
         "sender",
+        "label",
     ]
 
     def __init__(
@@ -1411,12 +1437,14 @@ class Message(WrittenWork):
         externalId: str = None,
         service: str = None,
         subject: str = None,
+        sourceProject: str = None,
         isMock: bool = None,
         message: EdgeList["Message"] = None,
         messageChannel: EdgeList["MessageChannel"] = None,
         photo: EdgeList["Photo"] = None,
         receiver: EdgeList["Account"] = None,
         sender: EdgeList["Account"] = None,
+        label: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1427,6 +1455,7 @@ class Message(WrittenWork):
         self.externalId: Optional[str] = externalId
         self.service: Optional[str] = service
         self.subject: Optional[str] = subject
+        self.sourceProject: Optional[str] = sourceProject
         self.isMock: Optional[bool] = isMock
 
         # Edges
@@ -1437,6 +1466,9 @@ class Message(WrittenWork):
         self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
         self.receiver: EdgeList["Account"] = EdgeList("receiver", "Account", receiver)
         self.sender: EdgeList["Account"] = EdgeList("sender", "Account", sender)
+        self.label: EdgeList["CategoricalLabel"] = EdgeList(
+            "label", "CategoricalLabel", label
+        )
 
 
 class Note(WrittenWork):
