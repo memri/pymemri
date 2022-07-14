@@ -80,7 +80,7 @@ class GitlabAPI():
                            headers=self.auth_headers,
                            params={**self.auth_params, **{
                                "owned": True,
-                               "search": iden
+                               "search": project_name
                            }})
         # we need this extra filter (search is not exact match)
         res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
