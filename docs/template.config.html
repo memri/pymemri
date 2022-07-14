@@ -39,7 +39,7 @@ nb_path: "nbs/template.config.ipynb"
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Often, plugins require some configuration before running. For example you might want to run plugin on data from a specific service, or run a specific version of your machine learning model. To configure your plugin when running it from the front-end, plugins require a <code>config.json</code> in the root of the plugin repository. This file contains a declarative definition, which our front-end app uses to display a configuration screen.</p>
-<p>This module contains utilities to directly generate this config file from the plugin definition, by inferring all arguments from the plugin <code>__init__</code> method. All configuration fields are textboxes by default, which can be changed to different types in the future. For a full example, see our guide on <a href="https://memri.docs.memri.io/docs.memri.io/guides/build_and_deploy_your_model/">building plugins</a>.</p>
+<p>This module contains utilities to directly generate this config file from the plugin definition, by inferring all arguments from the plugin <code>__init__</code> method. All configuration fields are textboxes by default, which can be changed to different types in the future. For a full example, see our guide on <a href="https://docs.memri.io/guides/build_and_deploy_your_model/">building plugins</a>.</p>
 <p>Usage:</p>
 
 <pre><code>create_plugin_config</code></pre>
@@ -183,7 +183,7 @@ Args:
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">create_config</span><span class="p">(</span><span class="n">MyPlugin</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;display&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;data_type&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span> 
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{c[&quot;display&quot;]}</span><span class="s1"> (</span><span class="si">{c[&quot;data_type&quot;]}</span><span class="s1">)&#39;</span><span class="p">)</span> 
 </pre></div>
 
     </div>

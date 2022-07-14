@@ -1,6 +1,6 @@
 ---
 
-title: - Downloading & Uploading functions for package registry
+title: - Downloading & Uploading functions for Models
 
 
 keywords: fastai
@@ -211,20 +211,12 @@ nb_path: "nbs/data.loader.ipynb"
 
 </div>
 </div>
-
 </div>
-    {% endraw %}
-
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
 <div class="output_wrapper">
 <div class="output">
@@ -240,22 +232,9 @@ nb_path: "nbs/data.loader.ipynb"
 
 </div>
 
+    </div>
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
 <div class="output">
@@ -268,7 +247,6 @@ nb_path: "nbs/data.loader.ipynb"
 </blockquote>
 
 </div>
-
 </div>
 
 </div>
@@ -280,13 +258,16 @@ nb_path: "nbs/data.loader.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">write_model_to_package_registry</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;test-1234&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -299,28 +280,33 @@ nb_path: "nbs/data.loader.ipynb"
 </blockquote>
 
 </div>
-
 </div>
 
-</div>
-</div>
+<div class="output_area">
 
-</div>
-    {% endraw %}
 
-    {% raw %}
+<div class="output_html rendered_html output_subarea ">
+
+    <div>
+        <style>
+            /* Turns off some styling */
+            progress {
+                /* gets rid of default border in Firefox and Opera. */
+                border: none;
+                /* Needs to be in here for Safari polyfill so background images work as expected. */
+                background-size: auto;
+            }
+            .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+                background: #F44336;
+            }
+        </style>
+      <progress value='100' class='' max='100' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [100/100 00:00<00:00]
+    </div>
     
-<div class="cell border-box-sizing code_cell rendered">
+</div>
 
 </div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
 
 <div class="output_area">
 
@@ -392,26 +378,19 @@ nb_path: "nbs/data.loader.ipynb"
 </blockquote>
 
 </div>
-
 </div>
 
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Succesfully uploaded /tmp/config.json
+writing pytorch_model.bin to package registry of test-1234 with project id 190
+uploading /tmp/pytorch_model.bin
+</pre>
 </div>
 </div>
 
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<div class="output_area">
 
 <div class="inner_cell">
     <div class="input_area">
@@ -420,12 +399,28 @@ nb_path: "nbs/data.loader.ipynb"
 <span class="n">out_file</span> <span class="o">=</span> <span class="n">download_package_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;memri/finetuning-example&quot;</span><span class="p">)</span>
 </pre></div>
 
+<div class="output_html rendered_html output_subarea ">
+
+    <div>
+        <style>
+            /* Turns off some styling */
+            progress {
+                /* gets rid of default border in Firefox and Opera. */
+                border: none;
+                /* Needs to be in here for Safari polyfill so background images work as expected. */
+                background-size: auto;
+            }
+            .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+                background: #F44336;
+            }
+        </style>
+      <progress value='100' class='' max='100' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [100/100 04:23<00:02]
     </div>
-</div>
+    
 </div>
 
-<div class="output_wrapper">
-<div class="output">
+</div>
 
 <div class="output_area">
 
@@ -442,12 +437,6 @@ nb_path: "nbs/data.loader.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="--Transformers-tests">- Transformers tests<a class="anchor-link" href="#--Transformers-tests"> </a></h1>
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -455,9 +444,7 @@ nb_path: "nbs/data.loader.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoModelForSequenceClassification</span><span class="p">,</span> <span class="n">AutoTokenizer</span>
-<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoModel</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForSequenceClassification</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;distilroberta-base&quot;</span><span class="p">,</span> <span class="n">num_labels</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">load_huggingface_model_for_project</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="s2">&quot;memri/finetuning-example&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -603,17 +590,13 @@ uploading /tmp/pytorch_model.bin
 </div>
     {% endraw %}
 
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<div class="output_area">
 
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">load_huggingface_model_for_project</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="s2">&quot;memri/finetuning-example&quot;</span><span class="p">)</span>
 </pre></div>
 
-    </div>
 </div>
 </div>
 
