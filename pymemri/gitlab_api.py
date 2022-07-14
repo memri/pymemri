@@ -30,34 +30,41 @@ PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )[0-9]+(?=</sp
 # Cell
 class GitlabAPI():
 
-    def __init__(self, client=None):
+    def __init__(self, client=None, request_auth_if_needed=False):
         self.client=client
         self.auth_headers=dict()
         self.auth_params=dict()
+        self.auth_initialized=False
+        self.request_auth_if_needed = request_auth_if_needed
         self.get_registry_params_headers()
+
 
     # export
     def get_registry_params_headers(self):
         job_token = os.environ.get("CI_JOB_TOKEN", None)
         if job_token is not None:
+            self.auth_initialized = True
             self.auth_headers = {"JOB-TOKEN": job_token}
         elif self.client is not None:
             self.auth_params = {"access_token": self.client.get_oauth_item().accessToken}
+            self.auth_initialized = True
         else:
-            ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
-            if ACCESS_TOKEN_PATH.is_file():
-                with open(ACCESS_TOKEN_PATH, "r") as f:
-                    self.auth_headers = {"PRIVATE-TOKEN": f.read()}
-            else:
-                print(f"""
-                The first time you are uploading a model you need to create an access_token
-                at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
-                Click at the blue button with 'Create personal access token'"
-                """)
-                access_token = getpass("Then copy your personal access token from 'Your new personal access token', and paste here: ")
-                with open(ACCESS_TOKEN_PATH, "w") as f:
-                    f.write(access_token)
-                self.auth_headers = {"PRIVATE-TOKEN": access_token}
+            if self.request_auth_if_needed:
+                self.auth_initialized = True
+                ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
+                if ACCESS_TOKEN_PATH.is_file():
+                    with open(ACCESS_TOKEN_PATH, "r") as f:
+                        self.auth_headers = {"PRIVATE-TOKEN": f.read()}
+                else:
+                    print(f"""
+                    The first time you are uploading a model you need to create an access_token
+                    at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
+                    Click at the blue button with 'Create personal access token'"
+                    """)
+                    access_token = getpass("Then copy your personal access token from 'Your new personal access token', and paste here: ")
+                    with open(ACCESS_TOKEN_PATH, "w") as f:
+                        f.write(access_token)
+                    self.auth_headers = {"PRIVATE-TOKEN": access_token}
 
     def write_file_to_package_registry(self, project_id, file_path, package_name, version=DEFAULT_PACKAGE_VERSION):
         file_path = Path(file_path)
