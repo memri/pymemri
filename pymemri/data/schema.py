@@ -96,8 +96,6 @@ class PluginRun(Item):
         self.webserverPort: Optional[int] = webserverPort
 
         # Edges
-        self.plugin: EdgeList[Plugin] = plugin if plugin is not None else EdgeList()
-        self.view: EdgeList[CVUStoredDefinition] = (
-            view if view is not None else EdgeList()
-        )
-        self.account: EdgeList[Account] = account if account is not None else EdgeList()
+        self.plugin: EdgeList[Plugin] = EdgeList("plugin", "Plugin", plugin)
+        self.view: EdgeList[CVUStoredDefinition] = EdgeList("view", "CVUStoredDefinition", view)
+        self.account: EdgeList[Account] = EdgeList("account", "Account", account)

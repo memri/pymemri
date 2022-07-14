@@ -1,13 +1,14 @@
 from typing import List
 from pymemri.data.oauth import OauthFlow
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Item, Edge
+from pymemri.data.schema import Item, Edge, EdgeList
 import pytest
-from pymemri.data.schema import EmailMessage, Address, Person, Account
+from pymemri.data.schema import EmailMessage, Person, Account
 
 
 class Dog(Item):
     properties = Item.properties + ["name", "age", "bites", "weight"]
+    edges = Item.edges + ["owner"]
 
     def __init__(
         self,
@@ -15,6 +16,7 @@ class Dog(Item):
         age: int = None,
         bites: bool = False,
         weight: float = None,
+        owner: EdgeList["Person"] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -22,6 +24,8 @@ class Dog(Item):
         self.age = age
         self.bites = bites
         self.weight = weight
+
+        self.owner = EdgeList("owner", "Person", owner)
 
 
 @pytest.fixture(scope="module")
@@ -84,11 +88,12 @@ def test_custom_item(client: PodClient):
 
 
 def test_create_edge(client: PodClient):
-    person = Person(firstName="Alice")
+    account = Account(handle="Alice")
     email = EmailMessage(content="test content")
-    assert client.bulk_action(create_items=[person, email])
 
-    email.add_edge("sender", person)
+    assert client.bulk_action(create_items=[account, email])
+
+    email.add_edge("sender", account)
     assert client.create_edge(email.get_edges("sender")[0])
     client.get_edges(email.id)
     assert len(client.get_edges(email.id))
@@ -263,8 +268,8 @@ def test_search_last_added(client: PodClient):
 def test_bulk_create(client: PodClient):
     dogs = [Dog(name=f"dog number {i}") for i in range(100)]
     person = Person(firstName="Alice")
-    edge1 = Edge(dogs[0], person, "label")
-    edge2 = Edge(dogs[1], person, "label")
+    edge1 = Edge(dogs[0], person, "owner")
+    edge2 = Edge(dogs[1], person, "owner")
 
     assert client.bulk_action(create_items=dogs + [person], create_edges=[edge1, edge2])
 
@@ -274,7 +279,7 @@ def test_bulk_create(client: PodClient):
     print(len(dogs_with_edge))
     assert len(dogs_with_edge) == 2
     for d in dogs_with_edge:
-        assert len(d.label) > 0
+        assert len(d.owner) > 0
 
 
 def test_bulk_update_delete(client: PodClient):

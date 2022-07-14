@@ -2,9 +2,9 @@ import pytest
 import random
 import uuid
 
-from pymemri.pod.api import PodAPI
+from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Account, Person
+from pymemri.data.schema import Account, Person, Message
 from pymemri.data.itembase import Edge
 
 
@@ -14,22 +14,36 @@ def api():
     Setup pod account with some dummy data, return API with account keys.
     """
     client = PodClient()
+    client.add_to_schema(Account, Person, Message)
+
+    client.api.create_item({
+        "type": "ItemEdgeSchema",
+        "edgeName": "sender",
+        "sourceType": "Message",
+        "targetType": "Account",
+    })
+    client.api.create_item({
+        "type": "ItemEdgeSchema",
+        "edgeName": "owner",
+        "sourceType": "Account",
+        "targetType": "Person",
+    })
 
     # Create dummy data
     person = Person(displayName="Alice")
     accounts = [
-        Account(identifier="Alice", service="whatsapp"),
-        Account(identifier="Alice", service="instagram"),
-        Account(identifier="Alice", service="gmail"),
+        Account(displayName="Alice", service="whatsapp"),
+        Account(displayName="Alice", service="instagram"),
+        Account(displayName="Alice", service="gmail"),
     ]
 
+    message = Message(service="whatsapp", subject="Hello")
     edges = [Edge(account, person, "owner") for account in accounts]
-
-    client.add_to_schema(Account, Person)
-    client.bulk_action(create_items=[person] + accounts, create_edges=edges)
+    edges += [Edge(message, accounts[0], "sender")]
+    client.bulk_action(create_items=accounts + [person, message], create_edges=edges)
 
     # Create data for search
-    search_accounts = [Account(identifier=str(i), service="search") for i in range(100)]
+    search_accounts = [Account(displayName=str(i), service="search") for i in range(100)]
     client.bulk_action(create_items=search_accounts)
 
     return PodAPI(database_key=client.database_key, owner_key=client.owner_key)
