@@ -203,7 +203,7 @@ def get_template_replace_dict(
         # hacky, dont change!
         model_imports_ = f"""
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
-from """ +"pymemri.data_loader import load_huggingface_model_for_project"
+from """ +"pymemri.data.loader import load_huggingface_model_for_project"
         model_init = f"""
         model = load_huggingface_model_for_project(project_path="{user}/{repo_name_gitlab}")
         tokenizer = AutoTokenizer.from_pretrained("distilroberta-base", model_max_length=512)
