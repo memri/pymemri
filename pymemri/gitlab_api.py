@@ -14,7 +14,7 @@ from datetime import datetime
 from git import Repo
 import re
 from .data.basic import *
-from .template.formatter import _plugin_from_template
+from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
 import urllib
 
 # Cell
@@ -75,14 +75,15 @@ class GitlabAPI():
 
     # export
     def project_id_from_name(self, project_name):
+        iden = str_to_gitlab_identifier(project_name)
         res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
                            headers=self.auth_headers,
                            params={**self.auth_params, **{
                                "owned": True,
-                               "search": project_name
+                               "search": iden
                            }})
         # we need this extra filter (search is not exact match)
-        res = [x.get("id") for x in res.json() if x.get("path", None) == project_name]
+        res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
         if len(res) == 0:
             raise ValueError(f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo")
         else:
