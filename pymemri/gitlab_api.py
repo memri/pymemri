@@ -38,7 +38,8 @@ class GitlabAPI():
 
     # export
     def get_registry_params_headers(self):
-        if os.environ.get("GITLAB_CI", None) is not None:
+        job_token = os.environ.get("CI_JOB_TOKEN", None)
+        if job_token is not None:
             self.auth_headers = {"JOB-TOKEN": job_token}
         elif self.client is not None:
             self.auth_params = {"access_token": self.client.get_oauth_item().accessToken}
