@@ -205,7 +205,7 @@ def get_template_replace_dict(
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 from """ +"pymemri.data.loader import load_huggingface_model_for_project"
         model_init = f"""
-        model = load_huggingface_model_for_project(project_path="{user}/{repo_name_gitlab}")
+        model = load_huggingface_model_for_project(project_path="{user}/{repo_name_gitlab}", client=client)
         tokenizer = AutoTokenizer.from_pretrained("distilroberta-base", model_max_length=512)
         self.pipeline = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer, return_all_scores=True, truncation=True)
         """
