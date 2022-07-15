@@ -67,7 +67,14 @@ class GitlabAPI():
                     self.auth_headers = {"PRIVATE-TOKEN": access_token}
                     self.auth_initialized = True
 
-    def write_file_to_package_registry(self, project_id, file_path, package_name, version=DEFAULT_PACKAGE_VERSION):
+    def write_file_to_package_registry(
+        self,
+        project_id,
+        file_path,
+        package_name,
+        version=DEFAULT_PACKAGE_VERSION,
+        trigger_pipeline=True
+    ):
         file_path = Path(file_path)
         file_name = file_path.name
 
@@ -81,6 +88,14 @@ class GitlabAPI():
             print(f"Failed to upload {file_path}: {res.content}")
         else:
             print(f"Succesfully uploaded {file_path}")
+            if trigger_pipeline:
+                self.trigger_pipeline(project_id)
+
+    def trigger_pipeline(self, project_id):
+        url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/pipeline?ref=main"
+        res = requests.post(url, headers=self.auth_headers, params=self.auth_params)
+        if res.status_code not in [200, 201]:
+            print(f"Failed to trigger pipeline")
 
     # export
     def project_id_from_name(self, project_name):
