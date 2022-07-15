@@ -49,22 +49,22 @@ class GitlabAPI():
             self.auth_params = {"access_token": self.client.get_oauth_item().accessToken}
             self.auth_initialized = True
         else:
-            if self.request_auth_if_needed:
                 self.auth_initialized = True
                 ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
                 if ACCESS_TOKEN_PATH.is_file():
                     with open(ACCESS_TOKEN_PATH, "r") as f:
                         self.auth_headers = {"PRIVATE-TOKEN": f.read()}
                 else:
-                    print(f"""
-                    The first time you are uploading a model you need to create an access_token
-                    at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
-                    Click at the blue button with 'Create personal access token'"
-                    """)
-                    access_token = getpass("Then copy your personal access token from 'Your new personal access token', and paste here: ")
-                    with open(ACCESS_TOKEN_PATH, "w") as f:
-                        f.write(access_token)
-                    self.auth_headers = {"PRIVATE-TOKEN": access_token}
+                    if self.request_auth_if_needed:
+                        print(f"""
+                        The first time you are uploading a model you need to create an access_token
+                        at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
+                        Click at the blue button with 'Create personal access token'"
+                        """)
+                        access_token = getpass("Then copy your personal access token from 'Your new personal access token', and paste here: ")
+                        with open(ACCESS_TOKEN_PATH, "w") as f:
+                            f.write(access_token)
+                        self.auth_headers = {"PRIVATE-TOKEN": access_token}
 
     def write_file_to_package_registry(self, project_id, file_path, package_name, version=DEFAULT_PACKAGE_VERSION):
         file_path = Path(file_path)
@@ -96,6 +96,21 @@ class GitlabAPI():
             raise ValueError(f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo")
         else:
             return res[0]
+
+        # export
+    def search_project(self, key):
+        response = requests.get(f"{GITLAB_API_BASE_URL}/projects",
+                           headers=self.auth_headers,
+                           params={**self.auth_params, **{
+                               "owned": True,
+                               "search": key
+                           }})
+        res = response.json()
+        # we need this extra filter (search is not exact match)
+        if len(res) == 0:
+            raise ValueError(f"No plugin found with name {key}, make sure to enter the name as specified in the url of the repo")
+        else:
+            return res
 
     # export
     def get_project_id_from_project_path_unsafe(self, project_path):
