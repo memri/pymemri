@@ -49,13 +49,13 @@ class GitlabAPI():
             self.auth_params = {"access_token": self.client.get_oauth_item().accessToken}
             self.auth_initialized = True
         else:
-            if self.request_auth_if_needed:
+            ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
+            if ACCESS_TOKEN_PATH.is_file():
                 self.auth_initialized = True
-                ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
-                if ACCESS_TOKEN_PATH.is_file():
-                    with open(ACCESS_TOKEN_PATH, "r") as f:
-                        self.auth_headers = {"PRIVATE-TOKEN": f.read()}
-                else:
+                with open(ACCESS_TOKEN_PATH, "r") as f:
+                    self.auth_headers = {"PRIVATE-TOKEN": f.read()}
+            else:
+                if self.request_auth_if_needed:
                     print(f"""
                     The first time you are uploading a model you need to create an access_token
                     at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
@@ -65,6 +65,7 @@ class GitlabAPI():
                     with open(ACCESS_TOKEN_PATH, "w") as f:
                         f.write(access_token)
                     self.auth_headers = {"PRIVATE-TOKEN": access_token}
+                    self.auth_initialized = True
 
     def write_file_to_package_registry(self, project_id, file_path, package_name, version=DEFAULT_PACKAGE_VERSION):
         file_path = Path(file_path)
