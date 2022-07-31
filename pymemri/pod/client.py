@@ -161,7 +161,7 @@ class PodClient:
     @classmethod
     def _edge_dicts_from_type_or_instance(cls, item):
         edge_items = []
-        for edge_name, (source_type, target_type) in item.get_edge_types().items():
+        for (edge_name, source_type, target_type) in item.get_edge_types():
             edge_items.append(
                 {
                     "type": "ItemEdgeSchema",

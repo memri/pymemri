@@ -3,7 +3,7 @@
 # Visit https://gitlab.memri.io/memri/schema to learn more
 
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional, Any, Union
 
 from pymemri.data.itembase import Item, EdgeList
 
@@ -402,18 +402,17 @@ class DatasetEntry(Item):
 
     def __init__(
         self,
-        data: EdgeList["Message"] = None,
+        data: EdgeList[Union["Account", "Message"]] = None,
         annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Edges
-        self.data: EdgeList["Message"] = EdgeList("data", "Message", data)
+        self.data: EdgeList[Union["Account", "Message"]] = EdgeList("data", Union["Account", "Message"], data)
         self.annotation: EdgeList["CategoricalLabel"] = EdgeList(
             "annotation", "CategoricalLabel", annotation
         )
-
 
 class DatasetType(Item):
     description = """Fixed dictionary for datasets."""
@@ -917,8 +916,8 @@ class Person(Item):
         self.profilePicture: EdgeList["Photo"] = EdgeList(
             "profilePicture", "Photo", profilePicture
         )
-        self.relationship: EdgeList["Relationship"] = EdgeList(
-            "relationship", "Relationship", relationship
+        self.relationship: EdgeList[Union["Relationship", "Person"]] = EdgeList(
+            "relationship", Union["Relationship", "Person"], relationship
         )
         self.website: EdgeList["Website"] = EdgeList("website", "Website", website)
 
