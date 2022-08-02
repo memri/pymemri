@@ -169,6 +169,10 @@ class PodAPI:
         payload = {k: v for k, v in payload.items() if v is not None}
         return self.post("bulk", payload).json()
 
+    def oauth(self, service, callback_url):
+        payload = {"service": service, "callbackUrl": callback_url}
+        return self.post("oauth", payload).json()
+
     def upload_file(self, file: bytes) -> Any:
         if self.auth_json.get("type") == "PluginAuth":
             # alternative file upload for plugins, with different authentication
