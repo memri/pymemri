@@ -19,6 +19,7 @@ class OauthFlow(Item):
         self,
         accessToken: str = None,
         refreshToken: str = None,
+        accessTokenSecret: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
