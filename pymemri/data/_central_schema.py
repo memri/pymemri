@@ -398,21 +398,17 @@ class Dataset(Item):
 class DatasetEntry(Item):
     description = """Entry item of dataset."""
     properties = Item.properties + []
-    edges = Item.edges + ["data", "annotation"]
+    edges = Item.edges + ["data"]
 
     def __init__(
         self,
-        data: EdgeList[Union["Account", "Message"]] = None,
-        annotation: EdgeList["CategoricalLabel"] = None,
+        data: EdgeList[Union["Message", "EmailMessage"]] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Edges
-        self.data: EdgeList[Union["Account", "Message"]] = EdgeList("data", Union["Account", "Message"], data)
-        self.annotation: EdgeList["CategoricalLabel"] = EdgeList(
-            "annotation", "CategoricalLabel", annotation
-        )
+        self.data: EdgeList[Union["Message", "EmailMessage"]] = EdgeList("data", Union["Message", "EmailMessage"], data)
 
 class DatasetType(Item):
     description = """Fixed dictionary for datasets."""
