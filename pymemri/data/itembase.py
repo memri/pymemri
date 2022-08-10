@@ -70,12 +70,14 @@ def check_target_type(fn):
     def _check_type_wrapper(self, arg):
         if isinstance(arg, Iterable):
             for item in arg:
-                if type(item.target).__name__ != self.target_type or \
-                    not isinstance(item.target, get_args(self.target_type)):
+                target_type_name = type(item.target).__name__
+                if not (target_type_name == self.target_type or \
+                    target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
                     raise TypeError("Attempted to insert edge with invalid target type")
         elif isinstance(arg, Edge):
-            if not (type(arg.target).__name__ == self.target_type or \
-                isinstance(arg.target, get_args(self.target_type))):
+            target_type_name = type(arg.target).__name__
+            if not (target_type_name == self.target_type or \
+                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -124,8 +126,9 @@ class EdgeList(list, Generic[T]):
 
     def __setitem__(self, i:  int, item: Edge) -> None:
         if isinstance(item, Edge):
-            if type(item.target).__name__ != self.target_type or \
-                not isinstance(item.target, get_args(self.target_type)):
+            target_type_name = type(item.target).__name__
+            if not (target_type_name == self.target_type or \
+                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -133,8 +136,9 @@ class EdgeList(list, Generic[T]):
 
     def insert(self, i: int, item: Edge) -> None:
         if isinstance(item, Edge):
-            if type(item.target).__name__ != self.target_type or \
-                not isinstance(item.target, get_args(self.target_type)):
+            target_type_name = type(item.target).__name__
+            if not (target_type_name == self.target_type or \
+                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
