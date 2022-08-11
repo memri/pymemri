@@ -4,7 +4,7 @@ __all__ = ['ALL_EDGES', 'Edge', 'check_target_type', 'EdgeList', 'T', 'ItemBase'
 
 # Cell
 # hide
-from typing import Optional, Dict, List, Generic, TypeVar, Tuple, Union, Iterable, ForwardRef, get_args, get_origin
+from typing import Optional, Dict, List, Generic, TypeVar, Tuple, Union, Iterable, ForwardRef
 from ..imports import *
 from datetime import datetime
 import uuid
@@ -72,12 +72,12 @@ def check_target_type(fn):
             for item in arg:
                 target_type_name = type(item.target).__name__
                 if not (target_type_name == self.target_type or \
-                    target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+                    target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in getattr(self.target_type, "__args__", [])]):
                     raise TypeError("Attempted to insert edge with invalid target type")
         elif isinstance(arg, Edge):
             target_type_name = type(arg.target).__name__
             if not (target_type_name == self.target_type or \
-                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in getattr(self.target_type, "__args__", [])]):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -128,7 +128,7 @@ class EdgeList(list, Generic[T]):
         if isinstance(item, Edge):
             target_type_name = type(item.target).__name__
             if not (target_type_name == self.target_type or \
-                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in getattr(self.target_type, "__args__", [])]):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -138,7 +138,7 @@ class EdgeList(list, Generic[T]):
         if isinstance(item, Edge):
             target_type_name = type(item.target).__name__
             if not (target_type_name == self.target_type or \
-                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in getattr(self.target_type, "__args__", [])]):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -397,8 +397,8 @@ class Item(ItemBase):
         for k, v in tgt_types.items():
             if hasattr(v, "__args__") and len(v.__args__):
                 v = v.__args__[0]
-                if get_origin(v) == Union:
-                    for arg in get_args(v):
+                if getattr(v, "__origin__", None) == Union:
+                    for arg in getattr(v, "__args__", []):
                         if isinstance(arg, ForwardRef):
                             res.append((k, cls.__name__, arg.__forward_arg__))
                         else:
