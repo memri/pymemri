@@ -383,7 +383,7 @@ class Item(ItemBase):
         return res
 
     @classmethod
-    def get_edge_types(cls) -> list[Tuple[str, str, str]]:
+    def get_edge_types(cls) -> List[Tuple[str, str, str]]:
         """
         Infer the types of all edges in cls as tuple (source_type, target_type)
         """

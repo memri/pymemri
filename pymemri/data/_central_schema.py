@@ -398,17 +398,20 @@ class Dataset(Item):
 class DatasetEntry(Item):
     description = """Entry item of dataset."""
     properties = Item.properties + []
-    edges = Item.edges + ["data"]
+    edges = Item.edges + ["data", "annotation"]
 
     def __init__(
         self,
-        data: EdgeList[Union["Message", "EmailMessage"]] = None,
+        data: EdgeList[Union["Message", "Tweet"]] = None,
+        annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
         # Edges
-        self.data: EdgeList[Union["Message", "EmailMessage"]] = EdgeList("data", Union["Message", "EmailMessage"], data)
+        self.data: EdgeList[Union["Message", "Tweet"]] = EdgeList("data", Union["Message", "Tweet"], data)
+        self.annotation: EdgeList["CategoricalLabel"] = EdgeList("annotation", "CategoricalLabel", annotation)
+
 
 class DatasetType(Item):
     description = """Fixed dictionary for datasets."""
@@ -1475,3 +1478,23 @@ class EmailMessage(Message):
             "message", "EmailMessage", message
         )
         self.replyTo: EdgeList["Account"] = EdgeList("replyTo", "Account", replyTo)
+
+class Tweet(Post):
+
+    description = """Tweet of Twitter"""
+    properties = Post.properties + ["service"]
+    edges = Post.edges + ["mention"]
+
+    def __init__(
+        self,
+        service: str = None,
+        mention: EdgeList["Account"]  = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.service: Optional[str] = service
+
+        # Edges
+        self.mention: EdgeList["Account"] = EdgeList("mention", "Account", mention)
