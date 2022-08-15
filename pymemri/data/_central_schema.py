@@ -3,9 +3,9 @@
 # Visit https://gitlab.memri.io/memri/schema to learn more
 
 from datetime import datetime
-from typing import Optional, Any, Union
+from typing import Any, Optional, Union
 
-from pymemri.data.itembase import Item, EdgeList
+from pymemri.data.itembase import EdgeList, Item
 
 
 class Account(Item):
@@ -397,20 +397,28 @@ class Dataset(Item):
 
 class DatasetEntry(Item):
     description = """Entry item of dataset."""
-    properties = Item.properties + []
+    properties = Item.properties + ["skippedByLabeller"]
     edges = Item.edges + ["data", "annotation"]
 
     def __init__(
         self,
+        skippedByLabeller: bool = None,
         data: EdgeList[Union["Message", "Tweet"]] = None,
         annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
 
+        # Properties
+        self.skippedByLabeller: Optional[bool] = skippedByLabeller
+
         # Edges
-        self.data: EdgeList[Union["Message", "Tweet"]] = EdgeList("data", Union["Message", "Tweet"], data)
-        self.annotation: EdgeList["CategoricalLabel"] = EdgeList("annotation", "CategoricalLabel", annotation)
+        self.data: EdgeList[Union["Message", "Tweet"]] = EdgeList(
+            "data", Union["Message", "Tweet"], data
+        )
+        self.annotation: EdgeList["CategoricalLabel"] = EdgeList(
+            "annotation", "CategoricalLabel", annotation
+        )
 
 
 class DatasetType(Item):
@@ -812,6 +820,26 @@ class Network(Item):
         self.website: EdgeList["Website"] = EdgeList("website", "Website", website)
 
 
+class OauthFlow(Item):
+    description = """"""
+    properties = Item.properties + ["accessToken", "refreshToken", "service"]
+    edges = Item.edges + []
+
+    def __init__(
+        self,
+        accessToken: str = None,
+        refreshToken: str = None,
+        service: str = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.accessToken: Optional[str] = accessToken
+        self.refreshToken: Optional[str] = refreshToken
+        self.service: Optional[str] = service
+
+
 class Person(Item):
     description = """A person (alive, dead, undead, or fictional)."""
     properties = Item.properties + [
@@ -915,8 +943,8 @@ class Person(Item):
         self.profilePicture: EdgeList["Photo"] = EdgeList(
             "profilePicture", "Photo", profilePicture
         )
-        self.relationship: EdgeList[Union["Relationship", "Person"]] = EdgeList(
-            "relationship", Union["Relationship", "Person"], relationship
+        self.relationship: EdgeList["Relationship"] = EdgeList(
+            "relationship", "Relationship", relationship
         )
         self.website: EdgeList["Website"] = EdgeList("website", "Website", website)
 
@@ -1384,6 +1412,23 @@ class Photo(MediaObject):
         self.thumbnail: EdgeList["File"] = EdgeList("thumbnail", "File", thumbnail)
 
 
+class Tweet(Post):
+    description = """A Twitter Tweet"""
+    properties = Post.properties + ["service"]
+    edges = Post.edges + ["mention"]
+
+    def __init__(
+        self, service: str = None, mention: EdgeList["Account"] = None, **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.service: Optional[str] = service
+
+        # Edges
+        self.mention: EdgeList["Account"] = EdgeList("mention", "Account", mention)
+
+
 class Message(WrittenWork):
     description = """A single message."""
     properties = WrittenWork.properties + [
@@ -1392,6 +1437,7 @@ class Message(WrittenWork):
         "externalId",
         "service",
         "subject",
+        "sourceProject",
         "isMock",
     ]
     edges = WrittenWork.edges + [
@@ -1400,6 +1446,7 @@ class Message(WrittenWork):
         "photo",
         "receiver",
         "sender",
+        "label",
     ]
 
     def __init__(
@@ -1409,12 +1456,14 @@ class Message(WrittenWork):
         externalId: str = None,
         service: str = None,
         subject: str = None,
+        sourceProject: str = None,
         isMock: bool = None,
         message: EdgeList["Message"] = None,
         messageChannel: EdgeList["MessageChannel"] = None,
         photo: EdgeList["Photo"] = None,
         receiver: EdgeList["Account"] = None,
         sender: EdgeList["Account"] = None,
+        label: EdgeList["CategoricalPrediction"] = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -1425,6 +1474,7 @@ class Message(WrittenWork):
         self.externalId: Optional[str] = externalId
         self.service: Optional[str] = service
         self.subject: Optional[str] = subject
+        self.sourceProject: Optional[str] = sourceProject
         self.isMock: Optional[bool] = isMock
 
         # Edges
@@ -1435,6 +1485,9 @@ class Message(WrittenWork):
         self.photo: EdgeList["Photo"] = EdgeList("photo", "Photo", photo)
         self.receiver: EdgeList["Account"] = EdgeList("receiver", "Account", receiver)
         self.sender: EdgeList["Account"] = EdgeList("sender", "Account", sender)
+        self.label: EdgeList["CategoricalPrediction"] = EdgeList(
+            "label", "CategoricalPrediction", label
+        )
 
 
 class Note(WrittenWork):
@@ -1478,23 +1531,3 @@ class EmailMessage(Message):
             "message", "EmailMessage", message
         )
         self.replyTo: EdgeList["Account"] = EdgeList("replyTo", "Account", replyTo)
-
-class Tweet(Post):
-
-    description = """Tweet of Twitter"""
-    properties = Post.properties + ["service"]
-    edges = Post.edges + ["mention"]
-
-    def __init__(
-        self,
-        service: str = None,
-        mention: EdgeList["Account"]  = None,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.service: Optional[str] = service
-
-        # Edges
-        self.mention: EdgeList["Account"] = EdgeList("mention", "Account", mention)
