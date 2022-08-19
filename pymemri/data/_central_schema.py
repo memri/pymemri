@@ -403,7 +403,7 @@ class DatasetEntry(Item):
     def __init__(
         self,
         skippedByLabeller: bool = None,
-        data: EdgeList[Union["Message", "Tweet"]] = None,
+        data: EdgeList[Union["Message", "Tweet", "EmailMessage"]] = None,
         annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
@@ -413,8 +413,8 @@ class DatasetEntry(Item):
         self.skippedByLabeller: Optional[bool] = skippedByLabeller
 
         # Edges
-        self.data: EdgeList[Union["Message", "Tweet"]] = EdgeList(
-            "data", Union["Message", "Tweet"], data
+        self.data: EdgeList[Union["Message", "Tweet", "EmailMessage"]] = EdgeList(
+            "data", Union["Message", "Tweet", "EmailMessage"], data
         )
         self.annotation: EdgeList["CategoricalLabel"] = EdgeList(
             "annotation", "CategoricalLabel", annotation
