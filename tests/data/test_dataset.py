@@ -54,3 +54,4 @@ def test_dataset(client):
     assert all(dataframe.columns == ["id"] + columns)
     assert dataframe["data.content"][0] == "content_0"
     assert dataframe["data.content"][1] == "email content_1"
+    assert dataframe['data.sender.handle'][0] == "account_0"

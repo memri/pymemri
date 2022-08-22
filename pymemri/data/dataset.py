@@ -10,6 +10,7 @@ from typing import Any, List, Optional, Union
 from . import _central_schema
 from .itembase import EdgeList, Item
 from ..exporters.exporters import Query
+from ..pod.graphql_utils import GQLQuery
 
 # Cell
 # hide
@@ -36,11 +37,30 @@ class Dataset(_central_schema.Dataset):
     def _get_items(self):
         if self._client is None:
             raise ValueError("Dataset does not have associated PodClient.")
-        if not len(self.entry):
-            edges = self._client.get_edges(self.id)
-            for e in self._client.get_edges(self.id):
-                self.add_edge(e["name"], e["item"])
 
+        query = GQLQuery(
+        """
+        query {
+            Dataset (filter: {id: {eq: "$id"}}) {
+                entry {
+                    data {
+                        content
+                        sender {
+                            handle
+                        }
+                        label {
+                            labelValue
+                        }
+                    }
+                }
+            }
+        }
+        """)
+        q = query.format({"id": self.id})
+
+        res = self._client.search_graphql(q)
+        for e in res[0].entry:
+            self.add_edge('entry', e)
         return self.entry
 
     def _get_data(self, dtype: str, columns: List[str], filter_missing: bool = True):
