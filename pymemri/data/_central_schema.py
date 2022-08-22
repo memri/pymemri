@@ -3,9 +3,9 @@
 # Visit https://gitlab.memri.io/memri/schema to learn more
 
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
-from pymemri.data.itembase import Item, EdgeList
+from pymemri.data.itembase import EdgeList, Item
 
 
 class Account(Item):
@@ -1167,6 +1167,37 @@ class SuggestedMerge(Item):
 
         # Edges
         self.mergeFrom: EdgeList["Person"] = EdgeList("mergeFrom", "Person", mergeFrom)
+
+
+class Trigger(Item):
+    description = """The Trigger Item registers a plugin trigger in the pod"""
+    properties = Item.properties + [
+        "action",
+        "triggerOn",
+        "pluginRunId",
+        "filterCreatedAfter",
+    ]
+    edges = Item.edges + ["trigger"]
+
+    def __init__(
+        self,
+        action: str = None,
+        triggerOn: str = None,
+        pluginRunId: str = None,
+        filterCreatedAfter: datetime = None,
+        trigger: EdgeList["PluginRun"] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.action: Optional[str] = action
+        self.triggerOn: Optional[str] = triggerOn
+        self.pluginRunId: Optional[str] = pluginRunId
+        self.filterCreatedAfter: Optional[datetime] = filterCreatedAfter
+
+        # Edges
+        self.trigger: EdgeList["PluginRun"] = EdgeList("trigger", "PluginRun", trigger)
 
 
 class VoteAction(Item):
