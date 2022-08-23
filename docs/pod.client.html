@@ -169,7 +169,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>29c0b7a3f8754d02a7d0e641523c25bb
+<pre>0b48d1a5acef4a2085d62222ebb90d33
 </pre>
 </div>
 </div>
@@ -199,7 +199,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L653" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>age</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>bites</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>weight</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
+<h2 id="Dog" class="doc_header"><code>class</code> <code>Dog</code><a href="https://gitlab.memri.io/memri/pymemri/tree/prod/pymemri/pod/client.py#L667" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Dog</code>(<strong><code>name</code></strong>:<code>str</code>=<em><code>None</code></em>, <strong><code>age</code></strong>:<code>int</code>=<em><code>None</code></em>, <strong><code>bites</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>weight</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>friend</code></strong>:<a href="/pymemri/itembase.html#EdgeList"><code>EdgeList</code></a>[<code>Person</code>]=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>) :: <a href="/pymemri/itembase.html#Item"><code>Item</code></a></p>
 </blockquote>
 
 <pre><code>Item is the baseclass for all of the data classes.</code></pre>
@@ -320,8 +320,8 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;29c0b7a3f8754d02a7d0e641523c25bb&#39;: EmailMessage (#29c0b7a3f8754d02a7d0e641523c25bb),
- &#39;93d7acb23bdc4902bd8e4c44d49a3953&#39;: Dog (#93d7acb23bdc4902bd8e4c44d49a3953)}</pre>
+<pre>{&#39;0b48d1a5acef4a2085d62222ebb90d33&#39;: EmailMessage (#0b48d1a5acef4a2085d62222ebb90d33),
+ &#39;ba13433aefc74095a498873fc6cfcc09&#39;: Dog (#ba13433aefc74095a498873fc6cfcc09)}</pre>
 </div>
 
 </div>
@@ -339,7 +339,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">lastName</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">person_item</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">displayName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">handle</span><span class="o">=</span><span class="s2">&quot;@alite&quot;</span><span class="p">)</span>
 <span class="n">item_succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">person_item</span><span class="p">)</span>
 <span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">email_item</span><span class="p">,</span> <span class="n">person_item</span><span class="p">,</span> <span class="s2">&quot;sender&quot;</span><span class="p">)</span>
 <span class="n">edge_succes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
@@ -357,7 +357,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[{&#39;item&#39;: Person (#5594a26fa6494f68a939eb610e34e7fe), &#39;name&#39;: &#39;sender&#39;}]
+<pre>[{&#39;item&#39;: Account (#0edbfb35dee84493b0ea96aecbe21048), &#39;name&#39;: &#39;sender&#39;}]
 </pre>
 </div>
 </div>
@@ -396,7 +396,7 @@ nb_path: "nbs/pod.client.ipynb"
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[Person (#5594a26fa6494f68a939eb610e34e7fe)]
+<pre>[Account (#0edbfb35dee84493b0ea96aecbe21048)]
 </pre>
 </div>
 </div>
@@ -469,10 +469,10 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>({&#39;id&#39;: &#39;1bdefab867c74f22ad156eebac482c1c&#39;,
-  &#39;dateCreated&#39;: 1644321461975,
-  &#39;dateModified&#39;: 1644321461975,
-  &#39;dateServerModified&#39;: 1644321461975,
+<pre>({&#39;id&#39;: &#39;767928a456f6496fb317f12578908015&#39;,
+  &#39;dateCreated&#39;: 1656252612451,
+  &#39;dateModified&#39;: 1656252612451,
+  &#39;dateServerModified&#39;: 1656252612451,
   &#39;deleted&#39;: False,
   &#39;firstName&#39;: &#39;Alice&#39;,
   &#39;type&#39;: &#39;Person&#39;},
@@ -589,7 +589,7 @@ nb_path: "nbs/pod.client.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Person (#e340f889884b4e4c91bc6711b38d9652)</pre>
+<pre>Person (#6b65ed71b33c4267aefad44cebfb7929)</pre>
 </div>
 
 </div>
@@ -696,20 +696,20 @@ Completed Bulk action, written 9 items/edges
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>BULK: Writing 3/3 items/edges
 Completed Bulk action, written 3 items/edges
-4c2913f892c8463ebdd2ee2a8197cb8e True
-e340f889884b4e4c91bc6711b38d9652 True
-5411889908c44b4bbebf469308065b66 True
-a7d7e0687c36451bb105097e5c8bb304 True
-eb4c84d002ac4ffebfae69a9a4597b5e True
-a6f801efb04946b4885b9d62fb445a0f False
-c8bae9ccff19410099d7e5ed8ae0e954 False
-60e6e59dbf104d4b976f68fbbce8d325 False
-5411889908c44b4bbebf469308065b66 True
-a7d7e0687c36451bb105097e5c8bb304 True
-eb4c84d002ac4ffebfae69a9a4597b5e True
-a6f801efb04946b4885b9d62fb445a0f False
-c8bae9ccff19410099d7e5ed8ae0e954 False
-60e6e59dbf104d4b976f68fbbce8d325 False
+8d37bb4ec26442eaab65f503a797969b True
+6b65ed71b33c4267aefad44cebfb7929 True
+9f1486b274b44dca816b3224d83873ca True
+33cdc841744e41a88346c881755919e8 True
+1d2edc76f9534d689b574f2f5830aaf1 True
+02752f907eae4a819891068fd0844d86 False
+1695a8fec3cf43918c8e34b463a67c26 False
+aba4d415ec9b478094549b7a9b6844d6 False
+9f1486b274b44dca816b3224d83873ca True
+33cdc841744e41a88346c881755919e8 True
+1d2edc76f9534d689b574f2f5830aaf1 True
+02752f907eae4a819891068fd0844d86 False
+1695a8fec3cf43918c8e34b463a67c26 False
+aba4d415ec9b478094549b7a9b6844d6 False
 </pre>
 </div>
 </div>
@@ -793,7 +793,7 @@ Completed Bulk action, written 1 items/edges
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Number of results: 5
+<pre>Number of results: 4
 </pre>
 </div>
 </div>
@@ -951,20 +951,6 @@ Completed Bulk action, written 100 items/edges
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>True
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -1021,7 +1007,7 @@ Completed Bulk action, written 3 items/edges
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[File (#ac52d3a0a99f46499487750430649476)]</pre>
+<pre>[File (#ab8fb6809b07403599c3abd579ac85cf)]</pre>
 </div>
 
 </div>
@@ -1093,10 +1079,10 @@ Completed Bulk action, written 3 items/edges
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dogs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dog</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;dog number </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dogs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dog</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;dog number </span><span class="si">{i}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">firstName</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
-<span class="n">edge1</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">dogs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">person</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">)</span>
-<span class="n">edge2</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">dogs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">person</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="n">edge1</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">dogs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">person</span><span class="p">,</span> <span class="s2">&quot;friend&quot;</span><span class="p">)</span>
+<span class="n">edge2</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">dogs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">person</span><span class="p">,</span> <span class="s2">&quot;friend&quot;</span><span class="p">)</span>
 
 <span class="c1"># Simultaneously add the dogs, person, and edges with the bulk API</span>
 <span class="n">success</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">bulk_action</span><span class="p">(</span><span class="n">create_items</span><span class="o">=</span><span class="n">dogs</span> <span class="o">+</span> <span class="p">[</span><span class="n">person</span><span class="p">],</span> <span class="n">create_edges</span><span class="o">=</span><span class="p">[</span><span class="n">edge1</span><span class="p">,</span> <span class="n">edge2</span><span class="p">])</span>

@@ -207,3 +207,7 @@ class PodAPI:
     def send_email(self, to: str, subject: str = "", body: str = "") -> Any:
         payload = {"to": to, "subject": subject, "body": body}
         return self.post("send_email", payload)
+
+    def send_trigger_status(self, item_id: str, trigger_id: str, status: str) -> Any:
+        payload = {"item_id": item_id, "trigger_id": trigger_id, "status": status}
+        return self.post("trigger/status", payload)

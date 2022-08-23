@@ -39,9 +39,7 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
             else:
                 constructor = classes[_type]
     else:
-        raise TypeError(
-            f"Could not initialize item, type {_type} not registered in PodClient"
-        )
+        raise TypeError(f"Could not initialize item, type {_type} not registered in PodClient")
     return constructor
 
 

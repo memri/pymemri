@@ -97,7 +97,7 @@ class EdgeList(list, Generic[T]):
         if isinstance(target_type, type):
             target_type = target_type.__name__
         elif isinstance(target_type, ForwardRef):
-            self.target_type = target_type.__forward_arg__
+            target_type = target_type.__forward_arg__
         self.target_type = target_type
 
         if data is not None:

@@ -1,11 +1,11 @@
-import pytest
 import random
 import uuid
 
+import pytest
+from pymemri.data.itembase import Edge
+from pymemri.data.schema import Account, Message, Person
 from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Account, Person, Message
-from pymemri.data.itembase import Edge
 from pymemri.pod.graphql_utils import GQLQuery
 
 
@@ -17,18 +17,22 @@ def api():
     client = PodClient()
     client.add_to_schema(Account, Person, Message)
 
-    client.api.create_item({
-        "type": "ItemEdgeSchema",
-        "edgeName": "sender",
-        "sourceType": "Message",
-        "targetType": "Account",
-    })
-    client.api.create_item({
-        "type": "ItemEdgeSchema",
-        "edgeName": "owner",
-        "sourceType": "Account",
-        "targetType": "Person",
-    })
+    client.api.create_item(
+        {
+            "type": "ItemEdgeSchema",
+            "edgeName": "sender",
+            "sourceType": "Message",
+            "targetType": "Account",
+        }
+    )
+    client.api.create_item(
+        {
+            "type": "ItemEdgeSchema",
+            "edgeName": "owner",
+            "sourceType": "Account",
+            "targetType": "Person",
+        }
+    )
 
     # Create dummy data
     person = Person(displayName="Alice")
@@ -63,7 +67,7 @@ def test_format_query():
     """
 
 def test_graphql_1(api: PodAPI):
-   
+
     query = """
         query {
             Message {
@@ -116,9 +120,10 @@ def test_graphql_2(api: PodAPI):
     except PodError as e:
         assert e.status == 400
 
+
 @pytest.mark.skip(reason="TODO /graphQL should support query aggregate functions")
 def test_graphql_3(api: PodAPI):
-   
+
     query = """
         query { 
             count
@@ -160,6 +165,7 @@ def test_graphql_4(api: PodAPI):
             assert p["~owner"][0]["~sender"][0]["subject"] == "Hello"
             return
     assert False
+
 
 @pytest.mark.skip(reason="TODO /graphQL should support query aggregate functions")
 def test_graphql_5(api: PodAPI):

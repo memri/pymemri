@@ -2,8 +2,8 @@ include settings.ini
 include LICENSE
 include CONTRIBUTING.md
 include README.md
-include pymemri/client_simulator/template/images.html
-include pymemri/client_simulator/template/success.html
+include pymemri/webserver/template/images.html
+include pymemri/webserver/template/success.html
 include pymemri/cvu/definitions/*.cvu
 include pymemri/cert/gitlab.memri.io.pem
 recursive-exclude * __pycache__

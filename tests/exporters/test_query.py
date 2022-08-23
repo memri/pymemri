@@ -19,26 +19,25 @@ def create_dummy_dataset(client: PodClient, num_items=10):
     messages = []
     items = []
     edges = []
-    for i in range(num_items):   
+    for i in range(num_items):
         msg = Message(content=f"content_{i}", service="my_service")
         account = Account(handle=f"account_{i}")
         person = Person(firstName=f"firstname_{i}")
         label = CategoricalPrediction(value=f"label_{i}")
         items.extend([msg, account, person, label])
-        edges.extend([
-            Edge(msg, account, "sender"),
-            Edge(msg, label, "label"),
-            Edge(account, person, "owner")
-        ])
+        edges.extend(
+            [
+                Edge(msg, account, "sender"),
+                Edge(msg, label, "label"),
+                Edge(account, person, "owner"),
+            ]
+        )
         messages.append(msg)
-        
-    # Dataset is not perfect, drop some random edges
-    edges = random.sample(edges, int(len(edges)*0.8))
 
-    client.bulk_action(
-        create_items=items,
-        create_edges=edges
-    )
+    # Dataset is not perfect, drop some random edges
+    edges = random.sample(edges, int(len(edges) * 0.8))
+
+    client.bulk_action(create_items=items, create_edges=edges)
 
 
 def test_query(client: PodClient):
