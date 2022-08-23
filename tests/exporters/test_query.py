@@ -1,16 +1,17 @@
-import pytest
-from pymemri.pod.client import PodClient
-from pymemri.data.schema import Account, Person, Message, CategoricalLabel
-from pymemri.data.itembase import Edge
-from pymemri.exporters.exporters import Query
 import random
+
 import pandas as pd
+import pytest
+from pymemri.data.itembase import Edge
+from pymemri.data.schema import Account, CategoricalPrediction, Message, Person
+from pymemri.exporters.exporters import Query
+from pymemri.pod.client import PodClient
 
 
 @pytest.fixture
 def client():
     client = PodClient()
-    client.add_to_schema(Account, Person, Message, CategoricalLabel)
+    client.add_to_schema(Account, Person, Message, CategoricalPrediction)
     return client
 
 
@@ -22,7 +23,7 @@ def create_dummy_dataset(client: PodClient, num_items=10):
         msg = Message(content=f"content_{i}", service="my_service")
         account = Account(handle=f"account_{i}")
         person = Person(firstName=f"firstname_{i}")
-        label = CategoricalLabel(labelValue=f"label_{i}")
+        label = CategoricalPrediction(value=f"label_{i}")
         items.extend([msg, account, person, label])
         edges.extend([
             Edge(msg, account, "sender"),
@@ -45,13 +46,13 @@ def test_query(client: PodClient):
     create_dummy_dataset(client, num_items)
     messages = client.search({"type": "Message", "service": "my_service"})
 
-    q = Query("content", "label.labelValue", "sender.owner.firstName", "sender.handle", "wrong_property")
+    q = Query("content", "label.value", "sender.owner.firstName", "sender.handle", "wrong_property")
     result = q.execute(client, messages)
 
     assert all(len(vals) == len(result["content"]) for vals in result.values())
     assert len(result["content"]) == num_items
 
-    valid_props = ["label.labelValue", "sender.owner.firstName", "sender.handle"]
+    valid_props = ["label.value", "sender.owner.firstName", "sender.handle"]
     for i in range(num_items):
         row = [result[prop][i] for prop in valid_props]
         row_idx = [val[-1] for val in row if val is not None]

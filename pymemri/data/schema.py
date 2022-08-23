@@ -1,13 +1,16 @@
-import random, string
-from .itembase import ItemBase, Edge, Item
+import random
+import string
+
 from ._central_schema import *
-from .photo import Photo
 from .dataset import Dataset
+from .itembase import Edge, Item, ItemBase
+from .photo import Photo
 
 
 def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
-    from .photo import Photo
     import pymemri.integrator_registry
+
+    from .photo import Photo
 
     if (
         _type == "Indexer"
@@ -45,6 +48,7 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
 class PluginRun(Item):
     description = """Information about a Plugin container being run by the Pod."""
     properties = Item.properties + [
+        "containerId",
         "containerImage",
         "authUrl",
         "pluginModule",
@@ -54,6 +58,7 @@ class PluginRun(Item):
         "error",
         "config",
         "progress",
+        "webserverPort",
     ]
     edges = Item.edges + ["plugin", "view", "account"]
 
@@ -68,6 +73,8 @@ class PluginRun(Item):
         error: str = None,
         config: str = None,
         progress: float = None,
+        webserverPort: int = None,
+        containerId: str = None,
         plugin: EdgeList[Plugin] = None,
         view: EdgeList[CVUStoredDefinition] = None,
         account: EdgeList[Account] = None,
@@ -91,6 +98,8 @@ class PluginRun(Item):
         self.error: Optional[str] = error
         self.config: Optional[str] = config
         self.progress: Optional[float] = progress
+        self.webserverPort: Optional[int] = webserverPort
+        self.containerId: Optional[str] = containerId
 
         # Edges
         self.plugin: EdgeList[Plugin] = EdgeList("plugin", "Plugin", plugin)
