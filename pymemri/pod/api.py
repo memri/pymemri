@@ -2,19 +2,17 @@
 
 __all__ = ['DEFAULT_POD_ADDRESS', 'POD_VERSION', 'PodError', 'PodAPI']
 
-import json
-
 # Cell
 import os
-import urllib
-from collections import deque
-from hashlib import sha256
-from typing import Any, Deque, Dict, Generator, List, Optional, Union
-
+from typing import Any, Dict, List, Generator, Deque, Union, Optional
 import requests
+import urllib
+from hashlib import sha256
+from collections import deque
+import json
 
-from ..data.itembase import Item
 from .graphql_utils import GQLQuery
+from ..data.itembase import Item
 
 # Cell
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
@@ -180,7 +178,7 @@ class PodAPI:
         query.format(variables)
         return self.post("graphql", query.data).json()
 
-    def oauth(self, service, callback_url):
+    def oauth(self, service: str, callback_url: str):
         payload = {"service": service, "callbackUrl": callback_url}
         return self.post("oauth", payload).json()
 
