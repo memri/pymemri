@@ -178,6 +178,10 @@ class PodAPI:
         query.format(variables)
         return self.post("graphql", query.data).json()
 
+    def oauth(self, service: str, callback_url: str):
+        payload = {"service": service, "callbackUrl": callback_url}
+        return self.post("oauth", payload).json()
+
     def upload_file(self, file: bytes) -> Any:
         if self.auth_json.get("type") == "PluginAuth":
             # alternative file upload for plugins, with different authentication

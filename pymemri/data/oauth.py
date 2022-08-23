@@ -12,13 +12,14 @@ from . import _central_schema
 # Cell
 class OauthFlow(Item):
     description = """TBD"""
-    properties = Item.properties + ["accessToken", "refreshToken"]
+    properties = Item.properties + ["accessToken", "refreshToken", "accessTokenSecret"]
     edges = Item.edges + []
 
     def __init__(
         self,
         accessToken: str = None,
         refreshToken: str = None,
+        accessTokenSecret: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -26,3 +27,4 @@ class OauthFlow(Item):
         # Properties
         self.accessToken: Optional[str] = accessToken
         self.refreshToken: Optional[str] = refreshToken
+        self.accessTokenSecret: Optional[str] = accessTokenSecret
