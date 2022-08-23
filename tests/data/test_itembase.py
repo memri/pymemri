@@ -1,7 +1,7 @@
 import pytest
 from pymemri.pod.client import PodClient
 from pymemri.data.schema import Account, Person
-from pymemri.data.itembase import Edge
+from pymemri.data.itembase import Edge, EdgeList, Item
 
 @pytest.fixture
 def client():
@@ -55,3 +55,30 @@ def test_edge_insert_wrong_target():
 
     # Length 1 from first add_edge
     assert len(account.owner)==1
+
+def test_create_and_read_item(client):
+    class MyItem(Item):
+        properties = Item.properties + ["name", "age"]
+        edges = Item.edges + ["friend"]
+        def __init__(self, name: str=None, age: int=None,friend: list=None, **kwargs):
+            super().__init__(**kwargs)
+            self.name = name
+            self.age = age
+            self.friend = EdgeList("friend", "MyItem", friend)
+
+    x = MyItem(name="me", age=30)
+    target = MyItem(name="my friend", age=31)
+    client.create(target)
+    x.add_edge("friend", MyItem(name="my friend", age=31))
+    assert client.add_to_schema(MyItem(name="abc", age=1))
+
+    x = MyItem(name="me", age=30)
+    target = MyItem(name="my friend", age=31)
+    client.create(target)
+    x.add_edge("friend", MyItem(name="my friend", age=31))
+    assert client.create(x)
+    y = client.get(x.id)
+    assert len(y.friend) > 0
+    assert y.friend[0].name == "my friend"
+    assert y.name == "me"
+    assert y.age == 30

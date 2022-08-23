@@ -3,9 +3,9 @@
 # Visit https://gitlab.memri.io/memri/schema to learn more
 
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional, Union
 
-from pymemri.data.itembase import Item, EdgeList
+from pymemri.data.itembase import EdgeList, Item
 
 
 class Account(Item):
@@ -403,7 +403,7 @@ class DatasetEntry(Item):
     def __init__(
         self,
         skippedByLabeller: bool = None,
-        data: EdgeList["Message"] = None,
+        data: EdgeList[Union["Message", "Tweet", "EmailMessage"]] = None,
         annotation: EdgeList["CategoricalLabel"] = None,
         **kwargs
     ):
@@ -413,7 +413,9 @@ class DatasetEntry(Item):
         self.skippedByLabeller: Optional[bool] = skippedByLabeller
 
         # Edges
-        self.data: EdgeList["Message"] = EdgeList("data", "Message", data)
+        self.data: EdgeList[Union["Message", "Tweet", "EmailMessage"]] = EdgeList(
+            "data", Union["Message", "Tweet", "EmailMessage"], data
+        )
         self.annotation: EdgeList["CategoricalLabel"] = EdgeList(
             "annotation", "CategoricalLabel", annotation
         )
@@ -1408,6 +1410,23 @@ class Photo(MediaObject):
         )
         self.label: EdgeList["Label"] = EdgeList("label", "Label", label)
         self.thumbnail: EdgeList["File"] = EdgeList("thumbnail", "File", thumbnail)
+
+
+class Tweet(Post):
+    description = """A Twitter Tweet"""
+    properties = Post.properties + ["service"]
+    edges = Post.edges + ["mention"]
+
+    def __init__(
+        self, service: str = None, mention: EdgeList["Account"] = None, **kwargs
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.service: Optional[str] = service
+
+        # Edges
+        self.mention: EdgeList["Account"] = EdgeList("mention", "Account", mention)
 
 
 class Message(WrittenWork):

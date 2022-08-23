@@ -4,6 +4,7 @@ from pymemri.pod.client import PodClient
 from pymemri.data.schema import Item, Edge, EdgeList
 import pytest
 from pymemri.data.schema import EmailMessage, Person, Account
+from pymemri.pod.graphql_utils import GQLQuery
 
 
 class Dog(Item):
@@ -263,6 +264,21 @@ def test_search_last_added(client: PodClient):
     client.create(person_item2)
     last_added = client.search_last_added(type="Person")
     assert last_added.firstName == "Last Person"
+
+
+def test_search_gql(client: PodClient):
+    client.bulk_action(
+        create_items=[
+            Person(firstName=str(i)) for i in range(100)
+        ]
+    )
+    all_persons = client.search({"type": "Person"}, include_edges=False)
+    person_ids = [p.id for p in all_persons]
+
+    query = GQLQuery("query{Person{id}}")
+    items = client.search_graphql(query)
+    result_ids = [r.id for r in items]
+    assert person_ids == result_ids
 
 
 def test_bulk_create(client: PodClient):

@@ -45,15 +45,13 @@ def test_query(client: PodClient):
     create_dummy_dataset(client, num_items)
     messages = client.search({"type": "Message", "service": "my_service"})
 
-    q = Query(
-        "content", "label.labelValue", "sender.owner.firstName", "sender.handle", "wrong_property"
-    )
+    q = Query("content", "label.value", "sender.owner.firstName", "sender.handle", "wrong_property")
     result = q.execute(client, messages)
 
     assert all(len(vals) == len(result["content"]) for vals in result.values())
     assert len(result["content"]) == num_items
 
-    valid_props = ["label.labelValue", "sender.owner.firstName", "sender.handle"]
+    valid_props = ["label.value", "sender.owner.firstName", "sender.handle"]
     for i in range(num_items):
         row = [result[prop][i] for prop in valid_props]
         row_idx = [val[-1] for val in row if val is not None]

@@ -6,6 +6,7 @@ from pymemri.data.itembase import Edge
 from pymemri.data.schema import Account, Message, Person
 from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
+from pymemri.pod.graphql_utils import GQLQuery
 
 
 @pytest.fixture(scope="module")
@@ -52,20 +53,29 @@ def api():
 
     return PodAPI(database_key=client.database_key, owner_key=client.owner_key)
 
+def test_format_query():
+    query = GQLQuery(
+    """query {
+        Account(filter: {eq: {service: "$service"}})
+    }
+    """)
+
+    q = query.format({"service": "test"})
+    assert query == """query {
+        Account(filter: {eq: {service: "test"}})
+    }
+    """
 
 def test_graphql_1(api: PodAPI):
 
     query = """
         query {
             Message {
-                id
                 subject
                 sender {
-                    id
                     displayName
                     service
                     owner {
-                        id
                         displayName
                     }
                 }
@@ -73,13 +83,20 @@ def test_graphql_1(api: PodAPI):
         }
     """
 
-    res = api.post("graphql", query).json()
-    message = res["data"][0]
+    client = PodClient()
+    client.api = api
+    items = client.search_graphql(query)
+    message = items[0]
+    # check item type
+    assert type(message).__name__ == "Message"
     # check selections
-    assert message["subject"] == "Hello"
-    assert message["sender"][0]["displayName"] == "Alice"
-    assert message["sender"][0]["owner"][0]["displayName"] == "Alice"
-
+    assert message.subject == "Hello"
+    assert message.sender[0].displayName == "Alice"
+    assert message.sender[0].owner[0].displayName == "Alice"
+    # base properties should exist
+    assert getattr(message, "dateCreated", None)
+    # non-selections should be absent
+    assert getattr(message, "service", None) == None
 
 @pytest.mark.skip(reason="TODO /graphQL should error on out-of-schema values")
 def test_graphql_2(api: PodAPI):
@@ -123,12 +140,12 @@ def test_graphql_3(api: PodAPI):
 
 def test_graphql_4(api: PodAPI):
 
-    query = """
+    query = GQLQuery("""
         query {
             Person {
                 id
                 displayName
-                ~owner (filter: {service: {eq: "whatsapp"}}) {
+                ~owner (filter: {service: {eq: "$service"}}) {
                     id
                     displayName
                     service
@@ -138,9 +155,10 @@ def test_graphql_4(api: PodAPI):
                 }
             }
         }
-    """
+    """)
+    query.format(service="whatsapp")
 
-    res = api.post("graphql", query).json()
+    res = api.graphql(query)
     # check reverse edges
     for p in res["data"]:
         if p["~owner"][0]["service"] == "whatsapp":
