@@ -13,8 +13,9 @@ from .utils import *
 from ..plugin.schema import *
 from ..test_utils import get_ci_variables
 from .api import PodAPI, PodError, DEFAULT_POD_ADDRESS, POD_VERSION
+from .graphql_utils import GQLQuery
 
-from typing import List, Union
+from typing import List, Dict, Union
 import uuid
 import urllib
 from datetime import datetime
@@ -160,7 +161,7 @@ class PodClient:
     @classmethod
     def _edge_dicts_from_type_or_instance(cls, item):
         edge_items = []
-        for edge_name, (source_type, target_type) in item.get_edge_types().items():
+        for (edge_name, source_type, target_type) in item.get_edge_types():
             edge_items.append(
                 {
                     "type": "ItemEdgeSchema",
@@ -606,6 +607,24 @@ class PodClient:
         if ALL_EDGES in properties:
             del properties[ALL_EDGES]
         return properties
+
+    def _item_from_graphql(self, data):
+        item = self.item_from_json(data)
+        for prop in item.edges:
+            if prop in data:
+                for edge in data[prop]:
+                    edge_item = self._item_from_graphql(edge)
+                    item.add_edge(prop, edge_item)
+        return item
+
+    def search_graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[Item]:
+        response = self.api.graphql(query, variables)
+        data = response['data']
+        result = []
+        for d in data:
+            item = self._item_from_graphql(d)
+            result.append(item)
+        return result
 
     def send_email(self, to, subject="", body=""):
         try:

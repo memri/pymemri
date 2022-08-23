@@ -1,13 +1,13 @@
 import pytest
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import Dataset, DatasetEntry, Account, Person, Message, CategoricalLabel
+from pymemri.data.schema import Dataset, DatasetEntry, Account, Person, Message, EmailMessage, CategoricalLabel
 from pymemri.data.itembase import Edge
 import pandas as pd
 
 @pytest.fixture
 def client():
     client = PodClient()
-    client.add_to_schema(Account, Person, Message, Dataset, DatasetEntry, CategoricalLabel)
+    client.add_to_schema(Account, Person, Message, EmailMessage, Dataset, DatasetEntry, CategoricalLabel)
     return client
 
 
@@ -20,7 +20,10 @@ def create_dummy_dataset(client, num_items):
     edges = []
     for i in range(num_items):
         entry = DatasetEntry()
-        msg = Message(content=f"content_{i}", service="my_service")
+        if i % 2 == 0:
+            msg = Message(content=f"content_{i}", service="my_service")
+        else:
+            msg = EmailMessage(content=f"email content_{i}", service="my_email_provider")
         account = Account(handle=f"account_{i}")
         person = Person(firstName=f"firstname_{i}")
         label = CategoricalLabel(labelValue=f"label_{i}")
@@ -29,7 +32,7 @@ def create_dummy_dataset(client, num_items):
             Edge(dataset, entry, "entry"),
             Edge(entry, msg, "data"),
             Edge(msg, account, "sender"),
-            Edge(entry, label, "annotation"),
+            Edge(entry, label, "label"),
             Edge(account, person, "owner")
         ])
         messages.append(msg)
@@ -44,8 +47,10 @@ def test_dataset(client):
     num_items = 10
     create_dummy_dataset(client, num_items)
     dataset = client.get_dataset("example-dataset")
-    columns = ["data.content", "data.sender.handle", "annotation.labelValue"]
+    columns = ["data.content", "data.sender.handle", "label.labelValue"]
     dataframe = dataset.to("pd", columns=columns)
     assert isinstance(dataframe, pd.DataFrame)
     assert len(dataframe) == num_items
     assert all(dataframe.columns == ["id"] + columns)
+    assert dataframe["data.content"][0] == "content_0"
+    assert dataframe["data.content"][1] == "email content_1"

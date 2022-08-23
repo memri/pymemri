@@ -4,11 +4,12 @@ __all__ = ['filter_rows', 'Dataset']
 
 # Cell
 # hide
-from typing import List, Union, Any
 from pathlib import Path
-from .itembase import Item, EdgeList
-from ..exporters.exporters import Query
+from typing import Any, List, Optional, Union
+
 from . import _central_schema
+from .itembase import EdgeList, Item
+from ..exporters.exporters import Query
 
 # Cell
 # hide
@@ -53,7 +54,18 @@ class Dataset(_central_schema.Dataset):
             result = filter_rows(result, filter_val=None)
         return query.convert_dtype(result, dtype)
 
-    def to(self, dtype: str, columns: List[str], filter_missing: bool = True):
+    def _infer_columns(self):
+        column_names = []
+        for feature in self.feature:
+            column_name = "data." + feature.propertyName
+            column_names.append(column_name)
+
+        # TODO infer columns for different label types
+        column_names.append("annotation.labelValue")
+
+        return column_names
+
+    def to(self, dtype: str, columns: Optional[List[str]] = None, filter_missing: bool = True):
         """
         Converts Dataset to a different format.
 
@@ -72,6 +84,8 @@ class Dataset(_central_schema.Dataset):
         Returns:
             Any: Dataset formatted according to `dtype`
         """
+        if columns is None:
+            columns =  self._infer_columns()
         return self._get_data(dtype, columns, filter_missing)
 
     def save(

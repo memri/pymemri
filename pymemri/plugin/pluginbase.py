@@ -116,9 +116,9 @@ class PluginBase(metaclass=ABCMeta):
             edge_schema = [
                 {"type": "ItemEdgeSchema",
                  "edgeName": k,
-                 "sourceType": v[0],
-                 "targetType": v[1]}
-                for k, v in edge_types.items()
+                 "sourceType": s,
+                 "targetType": t}
+                for (k, s, t) in edge_types
             ]
             schema.extend(edge_schema)
         return schema
