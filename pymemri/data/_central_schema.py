@@ -822,12 +822,18 @@ class Network(Item):
 
 class OauthFlow(Item):
     description = """"""
-    properties = Item.properties + ["accessToken", "refreshToken", "service"]
+    properties = Item.properties + [
+        "accessToken",
+        "accessTokenSecret",
+        "refreshToken",
+        "service",
+    ]
     edges = Item.edges + []
 
     def __init__(
         self,
         accessToken: str = None,
+        accessTokenSecret: str = None,
         refreshToken: str = None,
         service: str = None,
         **kwargs
@@ -836,6 +842,7 @@ class OauthFlow(Item):
 
         # Properties
         self.accessToken: Optional[str] = accessToken
+        self.accessTokenSecret: Optional[str] = accessTokenSecret
         self.refreshToken: Optional[str] = refreshToken
         self.service: Optional[str] = service
 
