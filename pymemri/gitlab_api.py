@@ -106,6 +106,9 @@ class GitlabAPI():
                                "owned": True,
                                "search": project_name
                            }})
+        if res.status_code not in [200, 201]:
+            print(res.content)
+            raise RuntimeError(f"Failed to get project id for {project_name}")
         # we need this extra filter (search is not exact match)
         res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
         if len(res) == 0:
