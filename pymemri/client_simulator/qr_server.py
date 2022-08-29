@@ -4,7 +4,7 @@ from pymemri.plugin.schema import Account, PluginRun
 from pymemri.pod.client import PodClient
 import flask
 import multiprocessing
-from flask import render_template
+from flask import render_template, make_response
 from time import sleep
 import os
 from flask_cors import CORS
@@ -25,9 +25,13 @@ def index():
     qr_code_data = qr_code_dict[QR_CODE_KEY]
     done = qr_code_dict.get("authenticated", False)
     if done:
-        return render_template("success.html")
+        res = render_template("success.html")
     else:
-        return render_template('images.html', chart_output=qr_code_data)
+        res =  render_template('images.html', chart_output=qr_code_data)
+
+    response = make_response(res)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 def run_app(qr_dict, host="0.0.0.0", port=8080):
     global qr_code_dict
