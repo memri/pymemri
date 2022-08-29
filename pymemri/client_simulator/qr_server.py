@@ -13,15 +13,14 @@ from pymemri.plugin.pluginbase import POD_PLUGIN_DNS_ENV, PluginBase
 from pymemri.cvu.utils import get_default_cvu
 
 app = flask.Flask(__name__, template_folder='template')
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app, support_credentials=True)
 qr_code_dict = None
 
 QR_CODE_KEY = "qr_code"
 
 
 @app.route('/qr')
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def index():
     global qr_code_dict
     qr_code_data = qr_code_dict[QR_CODE_KEY]
