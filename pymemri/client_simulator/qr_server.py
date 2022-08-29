@@ -7,20 +7,19 @@ import multiprocessing
 from flask import render_template
 from time import sleep
 import os
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from pymemri.plugin.states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED
 from pymemri.plugin.pluginbase import POD_PLUGIN_DNS_ENV, PluginBase
 from pymemri.cvu.utils import get_default_cvu
 
 app = flask.Flask(__name__, template_folder='template')
-cors = CORS(app, support_credentials=True)
+CORS(app)
 qr_code_dict = None
 
 QR_CODE_KEY = "qr_code"
 
 
 @app.route('/qr')
-@cross_origin(supports_credentials=True)
 def index():
     global qr_code_dict
     qr_code_data = qr_code_dict[QR_CODE_KEY]
