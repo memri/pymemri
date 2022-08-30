@@ -49,6 +49,7 @@ class PluginRun(Item):
         "containerId",
         "containerImage",
         "authUrl",
+        "authImage",
         "pluginModule",
         "pluginName",
         "status",
@@ -64,6 +65,7 @@ class PluginRun(Item):
         self,
         containerImage: str = None,
         authUrl: str = None,
+        authImage: str = None,
         pluginModule: str = None,
         pluginName: str = None,
         status: str = None,
@@ -89,6 +91,7 @@ class PluginRun(Item):
         # Properties
         self.containerImage: Optional[str] = containerImage
         self.authUrl: Optional[str] = authUrl
+        self.authImage: Optional[str] = authImage
         self.pluginModule: Optional[str] = pluginModule
         self.pluginName: Optional[str] = pluginName
         self.status: Optional[str] = status

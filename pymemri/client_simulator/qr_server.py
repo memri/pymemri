@@ -7,13 +7,11 @@ import multiprocessing
 from flask import render_template, make_response
 from time import sleep
 import os
-from flask_cors import CORS
 from pymemri.plugin.states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED
 from pymemri.plugin.pluginbase import POD_PLUGIN_DNS_ENV, PluginBase
 from pymemri.cvu.utils import get_default_cvu
 
 app = flask.Flask(__name__, template_folder='template')
-CORS(app)
 qr_code_dict = None
 
 QR_CODE_KEY = "qr_code"
@@ -90,6 +88,7 @@ def run_qr_flow(_qr_code_data, client: PodClient, plugin_run: PluginRun):
     process_dict = manager.dict()
     process_dict["qr_code"] = _qr_code_data
     process_dict["authenticated"] = False
+    # assert client.update_item(plugin_run)
     host = "0.0.0.0"
     port = 8080
     user_host = os.environ.get(POD_PLUGIN_DNS_ENV, f"http://0.0.0.0:{port}")
