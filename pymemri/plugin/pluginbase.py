@@ -66,6 +66,8 @@ class PluginBase(metaclass=ABCMeta):
         else:
             self._webserver = WebServer(pluginRun.webserverPort or 8080)
 
+        self.set_run_status(RUN_INITIALIZED)
+
     def set_run_status(self, status):
         # TODO sync before setting status (requires pod_client.sync())
         if self.pluginRun and self.client:
@@ -89,9 +91,17 @@ class PluginBase(metaclass=ABCMeta):
             listener.stop()
 
     def _run(self):
+        self.set_run_status(RUN_STARTED)
+
         self.setup()
         self.run()
-        self.teardown()
+
+        if self._webserver.is_running():
+            self.set_run_status(RUN_DAEMON)
+        else:
+            self.teardown()
+            self.set_run_status(RUN_COMPLETED)
+
 
     @abc.abstractmethod
     def run(self):
@@ -195,10 +205,7 @@ def run_plugin_from_run_id(run_id, client, **kwargs):
     plugin = plugin_cls(pluginRun=run, client=client, **kwargs)
     plugin.add_to_schema()
 
-    plugin.set_run_status(RUN_STARTED)
     plugin._run()
-    plugin.pluginRun = plugin.client.get(run_id)
-    plugin.set_run_status(RUN_COMPLETED)
 
     return plugin
 
