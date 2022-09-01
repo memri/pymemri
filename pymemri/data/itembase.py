@@ -322,7 +322,7 @@ class Item(ItemBase):
         importJson: str = None,
         pluginClass: str = None,
         isMock: bool = None,
-        label: EdgeList["CategoricalLabel"] = None,
+        label: EdgeList["CategoricalPrediction"] = None,
     ):
         super().__init__(id)
 
@@ -340,8 +340,8 @@ class Item(ItemBase):
         self.isMock: Optional[bool] = isMock
 
         # Edges
-        self.label: EdgeList["CategoricalLabel"] = EdgeList(
-            "label", "CategoricalLabel", label
+        self.label: EdgeList["CategoricalPrediction"] = EdgeList(
+            "label", "CategoricalPrediction", label
         )
 
     @classmethod
