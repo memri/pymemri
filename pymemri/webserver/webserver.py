@@ -30,6 +30,9 @@ class WebServer:
             self._server_handle = threading.Thread(target=self._uvicorn.run, daemon=False)
             self._server_handle.start()
 
+    def is_running(self):
+        return self._server_handle is not None
+
     def shutdown(self):
         """Shuts down the uvicorn server, frees the thread"""
         print("Shutting down the webserver..")
@@ -40,5 +43,6 @@ class WebServer:
 
             if self._server_handle:
                 self._server_handle.join()
+                self._server_handle = None
 
         print("Webserver shut down")
