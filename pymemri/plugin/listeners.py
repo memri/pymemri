@@ -14,6 +14,9 @@ from .states import RUN_COMPLETED, RUN_FAILED
 
 # Cell
 
+from xml.etree.ElementInclude import include
+
+
 class StatusListener:
     def __init__(self, client, run_id, status, callback, interval=5, verbose=False):
         self.client = client
@@ -36,7 +39,8 @@ class StatusListener:
         while self.running:
             time.sleep(self.interval)
             try:
-                run = self.client.get(self.run_id)
+                run = self.client.get(self.run_id, include_deleted=True)
+
                 if self.verbose:
                     print("run status:", run.status, flush=True)
                 if run.status == self.status:
@@ -66,7 +70,7 @@ class DeleteListener:
         while self.running:
             time.sleep(self.interval)
             try:
-                run = self.client.get(self.run_id)
+                run = self.client.get(self.run_id, include_deleted=True)
                 if self.verbose:
                     print(f"run {self.run_id} deleted {run.deleted}:", flush=True)
                 if run.deleted == True:
@@ -79,6 +83,7 @@ class DeleteListener:
 def force_exit_callback():
     print("Status aborted, killing plugin...", flush=True)
     pid = os.getpid()
+    # TODO: do shutdown procedure?
     os.kill(pid, signal.SIGINT)
 
 def get_abort_plugin_listener(client, run_id, **kwargs):
