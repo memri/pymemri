@@ -11,7 +11,7 @@ from ..pod.client import *
 from ..imports import *
 from .states import *
 from ..pod.utils import *
-from .listeners import get_abort_plugin_listener
+from .listeners import get_abort_plugin_listener, get_delete_plugin_listener
 from ..webserver.webserver import WebServer
 
 from os import environ
@@ -83,6 +83,10 @@ class PluginBase(metaclass=ABCMeta):
         if self.client and self.pluginRun:
             status_abort_listener = get_abort_plugin_listener(self.client, self.pluginRun.id)
             self._status_listeners.append(status_abort_listener)
+
+            delete_listener = get_delete_plugin_listener(self.client, self.pluginRun.id)
+            self._status_listeners.append(delete_listener)
+
 
         self._webserver.run()
 
