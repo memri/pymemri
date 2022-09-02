@@ -28,6 +28,8 @@ TIME_FORMAT_GITLAB = '%Y-%m-%dT%H:%M:%S.%fZ'
 PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )[0-9]+(?=</span>)'
 
 # Cell
+
+
 class GitlabAPI():
 
     def __init__(self, client=None, request_auth_if_needed=False):
@@ -115,7 +117,7 @@ class GitlabAPI():
         if res.status_code not in [200, 201]:
             print(res.content)
             raise RuntimeError(f"Failed to get project id for {project_name}")
-        
+
         project_id = res.json().get("id", None)
         if project_id:
             return project_id
@@ -235,9 +237,6 @@ class GitlabAPI():
         )
         self.write_files_to_git(project_name, tmp_dir)
 
-
-
-
 # Cell
 def find_git_repo():
     path = "."
@@ -253,7 +252,6 @@ def find_git_repo():
 
     repo_name = repo.remotes.origin.url.split('.git')[0].split('/')[-1]
     return repo_name
-
 
 # Cell
 class upload_in_chunks(object):
