@@ -33,7 +33,7 @@ class StatusListener:
         if self.verbose:
             print(f"Listening for status='{self.status}' on Item {self.run_id}", flush=True)
 
-        while self.running and threading.main_thread().is_alive():
+        while self.running:
             time.sleep(self.interval)
             try:
                 run = self.client.get(self.run_id)
@@ -63,7 +63,7 @@ class DeleteListener:
         if self.verbose:
             print(f"Listening for Plugin Delete on Item {self.run_id}", flush=True)
 
-        while self.running and threading.main_thread().is_alive():
+        while self.running:
             time.sleep(self.interval)
             try:
                 run = self.client.get(self.run_id)
