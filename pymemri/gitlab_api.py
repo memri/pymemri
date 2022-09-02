@@ -14,7 +14,7 @@ from datetime import datetime
 from git import Repo
 import re
 from .data.basic import *
-from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
+from .template.formatter import _plugin_from_template, gitlab_slugify
 import urllib
 
 # Cell
@@ -67,6 +67,13 @@ class GitlabAPI():
                     self.auth_headers = {"PRIVATE-TOKEN": access_token}
                     self.auth_initialized = True
 
+
+        # test if we are authenticated
+        res = requests.get(f"{GITLAB_API_BASE_URL}/projects", headers=self.auth_headers, params=self.auth_params)
+        if res.status_code not in [200, 201]:
+            print(res.content)
+            raise RuntimeError(res.content)
+
     def write_file_to_package_registry(
         self,
         project_id,
@@ -99,22 +106,21 @@ class GitlabAPI():
 
     # export
     def project_id_from_name(self, project_name):
-        iden = str_to_gitlab_identifier(project_name)
-        res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
-                           headers=self.auth_headers,
-                           params={**self.auth_params, **{
-                               "owned": True,
-                               "search": project_name
-                           }})
+        iden = gitlab_slugify(project_name)
+        username = self.get_current_username()
+        uri_encoded_name = urllib.parse.quote_plus(f"{username}/{iden}")
+        res = requests.get(f"{GITLAB_API_BASE_URL}/projects/{uri_encoded_name}",
+                            headers=self.auth_headers, params=self.auth_params)
+
         if res.status_code not in [200, 201]:
             print(res.content)
             raise RuntimeError(f"Failed to get project id for {project_name}")
-        # we need this extra filter (search is not exact match)
-        res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
-        if len(res) == 0:
-            raise ValueError(f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo")
+        
+        project_id = res.json().get("id", None)
+        if project_id:
+            return project_id
         else:
-            return res[0]
+            raise ValueError(f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo")
 
     # export
     def get_project_id_from_project_path_unsafe(self, project_path):
@@ -175,7 +181,7 @@ class GitlabAPI():
 
     # NEVER EXPORT THIS
     def delete_project(self, path_or_id, client=None):
-        url_escape_id = urllib.parse.quote(path_or_id, safe='')
+        url_escape_id = urllib.parse.quote(str(path_or_id), safe='')
         url = f"{GITLAB_API_BASE_URL}/projects/{url_escape_id}"
         res = requests.delete(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201, 202]:
