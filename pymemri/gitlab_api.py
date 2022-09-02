@@ -12,7 +12,7 @@ from loguru import logger
 
 from pymemri.pod.client import PodClient
 
-from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
+from .template.formatter import _plugin_from_template, gitlab_slugify
 
 MEMRI_PATH = Path.home() / ".memri"
 MEMRI_GITLAB_BASE_URL = "https://gitlab.memri.io"
@@ -36,8 +36,8 @@ class GitlabAPI:
     def init_auth_params(self):
         access_token = self.client.get_oauth2_access_token("gitlab")
         if access_token is None:
-            raise ValueError(
-                "No gitlab access token found in the pod."
+            raise RuntimeError(
+                "No gitlab access token found in the pod. "
                 "Please authenticate with gitlab in the frontend."
             )
         self.auth_params = {"access_token": access_token}
@@ -72,6 +72,14 @@ class GitlabAPI:
                         f.write(access_token)
                     self.auth_headers = {"PRIVATE-TOKEN": access_token}
                     self.auth_initialized = True
+
+        # test if we are authenticated
+        res = self.get(
+            f"{GITLAB_API_BASE_URL}/projects", headers=self.auth_headers, params=self.auth_params
+        )
+        if res.status_code not in [200, 201]:
+            logger.error(res.content)
+            raise RuntimeError(res.content)
 
     def write_file_to_package_registry(
         self,
@@ -132,23 +140,25 @@ class GitlabAPI:
             logger.error("Failed to trigger pipeline")
 
     def project_id_from_name(self, project_name):
-        iden = str_to_gitlab_identifier(project_name)
+        iden = gitlab_slugify(project_name)
+        username = self.get_current_username()
+        uri_encoded_name = urllib.parse.quote_plus(f"{username}/{iden}")
         res = self.get(
-            f"{GITLAB_API_BASE_URL}/projects",
+            f"{GITLAB_API_BASE_URL}/projects/{uri_encoded_name}",
             headers=self.auth_headers,
-            params={**self.auth_params, **{"owned": True, "search": project_name}},
+            params=self.auth_params,
         )
+
         if res.status_code not in [200, 201]:
             logger.error(res.content)
             raise RuntimeError(f"Failed to get project id for {project_name}")
-        # we need this extra filter (search is not exact match)
-        res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
-        if len(res) == 0:
+        project_id = res.json().get("id", None)
+        if project_id:
+            return project_id
+        else:
             raise ValueError(
                 f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo"
             )
-        else:
-            return res[0]
 
     def get_project_id_from_project_path_unsafe(self, project_path):
         try:
@@ -214,7 +224,7 @@ class GitlabAPI:
 
     # NEVER EXPORT THIS
     def delete_project(self, path_or_id, client=None):
-        url_escape_id = urllib.parse.quote(path_or_id, safe="")
+        url_escape_id = urllib.parse.quote(str(path_or_id), safe="")
         url = f"{GITLAB_API_BASE_URL}/projects/{url_escape_id}"
         res = self.delete(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201, 202]:

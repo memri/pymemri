@@ -58,11 +58,12 @@ def str_to_identifier(s, lower=True):
     return result
 
 
-def str_to_gitlab_identifier(s, lower=True):
-    result = re.sub("\W|^(?=\d)", "-", s)
-    if lower:
-        result = result.lower()
-    return result
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/utils.rb#L92
+def gitlab_slugify(s):
+    s = s.lower()
+    s = re.sub(r"[^a-z0-9]", "-", s)[:63]
+    s = re.sub(r"(^-+|-+$)", "", s)
+    return s
 
 
 def reponame_to_displayname(reponame: str) -> str:
