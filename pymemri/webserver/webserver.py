@@ -1,15 +1,33 @@
 import threading
-from uvicorn import Server, Config
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from uvicorn import Config, Server
 
 
 class WebServer:
     def __init__(self, port: int):
-        self._app = FastAPI(title="Plugin Webserver", redoc_url=None,
-                            swagger_ui_oauth2_redirect_url=None)
+        self._app =  self._setup_app()
         self._server_handle = None
         self._uvicorn = None
         self._port = port
+
+    def _setup_app(self) -> FastAPI:
+        app = FastAPI(
+            title="Plugin Webserver",
+            redoc_url=None,
+            swagger_ui_oauth2_redirect_url=None)
+
+        # TODO setup allow_origin_regex for *.memri.io and localhost
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
+        return app
+        
 
     @property
     def app(self) -> FastAPI:
