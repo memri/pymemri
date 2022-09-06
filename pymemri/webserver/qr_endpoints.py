@@ -1,8 +1,10 @@
 import os
-from .helpers import get_root_path, DictProxy
+
 from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+
+from .helpers import DictProxy, get_root_path
 
 qr_code_dict = DictProxy()
 
@@ -20,6 +22,7 @@ templates = Jinja2Templates(directory=os.path.join(get_root_path(__name__), "tem
 router = APIRouter()
 
 QR_CODE_KEY = "qr_code"
+QR_STRING_KEY = "qr_string"
 AUTHENTICATED = "authenticated"
 
 
@@ -37,3 +40,35 @@ def qr(request: Request):
         return templates.TemplateResponse("success.html", {"request": request})
     else:
         return templates.TemplateResponse("images.html", {"request": request, "chart_output": qr_code_data})
+
+
+@router.get("/qr_svg", response_class=JSONResponse)
+def qr_svg():
+    """Returns the QR svg as json"""
+    global qr_code_dict
+
+    content = {
+        "qr": qr_code_dict.get(QR_CODE_KEY, None),
+        "authenticated": qr_code_dict.get(AUTHENTICATED, False),
+    }
+
+    return JSONResponse(
+        content=content,
+        headers={'Access-Control-Allow-Origin': '*'}
+    )
+
+
+@router.get("/qr_string", response_class=JSONResponse)
+def qr_string():
+    """Returns the QR svg as json"""
+    global qr_code_dict
+
+    content = {
+        "qr": qr_code_dict.get(QR_STRING_KEY, None).decode("utf-8"),
+        "authenticated": qr_code_dict.get(AUTHENTICATED, False),
+    }
+
+    return JSONResponse(
+        content=content,
+        headers={'Access-Control-Allow-Origin': '*'}
+    )
