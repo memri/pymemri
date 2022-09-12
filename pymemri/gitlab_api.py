@@ -1,17 +1,14 @@
-import os
-import re
-import sys
-import urllib
-from datetime import datetime
-from getpass import getpass
-from pathlib import Path
-
-import requests
 from fastprogress.fastprogress import progress_bar
+from pathlib import Path
+import requests
+import os, sys
+from getpass import getpass
+from datetime import datetime
 from git import Repo
-
+import re
 from .data.basic import *
 from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
+import urllib
 
 MEMRI_PATH = Path.home() / ".memri"
 MEMRI_GITLAB_BASE_URL = "https://gitlab.memri.io"
