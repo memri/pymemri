@@ -1,16 +1,17 @@
-
-
-from fastprogress.fastprogress import progress_bar
-from pathlib import Path
-import requests
-import os, sys
-from getpass import getpass
-from datetime import datetime
-from git import Repo
+import os
 import re
+import sys
+import urllib
+from datetime import datetime
+from getpass import getpass
+from pathlib import Path
+
+import requests
+from fastprogress.fastprogress import progress_bar
+from git import Repo
+
 from .data.basic import *
 from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
-import urllib
 
 MEMRI_PATH = Path.home() / ".memri"
 MEMRI_GITLAB_BASE_URL = "https://gitlab.memri.io"
@@ -32,7 +33,7 @@ class GitlabAPI():
         self.get_registry_params_headers()
 
 
-        def get_registry_params_headers(self):
+    def get_registry_params_headers(self):
         job_token = os.environ.get("CI_JOB_TOKEN", None)
         if job_token is not None:
             self.auth_initialized = True
@@ -89,7 +90,7 @@ class GitlabAPI():
         if res.status_code not in [200, 201]:
             print(f"Failed to trigger pipeline")
 
-        def project_id_from_name(self, project_name):
+    def project_id_from_name(self, project_name):
         iden = str_to_gitlab_identifier(project_name)
         res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
                            headers=self.auth_headers,
@@ -107,7 +108,7 @@ class GitlabAPI():
         else:
             return res[0]
 
-        def get_project_id_from_project_path_unsafe(self, project_path):
+    def get_project_id_from_project_path_unsafe(self, project_path):
         try:
             res = requests.get(f"{MEMRI_GITLAB_BASE_URL}/{project_path}")
             html = str(res.content)
@@ -116,7 +117,7 @@ class GitlabAPI():
         except Exception:
             raise ValueError(f"Could not find project with name {project_path}")
 
-        def download_package_file(self, filename, project_path, package_name, out_dir=None,
+    def download_package_file(self, filename, project_path, package_name, out_dir=None,
                               package_version=DEFAULT_PACKAGE_VERSION, download_if_exists=False):
 
         project_name = str(project_path).split("/")[-1]
@@ -152,7 +153,7 @@ class GitlabAPI():
             raise ValueError(f"failed to create repo:\n {res.text}")
         print(f"created project {repo_name}")
 
-        def get_current_username(self, client=None):
+    def get_current_username(self, client=None):
         url = f"{GITLAB_API_BASE_URL}/user/"
         res = requests.get(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200,201]:
@@ -170,7 +171,7 @@ class GitlabAPI():
             raise ValueError(f"failed to delete repo:\n {res.text}")
         print(f"deleted project {path_or_id}")
 
-        def commit_file(self, project_name, path_in2out, branch="main", client=None):
+    def commit_file(self, project_name, path_in2out, branch="main", client=None):
         project_id = self.project_id_from_name(project_name)
     #     file_out_path_escaped = urllib.parse.quote(file_out_path, safe='')
 
@@ -190,7 +191,7 @@ class GitlabAPI():
             raise ValueError(f"failed to make commit with files {files_in}:\n {res.text}")
         print(f"committed files {files_in}")
 
-        def write_files_to_git(self, repo, target_dir, **kwargs):
+    def write_files_to_git(self, repo, target_dir, **kwargs):
         path_in2out = dict()
         for p in target_dir.rglob("*"):
             if p.is_file():
