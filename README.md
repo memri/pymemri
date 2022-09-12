@@ -52,7 +52,7 @@ client.create(dog)
 
 After installation, users can use the plugin CLI to manually run a plugin. For more information on how to build a plugin, see `run_plugin`.
 
-<b>With the pod running, run in your terminal|: </b>
+<b>With the pod running, run in your terminal: </b>
 
 ```bash
 store_keys
