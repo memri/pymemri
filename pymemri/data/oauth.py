@@ -1,9 +1,9 @@
-
-
-from typing import List, Union, Any
 from pathlib import Path
-from .itembase import Item, EdgeList
+from typing import Any, List, Union
+
 from . import _central_schema
+from .itembase import EdgeList, Item
+
 
 class OauthFlow(Item):
     description = """TBD"""

@@ -1,11 +1,10 @@
-
-
 import abc
 from time import sleep
-from ..pluginbase import PluginBase
-from ..states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED, RUN_FAILED
-from ..schema import PluginRun, Account
+
 from ...pod.client import PodClient
+from ..pluginbase import PluginBase
+from ..schema import Account, PluginRun
+from ..states import RUN_FAILED, RUN_USER_ACTION_COMPLETED, RUN_USER_ACTION_NEEDED
 
 
 class OAuthAuthenticator(metaclass=abc.ABCMeta):
@@ -27,7 +26,7 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
             if not self.pluginRun.account[0].refreshToken:
                 raise Exception("Refresh token is empty")
             tokens = self.refresh_tokens(self.pluginRun.account[0].refreshToken)
-        except: # no account exists or expired refresh token
+        except:  # no account exists or expired refresh token
             url = self.get_oauth_url()
             self.present_url_to_user(url)
             code = self.poll_for_code()
@@ -53,8 +52,8 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
 
     def store_tokens(self, tokens):
         account = self.pluginRun.account[0]
-        account.accessToken = tokens['access_token']
-        account.refreshToken = tokens['refresh_token'] if 'refresh_token' in tokens else None
+        account.accessToken = tokens["access_token"]
+        account.refreshToken = tokens["refresh_token"] if "refresh_token" in tokens else None
         account.update(self.client)
 
     def get_account(self):
@@ -66,23 +65,23 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def get_tokens_from_code(self, code):
-        """ Gets access and refresh tokens from 3rd party service
-            and returns them in form:
-                {
-                    'access_token': '...',
-                    'refresh_token': '...'
-                }
+        """Gets access and refresh tokens from 3rd party service
+        and returns them in form:
+            {
+                'access_token': '...',
+                'refresh_token': '...'
+            }
         """
         raise NotImplemented()
 
     @abc.abstractmethod
     def refresh_tokens(self):
-        """ Gets new tokens by using an existing refresh token
-            and returns them in form:
-                {
-                    'access_token': '...',
-                    'refresh_token': '...'
-                }
+        """Gets new tokens by using an existing refresh token
+        and returns them in form:
+            {
+                'access_token': '...',
+                'refresh_token': '...'
+            }
 
         """
         # use self.pluginRun.account[0].refreshToken

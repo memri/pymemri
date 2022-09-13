@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+
 from pymemri.data.itembase import Edge
 from pymemri.data.schema import (
     Account,
@@ -16,7 +17,9 @@ from pymemri.pod.client import PodClient
 @pytest.fixture
 def client():
     client = PodClient()
-    client.add_to_schema(Account, Person, Message, EmailMessage, Dataset, DatasetEntry, CategoricalPrediction)
+    client.add_to_schema(
+        Account, Person, Message, EmailMessage, Dataset, DatasetEntry, CategoricalPrediction
+    )
     return client
 
 
@@ -45,19 +48,18 @@ def create_dummy_dataset(client, num_items):
         person = Person(firstName=f"firstname_{i}")
         label = CategoricalPrediction(value=f"label_{i}")
         items.extend([entry, msg, account, person, label])
-        edges.extend([
-            Edge(dataset, entry, "entry"),
-            Edge(entry, msg, "data"),
-            Edge(msg, account, "sender"),
-            Edge(entry, label, "label"),
-            Edge(account, person, "owner")
-        ])
+        edges.extend(
+            [
+                Edge(dataset, entry, "entry"),
+                Edge(entry, msg, "data"),
+                Edge(msg, account, "sender"),
+                Edge(entry, label, "label"),
+                Edge(account, person, "owner"),
+            ]
+        )
         messages.append(msg)
 
-    client.bulk_action(
-        create_items=items,
-        create_edges=edges
-    )
+    client.bulk_action(create_items=items, create_edges=edges)
 
 
 def test_dataset(client):

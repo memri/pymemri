@@ -1,38 +1,40 @@
-
-
-from .itembase import Item, EdgeList
-from ._central_schema import File
-from .basic import *
-from matplotlib.pyplot import imshow
-from matplotlib import patches
-from matplotlib.collections import PatchCollection
-from numpy.linalg import norm
-from hashlib import sha256
-import matplotlib.pyplot as plt
-import math
-import numpy as np
 import io
-from PIL import Image
+import math
 from hashlib import sha256
 from typing import Any
 
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import patches
+from matplotlib.collections import PatchCollection
+from matplotlib.pyplot import imshow
+from numpy.linalg import norm
+from PIL import Image
+
+from ._central_schema import File
+from .basic import *
+from .itembase import EdgeList, Item
+
 DEFAULT_ENCODING = "PNG"
 
-def show_images(images, cols = 3, titles = None):
+
+def show_images(images, cols=3, titles=None):
     image_list = [x.data for x in images] if isinstance(images[0], Photo) else images
-    assert((titles is None) or (len(image_list) == len(titles)))
+    assert (titles is None) or (len(image_list) == len(titles))
     n_images = len(image_list)
-    if titles is None: titles = ["" for i in range(1,n_images + 1)]
+    if titles is None:
+        titles = ["" for i in range(1, n_images + 1)]
     fig = plt.figure()
     for n, (image, title) in enumerate(zip(image_list, titles)):
-        a = fig.add_subplot(int(np.ceil(n_images/float(cols))), cols , n + 1)
-        a.axis('off')
+        a = fig.add_subplot(int(np.ceil(n_images / float(cols))), cols, n + 1)
+        a.axis("off")
         if image.ndim == 2:
             plt.gray()
-        plt.imshow(image[:,:,::-1])
+        plt.imshow(image[:, :, ::-1])
         a.set_title(title)
     fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
     plt.show()
+
 
 class Photo(Item):
 
@@ -92,9 +94,7 @@ class Photo(Item):
         w, h, c = shape
         _bytes = cls.PIL_to_bytes(pil_image, encoding)
 
-        res = cls(
-            data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode
-        )
+        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
@@ -108,9 +108,7 @@ class Photo(Item):
         w, h, c = shape
         _bytes = cls.PIL_to_bytes(pil_image, encoding)
 
-        res = cls(
-            data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode
-        )
+        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
@@ -122,9 +120,7 @@ class Photo(Item):
         encoding, mode, shape = cls.infer_PIL_metadata(pil_image)
         w, h, c = shape
 
-        res = cls(
-            data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode
-        )
+        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
         file = File.from_data(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res

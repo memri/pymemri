@@ -1,35 +1,40 @@
-
-
-from pathlib import Path
-from typing import Dict, Union, List
-from fastcore.script import call_parse, Param, store_true
-import zipfile
-from string import Template
 import re
-import giturlparse
 import subprocess
-import pymemri
 import urllib
-from pathlib import PurePosixPath
-import requests
+import zipfile
+from pathlib import Path, PurePosixPath
+from string import Template
+from typing import Dict, List, Union
 
-TEMPLATE_URL = "https://gitlab.memri.io/memri/plugin-templates/-/archive/dev/plugin-templates-dev.zip"
+import giturlparse
+import requests
+from fastcore.script import Param, call_parse, store_true
+
+import pymemri
+
+TEMPLATE_URL = (
+    "https://gitlab.memri.io/memri/plugin-templates/-/archive/dev/plugin-templates-dev.zip"
+)
 TEMPLATE_BASE_PATH = "plugin-templates-dev"
 
 
 # If the owner of the repository is one of these groups, the CLI requires an additional `user` argument
 GITLAB_GROUPS = ["memri", "plugins"]
 
+
 def get_remote_url():
     path = Path(".")
-    url = subprocess.getoutput(f'git config --get remote.origin.url')
+    url = subprocess.getoutput(f"git config --get remote.origin.url")
     if not url:
-        raise ValueError(f"You can only run this from a initialized gitlab repository, and '{path}' is not an initialized git repository")
+        raise ValueError(
+            f"You can only run this from a initialized gitlab repository, and '{path}' is not an initialized git repository"
+        )
     parsed = giturlparse.parse(url)
     repo_url = parsed.url2https
     if repo_url.endswith(".git"):
         repo_url = repo_url[:-4]
     return repo_url
+
 
 def infer_git_info(url):
     parsed = giturlparse.parse(url)
@@ -39,11 +44,12 @@ def infer_git_info(url):
 def download_file(url, fname=None):
     cert_path = Path(pymemri.__file__).parent / "cert" / "gitlab.memri.io.pem"
     r = requests.get(url, stream=True, verify=cert_path)
-    fname = url.rsplit('/', 1)[1] if fname is None else fname
-    with open(fname, 'wb') as fd:
+    fname = url.rsplit("/", 1)[1] if fname is None else fname
+    with open(fname, "wb") as fd:
         for chunk in r.iter_content(chunk_size=128):
             fd.write(chunk)
     return fname
+
 
 def str_to_identifier(s, lower=True):
     result = re.sub("\W|^(?=\d)", "_", s)
@@ -51,14 +57,17 @@ def str_to_identifier(s, lower=True):
         result = result.lower()
     return result
 
+
 def str_to_gitlab_identifier(s, lower=True):
     result = re.sub("\W|^(?=\d)", "-", s)
     if lower:
         result = result.lower()
     return result
 
+
 def reponame_to_displayname(reponame: str) -> str:
     return re.sub("[-_]+", " ", reponame).title()
+
 
 def download_plugin_template(
     template_name: str, url: str = TEMPLATE_URL, base_path: str = TEMPLATE_BASE_PATH
@@ -71,7 +80,11 @@ def download_plugin_template(
     if len(result) == 0:
         raise ValueError(f"Could not find template: {template_name}")
 
-    result = {str(PurePosixPath(k).relative_to(PurePosixPath(base_path))): v.decode("utf-8") for k, v in result.items() if v}
+    result = {
+        str(PurePosixPath(k).relative_to(PurePosixPath(base_path))): v.decode("utf-8")
+        for k, v in result.items()
+        if v
+    }
     Path(zip_path).unlink()
     return result
 
@@ -81,8 +94,9 @@ def get_templates(url: str = TEMPLATE_URL) -> List[str]:
 
     with zipfile.ZipFile(zip_path, "r") as f:
         files_split = [name.split("/") for name in f.namelist()]
-        result = [fn[1] for fn in files_split if fn[-1] == '' and len(fn) == 3]
+        result = [fn[1] for fn in files_split if fn[-1] == "" and len(fn) == 3]
     return result
+
 
 class TemplateFormatter:
     def __init__(
@@ -124,8 +138,10 @@ class TemplateFormatter:
         previous_prefix = None
         res = "Created the following files"
 
-        for path in sorted([x.relative_to(self.tgt_path) for x in self.get_files()],
-                           key=lambda item: 100 * str(item).count("/")):
+        for path in sorted(
+            [x.relative_to(self.tgt_path) for x in self.get_files()],
+            key=lambda item: 100 * str(item).count("/"),
+        ):
             n_slashes = str(path).count("/")
             new_prefix = path.parent
             if previous_prefix != new_prefix and str(new_prefix) != ".":
@@ -135,12 +151,19 @@ class TemplateFormatter:
             elif n_slashes == 1:
                 res = f"{res}\n│   ├── {path.name}"
 
-            previous_prefix=new_prefix
+            previous_prefix = new_prefix
 
         print(res.strip() + "\n")
 
+
 def get_template_replace_dict(
-    repo_url=None, user=None, plugin_name=None, package_name=None, description=None, install_requires=None, template_name=None
+    repo_url=None,
+    user=None,
+    plugin_name=None,
+    package_name=None,
+    description=None,
+    install_requires=None,
+    template_name=None,
 ):
     if repo_url is None:
         repo_url = get_remote_url()
@@ -149,7 +172,9 @@ def get_template_replace_dict(
         repo_owner, repo_name = infer_git_info(repo_url)
     except ValueError:
         url_inf, owner_inf, name_inf = None, None, None
-        print("Could not infer git information from current directory, no initialized repository found.")
+        print(
+            "Could not infer git information from current directory, no initialized repository found."
+        )
 
     if repo_url is None:
         repo_url = url_inf
@@ -174,8 +199,13 @@ def get_template_replace_dict(
     if install_requires is None:
         install_requires = ""
     else:
-        install_requires = "\n    ".join([x.strip() for x in install_requires.split(",")
-                                if x.strip() != "" and x.strip() not in ["pymemri", "pytest"]])
+        install_requires = "\n    ".join(
+            [
+                x.strip()
+                for x in install_requires.split(",")
+                if x.strip() != "" and x.strip() not in ["pymemri", "pytest"]
+            ]
+        )
 
     if template_name == "classifier_plugin":
         assert package_name is not None
@@ -183,9 +213,12 @@ def get_template_replace_dict(
         repo_name_gitlab = str_to_gitlab_identifier(repo_name)
 
         # hacky, dont change!
-        model_imports_ = f"""
+        model_imports_ = (
+            f"""
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
-from """ +"pymemri.data.loader import load_huggingface_model_for_project"
+from """
+            + "pymemri.data.loader import load_huggingface_model_for_project"
+        )
         model_init = f"""
         model = load_huggingface_model_for_project(project_path="{user}/{repo_name_gitlab}", client=client)
         tokenizer = AutoTokenizer.from_pretrained("distilroberta-base", model_max_length=512)
@@ -209,11 +242,22 @@ from """ +"pymemri.data.loader import load_huggingface_model_for_project"
         "install_requires": install_requires,
         "model_imports": model_imports_,
         "model_init": model_init,
-        "model_predict": model_predict
+        "model_predict": model_predict,
     }
 
-def _plugin_from_template(list_templates=False, user=None,repo_url=None,plugin_name=None,template_name="basic",
-                          package_name=None,description=None,target_dir=".",verbose=True,install_requires=""):
+
+def _plugin_from_template(
+    list_templates=False,
+    user=None,
+    repo_url=None,
+    plugin_name=None,
+    template_name="basic",
+    package_name=None,
+    description=None,
+    target_dir=".",
+    verbose=True,
+    install_requires="",
+):
     if list_templates:
         print("Available templates:")
         for template in get_templates():
@@ -230,7 +274,7 @@ def _plugin_from_template(list_templates=False, user=None,repo_url=None,plugin_n
         package_name=package_name,
         description=description,
         install_requires=install_requires,
-        template_name=template_name
+        template_name=template_name,
     )
     print(replace_dict)
 
@@ -239,8 +283,8 @@ def _plugin_from_template(list_templates=False, user=None,repo_url=None,plugin_n
     if verbose:
         formatter.print_filetree()
 
-
     print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
+
 
 @call_parse
 def plugin_from_template(
@@ -255,7 +299,9 @@ def plugin_from_template(
     description: Param("Description of your plugin", str) = None,
     target_dir: Param("Directory to output the formatted template", str) = ".",
     verbose: Param("Should print out dir", bool) = True,
-    install_requires: Param("Extra packages to install, provided as comma separated, e.g. pymemri,requests", str)=""
+    install_requires: Param(
+        "Extra packages to install, provided as comma separated, e.g. pymemri,requests", str
+    ) = "",
 ):
     """
     CLI that downloads and formats a plugin template according to the arguments, and local git repository.
@@ -271,5 +317,15 @@ def plugin_from_template(
         description (Param, optional): An optional plugin description. Defaults to None.
         target_dir (Param, optional): Directory where the plugin template is generated. Defaults to ".".
     """
-    _plugin_from_template(list_templates, user,repo_url,plugin_name,template_name,package_name,description,target_dir,
-                          verbose,install_requires)
+    _plugin_from_template(
+        list_templates,
+        user,
+        repo_url,
+        plugin_name,
+        template_name,
+        package_name,
+        description,
+        target_dir,
+        verbose,
+        install_requires,
+    )

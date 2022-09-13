@@ -3,6 +3,11 @@ default:
   before_script:
   - pip install -e .[dev]
 
+run pre-commit:
+  stage: linter
+  script:
+  - pre-commit run --all-files
+
 run tests:
   stage: test
   services:

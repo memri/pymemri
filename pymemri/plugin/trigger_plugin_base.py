@@ -1,13 +1,14 @@
-
-from pymemri.webserver.models.trigger import TriggerReq
-from .pluginbase import PluginBase
 import abc
 import threading
+
+from pymemri.webserver.models.trigger import TriggerReq
+
+from .pluginbase import PluginBase
 
 
 class TriggerPluginBase(PluginBase):
     """Base class for plugins that are expected to expose HTTP interface used by the POD.
-       Current use case is to notify the plugin about arrival of new data."""
+    Current use case is to notify the plugin about arrival of new data."""
 
     def __init__(self, pluginRun=None, client=None, **kwargs):
         """The pluginRun argument keeps information about port used to setup the web server"""
@@ -17,9 +18,10 @@ class TriggerPluginBase(PluginBase):
         self._webserver.app.add_api_route("/v1/item/trigger", self.do_trigger, methods=["POST"])
 
     def do_trigger(self, req: TriggerReq):
-        """ Handle trigger request for given item. Item must be present already in the POD.
-            Operation is offloaded to a dedicated thread, the POD is notified about the status
-            asynchronously."""
+        """Handle trigger request for given item. Item must be present already in the POD.
+        Operation is offloaded to a dedicated thread, the POD is notified about the status
+        asynchronously."""
+
         def thread_fn(req: TriggerReq):
             try:
                 self.trigger(req)

@@ -1,38 +1,37 @@
-
-
-from ..data.schema import *
-from ..pod.client import *
-from ..imports import *
-from .states import *
-from ..pod.utils import *
-from .listeners import get_abort_plugin_listener
-from ..webserver.webserver import WebServer
-
-from os import environ
-from abc import ABCMeta
 import abc
-import json
 import importlib
+import json
+import os
 import string
 import time
-from enum import Enum
-from fastscript import *
-import os
-from .schema import Account, PluginRun
-from ..data.basic import *
-from ..pod.client import Dog, PodClient, DEFAULT_POD_ADDRESS
-import warnings
-from ..data.basic import write_json
-from .authenticators.credentials import PLUGIN_DIR
-from fastcore.script import call_parse, Param
-import os
 import traceback
+import warnings
+from abc import ABCMeta
+from enum import Enum
+from os import environ
 
-POD_FULL_ADDRESS_ENV        = 'POD_FULL_ADDRESS'
-POD_TARGET_ITEM_ENV         = 'POD_TARGET_ITEM'
-POD_OWNER_KEY_ENV           = 'POD_OWNER'
-POD_AUTH_JSON_ENV           = 'POD_AUTH_JSON'
-POD_PLUGIN_DNS_ENV          = 'PLUGIN_DNS'
+from fastcore.script import Param, call_parse
+from fastscript import *
+
+from ..data.basic import *
+from ..data.basic import write_json
+from ..data.schema import *
+from ..imports import *
+from ..pod.client import *
+from ..pod.client import DEFAULT_POD_ADDRESS, Dog, PodClient
+from ..pod.utils import *
+from ..webserver.webserver import WebServer
+from .authenticators.credentials import PLUGIN_DIR
+from .listeners import get_abort_plugin_listener
+from .schema import Account, PluginRun
+from .states import *
+
+POD_FULL_ADDRESS_ENV = "POD_FULL_ADDRESS"
+POD_TARGET_ITEM_ENV = "POD_TARGET_ITEM"
+POD_OWNER_KEY_ENV = "POD_OWNER"
+POD_AUTH_JSON_ENV = "POD_AUTH_JSON"
+POD_PLUGIN_DNS_ENV = "PLUGIN_DNS"
+
 
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
@@ -44,7 +43,8 @@ class PluginBase(metaclass=ABCMeta):
         if pluginRun is None:
             warnings.warn(
                 "Plugin needs a pluginRun as kwarg, running without will only work in development.",
-                RuntimeWarning)
+                RuntimeWarning,
+            )
         self.pluginRun = pluginRun
 
         if client is None:
@@ -94,7 +94,6 @@ class PluginBase(metaclass=ABCMeta):
             self.teardown()
             self.set_run_status(RUN_COMPLETED)
 
-
     @abc.abstractmethod
     def run(self):
         raise NotImplementedError()
@@ -120,10 +119,7 @@ class PluginBase(metaclass=ABCMeta):
         for item in cls.schema_classes:
             edge_types = item.get_edge_types()
             edge_schema = [
-                {"type": "ItemEdgeSchema",
-                 "edgeName": k,
-                 "sourceType": s,
-                 "targetType": t}
+                {"type": "ItemEdgeSchema", "edgeName": k, "sourceType": s, "targetType": t}
                 for (k, s, t) in edge_types
             ]
             schema.extend(edge_schema)
@@ -137,9 +133,12 @@ class PluginBase(metaclass=ABCMeta):
             schema.extend(edges)
         return schema
 
+
 class PluginError(Exception):
     """Generic class for plugin errors. This error is raised when a plugin raises an unexpected exception."""
+
     pass
+
 
 class ExamplePlugin(PluginBase):
     schema_classes = [Dog, Message]
@@ -154,6 +153,7 @@ class ExamplePlugin(PluginBase):
         self.client.create(dog)
         print("Run success!")
 
+
 def write_run_info(plugin, id_):
     try:
         if plugin is None:
@@ -165,6 +165,7 @@ def write_run_info(plugin, id_):
     except Exception as e:
         print(f"""failed to write run info to {run_path}\n{e}""")
 
+
 def get_plugin_cls(plugin_module, plugin_name):
     try:
         module = importlib.import_module(plugin_module)
@@ -172,6 +173,7 @@ def get_plugin_cls(plugin_module, plugin_name):
         return plugin_cls
     except (ImportError, AttributeError):
         raise ImportError(f"Unknown plugin: {plugin_module}.{plugin_name}")
+
 
 def run_plugin_from_run_id(run_id, client, **kwargs):
     """
@@ -183,7 +185,10 @@ def run_plugin_from_run_id(run_id, client, **kwargs):
     """
 
     run = client.get(run_id)
-    write_run_info(run.pluginModule.split(".")[0] if run.pluginModule is not None else run.containerImage, run.id)
+    write_run_info(
+        run.pluginModule.split(".")[0] if run.pluginModule is not None else run.containerImage,
+        run.id,
+    )
 
     plugin_cls = get_plugin_cls(run.pluginModule, run.pluginName)
     plugin = plugin_cls(pluginRun=run, client=client, **kwargs)
@@ -193,25 +198,29 @@ def run_plugin_from_run_id(run_id, client, **kwargs):
 
     return plugin
 
+
 def _parse_env():
     env = os.environ
     print("Reading `run_plugin()` parameters from environment variables")
     try:
         pod_full_address = env.get(POD_FULL_ADDRESS_ENV, DEFAULT_POD_ADDRESS)
-        plugin_run_json  = json.loads(str(env[POD_TARGET_ITEM_ENV]))
+        plugin_run_json = json.loads(str(env[POD_TARGET_ITEM_ENV]))
         print(plugin_run_json)
-        plugin_run_id    = plugin_run_json["id"]
-        owner_key        = env.get(POD_OWNER_KEY_ENV)
-        pod_auth_json    = json.loads(str(env.get(POD_AUTH_JSON_ENV)))
+        plugin_run_id = plugin_run_json["id"]
+        owner_key = env.get(POD_OWNER_KEY_ENV)
+        pod_auth_json = json.loads(str(env.get(POD_AUTH_JSON_ENV)))
         return pod_full_address, plugin_run_id, pod_auth_json, owner_key
     except KeyError as e:
-        raise Exception('Missing parameter: {}'.format(e)) from None
+        raise Exception("Missing parameter: {}".format(e)) from None
+
 
 @call_parse
-def store_keys(path:Param("path to store the keys", str)=DEFAULT_POD_KEY_PATH,
-               database_key:Param("Database key of the pod", str)=None,
-               owner_key:Param("Owner key of the pod", str)=None,
-               replace: Param("Replace existing stored keys", str)=True):
+def store_keys(
+    path: Param("path to store the keys", str) = DEFAULT_POD_KEY_PATH,
+    database_key: Param("Database key of the pod", str) = None,
+    owner_key: Param("Owner key of the pod", str) = None,
+    replace: Param("Replace existing stored keys", str) = True,
+):
 
     if not replace:
         try:
@@ -222,16 +231,18 @@ def store_keys(path:Param("path to store the keys", str)=DEFAULT_POD_KEY_PATH,
         except ValueError:
             pass
 
-    if database_key is None: database_key = PodClient.generate_random_key()
-    if owner_key is None: owner_key = PodClient.generate_random_key()
+    if database_key is None:
+        database_key = PodClient.generate_random_key()
+    if owner_key is None:
+        owner_key = PodClient.generate_random_key()
 
-    obj = {"database_key": database_key,
-           "owner_key": owner_key}
+    obj = {"database_key": database_key, "owner_key": owner_key}
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         timestr = time.strftime("%Y%m%d-%H%M%S")
         path.rename(POD_KEYS_FULL_FOLDER / f"keys-{timestr}.json")
     write_json(obj, path)
+
 
 def parse_metadata(fn, remove_container=False):
     metadata = read_json(fn)
@@ -271,9 +282,10 @@ def create_run_expanded(client, run):
     client.create(run)
     accounts = run.account
     if accounts:
-        account=accounts[0]
+        account = accounts[0]
         client.create(account)
         client.create_edge(run.get_edges("account")[0])
+
 
 @call_parse
 def run_plugin(
@@ -317,15 +329,14 @@ def run_plugin(
     plugin_config = parse_config(run.config, config_file)
 
     try:
-        run_plugin_from_run_id(
-            plugin_run_id, client, **plugin_config
-        )
+        run_plugin_from_run_id(plugin_run_id, client, **plugin_config)
     except Exception as e:
         run = client.get(plugin_run_id)
         run.status = RUN_FAILED
         client.update_item(run)
         print(traceback.format_exc(), flush=True)
         raise PluginError("The plugin quit unexpectedly.") from None
+
 
 @call_parse
 def simulate_run_plugin_from_frontend(
@@ -368,9 +379,7 @@ def simulate_run_plugin_from_frontend(
 
         client.create(run)
 
-    print(
-        f"Created pluginrun with id {run.id} on {pod_full_address}"
-    )
+    print(f"Created pluginrun with id {run.id} on {pod_full_address}")
 
     plugin_dir = run.containerImage
     write_run_info(plugin_dir, run.id)
