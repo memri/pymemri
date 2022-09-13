@@ -1,10 +1,10 @@
-
-
-from ..imports import *
+import zipfile
 from urllib.request import urlretrieve
+
 import requests
 from tqdm import tqdm
-import zipfile
+
+from ..imports import *
 
 Path.ls = lambda x: list(x.iterdir())
 PYI_HOME = Path.cwd().parent
@@ -18,13 +18,16 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 def read_file(path):
     return open(path, "r").read()
 
+
 def read_json(path):
     with open(path) as json_file:
         return json.load(json_file)
 
+
 def write_json(obj, fname, indent=4):
-    with open(fname, 'w') as file_out:
-        json.dump(obj , file_out, indent=indent)
+    with open(fname, "w") as file_out:
+        json.dump(obj, file_out, indent=indent)
+
 
 def unzip(f, dest):
     with zipfile.ZipFile(str(f)) as zf:

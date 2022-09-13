@@ -1,13 +1,16 @@
-import pytest
-from pymemri.data.schema import Photo
-from pymemri.data.photo import DEFAULT_ENCODING
-from pymemri.test_utils import get_project_root
 import numpy as np
+import pytest
 from PIL import Image
+
+from pymemri.data.photo import DEFAULT_ENCODING
+from pymemri.data.schema import Photo
+from pymemri.test_utils import get_project_root
+
 
 @pytest.fixture
 def photo_path():
     return get_project_root() / "nbs" / "images" / "labrador.jpg"
+
 
 def test_photo_from_path(photo_path):
     photo = Photo.from_path(photo_path)
@@ -19,7 +22,7 @@ def test_photo_from_path(photo_path):
 def test_photo_from_bytes(photo_path):
     with open(photo_path, "rb") as f:
         b = f.read()
-    
+
     photo_bytes = Photo.from_bytes(b)
     assert photo_bytes.encoding == "JPEG"
     assert photo_bytes.mode == "RGB"

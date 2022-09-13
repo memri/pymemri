@@ -1,18 +1,18 @@
-
-
-import os
-from typing import Any, Dict, List, Generator, Deque, Union, Optional
-import requests
-import urllib
-from hashlib import sha256
-from collections import deque
 import json
+import os
+import urllib
+from collections import deque
+from hashlib import sha256
+from typing import Any, Deque, Dict, Generator, List, Optional, Union
 
-from .graphql_utils import GQLQuery
+import requests
+
 from ..data.itembase import Item
+from .graphql_utils import GQLQuery
 
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
 POD_VERSION = "v4"
+
 
 class PodError(Exception):
     def __init__(self, status=None, message=None, **kwargs) -> None:
@@ -22,6 +22,7 @@ class PodError(Exception):
 
     def __str__(self) -> str:
         return " ".join([str(a) for a in self.args if a])
+
 
 class PodAPI:
     def __init__(
@@ -119,7 +120,6 @@ class PodAPI:
         while len(remaining):
             yield [remaining.popleft() for _ in range(min(limit, len(remaining)))]
 
-
     def _paginate(self, query: dict, limit: int = 32) -> Generator:
         if (
             "_limit" in query
@@ -166,7 +166,9 @@ class PodAPI:
         payload = {k: v for k, v in payload.items() if v is not None}
         return self.post("bulk", payload).json()
 
-    def graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[dict]:
+    def graphql(
+        self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]] = None
+    ) -> List[dict]:
         if isinstance(query, str):
             query = GQLQuery(query)
         query.format(variables)
@@ -182,9 +184,7 @@ class PodAPI:
             return self.upload_file_b(file)
 
         sha = sha256(file).hexdigest()
-        result = requests.post(
-            f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file
-        )
+        result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
         if result.status_code != 200:
             raise PodError(result.status_code, result.text)
 

@@ -1,25 +1,25 @@
-
-
 from pathlib import Path
 from typing import Any, List, Optional, Union
 
+from ..exporters.exporters import Query
 from . import _central_schema
 from .itembase import EdgeList, Item
-from ..exporters.exporters import Query
+
 
 def filter_rows(dataset: dict, filter_val=None) -> dict:
     missing_idx = set()
     for column in dataset.values():
         missing_idx.update([i for i, val in enumerate(column) if val == filter_val])
     return {
-        k: [item for i, item in enumerate(v) if i not in missing_idx]
-        for k, v in dataset.items()
+        k: [item for i, item in enumerate(v) if i not in missing_idx] for k, v in dataset.items()
     }
+
 
 class Dataset(_central_schema.Dataset):
     """
     The main Dataset class
     """
+
     requires_client_ref = True
 
     def __init__(self, **kwargs):
@@ -78,12 +78,10 @@ class Dataset(_central_schema.Dataset):
             Any: Dataset formatted according to `dtype`
         """
         if columns is None:
-            columns =  self._infer_columns()
+            columns = self._infer_columns()
         return self._get_data(dtype, columns, filter_missing)
 
-    def save(
-        self, path: Union[Path, str], columns: List[str], filter_missing: bool = True
-    ):
+    def save(self, path: Union[Path, str], columns: List[str], filter_missing: bool = True):
         """
         Save dataset to CSV.
         """

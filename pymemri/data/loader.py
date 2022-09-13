@@ -1,22 +1,35 @@
-
-
-from fastprogress.fastprogress import progress_bar
-from pathlib import Path
-import requests
-import os, sys
-from getpass import getpass
-from datetime import datetime
-from git import Repo
+import os
 import re
-from ..gitlab_api import MEMRI_PATH, MEMRI_GITLAB_BASE_URL, ACCESS_TOKEN_PATH, GITLAB_API_BASE_URL, TIME_FORMAT_GITLAB, \
-PROJET_ID_PATTERN, DEFAULT_PACKAGE_VERSION, GitlabAPI
+import sys
+from datetime import datetime
+from getpass import getpass
+from pathlib import Path
+
+import requests
+from fastprogress.fastprogress import progress_bar
+from git import Repo
+
+from ..gitlab_api import (
+    ACCESS_TOKEN_PATH,
+    DEFAULT_PACKAGE_VERSION,
+    GITLAB_API_BASE_URL,
+    MEMRI_GITLAB_BASE_URL,
+    MEMRI_PATH,
+    PROJET_ID_PATTERN,
+    TIME_FORMAT_GITLAB,
+    GitlabAPI,
+)
 
 DEFAULT_PLUGIN_MODEL_PACKAGE_NAME = "plugin-model-package"
 DEFAULT_PYTORCH_MODEL_NAME = "pytorch_model.bin"
 DEFAULT_HUGGINFACE_CONFIG_NAME = "config.json"
 
-def write_huggingface_model_to_package_registry(project_name, model, version=DEFAULT_PACKAGE_VERSION, client=None):
+
+def write_huggingface_model_to_package_registry(
+    project_name, model, version=DEFAULT_PACKAGE_VERSION, client=None
+):
     import torch
+
     api = GitlabAPI(client=client)
     project_id = api.project_id_from_name(project_name)
     local_save_dir = Path("/tmp")
@@ -26,28 +39,42 @@ def write_huggingface_model_to_package_registry(project_name, model, version=DEF
     for f in [DEFAULT_HUGGINFACE_CONFIG_NAME, DEFAULT_PYTORCH_MODEL_NAME]:
         file_path = local_save_dir / f
         print(f"writing {f} to package registry of {project_name} with project id {project_id}")
-        api.write_file_to_package_registry(project_id, file_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version)
+        api.write_file_to_package_registry(
+            project_id, file_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version
+        )
+
 
 def write_model_to_package_registry(model, project_name=None, client=None):
     project_name = project_name if project_name is not None else find_git_repo()
     if type(model).__module__.startswith("transformers"):
-        import transformers
         import torch
+        import transformers
     if isinstance(model, transformers.PreTrainedModel):
         write_huggingface_model_to_package_registry(project_name, model, client=client)
     else:
         raise ValueError(f"Model type not supported: {type(model)}")
 
-def download_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False, client=None):
+
+def download_huggingface_model_for_project(
+    project_path=None, files=None, download_if_exists=False, client=None
+):
     api = GitlabAPI(client=client)
     if files is None:
         files = ["config.json", "pytorch_model.bin"]
     for f in files:
-        out_file_path = api.download_package_file(f, project_path=project_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME)
+        out_file_path = api.download_package_file(
+            f, project_path=project_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME
+        )
     return out_file_path.parent
 
-def load_huggingface_model_for_project(project_path=None, files=None, download_if_exists=False, client=None):
-    out_dir = download_huggingface_model_for_project(project_path, files, download_if_exists, client=client)
+
+def load_huggingface_model_for_project(
+    project_path=None, files=None, download_if_exists=False, client=None
+):
+    out_dir = download_huggingface_model_for_project(
+        project_path, files, download_if_exists, client=client
+    )
     from transformers import AutoModelForSequenceClassification
+
     model = AutoModelForSequenceClassification.from_pretrained(out_dir)
     return model

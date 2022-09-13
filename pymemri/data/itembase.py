@@ -1,37 +1,59 @@
-
-
-from typing import Optional, Dict, List, Generic, TypeVar, Tuple, Union, Iterable, ForwardRef
-from ..imports import *
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import (
+    Dict,
+    ForwardRef,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
+
+from ..imports import *
 
 ALL_EDGES = "allEdges"
-SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE = "_source", "_target", "_type", "_type", "label", "sequence"
+SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE = (
+    "_source",
+    "_target",
+    "_type",
+    "_type",
+    "label",
+    "sequence",
+)
 
 
 # typing utils for python 3.7
 def get_args(type_annotation):
     return getattr(type_annotation, "__args__", tuple())
 
+
 def get_origin(type_annotation):
     return getattr(type_annotation, "__origin__", None)
 
-class Edge():
+
+class Edge:
     """Edges makes a link between two `ItemBase` Items. You won't use this class a lot in practice, as edges are
     abstracted away for normal users. When items are retrieved from the database, the edges are parsed automatically.
     When you add an edge between to items within pymemri, you will often use `ItemBase.add_edge`"""
-    def __init__(self, source, target, _type, label=None, sequence=None, created=False, reverse=True):
-        self.source   = source
-        self.target   = target
-        self._type    = _type
-        self.label    = label
+
+    def __init__(
+        self, source, target, _type, label=None, sequence=None, created=False, reverse=True
+    ):
+        self.source = source
+        self.target = target
+        self._type = _type
+        self.label = label
         self.sequence = sequence
-        self.created  = created
-        self.reverse  = reverse
+        self.created = created
+        self.reverse = reverse
 
     @classmethod
     def from_json(cls, json):
         from .schema import get_constructor
+
         # we only set the target here
         _type = json[EDGE_TYPE]
         json_target = json[TARGET]
@@ -49,9 +71,14 @@ class Edge():
             api.create_edges([self])
 
     def __eq__(self, other):
-        return self.source is other.source and self.target is other.target \
-         and self._type == other._type and self.reverse == other.reverse and self.created == other.created \
-         and self.label == other.label
+        return (
+            self.source is other.source
+            and self.target is other.target
+            and self._type == other._type
+            and self.reverse == other.reverse
+            and self.created == other.created
+            and self.label == other.label
+        )
 
     def traverse(self, start):
         """We can traverse an edge starting from the source to the target or vice versa. In practice we often call
@@ -63,28 +90,45 @@ class Edge():
         else:
             raise ValueError
 
-T = TypeVar('T')
+
+T = TypeVar("T")
+
 
 def check_target_type(fn):
     """
     Decorator to perform type check the target type of the first argument, or list of arguments.
     """
+
     def _check_type_wrapper(self, arg):
         if isinstance(arg, Iterable):
             for item in arg:
                 target_type_name = type(item.target).__name__
-                if not (target_type_name == self.target_type or \
-                    target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+                if not (
+                    target_type_name == self.target_type
+                    or target_type_name
+                    in [
+                        t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__
+                        for t in get_args(self.target_type)
+                    ]
+                ):
                     raise TypeError("Attempted to insert edge with invalid target type")
         elif isinstance(arg, Edge):
             target_type_name = type(arg.target).__name__
-            if not (target_type_name == self.target_type or \
-                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+            if not (
+                target_type_name == self.target_type
+                or target_type_name
+                in [
+                    t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__
+                    for t in get_args(self.target_type)
+                ]
+            ):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
         return fn(self, arg)
+
     return _check_type_wrapper
+
 
 class EdgeList(list, Generic[T]):
     def __init__(
@@ -126,11 +170,17 @@ class EdgeList(list, Generic[T]):
     def __iadd__(self, other: Iterable[Edge]) -> "EdgeList":
         return super().__iadd__(other)
 
-    def __setitem__(self, i:  int, item: Edge) -> None:
+    def __setitem__(self, i: int, item: Edge) -> None:
         if isinstance(item, Edge):
             target_type_name = type(item.target).__name__
-            if not (target_type_name == self.target_type or \
-                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+            if not (
+                target_type_name == self.target_type
+                or target_type_name
+                in [
+                    t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__
+                    for t in get_args(self.target_type)
+                ]
+            ):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -139,8 +189,14 @@ class EdgeList(list, Generic[T]):
     def insert(self, i: int, item: Edge) -> None:
         if isinstance(item, Edge):
             target_type_name = type(item.target).__name__
-            if not (target_type_name == self.target_type or \
-                target_type_name in [t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__ for t in get_args(self.target_type)]):
+            if not (
+                target_type_name == self.target_type
+                or target_type_name
+                in [
+                    t.__forward_arg__ if isinstance(t, ForwardRef) else t.__name__
+                    for t in get_args(self.target_type)
+                ]
+            ):
                 raise TypeError("Attempted to insert edge with invalid target type")
         else:
             raise TypeError("Attempted to insert edge with invalid type")
@@ -214,12 +270,7 @@ class ItemBase:
         return object.__getattribute__(self, name)
 
     def get_all_edges(self):
-        return [
-            e
-            for attr in self.__dict__.values()
-            if self.attr_is_edge(attr)
-            for e in attr
-        ]
+        return [e for attr in self.__dict__.values() if self.attr_is_edge(attr) for e in attr]
 
     def get_all_edge_names(self):
         return [k for k, v in self.__dict__.items() if self.attr_is_edge(v)]
@@ -276,6 +327,7 @@ class ItemBase:
             v.source = res
         return res
 
+
 class Item(ItemBase):
     """Item is the baseclass for all of the data classes."""
 
@@ -295,7 +347,7 @@ class Item(ItemBase):
     ]
     edges = ["label"]
 
-    DATE_PROPERTIES = ['dateCreated', 'dateModified', 'dateServerModified']
+    DATE_PROPERTIES = ["dateCreated", "dateModified", "dateServerModified"]
 
     def __init__(
         self,
@@ -367,7 +419,7 @@ class Item(ItemBase):
         """
         mro = cls.mro()
         property_types = dict()
-        for basecls in reversed(mro[:mro.index(ItemBase)]):
+        for basecls in reversed(mro[: mro.index(ItemBase)]):
             property_types.update(basecls.__init__.__annotations__)
         property_types = {k: v for k, v in property_types.items() if k in cls.properties}
 
@@ -376,8 +428,13 @@ class Item(ItemBase):
 
         res = dict()
         for k, v in property_types.items():
-            if k[:1] != '_' and k != "private" and not (isinstance(v, list)) \
-                            and v is not None and (not (dates == False and k in cls.DATE_PROPERTIES)):
+            if (
+                k[:1] != "_"
+                and k != "private"
+                and not (isinstance(v, list))
+                and v is not None
+                and (not (dates == False and k in cls.DATE_PROPERTIES))
+            ):
                 res[k] = v
         return res
 
@@ -388,7 +445,7 @@ class Item(ItemBase):
         """
         mro = cls.mro()
         tgt_types = dict()
-        for basecls in reversed(mro[:mro.index(ItemBase)]):
+        for basecls in reversed(mro[: mro.index(ItemBase)]):
             tgt_types.update(basecls.__init__.__annotations__)
         tgt_types = {k: v for k, v in tgt_types.items() if k in cls.edges}
 
@@ -426,7 +483,7 @@ class Item(ItemBase):
         for k, v in kwargs.items():
             if v is not None and property_types[k] == datetime:
                 # Datetime in pod is in milliseconds
-                kwargs[k] = datetime.fromtimestamp(v / 1000.)
+                kwargs[k] = datetime.fromtimestamp(v / 1000.0)
         res = cls(**kwargs)
         for e in res.get_all_edges():
             e.source = res
@@ -441,8 +498,14 @@ class Item(ItemBase):
         res = dict()
         private = getattr(self, "private", [])
         for k, v in self.__dict__.items():
-            if k[:1] != '_' and k != "private" and k not in private and not (isinstance(v, list)) \
-                            and v is not None and (not (dates == False and k in self.DATE_PROPERTIES)):
+            if (
+                k[:1] != "_"
+                and k != "private"
+                and k not in private
+                and not (isinstance(v, list))
+                and v is not None
+                and (not (dates == False and k in self.DATE_PROPERTIES))
+            ):
                 if isinstance(v, datetime):
                     # Save datetimes in milliseconds
                     v = int(v.timestamp() * 1000)

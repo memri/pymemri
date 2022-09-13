@@ -1,22 +1,22 @@
-from ..data.basic import *
-from ..data.schema import *
-from ..data.itembase import Edge, ItemBase, Item
-from ..imports import *
+import urllib
+import uuid
+import warnings
+from datetime import datetime
 from hashlib import sha256
-from .db import DB, Priority
-from .utils import *
+from threading import Thread
+from typing import Dict, List, Union
+
+from ..data.basic import *
+from ..data.itembase import Edge, Item, ItemBase
+from ..data.schema import *
+from ..imports import *
 from ..plugin.schema import *
 from ..test_utils import get_ci_variables
-from .api import PodAPI, PodError, DEFAULT_POD_ADDRESS, POD_VERSION
+from .api import DEFAULT_POD_ADDRESS, POD_VERSION, PodAPI, PodError
+from .db import DB, Priority
 from .graphql_utils import GQLQuery
+from .utils import *
 
-from typing import List, Dict, Union
-import uuid
-import urllib
-from datetime import datetime
-import warnings
-
-from threading import Thread
 
 class PodClient:
     # Mapping from python type to schema type
@@ -41,12 +41,8 @@ class PodClient:
         default_priority=Priority.local,
     ):
         self.verbose = verbose
-        self.database_key = (
-            database_key if database_key is not None else self.generate_random_key()
-        )
-        self.owner_key = (
-            owner_key if owner_key is not None else self.generate_random_key()
-        )
+        self.database_key = database_key if database_key is not None else self.generate_random_key()
+        self.owner_key = owner_key if owner_key is not None else self.generate_random_key()
         self.api = PodAPI(
             database_key=self.database_key,
             owner_key=self.owner_key,
@@ -210,6 +206,7 @@ class PodClient:
             result = self.upload_file(file, asyncFlag=False)
             if callback:
                 callback(result)
+
         Thread(target=thread_fn, args=(file, callback)).start()
         return True
 
@@ -298,22 +295,15 @@ class PodClient:
                     self.add_to_store(c, priority=priority)
 
         create_items = (
-            [self.get_create_dict(i) for i in create_items]
-            if create_items is not None
-            else []
+            [self.get_create_dict(i) for i in create_items] if create_items is not None else []
         )
         update_items = (
-            [
-                self.get_update_dict(i, partial_update=partial_update)
-                for i in update_items
-            ]
+            [self.get_update_dict(i, partial_update=partial_update) for i in update_items]
             if update_items is not None
             else []
         )
         create_edges = (
-            [self.get_create_edge_dict(i) for i in create_edges]
-            if create_edges is not None
-            else []
+            [self.get_create_edge_dict(i) for i in create_edges] if create_edges is not None else []
         )
         # Note: skip delete_items without id, as items that are not in pod cannot be deleted
         delete_items = (
@@ -349,10 +339,7 @@ class PodClient:
             else:
                 create_edges_batch = []
             n_batch = len(
-                create_items_batch
-                + update_items_batch
-                + create_edges_batch
-                + delete_items_batch
+                create_items_batch + update_items_batch + create_edges_batch + delete_items_batch
             )
             n += n_batch
             print(f"BULK: Writing {n}/{n_total} items/edges")
@@ -445,9 +432,7 @@ class PodClient:
         properties.pop("type", None)
         properties.pop("deleted", None)
         properties = {
-            k: v
-            for k, v in properties.items()
-            if k == "id" or k in item._updated_properties
+            k: v for k, v in properties.items() if k == "id" or k in item._updated_properties
         }
         return properties
 
@@ -492,9 +477,7 @@ class PodClient:
         try:
             for page in self.api.search_paginate(query, limit):
                 result = [
-                    self._item_from_search(
-                        item, add_to_local_db=add_to_local_db, priority=priority
-                    )
+                    self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority)
                     for item in page
                 ]
                 yield self.filter_deleted(result)
@@ -531,21 +514,15 @@ class PodClient:
                 print(e)
 
         result = [
-            self._item_from_search(
-                item, add_to_local_db=add_to_local_db, priority=priority
-            )
+            self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority)
             for item in result
         ]
         return self.filter_deleted(result)
 
-    def _item_from_search(
-        self, item_json: dict, add_to_local_db: bool = True, priority=None
-    ):
+    def _item_from_search(self, item_json: dict, add_to_local_db: bool = True, priority=None):
         # search returns different fields w.r.t. edges compared to `get` api,
         # different method to keep `self.get` clean.
-        item = self.item_from_json(
-            item_json, add_to_local_db=add_to_local_db, priority=priority
-        )
+        item = self.item_from_json(item_json, add_to_local_db=add_to_local_db, priority=priority)
         item.reset_local_sync_state()
 
         for edge_json in item_json.get("[[edges]]", []):
@@ -611,9 +588,11 @@ class PodClient:
                     item.add_edge(prop, edge_item)
         return item
 
-    def search_graphql(self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]]=None) -> List[Item]:
+    def search_graphql(
+        self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]] = None
+    ) -> List[Item]:
         response = self.api.graphql(query, variables)
-        data = response['data']
+        data = response["data"]
         result = []
         for d in data:
             item = self._item_from_graphql(d)
@@ -657,9 +636,7 @@ class PodClient:
                     )
 
         update_ids = [item.id for item in update_items]
-        existing_items = self.search(
-            {"ids": update_ids}, add_to_local_db=True, priority=priority
-        )
+        existing_items = self.search({"ids": update_ids}, add_to_local_db=True, priority=priority)
 
         return self.bulk_action(
             create_items=create_items,
@@ -685,7 +662,9 @@ class PodClient:
             return False
 
     def get_oauth_item(self):
-        oauth_items = sorted([x for x in self.search({"type": "OauthFlow"})], key=lambda x: x.dateCreated)
+        oauth_items = sorted(
+            [x for x in self.search({"type": "OauthFlow"})], key=lambda x: x.dateCreated
+        )
         if len(oauth_items) > 0:
             return oauth_items[-1]
         else:
@@ -696,7 +675,15 @@ class Dog(Item):
     properties = Item.properties + ["name", "age", "bites", "weight"]
     edges = Item.edges + ["friend"]
 
-    def __init__(self, name: str=None, age: int=None, bites: bool=False, weight: float=None, friend: EdgeList["Person"]=None, **kwargs):
+    def __init__(
+        self,
+        name: str = None,
+        age: int = None,
+        bites: bool = False,
+        weight: float = None,
+        friend: EdgeList["Person"] = None,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
         self.name = name
         self.age = age

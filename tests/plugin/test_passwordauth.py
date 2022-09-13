@@ -1,10 +1,16 @@
-from pymemri.plugin.authenticators.password import PasswordAuthenticator, set_account_credentials
+import threading
+import time
+
+import pytest
+
+from pymemri.data.schema import Account, PluginRun
+from pymemri.plugin.authenticators.password import (
+    PasswordAuthenticator,
+    set_account_credentials,
+)
 from pymemri.plugin.pluginbase import PluginBase
 from pymemri.pod.client import PodClient
-from pymemri.data.schema import PluginRun, Account
-import threading
-import pytest
-import time
+
 
 @pytest.fixture
 def client():
@@ -16,11 +22,11 @@ class MyAuthenticatedPlugin(PluginBase):
         super().__init__(*args, **kwargs)
         self.logged_in = False
         self.authenticator = PasswordAuthenticator(self.client, self.pluginRun)
-        
+
     def login(self, username, password):
-        if not (username=="username" and password=="password"):
+        if not (username == "username" and password == "password"):
             raise ValueError("Wrong credentials.")
-            
+
     def run(self):
         self.authenticator.authenticate(login_callback=self.login)
         self.logged_in = True

@@ -79,9 +79,7 @@ class Account(Item):
         self.refreshToken: Optional[str] = refreshToken
 
         # Edges
-        self.changelog: EdgeList["AuditItem"] = EdgeList(
-            "changelog", "AuditItem", changelog
-        )
+        self.changelog: EdgeList["AuditItem"] = EdgeList("changelog", "AuditItem", changelog)
         self.cryptoTransaction: EdgeList["CryptoTransaction"] = EdgeList(
             "cryptoTransaction", "CryptoTransaction", cryptoTransaction
         )
@@ -92,9 +90,7 @@ class Account(Item):
         )
         self.owner: EdgeList["Person"] = EdgeList("owner", "Person", owner)
         self.trust: EdgeList["Account"] = EdgeList("trust", "Account", trust)
-        self.profilePicture: EdgeList["Photo"] = EdgeList(
-            "profilePicture", "Photo", profilePicture
-        )
+        self.profilePicture: EdgeList["Photo"] = EdgeList("profilePicture", "Photo", profilePicture)
 
 
 class AuditItem(Item):
@@ -103,11 +99,7 @@ class AuditItem(Item):
     edges = Item.edges + []
 
     def __init__(
-        self,
-        actionname: str = None,
-        content: str = None,
-        date: datetime = None,
-        **kwargs
+        self, actionname: str = None, content: str = None, date: datetime = None, **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -440,9 +432,7 @@ class DatasetType(Item):
         self.queryStr: Optional[str] = queryStr
 
         # Edges
-        self.datasetPlugin: EdgeList["Plugin"] = EdgeList(
-            "datasetPlugin", "Plugin", datasetPlugin
-        )
+        self.datasetPlugin: EdgeList["Plugin"] = EdgeList("datasetPlugin", "Plugin", datasetPlugin)
 
 
 class Diet(Item):
@@ -547,11 +537,7 @@ class ItemEdgeSchema(Item):
     edges = Item.edges + []
 
     def __init__(
-        self,
-        edgeName: str = None,
-        sourceType: str = None,
-        targetType: str = None,
-        **kwargs
+        self, edgeName: str = None, sourceType: str = None, targetType: str = None, **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -567,11 +553,7 @@ class ItemPropertySchema(Item):
     edges = Item.edges + []
 
     def __init__(
-        self,
-        itemType: str = None,
-        propertyName: str = None,
-        valueType: str = None,
-        **kwargs
+        self, itemType: str = None, propertyName: str = None, valueType: str = None, **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -660,9 +642,7 @@ class LabellingTask(Item):
         self.labelOption: EdgeList["LabelOption"] = EdgeList(
             "labelOption", "LabelOption", labelOption
         )
-        self.view: EdgeList["CVUStoredDefinition"] = EdgeList(
-            "view", "CVUStoredDefinition", view
-        )
+        self.view: EdgeList["CVUStoredDefinition"] = EdgeList("view", "CVUStoredDefinition", view)
 
 
 class Location(Item):
@@ -719,13 +699,7 @@ class MedicalCondition(Item):
     properties = Item.properties + ["conditiontype", "itemType", "name"]
     edges = Item.edges + []
 
-    def __init__(
-        self,
-        conditiontype: str = None,
-        itemType: str = None,
-        name: str = None,
-        **kwargs
-    ):
+    def __init__(self, conditiontype: str = None, itemType: str = None, name: str = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
@@ -806,7 +780,9 @@ class NavigationItem(Item):
 
 
 class Network(Item):
-    description = """A group or system of interconnected people or things, for instance a social network."""
+    description = (
+        """A group or system of interconnected people or things, for instance a social network."""
+    )
     properties = Item.properties + ["name"]
     edges = Item.edges + ["website"]
 
@@ -926,15 +902,9 @@ class Person(Item):
         # Edges
         self.account: EdgeList["Account"] = EdgeList("account", "Account", account)
         self.address: EdgeList["Address"] = EdgeList("address", "Address", address)
-        self.birthPlace: EdgeList["Location"] = EdgeList(
-            "birthPlace", "Location", birthPlace
-        )
-        self.cryptoKey: EdgeList["CryptoKey"] = EdgeList(
-            "cryptoKey", "CryptoKey", cryptoKey
-        )
-        self.deathPlace: EdgeList["Location"] = EdgeList(
-            "deathPlace", "Location", deathPlace
-        )
+        self.birthPlace: EdgeList["Location"] = EdgeList("birthPlace", "Location", birthPlace)
+        self.cryptoKey: EdgeList["CryptoKey"] = EdgeList("cryptoKey", "CryptoKey", cryptoKey)
+        self.deathPlace: EdgeList["Location"] = EdgeList("deathPlace", "Location", deathPlace)
         self.diet: EdgeList["Diet"] = EdgeList("diet", "Diet", diet)
         self.hasPhoneNumber: EdgeList["PhoneNumber"] = EdgeList(
             "hasPhoneNumber", "PhoneNumber", hasPhoneNumber
@@ -944,12 +914,8 @@ class Person(Item):
         self.medicalCondition: EdgeList["MedicalCondition"] = EdgeList(
             "medicalCondition", "MedicalCondition", medicalCondition
         )
-        self.mergedFrom: EdgeList["Person"] = EdgeList(
-            "mergedFrom", "Person", mergedFrom
-        )
-        self.profilePicture: EdgeList["Photo"] = EdgeList(
-            "profilePicture", "Photo", profilePicture
-        )
+        self.mergedFrom: EdgeList["Person"] = EdgeList("mergedFrom", "Person", mergedFrom)
+        self.profilePicture: EdgeList["Photo"] = EdgeList("profilePicture", "Photo", profilePicture)
         self.relationship: EdgeList["Relationship"] = EdgeList(
             "relationship", "Relationship", relationship
         )
@@ -1020,9 +986,7 @@ class Plugin(Item):
         self.gitProjectId: Optional[int] = gitProjectId
 
         # Edges
-        self.view: EdgeList["CVUStoredDefinition"] = EdgeList(
-            "view", "CVUStoredDefinition", view
-        )
+        self.view: EdgeList["CVUStoredDefinition"] = EdgeList("view", "CVUStoredDefinition", view)
 
 
 class Post(Item):
@@ -1118,9 +1082,7 @@ class Receipt(Item):
 
 
 class Relationship(Item):
-    description = (
-        """Relation of people, that indicates type of relationship and its value"""
-    )
+    description = """Relation of people, that indicates type of relationship and its value"""
     properties = Item.properties + ["label", "proximityValue"]
     edges = Item.edges + ["relationship"]
 
@@ -1138,9 +1100,7 @@ class Relationship(Item):
         self.proximityValue: Optional[int] = proximityValue
 
         # Edges
-        self.relationship: EdgeList["Person"] = EdgeList(
-            "relationship", "Person", relationship
-        )
+        self.relationship: EdgeList["Person"] = EdgeList("relationship", "Person", relationship)
 
 
 class Setting(Item):
@@ -1162,11 +1122,7 @@ class SuggestedMerge(Item):
     edges = Item.edges + ["mergeFrom"]
 
     def __init__(
-        self,
-        score: float = None,
-        task: str = None,
-        mergeFrom: EdgeList["Person"] = None,
-        **kwargs
+        self, score: float = None, task: str = None, mergeFrom: EdgeList["Person"] = None, **kwargs
     ):
         super().__init__(**kwargs)
 
@@ -1219,7 +1175,9 @@ class Website(Item):
 
 
 class WrittenWork(CreativeWork):
-    description = """A written work, for instance a book, article or note. Doesn't have to be published."""
+    description = (
+        """A written work, for instance a book, article or note. Doesn't have to be published."""
+    )
     properties = CreativeWork.properties + []
     edges = CreativeWork.edges + []
 
@@ -1261,9 +1219,7 @@ class Indexer(Integrator):
         self.runDestination: Optional[str] = runDestination
 
         # Edges
-        self.indexerRun: EdgeList["IndexerRun"] = EdgeList(
-            "indexerRun", "IndexerRun", indexerRun
-        )
+        self.indexerRun: EdgeList["IndexerRun"] = EdgeList("indexerRun", "IndexerRun", indexerRun)
 
 
 class IndexerRun(Integrator):
@@ -1360,9 +1316,7 @@ class Address(Location):
         self.street: Optional[str] = street
 
         # Edges
-        self.changelog: EdgeList["AuditItem"] = EdgeList(
-            "changelog", "AuditItem", changelog
-        )
+        self.changelog: EdgeList["AuditItem"] = EdgeList("changelog", "AuditItem", changelog)
         self.country: EdgeList["Country"] = EdgeList("country", "Country", country)
         self.location: EdgeList["Location"] = EdgeList("location", "Location", location)
 
@@ -1412,9 +1366,7 @@ class Photo(MediaObject):
         self.name: Optional[str] = name
 
         # Edges
-        self.changelog: EdgeList["AuditItem"] = EdgeList(
-            "changelog", "AuditItem", changelog
-        )
+        self.changelog: EdgeList["AuditItem"] = EdgeList("changelog", "AuditItem", changelog)
         self.label: EdgeList["Label"] = EdgeList("label", "Label", label)
         self.thumbnail: EdgeList["File"] = EdgeList("thumbnail", "File", thumbnail)
 
@@ -1424,9 +1376,7 @@ class Tweet(Post):
     properties = Post.properties + ["service"]
     edges = Post.edges + ["mention"]
 
-    def __init__(
-        self, service: str = None, mention: EdgeList["Account"] = None, **kwargs
-    ):
+    def __init__(self, service: str = None, mention: EdgeList["Account"] = None, **kwargs):
         super().__init__(**kwargs)
 
         # Properties
@@ -1534,7 +1484,5 @@ class EmailMessage(Message):
         # Edges
         self.bcc: EdgeList["Account"] = EdgeList("bcc", "Account", bcc)
         self.cc: EdgeList["Account"] = EdgeList("cc", "Account", cc)
-        self.message: EdgeList["EmailMessage"] = EdgeList(
-            "message", "EmailMessage", message
-        )
+        self.message: EdgeList["EmailMessage"] = EdgeList("message", "EmailMessage", message)
         self.replyTo: EdgeList["Account"] = EdgeList("replyTo", "Account", replyTo)

@@ -1,20 +1,23 @@
 from time import sleep
 from typing import List
-from pymemri.pod.client import PodClient
-from pymemri.data.schema import Item
-import pytest
-from pymemri.data.schema import Photo, File
+
 import numpy as np
+import pytest
+
+from pymemri.data.schema import File, Item, Photo
+from pymemri.pod.client import PodClient
 
 
 @pytest.fixture(scope="module")
 def client():
     return PodClient()
 
+
 @pytest.fixture
 def photo():
-    x = np.random.randint(0, 255+1, size=(640, 640), dtype=np.uint8)
+    x = np.random.randint(0, 255 + 1, size=(640, 640), dtype=np.uint8)
     return Photo.from_np(x)
+
 
 def test_create_file(client: PodClient, photo: Photo):
     client.add_to_schema(File, Photo)
@@ -25,6 +28,7 @@ def test_create_file(client: PodClient, photo: Photo):
 
     data = client.get_file(file.sha256)
     assert photo.data == data
+
 
 def test_create_photo(client: PodClient, photo: Photo):
     client.add_to_schema(Photo)
