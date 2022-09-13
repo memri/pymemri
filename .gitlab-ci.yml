@@ -3,11 +3,6 @@ default:
   before_script:
   - pip install -e .[dev]
 
-run pre-commit:
-  stage: test
-  script:
-  - pre-commit run --all-files
-
 run tests:
   stage: test
   services:
@@ -20,6 +15,7 @@ run tests:
   script:
   - curl http://pod:3030/version
   - export POD_ADDRESS='http://pod:3030'
+  - pre-commit run --all-files
   - pytest
 
 
