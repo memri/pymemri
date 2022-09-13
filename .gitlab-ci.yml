@@ -4,7 +4,7 @@ default:
   - pip install -e .[dev]
 
 run pre-commit:
-  stage: linter
+  stage: test
   script:
   - pre-commit run --all-files
 
