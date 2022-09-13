@@ -596,12 +596,6 @@ class PodClient:
             new_item._client = self
         return new_item
 
-    def get_properties(self, expanded):
-        properties = copy(expanded)
-        if ALL_EDGES in properties:
-            del properties[ALL_EDGES]
-        return properties
-
     def _item_from_graphql(self, data):
         item = self.item_from_json(data)
         for prop in item.edges:
@@ -690,16 +684,3 @@ class PodClient:
             return oauth_items[-1]
         else:
             return None
-
-
-class Dog(Item):
-    properties = Item.properties + ["name", "age", "bites", "weight"]
-    edges = Item.edges + ["friend"]
-
-    def __init__(self, name: str=None, age: int=None, bites: bool=False, weight: float=None, friend: EdgeList["Person"]=None, **kwargs):
-        super().__init__(**kwargs)
-        self.name = name
-        self.age = age
-        self.bites = bites
-        self.weight = weight
-        self.friend = EdgeList("friend", "Person", friend)
