@@ -5,6 +5,7 @@ from collections import deque
 from hashlib import sha256
 from typing import Any, Deque, Dict, Generator, List, Optional, Union
 
+from loguru import logger
 import requests
 
 from ..data.itembase import Item
@@ -52,10 +53,10 @@ class PodAPI:
         try:
             res = requests.get(self._url)
             if self.verbose:
-                print("Succesfully connected to pod")
+                logger.info("Succesfully connected to pod")
             return True
         except requests.exceptions.RequestException as e:
-            print("Could no connect to backend")
+            logger.error("Could no connect to backend")
             return False
 
     @property

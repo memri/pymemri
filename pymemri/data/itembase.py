@@ -11,7 +11,7 @@ from typing import (
     TypeVar,
     Union,
 )
-
+from loguru import logger
 from ..imports import *
 
 ALL_EDGES = "allEdges"
@@ -285,10 +285,10 @@ class ItemBase:
     def update(self, api, edges=True, create_if_not_exists=True, skip_nodes=False):
 
         if not self.exists(api):
-            print(f"creating {self}")
+            logger.debug(f"creating {self}")
             api.create(self)
         else:
-            print(f"updating {self}")
+            logger.debug(f"updating {self}")
             api.update_item(self)
 
         if edges:

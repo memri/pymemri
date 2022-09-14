@@ -28,7 +28,6 @@ def test_stuff(client):
     client.add_to_schema(Dataset)
 
     create_dummy_dataset(client, 1)
-    # print(client.search({"type": "Dataset"}))
 
 
 def create_dummy_dataset(client, num_items):

@@ -1,5 +1,6 @@
 import time
 
+from loguru import logger
 from fastscript import Param, call_parse
 
 from pymemri.plugin.states import (
@@ -29,7 +30,7 @@ def run_password_simulator(
 
     print("FRONTEND PASSWORD SIMULATOR")
     if database_key and owner_key:
-        print("pod credentials from from args")
+        logger.info("pod credentials from from args")
         client = PodClient(database_key=database_key, owner_key=owner_key)
     else:
         client = PodClient.from_local_keys()
@@ -46,21 +47,21 @@ def run_password_simulator(
             pluginRun.status = "ready"
             client.update_item(pluginRun)
             client.update_item(account)
-            print("Done authenticating")
+            logger.info("Done authenticating")
             break
 
         elif pluginRun.status == RUN_STARTED:
-            print("plugin starting...")
+            logger.info("plugin starting...")
 
         elif pluginRun.status == RUN_USER_ACTION_COMPLETED:
-            print("no user action needed.")
+            logger.info("no user action needed.")
 
         elif pluginRun.status == RUN_FAILED:
-            print("error occurred in plugin.")
+            logger.error("error occurred in plugin.")
             break
 
         elif pluginRun.status == RUN_COMPLETED:
             break
 
         else:
-            print(f"unknown plugin state {pluginRun.status}.")
+            logger.warning(f"unknown plugin state {pluginRun.status}.")

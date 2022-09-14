@@ -3,6 +3,7 @@ import signal
 import threading
 import time
 from threading import Thread
+from loguru import logger
 
 from .states import RUN_COMPLETED, RUN_FAILED
 
@@ -19,27 +20,27 @@ class StatusListener:
 
     def stop(self):
         if self.verbose:
-            print("Stopping listener...", flush=True)
+            logger.info("Stopping listener...", flush=True)
         self.running = False
 
     def run(self):
         if self.verbose:
-            print(f"Listening for status='{self.status}' on Item {self.run_id}", flush=True)
+            logger.info(f"Listening for status='{self.status}' on Item {self.run_id}", flush=True)
 
         while self.running and threading.main_thread().is_alive():
             time.sleep(self.interval)
             try:
                 run = self.client.get(self.run_id)
                 if self.verbose:
-                    print("run status:", run.status, flush=True)
+                    logger.info("run status:", run.status, flush=True)
                 if run.status == self.status:
                     self.callback()
             except Exception as e:
-                print(f"Could not get run in status listener: {e}")
+                logger.exception(f"Could not get run in status listener: {e}")
 
 
 def force_exit_callback():
-    print("Status aborted, killing plugin...", flush=True)
+    logger.info("Status aborted, killing plugin...", flush=True)
     pid = os.getpid()
     os.kill(pid, signal.SIGINT)
 

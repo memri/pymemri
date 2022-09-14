@@ -57,7 +57,7 @@ def test_run_plugin_cli(example_metadata_path):
     result = subprocess.run(
         ["run_plugin", "--metadata", example_metadata_path], stdout=subprocess.PIPE
     )
-    success_message = result.stdout.splitlines()[-1]
+    success_message = result.stderr.splitlines()[-1]
     assert success_message == b"Run success!"
 
 

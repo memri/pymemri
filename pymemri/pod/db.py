@@ -1,5 +1,7 @@
 from enum import Enum
 
+from loguru import logger
+
 from ..data.itembase import Item
 from ..data.schema import File, Photo
 
@@ -18,7 +20,7 @@ class DB:
     def add(self, node):
         id = node.id
         if id in self.nodes:
-            print(f"Error trying to add node, but node with with id: {id} is already in database")
+            logger.error(f"Error trying to add node, but node with with id: {id} is already in database")
         self.nodes[id] = node
 
     def get(self, id):
