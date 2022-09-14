@@ -7,11 +7,11 @@ from abc import ABCMeta
 from pymemri.data.basic import read_json
 
 from ..data.basic import write_json
+from ..data.schema import Account, PluginRun
 from ..pod.client import PodClient
 from ..webserver.webserver import WebServer
 from .authenticators.credentials import PLUGIN_DIR
 from .listeners import get_abort_plugin_listener
-from .schema import Account, PluginRun
 from .states import RUN_COMPLETED, RUN_DAEMON, RUN_INITIALIZED, RUN_STARTED
 
 

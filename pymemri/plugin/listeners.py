@@ -4,8 +4,6 @@ import threading
 import time
 from threading import Thread
 
-from .states import RUN_COMPLETED, RUN_FAILED
-
 
 class StatusListener:
     def __init__(self, client, run_id, status, callback, interval=5, verbose=False):

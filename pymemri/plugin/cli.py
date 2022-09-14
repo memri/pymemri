@@ -6,8 +6,8 @@ from pathlib import Path
 
 from fastcore.script import Param, call_parse
 
-from ..data.basic import read_json, write_json
-from ..data.schema import Account, PluginRun
+from ..data.basic import write_json
+from ..data.schema import PluginRun
 from ..pod.client import (
     DEFAULT_POD_ADDRESS,
     DEFAULT_POD_KEY_PATH,

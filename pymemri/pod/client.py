@@ -10,7 +10,6 @@ from ..data.basic import *
 from ..data.itembase import Edge, Item, ItemBase
 from ..data.schema import *
 from ..imports import *
-from ..plugin.schema import *
 from ..test_utils import get_ci_variables
 from .api import DEFAULT_POD_ADDRESS, POD_VERSION, PodAPI, PodError
 from .db import DB, Priority
