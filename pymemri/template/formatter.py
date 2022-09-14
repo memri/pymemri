@@ -72,12 +72,16 @@ def reponame_to_displayname(reponame: str) -> str:
 def download_plugin_template(
     template_name: str, url: str = TEMPLATE_URL, base_path: str = TEMPLATE_BASE_PATH
 ):
-    base_path = Path(base_path) / template_name
+    # base_path = Path(base_path) / template_name if url is None else Path(url.rsplit("/", 1)[1].split(".")[0]) / template_name
+
     zip_path = download_file(url)
+    base_path = Path(zip_path.split(".")[0])
+
     with zipfile.ZipFile(zip_path, "r") as f:
         result = {name: f.read(name) for name in f.namelist() if base_path in Path(name).parents}
 
     if len(result) == 0:
+        Path(zip_path).unlink()
         raise ValueError(f"Could not find template: {template_name}")
 
     result = {
@@ -257,6 +261,7 @@ def _plugin_from_template(
     target_dir=".",
     verbose=True,
     install_requires="",
+    template_url=None,
 ):
     if list_templates:
         print("Available templates:")
@@ -264,7 +269,9 @@ def _plugin_from_template(
             print(template)
         return
 
-    template = download_plugin_template(template_name)
+    template = download_plugin_template(
+        template_name, **({"url": template_url} if template_url else {})
+    )
 
     tgt_path = Path(target_dir)
     replace_dict = get_template_replace_dict(

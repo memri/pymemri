@@ -225,7 +225,7 @@ class GitlabAPI:
                 path_in2out[str(p)] = str(path_in_repo)
         self.commit_file(str(repo), path_in2out, **kwargs)
 
-    def create_new_project(self, project_name, user=None):
+    def create_new_project(self, project_name, user=None, template_url=None):
         tmp_dir = Path("/tmp/test") / project_name
         rm_tree(tmp_dir)
         repo_url = (
@@ -242,6 +242,7 @@ class GitlabAPI:
             repo_url=repo_url,
             verbose=False,
             user=user,
+            template_url=template_url,
         )
         self.write_files_to_git(project_name, tmp_dir)
 
