@@ -20,7 +20,9 @@ class DB:
     def add(self, node):
         id = node.id
         if id in self.nodes:
-            logger.error(f"Error trying to add node, but node with with id: {id} is already in database")
+            logger.error(
+                f"Error trying to add node, but node with with id: {id} is already in database"
+            )
         self.nodes[id] = node
 
     def get(self, id):

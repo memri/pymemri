@@ -1,7 +1,7 @@
 import time
 
-from loguru import logger
 from fastscript import Param, call_parse
+from loguru import logger
 
 from pymemri.plugin.states import (
     RUN_COMPLETED,

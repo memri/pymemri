@@ -11,7 +11,9 @@ from typing import (
     TypeVar,
     Union,
 )
+
 from loguru import logger
+
 from ..imports import *
 
 ALL_EDGES = "allEdges"

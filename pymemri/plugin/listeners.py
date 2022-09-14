@@ -3,6 +3,7 @@ import signal
 import threading
 import time
 from threading import Thread
+
 from loguru import logger
 
 from .states import RUN_COMPLETED, RUN_FAILED

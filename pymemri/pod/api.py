@@ -5,8 +5,8 @@ from collections import deque
 from hashlib import sha256
 from typing import Any, Deque, Dict, Generator, List, Optional, Union
 
-from loguru import logger
 import requests
+from loguru import logger
 
 from ..data.itembase import Item
 from .graphql_utils import GQLQuery

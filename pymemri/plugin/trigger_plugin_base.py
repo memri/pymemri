@@ -1,6 +1,8 @@
 import abc
 import threading
+
 from loguru import logger
+
 from pymemri.webserver.models.trigger import TriggerReq
 
 from .pluginbase import PluginBase

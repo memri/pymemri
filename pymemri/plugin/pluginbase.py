@@ -9,10 +9,10 @@ import warnings
 from abc import ABCMeta
 from enum import Enum
 from os import environ
-from loguru import logger
 
 from fastcore.script import Param, call_parse
 from fastscript import *
+from loguru import logger
 
 from ..data.basic import *
 from ..data.basic import write_json

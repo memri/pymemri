@@ -9,7 +9,6 @@ from pathlib import Path
 import requests
 from fastprogress.fastprogress import progress_bar
 from git import Repo
-
 from loguru import logger
 
 from .data.basic import *

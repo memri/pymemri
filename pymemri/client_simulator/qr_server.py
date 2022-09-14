@@ -2,10 +2,10 @@ import multiprocessing
 import os
 from time import sleep
 
-from loguru import logging
 import flask
 import requests
 from flask import make_response, render_template
+from loguru import logging
 
 from pymemri.cvu.utils import get_default_cvu
 from pymemri.data.itembase import Edge
@@ -44,6 +44,7 @@ def run_app(qr_dict, host="0.0.0.0", port=8080):
 @app.before_first_request
 def _run_on_start():
     pass
+
 
 def send_email(plugin_run, client, full_user_auth_url):
     # To make auth possible without email, attach url to pluginrun.

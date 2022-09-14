@@ -7,6 +7,7 @@ from time import sleep
 
 from fastscript import Param, call_parse
 from loguru import logger
+
 import pymemri
 
 from ...cvu.utils import get_default_cvu
