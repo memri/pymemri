@@ -21,6 +21,9 @@ To install the Python package for development, run:
 ```bash
 pip install -e .
 ```
+
+## Contributing
+If you would like to contribute to Pymemri, have a look at our [contibuting guidelines](CONTRIBUTING.md) to get started and join our Discord if you have any questions about using or contributing to the library.
 ## Quickstart: Pod Client
 
 All interaction between plugins and the pod goes via the Pymemri `PodClient`. To use this client in development, we first need to have a pod running locally. The quickest way to do this is to install from the [pod repo](https://gitlab.memri.io/memri/pod), and run `./examples/run_development.sh`.

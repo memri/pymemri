@@ -14,7 +14,6 @@ Pymemri uses [pre-commit](https://pre-commit.com/), which configures git hooks f
 pre-commit is installed along with all dev requirements. To enable the pre-commit hooks for pymemri, run:
 
 ```
-cd pymemri
 pre-commit install
 ```
 
