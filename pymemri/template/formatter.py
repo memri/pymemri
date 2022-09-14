@@ -9,6 +9,7 @@ from typing import Dict, List, Union
 import giturlparse
 import requests
 from fastcore.script import Param, call_parse, store_true
+from loguru import logger
 
 import pymemri
 
@@ -123,7 +124,7 @@ class TemplateFormatter:
         new_content = self.format_content(content)
         new_path.parent.mkdir(exist_ok=True, parents=True)
         if self.verbose:
-            print(f"Formatting {filename} -> {new_path}")
+            logger.info(f"Formatting {filename} -> {new_path}")
         with open(new_path, "w", encoding="utf-8") as f:
             f.write(new_content)
 
@@ -172,7 +173,7 @@ def get_template_replace_dict(
         repo_owner, repo_name = infer_git_info(repo_url)
     except ValueError:
         url_inf, owner_inf, name_inf = None, None, None
-        print(
+        logger.error(
             "Could not infer git information from current directory, no initialized repository found."
         )
 
@@ -276,14 +277,14 @@ def _plugin_from_template(
         install_requires=install_requires,
         template_name=template_name,
     )
-    print(replace_dict)
+    logger.debug(replace_dict)
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
     formatter.format()
     if verbose:
         formatter.print_filetree()
 
-    print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
+    logger.info(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
 
 
 @call_parse

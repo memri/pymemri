@@ -227,7 +227,7 @@ def store_keys(
         try:
             read_pod_key("database_key")
             read_pod_key("owner_key")
-            print("Existing stored keys found, exiting without generating new keys.")
+            logger.info("Existing stored keys found, exiting without generating new keys.")
             return
         except ValueError:
             pass

@@ -5,7 +5,7 @@ from time import sleep
 import flask
 import requests
 from flask import make_response, render_template
-from loguru import logging
+from loguru import logger
 
 from pymemri.cvu.utils import get_default_cvu
 from pymemri.data.itembase import Edge
