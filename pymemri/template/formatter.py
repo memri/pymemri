@@ -75,7 +75,7 @@ def download_plugin_template(
     # base_path = Path(base_path) / template_name if url is None else Path(url.rsplit("/", 1)[1].split(".")[0]) / template_name
 
     zip_path = download_file(url)
-    base_path = Path(zip_path.split(".")[0])
+    base_path = Path(zip_path.split(".")[0]) / template_name
 
     with zipfile.ZipFile(zip_path, "r") as f:
         result = {name: f.read(name) for name in f.namelist() if base_path in Path(name).parents}
