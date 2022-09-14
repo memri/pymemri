@@ -1,4 +1,4 @@
-from pymemri.data.itembase import Item, EdgeList
+from pymemri.data.itembase import EdgeList, Item
 from pymemri.data.schema import Person
 
 

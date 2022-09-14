@@ -1,24 +1,26 @@
-
-
-from typing import List
-from fastcore.script import call_parse, Param
-import inspect
-import os
 import importlib
+import inspect
 import json
+import os
 from pathlib import Path
+from typing import List
+
+from fastcore.script import Param, call_parse
 
 from ..plugin.pluginbase import get_plugin_cls
 from ..pod.client import PodClient
 
 ALLOWED_TYPES = [int, str, float, bool]
 
+
 def get_params(cls):
     params = inspect.signature(cls.__init__).parameters
     return {k: v for k, v in list(params.items()) if k not in {"self", "args", "kwargs"}}
 
+
 def identifier_to_displayname(identifier: str) -> str:
     return identifier.replace("_", " ").title()
+
 
 def get_param_config(name, dtype, is_optional, default):
     return {
@@ -29,6 +31,7 @@ def get_param_config(name, dtype, is_optional, default):
         "default": default,
         "optional": is_optional,
     }
+
 
 def create_config(plugin_cls: type) -> List[dict]:
     """
@@ -60,11 +63,12 @@ def create_config(plugin_cls: type) -> List[dict]:
         config.append(param_config)
     return config
 
+
 @call_parse
 def create_plugin_config(
     metadata: Param("metadata.json of the plugin", str) = "./metadata.json",
     tgt_file: Param("Filename of config file", str) = "config.json",
-    schema_file: Param("Filename of exported plugin schema", str) = "schema.json"
+    schema_file: Param("Filename of exported plugin schema", str) = "schema.json",
 ):
     """
     Creates a plugin configuration definition from the arguments of your plugin class.

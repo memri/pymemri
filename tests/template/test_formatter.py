@@ -1,9 +1,11 @@
-from sys import stdout
-from pymemri.template.formatter import TemplateFormatter, download_plugin_template
-from pathlib import Path
-import tempfile
-import subprocess
 import os
+import subprocess
+import tempfile
+from pathlib import Path
+from sys import stdout
+
+from pymemri.template.formatter import TemplateFormatter, download_plugin_template
+
 
 def test_list_templates():
     result = subprocess.run(["plugin_from_template", "--list_templates"], stdout=subprocess.PIPE)
@@ -19,7 +21,7 @@ def test_formatter():
         "repo_name": "sentiment-plugin",
         "package_name": "sentiment_plugin",
         "plugin_name": "Sentiment Plugin",
-        "description": "Predict sentiment on text messages"
+        "description": "Predict sentiment on text messages",
     }
 
     with tempfile.TemporaryDirectory() as result_path:
@@ -28,7 +30,7 @@ def test_formatter():
         formatter = TemplateFormatter(template, replace_dict, result_path)
         formatter.format()
         created_files = [f for f in result_path.rglob("*") if not os.path.isdir(f)]
-        
+
         contents = {}
         for fn in created_files:
             with open(fn, "r") as f:

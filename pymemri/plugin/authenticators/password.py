@@ -1,26 +1,22 @@
-
-
-
 import abc
-from time import sleep
+import getpass
+import threading
+import time
 from pathlib import Path
+from time import sleep
+
+from fastscript import Param, call_parse
 
 import pymemri
-from ...data.basic import read_file
+
 from ...cvu.utils import get_default_cvu
-from ..states import RUN_USER_ACTION_NEEDED, RUN_USER_ACTION_COMPLETED
+from ...data.basic import read_file
 from ...data.schema import CVUStoredDefinition
-import time
-from time import sleep
-from fastscript import call_parse
-import getpass
-from ...pod.client import DEFAULT_POD_ADDRESS
-from fastscript import Param
+from ...pod.client import DEFAULT_POD_ADDRESS, PodClient
 from ...pod.utils import *
 from ..pluginbase import PluginBase
-from ..schema import PluginRun, Account
-from ...pod.client import PodClient
-import threading
+from ..schema import Account, PluginRun
+from ..states import RUN_USER_ACTION_COMPLETED, RUN_USER_ACTION_NEEDED
 
 
 class PasswordAuthenticator:
@@ -50,7 +46,9 @@ class PasswordAuthenticator:
                 if self.pluginRun.account:
                     attempts_remaining = self.MAX_LOGIN_ATTEMPTS - (i + 1)
                     account = self.pluginRun.account[0]
-                    account.errorMessage = f"Reached max login attempts. {attempts_remaining} attempts remaining"
+                    account.errorMessage = (
+                        f"Reached max login attempts. {attempts_remaining} attempts remaining"
+                    )
                     self.client.update_item(account)
 
         if not login_success:
@@ -82,10 +80,14 @@ class PasswordAuthenticator:
 
             sleep(self.SLEEP_INTERVAL)
             self.pluginRun = self.client.get(self.pluginRun.id)
-            print(f"polling for credentials from account of pluginRun {self.pluginRun.id} ... run.status={self.pluginRun.status}", flush=True)
+            print(
+                f"polling for credentials from account of pluginRun {self.pluginRun.id} ... run.status={self.pluginRun.status}",
+                flush=True,
+            )
             if self.pluginRun.status == RUN_USER_ACTION_COMPLETED:
                 account = self.pluginRun.account[0]
                 return account.identifier, account.secret
+
 
 def set_account_credentials(pod_client, run_id, username, password):
     run = pod_client.get(run_id)
@@ -98,27 +100,36 @@ def set_account_credentials(pod_client, run_id, username, password):
     pod_client.update_item(run)
     print(f"Setting username and password for {run_id}'s Account'")
 
-from .credentials import PLUGIN_DIR
-from ...pod.client import PodClient, DEFAULT_POD_ADDRESS
-from .credentials import *
+
+from fastscript import Param, call_parse
+
 from ...data.basic import *
-from fastscript import call_parse, Param
+from ...pod.client import DEFAULT_POD_ADDRESS, PodClient
+from .credentials import *
+from .credentials import PLUGIN_DIR
+
 
 @call_parse
-def simulate_enter_credentials(run_id:Param("run id that requires the password", str)=None,
-                               plugin:Param("plugin name, used for finding credentials", str)=None,
-                               pod_full_address:Param("The pod full address", str)=DEFAULT_POD_ADDRESS,
-                               database_key:Param("Database key of the pod", str)=None,
-                               owner_key:Param("Owner key of the pod", str)=None,):
-    if database_key is None: database_key = read_pod_key("database_key")
-    if owner_key is None: owner_key = read_pod_key("owner_key")
+def simulate_enter_credentials(
+    run_id: Param("run id that requires the password", str) = None,
+    plugin: Param("plugin name, used for finding credentials", str) = None,
+    pod_full_address: Param("The pod full address", str) = DEFAULT_POD_ADDRESS,
+    database_key: Param("Database key of the pod", str) = None,
+    owner_key: Param("Owner key of the pod", str) = None,
+):
+    if database_key is None:
+        database_key = read_pod_key("database_key")
+    if owner_key is None:
+        owner_key = read_pod_key("owner_key")
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     if plugin is not None:
         try:
             username, password = read_username_password(plugin)
         except Exception as e:
             print(e)
-            print(f"Could not find credentials for plugin {plugin}, if you don't want to set those locally remove the --plugin arg. Exiting")
+            print(
+                f"Could not find credentials for plugin {plugin}, if you don't want to set those locally remove the --plugin arg. Exiting"
+            )
             exit()
     else:
         username = input(f"Enter username for service used by {run_id}: ")

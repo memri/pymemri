@@ -1,10 +1,10 @@
-
-
-from typing import Dict, List, Optional, Iterable, Any
-import pandas as pd
 import json
+from typing import Any, Dict, Iterable, List, Optional
+
+import pandas as pd
 
 from ..data.itembase import Item
+
 
 class Query:
     def __init__(self, *properties: List[str]):
@@ -17,7 +17,9 @@ class Query:
         """
         self.properties = list(properties)
 
-    def traverse_edges(self, client: "PodClient", items: List[Item], edges: List[str]) -> List[Item]:
+    def traverse_edges(
+        self, client: "PodClient", items: List[Item], edges: List[str]
+    ) -> List[Item]:
         items = items.copy()
 
         for edge in edges:
@@ -38,7 +40,6 @@ class Query:
                     query_item_idx.append(i)
                     items[i] = None
 
-
             new_items = client.search({"ids": ids_to_query})
             for i, new_item in zip(query_item_idx, new_items):
                 try:
@@ -47,9 +48,7 @@ class Query:
                     items[i] = None
         return items
 
-    def get_property_values(
-        self, client: "PodClient", prop: str, items: List[Item]
-    ) -> list:
+    def get_property_values(self, client: "PodClient", prop: str, items: List[Item]) -> list:
         edges, prop_name = self.parse_property(prop)
         target_items = self.traverse_edges(client, items, edges)
 
@@ -74,7 +73,5 @@ class Query:
             raise ValueError(f"Unknown dtype: {dtype}")
 
     def execute(self, client: "PodClient", items: List[Item], dtype="dict") -> Any:
-        result = {
-            prop: self.get_property_values(client, prop, items) for prop in self.properties
-        }
+        result = {prop: self.get_property_values(client, prop, items) for prop in self.properties}
         return self.convert_dtype(result, dtype)

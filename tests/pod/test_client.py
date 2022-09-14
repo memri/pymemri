@@ -1,9 +1,10 @@
 from typing import List
-from pymemri.data.oauth import OauthFlow
-from pymemri.pod.client import PodClient
-from pymemri.data.schema import Item, Edge, EdgeList
+
 import pytest
-from pymemri.data.schema import EmailMessage, Person, Account
+
+from pymemri.data.oauth import OauthFlow
+from pymemri.data.schema import Account, Edge, EdgeList, EmailMessage, Item, Person
+from pymemri.pod.client import PodClient
 from pymemri.pod.graphql_utils import GQLQuery
 
 
@@ -147,9 +148,9 @@ def test_sync_local():
     all_items = setup_sync_items(client)
     client.sync(priority="local")
     for i, item in enumerate(all_items):
-        if i==0:
+        if i == 0:
             assert item.content == f"changed_{i}"
-        elif i==2:
+        elif i == 2:
             item.content == "remote_content"
         else:
             assert item.content == f"content_{i}"
@@ -163,9 +164,9 @@ def test_sync_remote():
     all_items = setup_sync_items(client)
     client.sync(priority="remote")
     for i, item in enumerate(all_items):
-        if i==0:
+        if i == 0:
             assert item.content == "conflict"
-        elif  i==2:
+        elif i == 2:
             assert item.content == "remote_content"
         else:
             assert item.content == f"content_{i}"
@@ -179,9 +180,9 @@ def test_sync_newest():
     all_items = setup_sync_items(client)
     client.sync(priority="newest")
     for i, item in enumerate(all_items):
-        if i==0:
+        if i == 0:
             assert item.content == "conflict"
-        elif  i==2:
+        elif i == 2:
             assert item.content == "remote_content"
         else:
             assert item.content == f"content_{i}"
@@ -218,7 +219,7 @@ def test_search(client: PodClient):
 def test_search_no_edges(client: PodClient):
     all_people = client.search({"type": "Person"}, include_edges=False)
     assert len(all_people)
-    assert([len(person.get_all_edges())==0 for person in all_people])
+    assert [len(person.get_all_edges()) == 0 for person in all_people]
 
 
 def search_by_ids(client: PodClient):
@@ -230,9 +231,7 @@ def search_by_ids(client: PodClient):
 
 def test_paginate(client: PodClient):
     client.bulk_action(
-        create_items=[
-            Account(identifier=str(i), service="paginate_test") for i in range(100)
-        ]
+        create_items=[Account(identifier=str(i), service="paginate_test") for i in range(100)]
     )
 
     client.reset_local_db()
@@ -267,11 +266,7 @@ def test_search_last_added(client: PodClient):
 
 
 def test_search_gql(client: PodClient):
-    client.bulk_action(
-        create_items=[
-            Person(firstName=str(i)) for i in range(100)
-        ]
-    )
+    client.bulk_action(create_items=[Person(firstName=str(i)) for i in range(100)])
     all_persons = client.search({"type": "Person"}, include_edges=False)
     person_ids = [p.id for p in all_persons]
 
@@ -312,6 +307,7 @@ def test_bulk_update_delete(client: PodClient):
     client.reset_local_db()
     assert client.get(person2.id, include_deleted=True).deleted
     assert client.get(person1.id).firstName == "updated"
+
 
 def test_oauth_search(client: PodClient):
     oauth_item = OauthFlow(accessToken="", refreshToken="")

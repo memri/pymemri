@@ -1,8 +1,7 @@
-
-
-#hide
+# hide
 import os
 from pathlib import Path
+
 
 def get_ci_variables(*varnames):
     """
@@ -10,8 +9,10 @@ def get_ci_variables(*varnames):
     """
     return {varname: os.environ.get(varname) for varname in varnames}
 
-#hide
+
+# hide
 from pathlib import Path
+
 
 def get_project_root():
     return Path(__file__).parent.parent

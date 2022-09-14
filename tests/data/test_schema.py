@@ -1,7 +1,10 @@
-import pytest
 import inspect
+
+import pytest
+
 from pymemri.data import _central_schema
 from pymemri.pod.client import PodClient
+
 
 @pytest.fixture
 def central_schema():

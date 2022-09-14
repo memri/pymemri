@@ -1,20 +1,23 @@
-import sys
-from time import time
-from pymemri.data.itembase import EdgeList
-from pymemri.plugin.pluginbase import PluginBase, run_plugin_from_run_id
-from pymemri.examples.example_plugin import ExamplePlugin
-from pymemri.plugin import states
-from pymemri.pod.client import PodClient
-from pymemri.data.schema import PluginRun, Account, Message
-from pymemri.test_utils import get_project_root
-import pytest
 import os
 import subprocess
+import sys
+from time import time
+
+import pytest
+
+from pymemri.data.itembase import EdgeList
+from pymemri.data.schema import Account, Message, PluginRun
+from pymemri.examples.example_plugin import ExamplePlugin
+from pymemri.plugin import states
+from pymemri.plugin.pluginbase import PluginBase, run_plugin_from_run_id
+from pymemri.pod.client import PodClient
+from pymemri.test_utils import get_project_root
 
 
 @pytest.fixture
 def example_metadata_path():
     return get_project_root() / "pymemri" / "examples" / "example_plugin.json"
+
 
 @pytest.fixture
 def client():
@@ -26,6 +29,7 @@ def test_plugin_schema():
     example_schema = ExamplePlugin.get_schema()
     assert isinstance(example_schema, list)
     assert len(example_schema)
+
 
 def test_run_from_id(client):
     sys.path.append(get_project_root() / "examples")
@@ -53,6 +57,7 @@ def test_run_from_id(client):
 def test_example_metadata(example_metadata_path):
     assert os.path.exists(example_metadata_path)
 
+
 def test_run_plugin_cli(example_metadata_path):
     result = subprocess.run(
         ["run_plugin", "--metadata", example_metadata_path], stdout=subprocess.PIPE
@@ -64,7 +69,8 @@ def test_run_plugin_cli(example_metadata_path):
 @pytest.mark.skip(reason="TODO build example plugin in CI")
 def test_simulate_run_cli(client, example_metadata_path):
     subprocess.run(
-        ["simulate_run_plugin_from_frontend", "--metadata", example_metadata_path], stdout=subprocess.PIPE
+        ["simulate_run_plugin_from_frontend", "--metadata", example_metadata_path],
+        stdout=subprocess.PIPE,
     )
 
     t0 = time.time()

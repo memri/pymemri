@@ -2,6 +2,7 @@ import random
 
 import pandas as pd
 import pytest
+
 from pymemri.data.itembase import Edge
 from pymemri.data.schema import Account, CategoricalPrediction, Message, Person
 from pymemri.exporters.exporters import Query

@@ -7,16 +7,13 @@ from uvicorn import Config, Server
 
 class WebServer:
     def __init__(self, port: int):
-        self._app =  self._setup_app()
+        self._app = self._setup_app()
         self._server_handle = None
         self._uvicorn = None
         self._port = port
 
     def _setup_app(self) -> FastAPI:
-        app = FastAPI(
-            title="Plugin Webserver",
-            redoc_url=None,
-            swagger_ui_oauth2_redirect_url=None)
+        app = FastAPI(title="Plugin Webserver", redoc_url=None, swagger_ui_oauth2_redirect_url=None)
 
         # TODO setup allow_origin_regex for *.memri.io and localhost
         app.add_middleware(
@@ -27,7 +24,6 @@ class WebServer:
         )
 
         return app
-        
 
     @property
     def app(self) -> FastAPI:
@@ -56,7 +52,7 @@ class WebServer:
         print("Shutting down the webserver..")
         if self._uvicorn:
             self._uvicorn.should_exit = True
-            #self._uvicorn.force_exit = True
+            # self._uvicorn.force_exit = True
             print("Joining the thread...")
 
             if self._server_handle:

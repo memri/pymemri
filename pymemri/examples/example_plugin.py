@@ -1,5 +1,5 @@
-from pymemri.plugin.pluginbase import PluginBase
 from pymemri.data.schema import Message
+from pymemri.plugin.pluginbase import PluginBase
 
 
 class ExamplePlugin(PluginBase):

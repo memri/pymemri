@@ -1,6 +1,6 @@
-from collections import UserString
 import string
-from typing import Dict, Optional, Any
+from collections import UserString
+from typing import Any, Dict, Optional
 
 
 class GQLQuery(UserString):

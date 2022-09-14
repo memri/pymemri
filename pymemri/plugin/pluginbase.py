@@ -121,6 +121,7 @@ class PluginError(Exception):
 
     pass
 
+
 def write_run_info(plugin, id_):
     try:
         if plugin is None:

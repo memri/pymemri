@@ -1,9 +1,8 @@
-
-
 from pathlib import Path
 from typing import List
 
 import pymemri
+
 from ..data.basic import read_file
 from ..data.schema import CVUStoredDefinition
 
@@ -17,6 +16,7 @@ def get_default_cvu(name: str, base_path: Path = CVU_BASE_PATH) -> CVUStoredDefi
     path = Path(base_path) / name
     cvu_str = read_file(path)
     return CVUStoredDefinition(definition=cvu_str, name=name, externalId=name)
+
 
 def list_default_cvus(base_path: Path = CVU_BASE_PATH) -> List[str]:
     """
