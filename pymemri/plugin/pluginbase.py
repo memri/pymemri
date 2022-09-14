@@ -22,7 +22,7 @@ from ..pod.client import DEFAULT_POD_ADDRESS, Dog, PodClient
 from ..pod.utils import *
 from ..webserver.webserver import WebServer
 from .authenticators.credentials import PLUGIN_DIR
-from .listeners import get_abort_plugin_listener
+from .listeners import get_abort_plugin_listener, get_pod_restart_listener
 from .schema import Account, PluginRun
 from .states import *
 
@@ -74,7 +74,8 @@ class PluginBase(metaclass=ABCMeta):
     def setup(self):
         if self.client and self.pluginRun:
             status_abort_listener = get_abort_plugin_listener(self.client, self.pluginRun.id)
-            self._status_listeners.append(status_abort_listener)
+            pod_restart_listener = get_pod_restart_listener(self.client, self.pluginRun.id)
+            self._status_listeners.extend([status_abort_listener, pod_restart_listener])
 
         self._webserver.run()
 
