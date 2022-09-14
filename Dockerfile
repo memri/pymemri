@@ -7,17 +7,9 @@ WORKDIR /usr/src/pymemri
 # In order to leverage docker caching, copy only the minimal
 # information needed to install dependencies
 
-COPY ./settings.ini ./settings.ini
+COPY ./setup.cfg ./setup.cfg
 COPY ./setup.py ./setup.py
 RUN touch ./README.md
-
-# Install dependencies
-
-RUN python3 setup.py egg_info
-RUN pip3 install -r pymemri.egg-info/requires.txt
-
-# Copy the real project-s sources (docker caching is broken from here onwards)
-
 COPY ./MANIFEST.in ./MANIFEST.in
 COPY ./README.md ./README.md
 COPY ./tools ./tools
