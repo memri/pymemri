@@ -1,5 +1,12 @@
 # Contributing
 
+## Installation
+For development, Pymemri has a few extra requirements for linting, code quality, and testing. You can install these extra requirements by including the `dev` tag when installing pymemri:
+
+```
+pip install -e .[dev]
+```
+
 ## Testing
 Pymemri uses `pytest` as testing tool. All tests are located in the `tests` folder, and can be run with:
 
