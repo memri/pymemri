@@ -15,6 +15,7 @@ run tests:
   script:
   - curl http://pod:3030/version
   - export POD_ADDRESS='http://pod:3030'
+  - pre-commit run --all-files
   - pytest
 
 
