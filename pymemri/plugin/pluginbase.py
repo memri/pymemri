@@ -153,7 +153,6 @@ class ExamplePlugin(PluginBase):
         print("Started plugin run...")
         dog = Dog(self.dog_name, 10)
         self.client.create(dog)
-        time.sleep(1000)
         print("Run success!")
 
 
