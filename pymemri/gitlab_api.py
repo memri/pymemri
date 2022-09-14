@@ -1,14 +1,17 @@
-from fastprogress.fastprogress import progress_bar
-from pathlib import Path
-import requests
-import os, sys
-from getpass import getpass
-from datetime import datetime
-from git import Repo
+import os
 import re
+import sys
+import urllib
+from datetime import datetime
+from getpass import getpass
+from pathlib import Path
+
+import requests
+from fastprogress.fastprogress import progress_bar
+from git import Repo
+
 from .data.basic import *
 from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
-import urllib
 
 MEMRI_PATH = Path.home() / ".memri"
 MEMRI_GITLAB_BASE_URL = "https://gitlab.memri.io"
@@ -16,19 +19,18 @@ ACCESS_TOKEN_PATH = Path.home() / ".memri/access_token/access_token.txt"
 GITLAB_API_BASE_URL = "https://gitlab.memri.io/api/v4"
 DEFAULT_PACKAGE_VERSION = "0.0.1"
 
-TIME_FORMAT_GITLAB = '%Y-%m-%dT%H:%M:%S.%fZ'
+TIME_FORMAT_GITLAB = "%Y-%m-%dT%H:%M:%S.%fZ"
 PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )[0-9]+(?=</span>)'
 
-class GitlabAPI():
 
+class GitlabAPI:
     def __init__(self, client=None, request_auth_if_needed=False):
-        self.client=client
-        self.auth_headers=dict()
-        self.auth_params=dict()
-        self.auth_initialized=False
+        self.client = client
+        self.auth_headers = dict()
+        self.auth_params = dict()
+        self.auth_initialized = False
         self.request_auth_if_needed = request_auth_if_needed
         self.get_registry_params_headers()
-
 
     def get_registry_params_headers(self):
         job_token = os.environ.get("CI_JOB_TOKEN", None)
@@ -46,12 +48,16 @@ class GitlabAPI():
                     self.auth_headers = {"PRIVATE-TOKEN": f.read()}
             else:
                 if self.request_auth_if_needed:
-                    print(f"""
+                    print(
+                        f"""
                     The first time you are uploading a model you need to create an access_token
                     at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
                     Click at the blue button with 'Create personal access token'"
-                    """)
-                    access_token = getpass("Then copy your personal access token from 'Your new personal access token', and paste here: ")
+                    """
+                    )
+                    access_token = getpass(
+                        "Then copy your personal access token from 'Your new personal access token', and paste here: "
+                    )
                     with open(ACCESS_TOKEN_PATH, "w") as f:
                         f.write(access_token)
                     self.auth_headers = {"PRIVATE-TOKEN": access_token}
@@ -63,7 +69,7 @@ class GitlabAPI():
         file_path,
         package_name,
         version=DEFAULT_PACKAGE_VERSION,
-        trigger_pipeline=True
+        trigger_pipeline=True,
     ):
         file_path = Path(file_path)
         file_name = file_path.name
@@ -71,8 +77,12 @@ class GitlabAPI():
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{package_name}/{version}/{file_name}"
         print(f"uploading {file_path}")
         it = upload_in_chunks(file_path)
-        res = requests.put(url=url, data=IterableToFileAdapter(it),
-                         headers=self.auth_headers, params=self.auth_params)
+        res = requests.put(
+            url=url,
+            data=IterableToFileAdapter(it),
+            headers=self.auth_headers,
+            params=self.auth_params,
+        )
 
         if res.status_code not in [200, 201]:
             print(f"Failed to upload {file_path}: {res.content}")
@@ -89,19 +99,20 @@ class GitlabAPI():
 
     def project_id_from_name(self, project_name):
         iden = str_to_gitlab_identifier(project_name)
-        res = requests.get(f"{GITLAB_API_BASE_URL}/projects",
-                           headers=self.auth_headers,
-                           params={**self.auth_params, **{
-                               "owned": True,
-                               "search": project_name
-                           }})
+        res = requests.get(
+            f"{GITLAB_API_BASE_URL}/projects",
+            headers=self.auth_headers,
+            params={**self.auth_params, **{"owned": True, "search": project_name}},
+        )
         if res.status_code not in [200, 201]:
             print(res.content)
             raise RuntimeError(f"Failed to get project id for {project_name}")
         # we need this extra filter (search is not exact match)
         res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
         if len(res) == 0:
-            raise ValueError(f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo")
+            raise ValueError(
+                f"No plugin found with name {project_name}, make sure to enter the name as specified in the url of the repo"
+            )
         else:
             return res[0]
 
@@ -114,8 +125,15 @@ class GitlabAPI():
         except Exception:
             raise ValueError(f"Could not find project with name {project_path}")
 
-    def download_package_file(self, filename, project_path, package_name, out_dir=None,
-                              package_version=DEFAULT_PACKAGE_VERSION, download_if_exists=False):
+    def download_package_file(
+        self,
+        filename,
+        project_path,
+        package_name,
+        out_dir=None,
+        package_version=DEFAULT_PACKAGE_VERSION,
+        download_if_exists=False,
+    ):
 
         project_name = str(project_path).split("/")[-1]
         out_dir = out_dir if out_dir is not None else MEMRI_PATH / "projects" / project_name
@@ -127,7 +145,9 @@ class GitlabAPI():
         print(file_path)
 
         if file_path.exists() and not download_if_exists:
-            print(f"{file_path} already exists, and `download_if_exists`==False, using cached version")
+            print(
+                f"{file_path} already exists, and `download_if_exists`==False, using cached version"
+            )
             return file_path
 
         print(f"downloading {filename} from project {project_path}, package {package_name}")
@@ -144,7 +164,9 @@ class GitlabAPI():
     def create_repo(self, repo_name, client=None):
         url = f"{GITLAB_API_BASE_URL}/projects/"
         payload = {"name": repo_name}
-        res = requests.post(url=url, json=payload, headers=self.auth_headers, params=self.auth_params)
+        res = requests.post(
+            url=url, json=payload, headers=self.auth_headers, params=self.auth_params
+        )
 
         if res.status_code not in [200, 201]:
             raise ValueError(f"failed to create repo:\n {res.text}")
@@ -153,7 +175,7 @@ class GitlabAPI():
     def get_current_username(self, client=None):
         url = f"{GITLAB_API_BASE_URL}/user/"
         res = requests.get(url=url, headers=self.auth_headers, params=self.auth_params)
-        if res.status_code not in [200,201]:
+        if res.status_code not in [200, 201]:
             raise ValueError(f"Could not find current user {res.content}")
         else:
             username = res.json()["username"]
@@ -161,7 +183,7 @@ class GitlabAPI():
 
     # NEVER EXPORT THIS
     def delete_project(self, path_or_id, client=None):
-        url_escape_id = urllib.parse.quote(path_or_id, safe='')
+        url_escape_id = urllib.parse.quote(path_or_id, safe="")
         url = f"{GITLAB_API_BASE_URL}/projects/{url_escape_id}"
         res = requests.delete(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201, 202]:
@@ -170,7 +192,7 @@ class GitlabAPI():
 
     def commit_file(self, project_name, path_in2out, branch="main", client=None):
         project_id = self.project_id_from_name(project_name)
-    #     file_out_path_escaped = urllib.parse.quote(file_out_path, safe='')
+        #     file_out_path_escaped = urllib.parse.quote(file_out_path, safe='')
 
         actions = []
 
@@ -180,9 +202,16 @@ class GitlabAPI():
             actions.append(action_payload)
 
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/repository/commits"
-        payload = {"branch": branch, "commit_message": "automated commit", "content": content, "actions": actions}
+        payload = {
+            "branch": branch,
+            "commit_message": "automated commit",
+            "content": content,
+            "actions": actions,
+        }
 
-        res = requests.post(url=url, json=payload, headers=self.auth_headers, params=self.auth_params)
+        res = requests.post(
+            url=url, json=payload, headers=self.auth_headers, params=self.auth_params
+        )
         files_in = list(path_in2out.keys())
         if res.status_code not in [200, 201, 202]:
             raise ValueError(f"failed to make commit with files {files_in}:\n {res.text}")
@@ -196,11 +225,14 @@ class GitlabAPI():
                 path_in2out[str(p)] = str(path_in_repo)
         self.commit_file(str(repo), path_in2out, **kwargs)
 
-
     def create_new_project(self, project_name, user=None):
         tmp_dir = Path("/tmp/test") / project_name
         rm_tree(tmp_dir)
-        repo_url = f"{MEMRI_GITLAB_BASE_URL}/{user}/{project_name}" if user is not None else f"{MEMRI_GITLAB_BASE_URL}/plugins/{project_name}"
+        repo_url = (
+            f"{MEMRI_GITLAB_BASE_URL}/{user}/{project_name}"
+            if user is not None
+            else f"{MEMRI_GITLAB_BASE_URL}/plugins/{project_name}"
+        )
 
         _plugin_from_template(
             template_name="classifier_plugin",
@@ -209,11 +241,9 @@ class GitlabAPI():
             target_dir=str(tmp_dir),
             repo_url=repo_url,
             verbose=False,
-            user=user
+            user=user,
         )
         self.write_files_to_git(project_name, tmp_dir)
-
-
 
 
 def find_git_repo():
@@ -228,7 +258,7 @@ def find_git_repo():
     if i == 9:
         raise ValueError(f"could not fine git repo in {os.path.abspath('')}")
 
-    repo_name = repo.remotes.origin.url.split('.git')[0].split('/')[-1]
+    repo_name = repo.remotes.origin.url.split(".git")[0].split("/")[-1]
     return repo_name
 
 
@@ -247,7 +277,7 @@ class upload_in_chunks(object):
         delta = 1 / n
         next(pb_iter, None)
 
-        with open(self.filename, 'rb') as file:
+        with open(self.filename, "rb") as file:
             while True:
                 data = file.read(self.chunksize)
                 if not data:
@@ -264,20 +294,22 @@ class upload_in_chunks(object):
     def __len__(self):
         return self.totalsize
 
+
 class IterableToFileAdapter(object):
     def __init__(self, iterable):
         self.iterator = iter(iterable)
         self.length = len(iterable)
 
-    def read(self, size=-1): # TBD: add buffer for `len(data) > size` case
-        return next(self.iterator, b'')
+    def read(self, size=-1):  # TBD: add buffer for `len(data) > size` case
+        return next(self.iterator, b"")
 
     def __len__(self):
         return self.length
 
+
 def rm_tree(pth):
     pth = Path(pth)
-    for child in pth.glob('*'):
+    for child in pth.glob("*"):
         if child.is_file():
             child.unlink()
         else:

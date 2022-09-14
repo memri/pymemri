@@ -1,8 +1,8 @@
-
+from enum import Enum
 
 from ..data.itembase import Item
 from ..data.schema import File, Photo
-from enum import Enum
+
 
 class Priority(Enum):
     newest = "newest"
@@ -18,9 +18,7 @@ class DB:
     def add(self, node):
         id = node.id
         if id in self.nodes:
-            print(
-                f"Error trying to add node, but node with with id: {id} is already in database"
-            )
+            print(f"Error trying to add node, but node with with id: {id} is already in database")
         self.nodes[id] = node
 
     def get(self, id):
@@ -37,9 +35,7 @@ class DB:
             self.add(node)
         return node
 
-    def _merge_item(
-        self, local_item: Item, remote_item: Item, priority: Priority
-    ) -> Item:
+    def _merge_item(self, local_item: Item, remote_item: Item, priority: Priority) -> Item:
         """
         Merge the properties and edges of `remote_item` into `local_item`, according to `priority`
 
@@ -51,7 +47,9 @@ class DB:
         "error": throw a `ValueError` on conflict
         """
         if not isinstance(remote_item, type(local_item)):
-            raise ValueError(f"Attempted to merge two items with different schema: {type(remote_item)}, {type(local_item)}")
+            raise ValueError(
+                f"Attempted to merge two items with different schema: {type(remote_item)}, {type(local_item)}"
+            )
 
         for prop in local_item.properties:
             self._merge_property(local_item, remote_item, prop, priority)
@@ -75,10 +73,7 @@ class DB:
         elif priority == Priority.newest:
             # Note: Pod does not have a DSM per property, so we compare against the Item DSM.
             dateLocalModified = local_item._date_local_modified.get(prop, None)
-            if (
-                remote_val != orig_val
-                and remote_item.dateServerModified > dateLocalModified
-            ):
+            if remote_val != orig_val and remote_item.dateServerModified > dateLocalModified:
                 setattr(local_item, prop, remote_val)
 
         elif priority == Priority.remote:
@@ -98,8 +93,6 @@ class DB:
         for edge in local_item.edges:
             local_edges = object.__getattribute__(local_item, edge)
             remote_edges = object.__getattribute__(remote_item, edge)
-            local_edges.extend(
-                [edge for edge in remote_edges if edge not in local_edges]
-            )
+            local_edges.extend([edge for edge in remote_edges if edge not in local_edges])
             for edge in local_edges:
                 edge.source = local_item

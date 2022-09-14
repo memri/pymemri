@@ -1,11 +1,9 @@
-
-
-
-import time
 import os
 import signal
 import threading
+import time
 from threading import Thread
+
 from .states import RUN_COMPLETED, RUN_FAILED
 
 
@@ -39,18 +37,16 @@ class StatusListener:
             except Exception as e:
                 print(f"Could not get run in status listener: {e}")
 
+
 def force_exit_callback():
     print("Status aborted, killing plugin...", flush=True)
     pid = os.getpid()
     os.kill(pid, signal.SIGINT)
 
+
 def get_abort_plugin_listener(client, run_id, **kwargs):
     listener = StatusListener(
-        client=client,
-        run_id=run_id,
-        status="aborted",
-        callback=force_exit_callback,
-        **kwargs
+        client=client, run_id=run_id, status="aborted", callback=force_exit_callback, **kwargs
     )
     thread = Thread(
         target=listener.run,

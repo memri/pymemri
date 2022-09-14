@@ -33,13 +33,14 @@ def qr(request: Request):
     qr_code_data = qr_code_dict.get(QR_CODE_KEY, None)
     done = qr_code_dict.get(AUTHENTICATED, False)
 
-
     the_path = os.path.join(get_root_path(__name__), "template")
 
     if done:
         return templates.TemplateResponse("success.html", {"request": request})
     else:
-        return templates.TemplateResponse("images.html", {"request": request, "chart_output": qr_code_data})
+        return templates.TemplateResponse(
+            "images.html", {"request": request, "chart_output": qr_code_data}
+        )
 
 
 @router.get("/qr_svg", response_class=JSONResponse)
@@ -52,10 +53,7 @@ def qr_svg():
         "authenticated": qr_code_dict.get(AUTHENTICATED, False),
     }
 
-    return JSONResponse(
-        content=content,
-        headers={'Access-Control-Allow-Origin': '*'}
-    )
+    return JSONResponse(content=content, headers={"Access-Control-Allow-Origin": "*"})
 
 
 @router.get("/qr_string", response_class=JSONResponse)
@@ -68,7 +66,4 @@ def qr_string():
         "authenticated": qr_code_dict.get(AUTHENTICATED, False),
     }
 
-    return JSONResponse(
-        content=content,
-        headers={'Access-Control-Allow-Origin': '*'}
-    )
+    return JSONResponse(content=content, headers={"Access-Control-Allow-Origin": "*"})
