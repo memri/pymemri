@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from time import time
+import time
 
 import pytest
 
@@ -75,7 +75,8 @@ def test_simulate_run_cli(client, example_metadata_path):
 
     t0 = time.time()
     while time.time() - t0 < 60:
-        time.sleep(2)
+        # TODO check if container has started first
+        time.sleep(3)
         run = client.search_last_added("PluginRun")
         if run.status == states.RUN_COMPLETED:
             break
