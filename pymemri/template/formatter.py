@@ -272,7 +272,6 @@ def _plugin_from_template(
     template = download_plugin_template(
         template_name, **({"url": template_url} if template_url else {})
     )
-    print(list(template.keys()))
 
     tgt_path = Path(target_dir)
     replace_dict = get_template_replace_dict(
