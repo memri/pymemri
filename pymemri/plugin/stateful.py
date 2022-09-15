@@ -117,7 +117,7 @@ class StatefulPlugin(PluginBase):
 
     def failed(self, client, error):
         logging.error(f"PLUGIN run is failed: {error}")
-        logger.exception("Exception while running plugin:", error)
+        logger.error("Exception while running plugin:", error)
         self.set_run_vars(client, {"state": RUN_FAILED, "error": str(error)})
 
     def completed(self, client):

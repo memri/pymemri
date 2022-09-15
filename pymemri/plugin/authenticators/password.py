@@ -83,7 +83,6 @@ class PasswordAuthenticator:
             self.pluginRun = self.client.get(self.pluginRun.id)
             logger.info(
                 f"polling for credentials from account of pluginRun {self.pluginRun.id} ... run.status={self.pluginRun.status}",
-                flush=True,
             )
             if self.pluginRun.status == RUN_USER_ACTION_COMPLETED:
                 account = self.pluginRun.account[0]
@@ -127,10 +126,9 @@ def simulate_enter_credentials(
         try:
             username, password = read_username_password(plugin)
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Could not find credentials for plugin {plugin}, if you don't want to set those locally remove the --plugin arg. Exiting"
             )
-            logger.exception(e)
 
             exit()
     else:
@@ -143,6 +141,5 @@ def simulate_enter_credentials(
             logger.info(f"Reading run id from {run_path}")
             run_id = read_json(run_path)["id"]
         except Exception as e:
-            logger.error(f"No run_id specified and could not read current run information")
-            logger.exception(e)
+            logger.exception(f"No run_id specified and could not read current run information")
     set_account_credentials(client, run_id, username, password)

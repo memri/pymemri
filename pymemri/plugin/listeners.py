@@ -26,23 +26,23 @@ class PluginRunStatusListener:
 
     def stop(self):
         if self.verbose:
-            logger.info("Stopping listener...", flush=True)
+            logger.info("Stopping listener...")
         self.running = False
 
     def run(self):
         if self.verbose:
-            logger.info(f"Listening for status='{self.status}' on Item {self.run_id}", flush=True)
+            logger.info(f"Listening for status='{self.status}' on Item {self.run_id}")
 
         while self.running and threading.main_thread().is_alive():
             time.sleep(self.interval)
             try:
                 run = self.client.get(self.run_id)
                 if self.verbose:
-                    logger.info("run status:", run.status, flush=True)
+                    logger.info("run status:", run.status)
                 if run.status == self.status:
                     self.callback()
             except Exception as e:
-                logger.exception(f"Could not get run in status listener: {e}")
+                logger.exception(f"Could not get run in status listener")
 
 
 class PodHTTPStatusListener:
