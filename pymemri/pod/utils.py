@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from loguru import logger
+
 from ..data.basic import *
 
 PYMEMRI_FOLDER = ".pymemri"
@@ -18,7 +20,7 @@ def read_pod_key(key_type, file=DEFAULT_POD_KEY_PATH):
         ) from None
     try:
         key = json[key_type]
-        print(f"reading {key_type} from {file}")
+        logger.info(f"reading {key_type} from {file}")
         return key
     except:
         raise ValueError(f"{key_type} not specified in {file}") from None
