@@ -5,6 +5,7 @@ import traceback
 from pathlib import Path
 
 from fastcore.script import Param, call_parse
+from loguru import logger
 
 from ..data.basic import write_json
 from ..data.schema import PluginRun
@@ -35,11 +36,11 @@ from .states import RUN_FAILED
 
 def _parse_env():
     env = os.environ
-    print("Reading `run_plugin()` parameters from environment variables")
+    logger.info("Reading `run_plugin()` parameters from environment variables")
     try:
         pod_full_address = env.get(POD_FULL_ADDRESS_ENV, DEFAULT_POD_ADDRESS)
         plugin_run_json = json.loads(str(env[POD_TARGET_ITEM_ENV]))
-        print(plugin_run_json)
+        logger.debug(plugin_run_json)
         plugin_run_id = plugin_run_json["id"]
         owner_key = env.get(POD_OWNER_KEY_ENV)
         pod_auth_json = json.loads(str(env.get(POD_AUTH_JSON_ENV)))
@@ -60,7 +61,7 @@ def store_keys(
         try:
             read_pod_key("database_key")
             read_pod_key("owner_key")
-            print("Existing stored keys found, exiting without generating new keys.")
+            logger.info("Existing stored keys found, exiting without generating new keys.")
             return
         except ValueError:
             pass

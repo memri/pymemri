@@ -4,6 +4,8 @@ import json
 import warnings
 from abc import ABCMeta
 
+from loguru import logger
+
 from pymemri.data.basic import read_json
 
 from ..data.basic import write_json
@@ -11,7 +13,7 @@ from ..data.schema import Account, PluginRun
 from ..pod.client import PodClient
 from ..webserver.webserver import WebServer
 from .authenticators.credentials import PLUGIN_DIR
-from .listeners import get_abort_plugin_listener
+from .listeners import get_abort_plugin_listener, get_pod_restart_listener
 from .states import RUN_COMPLETED, RUN_DAEMON, RUN_INITIALIZED, RUN_STARTED
 
 
@@ -56,7 +58,8 @@ class PluginBase(metaclass=ABCMeta):
     def setup(self):
         if self.client and self.pluginRun:
             status_abort_listener = get_abort_plugin_listener(self.client, self.pluginRun.id)
-            self._status_listeners.append(status_abort_listener)
+            pod_restart_listener = get_pod_restart_listener(self.client, self.pluginRun.id)
+            self._status_listeners.extend([status_abort_listener, pod_restart_listener])
 
         self._webserver.run()
 
@@ -128,10 +131,10 @@ def write_run_info(plugin, id_):
             raise ValueError("Empty container")
         run_path = PLUGIN_DIR / plugin / "current_run.json"
         run_path.parent.mkdir(parents=True, exist_ok=True)
-        print(f"writing run info to {run_path}")
+        logger.info(f"writing run info to {run_path}")
         write_json({"id": id_}, run_path)
     except Exception as e:
-        print(f"""failed to write run info to {run_path}\n{e}""")
+        logger.error(f"""failed to write run info to {run_path}\n{e}""")
 
 
 def get_plugin_cls(plugin_module, plugin_name):

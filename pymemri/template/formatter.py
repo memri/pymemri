@@ -9,6 +9,7 @@ from typing import Dict, List, Union
 import giturlparse
 import requests
 from fastcore.script import Param, call_parse, store_true
+from loguru import logger
 
 import pymemri
 
@@ -72,12 +73,16 @@ def reponame_to_displayname(reponame: str) -> str:
 def download_plugin_template(
     template_name: str, url: str = TEMPLATE_URL, base_path: str = TEMPLATE_BASE_PATH
 ):
-    base_path = Path(base_path) / template_name
+    # base_path = Path(base_path) / template_name if url is None else Path(url.rsplit("/", 1)[1].split(".")[0]) / template_name
+
     zip_path = download_file(url)
+    base_path = Path(zip_path.split(".")[0]) / template_name
+
     with zipfile.ZipFile(zip_path, "r") as f:
         result = {name: f.read(name) for name in f.namelist() if base_path in Path(name).parents}
 
     if len(result) == 0:
+        Path(zip_path).unlink()
         raise ValueError(f"Could not find template: {template_name}")
 
     result = {
@@ -123,7 +128,7 @@ class TemplateFormatter:
         new_content = self.format_content(content)
         new_path.parent.mkdir(exist_ok=True, parents=True)
         if self.verbose:
-            print(f"Formatting {filename} -> {new_path}")
+            logger.info(f"Formatting {filename} -> {new_path}")
         with open(new_path, "w", encoding="utf-8") as f:
             f.write(new_content)
 
@@ -172,7 +177,7 @@ def get_template_replace_dict(
         repo_owner, repo_name = infer_git_info(repo_url)
     except ValueError:
         url_inf, owner_inf, name_inf = None, None, None
-        print(
+        logger.error(
             "Could not infer git information from current directory, no initialized repository found."
         )
 
@@ -257,6 +262,7 @@ def _plugin_from_template(
     target_dir=".",
     verbose=True,
     install_requires="",
+    template_url=None,
 ):
     if list_templates:
         print("Available templates:")
@@ -264,7 +270,9 @@ def _plugin_from_template(
             print(template)
         return
 
-    template = download_plugin_template(template_name)
+    template = download_plugin_template(
+        template_name, **({"url": template_url} if template_url else {})
+    )
 
     tgt_path = Path(target_dir)
     replace_dict = get_template_replace_dict(
@@ -276,14 +284,14 @@ def _plugin_from_template(
         install_requires=install_requires,
         template_name=template_name,
     )
-    print(replace_dict)
+    logger.debug(replace_dict)
 
     formatter = TemplateFormatter(template, replace_dict, tgt_path)
     formatter.format()
     if verbose:
         formatter.print_filetree()
 
-    print(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
+    logger.info(f"Created `{replace_dict['plugin_name']}` using the {template_name} template.")
 
 
 @call_parse

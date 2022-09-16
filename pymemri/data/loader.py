@@ -8,6 +8,7 @@ from pathlib import Path
 import requests
 from fastprogress.fastprogress import progress_bar
 from git import Repo
+from loguru import logger
 
 from ..gitlab_api import (
     ACCESS_TOKEN_PATH,
@@ -38,7 +39,9 @@ def write_huggingface_model_to_package_registry(
 
     for f in [DEFAULT_HUGGINFACE_CONFIG_NAME, DEFAULT_PYTORCH_MODEL_NAME]:
         file_path = local_save_dir / f
-        print(f"writing {f} to package registry of {project_name} with project id {project_id}")
+        logger.info(
+            f"writing {f} to package registry of {project_name} with project id {project_id}"
+        )
         api.write_file_to_package_registry(
             project_id, file_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version
         )

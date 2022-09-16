@@ -1,6 +1,8 @@
 import abc
 import threading
 
+from loguru import logger
+
 from pymemri.webserver.models.trigger import TriggerReq
 
 from .pluginbase import PluginBase
@@ -29,7 +31,7 @@ class TriggerPluginBase(PluginBase):
 
             except Exception as e:
                 msg = f"Error while handling the trigger for item {req}, reason {e}"
-                print(msg)
+                logger.error(msg)
                 self.client.send_trigger_status(req.item_id, req.trigger_id, msg)
 
         threading.Thread(target=thread_fn, args=(req,)).start()

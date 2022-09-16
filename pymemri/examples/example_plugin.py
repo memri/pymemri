@@ -6,6 +6,7 @@ class ExamplePlugin(PluginBase):
     schema_classes = [Message]
 
     def __init__(self, **kwargs):
+        print("Initializing plugin...")
         super().__init__(**kwargs)
 
     def run(self):

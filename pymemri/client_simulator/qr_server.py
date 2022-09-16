@@ -5,6 +5,7 @@ from time import sleep
 import flask
 import requests
 from flask import make_response, render_template
+from loguru import logger
 
 from pymemri.cvu.utils import get_default_cvu
 from pymemri.data.itembase import Edge
@@ -42,7 +43,7 @@ def run_app(qr_dict, host="0.0.0.0", port=8080):
 
 @app.before_first_request
 def _run_on_start():
-    print("ABC")
+    pass
 
 
 def send_email(plugin_run, client, full_user_auth_url):
@@ -56,13 +57,13 @@ def send_email(plugin_run, client, full_user_auth_url):
     client.update_item(plugin_run)
 
     # Poll until status == "ready"
-    print("Polling for email...")
+    logger.info("Polling for email...")
     while plugin_run.status != RUN_USER_ACTION_COMPLETED:
         sleep(1)
         plugin_run = client.get(plugin_run.id)
 
     # send email
-    print("Sending email...")
+    logger.info("Sending email...")
     try:
         to = plugin_run.account[0].authEmail
         if to is None:
@@ -71,7 +72,7 @@ def send_email(plugin_run, client, full_user_auth_url):
         email_sent = True
     except Exception as e:
         email_sent = False
-        print(f"failed to send email:\n{e}")
+        logger.info(f"failed to send email:\n{e}")
 
     # depending on whether email was a success, either show qr link, or message that link was sent to email
     if not email_sent:

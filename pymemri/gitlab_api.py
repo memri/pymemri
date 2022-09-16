@@ -9,6 +9,7 @@ from pathlib import Path
 import requests
 from fastprogress.fastprogress import progress_bar
 from git import Repo
+from loguru import logger
 
 from .data.basic import *
 from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
@@ -75,7 +76,7 @@ class GitlabAPI:
         file_name = file_path.name
 
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{package_name}/{version}/{file_name}"
-        print(f"uploading {file_path}")
+        logger.info(f"uploading {file_path}")
         it = upload_in_chunks(file_path)
         res = requests.put(
             url=url,
@@ -85,9 +86,9 @@ class GitlabAPI:
         )
 
         if res.status_code not in [200, 201]:
-            print(f"Failed to upload {file_path}: {res.content}")
+            logger.error(f"Failed to upload {file_path}: {res.content}")
         else:
-            print(f"Succesfully uploaded {file_path}")
+            logger.info(f"Succesfully uploaded {file_path}")
             if trigger_pipeline:
                 self.trigger_pipeline(project_id)
 
@@ -95,7 +96,7 @@ class GitlabAPI:
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/pipeline?ref=main"
         res = requests.post(url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201]:
-            print(f"Failed to trigger pipeline")
+            logger.error(f"Failed to trigger pipeline")
 
     def project_id_from_name(self, project_name):
         iden = str_to_gitlab_identifier(project_name)
@@ -105,7 +106,7 @@ class GitlabAPI:
             params={**self.auth_params, **{"owned": True, "search": project_name}},
         )
         if res.status_code not in [200, 201]:
-            print(res.content)
+            logger.error(res.content)
             raise RuntimeError(f"Failed to get project id for {project_name}")
         # we need this extra filter (search is not exact match)
         res = [x.get("id") for x in res.json() if x.get("path", None) == iden]
@@ -142,22 +143,21 @@ class GitlabAPI:
         project_id = self.get_project_id_from_project_path_unsafe(project_path)
 
         file_path = out_dir / filename
-        print(file_path)
 
         if file_path.exists() and not download_if_exists:
-            print(
+            logger.warning(
                 f"{file_path} already exists, and `download_if_exists`==False, using cached version"
             )
             return file_path
 
-        print(f"downloading {filename} from project {project_path}, package {package_name}")
+        logger.info(f"downloading {filename} from project {project_path}, package {package_name}")
 
         res = requests.get(
             url=f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{package_name}/{package_version}/{filename}"
         )
         res.raise_for_status()
         with open(out_dir / filename, "wb") as f:
-            print(f"writing {filename} to {out_dir}")
+            logger.info(f"writing {filename} to {out_dir}")
             f.write(res.content)
         return file_path
 
@@ -170,7 +170,7 @@ class GitlabAPI:
 
         if res.status_code not in [200, 201]:
             raise ValueError(f"failed to create repo:\n {res.text}")
-        print(f"created project {repo_name}")
+        logger.info(f"created project {repo_name}")
 
     def get_current_username(self, client=None):
         url = f"{GITLAB_API_BASE_URL}/user/"
@@ -188,7 +188,7 @@ class GitlabAPI:
         res = requests.delete(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201, 202]:
             raise ValueError(f"failed to delete repo:\n {res.text}")
-        print(f"deleted project {path_or_id}")
+        logger.info(f"deleted project {path_or_id}")
 
     def commit_file(self, project_name, path_in2out, branch="main", client=None):
         project_id = self.project_id_from_name(project_name)
@@ -215,7 +215,7 @@ class GitlabAPI:
         files_in = list(path_in2out.keys())
         if res.status_code not in [200, 201, 202]:
             raise ValueError(f"failed to make commit with files {files_in}:\n {res.text}")
-        print(f"committed files {files_in}")
+        logger.info(f"committed files {files_in}")
 
     def write_files_to_git(self, repo, target_dir, **kwargs):
         path_in2out = dict()
@@ -225,7 +225,7 @@ class GitlabAPI:
                 path_in2out[str(p)] = str(path_in_repo)
         self.commit_file(str(repo), path_in2out, **kwargs)
 
-    def create_new_project(self, project_name, user=None):
+    def create_new_project(self, project_name, user=None, template_url=None):
         tmp_dir = Path("/tmp/test") / project_name
         rm_tree(tmp_dir)
         repo_url = (
@@ -242,6 +242,7 @@ class GitlabAPI:
             repo_url=repo_url,
             verbose=False,
             user=user,
+            template_url=template_url,
         )
         self.write_files_to_git(project_name, tmp_dir)
 
