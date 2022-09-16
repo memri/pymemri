@@ -1,6 +1,8 @@
 import random
 import string
 
+from loguru import logger
+
 from ._central_schema import *
 from .dataset import Dataset
 from .itembase import Edge, Item, ItemBase
@@ -23,7 +25,7 @@ def get_constructor(_type, plugin_class=None, plugin_package=None, extra=None):
             mod = __import__(plugin_package, fromlist=[plugin_class])
             dynamic = {plugin_class: getattr(mod, plugin_class)}
         except Exception as e:
-            print(f"Could not import {plugin_class}.{plugin_package}")
+            logger.error(f"Could not import {plugin_class}.{plugin_package}")
     else:
         dynamic = dict()
 

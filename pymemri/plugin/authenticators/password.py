@@ -6,6 +6,7 @@ from pathlib import Path
 from time import sleep
 
 from fastscript import Param, call_parse
+from loguru import logger
 
 import pymemri
 
@@ -41,8 +42,7 @@ class PasswordAuthenticator:
                 login_success = True
                 break
             except Exception as e:
-                print("Login failed, invalid credentials.")
-                print(f"ERROR: {e}")
+                logger.error("Login failed, invalid credentials.")
                 if self.pluginRun.account:
                     attempts_remaining = self.MAX_LOGIN_ATTEMPTS - (i + 1)
                     account = self.pluginRun.account[0]
@@ -80,9 +80,8 @@ class PasswordAuthenticator:
 
             sleep(self.SLEEP_INTERVAL)
             self.pluginRun = self.client.get(self.pluginRun.id)
-            print(
+            logger.info(
                 f"polling for credentials from account of pluginRun {self.pluginRun.id} ... run.status={self.pluginRun.status}",
-                flush=True,
             )
             if self.pluginRun.status == RUN_USER_ACTION_COMPLETED:
                 account = self.pluginRun.account[0]
@@ -126,10 +125,10 @@ def simulate_enter_credentials(
         try:
             username, password = read_username_password(plugin)
         except Exception as e:
-            print(e)
-            print(
+            logger.error(
                 f"Could not find credentials for plugin {plugin}, if you don't want to set those locally remove the --plugin arg. Exiting"
             )
+
             exit()
     else:
         username = input(f"Enter username for service used by {run_id}: ")
@@ -138,8 +137,8 @@ def simulate_enter_credentials(
     if run_id is None:
         try:
             run_path = PLUGIN_DIR / plugin / "current_run.json"
-            print(f"Reading run id from {run_path}")
+            logger.info(f"Reading run id from {run_path}")
             run_id = read_json(run_path)["id"]
         except Exception as e:
-            print(f"No run_id specified and could not read current run information:\n{e}")
+            logger.error(f"No run_id specified and could not read current run information")
     set_account_credentials(client, run_id, username, password)

@@ -1,6 +1,7 @@
 import threading
 
 from fastapi import FastAPI
+from loguru import logger
 from starlette.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
 
@@ -49,14 +50,14 @@ class WebServer:
 
     def shutdown(self):
         """Shuts down the uvicorn server, frees the thread"""
-        print("Shutting down the webserver..")
+        logger.info("Shutting down the webserver..")
         if self._uvicorn:
             self._uvicorn.should_exit = True
             # self._uvicorn.force_exit = True
-            print("Joining the thread...")
+            logger.info("Joining the thread...")
 
             if self._server_handle:
                 self._server_handle.join()
                 self._server_handle = None
 
-        print("Webserver shut down")
+        logger.info("Webserver shut down")

@@ -12,6 +12,7 @@ from os import environ
 
 from fastcore.script import Param, call_parse
 from fastscript import *
+from loguru import logger
 
 from ..data.basic import *
 from ..data.basic import write_json
@@ -161,10 +162,10 @@ def write_run_info(plugin, id_):
             raise ValueError("Empty container")
         run_path = PLUGIN_DIR / plugin / "current_run.json"
         run_path.parent.mkdir(parents=True, exist_ok=True)
-        print(f"writing run info to {run_path}")
+        logger.info(f"writing run info to {run_path}")
         write_json({"id": id_}, run_path)
     except Exception as e:
-        print(f"""failed to write run info to {run_path}\n{e}""")
+        logger.error(f"""failed to write run info to {run_path}\n{e}""")
 
 
 def get_plugin_cls(plugin_module, plugin_name):
@@ -227,7 +228,7 @@ def store_keys(
         try:
             read_pod_key("database_key")
             read_pod_key("owner_key")
-            print("Existing stored keys found, exiting without generating new keys.")
+            logger.info("Existing stored keys found, exiting without generating new keys.")
             return
         except ValueError:
             pass

@@ -6,6 +6,8 @@ from hashlib import sha256
 from threading import Thread
 from typing import Dict, List, Union
 
+from loguru import logger
+
 from ..data.basic import *
 from ..data.itembase import Edge, Item, ItemBase
 from ..data.schema import *
@@ -97,7 +99,7 @@ class PodClient:
                 item._client = self
             return True
         except Exception as e:
-            print(e)
+            logger.error(e)
             return False
 
     def create_photo(self, photo, asyncFlag=True):
@@ -178,7 +180,7 @@ class PodClient:
             self.api.bulk(create_items=create_items)
             return True
         except Exception as e:
-            print(e)
+            logger.error(e)
             return False
 
     def _upload_image(self, img, asyncFlag=True, callback=None):
@@ -222,13 +224,13 @@ class PodClient:
         if len(photo.file) > 0 and photo.data is None:
             file = self.get_file(photo.file[0].sha256)
             if file is None:
-                print(
+                logger.error(
                     f"Could not load data of {photo} attached file item does not have data in pod"
                 )
                 return
             photo.data = file
         else:
-            print(f"could not load data of {photo}, no file attached")
+            logger.error(f"could not load data of {photo}, no file attached")
 
     def create_if_external_id_not_exists(self, item):
         if not self.external_id_exists(item):
@@ -260,7 +262,7 @@ class PodClient:
                 continue
             elif len(str(x)) > max_size:
                 idx = i + 1
-                print("Could not add item: Item exceeds max item size")
+                logger.error("Could not add item: Item exceeds max item size")
             elif total_size + len(str(x)) < max_size:
                 batch_items.append(x)
                 total_size += len(str(x))
@@ -342,7 +344,7 @@ class PodClient:
                 create_items_batch + update_items_batch + create_edges_batch + delete_items_batch
             )
             n += n_batch
-            print(f"BULK: Writing {n}/{n_total} items/edges")
+            logger.info(f"BULK: Writing {n}/{n_total} items/edges")
 
             try:
                 result = self.api.bulk(
@@ -352,10 +354,9 @@ class PodClient:
                     delete_items_batch,
                 )
             except PodError as e:
-                print(e)
-                print("could not complete bulk action, aborting")
+                logger.error("could not complete bulk action, aborting")
                 return False
-        print(f"Completed Bulk action, written {n} items/edges")
+        logger.info(f"Completed Bulk action, written {n} items/edges")
 
         for item in all_items:
             item.reset_local_sync_state()
@@ -375,7 +376,7 @@ class PodClient:
             self.api.create_edge(edge_dict)
             return True
         except PodError as e:
-            print(e)
+            logger.error(e)
             return False
 
     def get(self, id, expanded=True, include_deleted=False):
@@ -386,7 +387,7 @@ class PodClient:
         if res is None:
             raise ValueError(f"Item with id {id} does not exist")
         elif res.deleted and not include_deleted:
-            print(f"Item with id {id} has been deleted")
+            logger.info(f"Item with id {id} has been deleted")
             return
         return res
 
@@ -412,7 +413,7 @@ class PodClient:
                 d["item"] = edge_item
             return result
         except PodError as e:
-            print(e)
+            logger.error(e)
             return
 
     def _get_item_with_properties(self, id):
@@ -424,7 +425,7 @@ class PodClient:
             item.reset_local_sync_state()
             return item
         except PodError as e:
-            print(e)
+            logger.error(e)
             return
 
     def get_update_dict(self, item, partial_update=True):
@@ -443,7 +444,7 @@ class PodClient:
             item.reset_local_sync_state()
             return True
         except PodError as e:
-            print(e)
+            logger.error(e)
             return False
 
     def exists(self, id):
@@ -453,7 +454,7 @@ class PodClient:
                 return True
             return False
         except PodError as e:
-            print(e)
+            logger.error(e)
             return False
 
     def search_paginate(
@@ -482,7 +483,7 @@ class PodClient:
                 ]
                 yield self.filter_deleted(result)
         except PodError as e:
-            print(e)
+            logger.error(e)
 
     def search(
         self,
@@ -504,14 +505,14 @@ class PodClient:
             try:
                 result = self.api.bulk(search=bulk_query)["search"]
             except PodError as e:
-                print(e)
+                logger.error(e)
 
             result = [item for sublist in result for item in sublist]
         else:
             try:
                 result = self.api.search(query)
             except PodError as e:
-                print(e)
+                logger.error(e)
 
         result = [
             self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority)
@@ -536,8 +537,7 @@ class PodClient:
                 edge_item.reset_local_sync_state()
                 item.add_edge(edge_name, edge_item)
             except Exception as e:
-                print(f"Could not attach edge {edge_json['_item']} to {item}")
-                print(e)
+                logger.error(f"Could not attach edge {edge_json['_item']} to {item}, {e}")
                 continue
         return item
 
@@ -602,10 +602,10 @@ class PodClient:
     def send_email(self, to, subject="", body=""):
         try:
             self.api.send_email(to, subject, body)
-            print(f"succesfully sent email to {to}")
+            logger.info(f"succesfully sent email to {to}")
             return True
         except PodError as e:
-            print(e)
+            logger.error(e)
             return False
 
     def sync(self, priority: str = Priority.newest):
@@ -658,7 +658,7 @@ class PodClient:
             self.api.send_trigger_status(item_id, trigger_id, status)
             return True
         except Exception as e:
-            print(f"Failed to send trigger status to the POD, reason {e}")
+            logger.error(f"Failed to send trigger status to the POD")
             return False
 
     def get_oauth_item(self):

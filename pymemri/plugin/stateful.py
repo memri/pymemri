@@ -1,5 +1,7 @@
 import logging
 
+from loguru import logger
+
 from ..data.schema import Item
 from .pluginbase import PluginBase
 
@@ -115,7 +117,7 @@ class StatefulPlugin(PluginBase):
 
     def failed(self, client, error):
         logging.error(f"PLUGIN run is failed: {error}")
-        print("Exception while running plugin:", error)
+        logger.error("Exception while running plugin:", error)
         self.set_run_vars(client, {"state": RUN_FAILED, "error": str(error)})
 
     def completed(self, client):
@@ -211,7 +213,7 @@ class MyStatefulPlugin(StatefulPlugin):
         self.set_state_str("continue_from:5021")
 
     def add_to_schema(self, client):
-        print("Adding schema")
+        logger.info("Adding schema")
         super().add_to_schema(client)
         # add plugin-specific schemas here
         client.add_to_schema(Person(firstName="", lastName=""))

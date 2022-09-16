@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List
 
 from fastcore.script import Param, call_parse
+from loguru import logger
 
 from ..plugin.pluginbase import get_plugin_cls
 from ..pod.client import PodClient
@@ -51,10 +52,10 @@ def create_config(plugin_cls: type) -> List[dict]:
         if param_name.startswith("_"):
             continue
         if param.annotation == inspect._empty:
-            print(f"Skipping unannotated parameter `{param_name}`")
+            logger.info(f"Skipping unannotated parameter `{param_name}`")
             continue
         if param.annotation not in ALLOWED_TYPES:
-            print(f"Skipping parameter with unknown type: `{param_name}: {param.annotation}`")
+            logger.info(f"Skipping parameter with unknown type: `{param_name}: {param.annotation}`")
             continue
         is_optional = param.default != inspect._empty
         dtype = PodClient.TYPE_TO_SCHEMA[param.annotation]
@@ -98,7 +99,7 @@ def create_plugin_config(
     try:
         plugin_cls = get_plugin_cls(plugin_module, plugin_name)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return
     config = create_config(plugin_cls)
 

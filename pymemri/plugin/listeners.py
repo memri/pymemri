@@ -6,6 +6,8 @@ from http import HTTPStatus
 from threading import Thread
 from typing import Callable
 
+from loguru import logger
+
 from pymemri.pod.api import PodError
 from pymemri.pod.client import PodClient
 
@@ -24,23 +26,23 @@ class PluginRunStatusListener:
 
     def stop(self):
         if self.verbose:
-            print("Stopping listener...", flush=True)
+            logger.info("Stopping listener...")
         self.running = False
 
     def run(self):
         if self.verbose:
-            print(f"Listening for status='{self.status}' on Item {self.run_id}", flush=True)
+            logger.info(f"Listening for status='{self.status}' on Item {self.run_id}")
 
         while self.running and threading.main_thread().is_alive():
             time.sleep(self.interval)
             try:
                 run = self.client.get(self.run_id)
                 if self.verbose:
-                    print("run status:", run.status, flush=True)
+                    logger.info("run status:", run.status)
                 if run.status == self.status:
                     self.callback()
             except Exception as e:
-                print(f"Could not get run in status listener: {e}")
+                logger.error(f"Could not get run in status listener")
 
 
 class PodHTTPStatusListener:
@@ -76,30 +78,30 @@ class PodHTTPStatusListener:
 
     def stop(self):
         if self.verbose:
-            print("Stopping listener...", flush=True)
+            logger.info("Stopping listener...")
         self.running = False
 
     def run(self):
         if self.verbose:
-            print(f"Listening for pod http status {self.http_status.value}", flush=True)
+            logger.info(f"Listening for pod http status {self.http_status.value}")
 
         while self.running and threading.main_thread().is_alive():
             time.sleep(self.interval)
             try:
                 _ = self.client.api.get_item(self.run_id)
                 if self.verbose:
-                    print("run http status OK", flush=True)
+                    logger.info("run http status OK")
             except PodError as e:
                 if self.verbose:
-                    print("run http status:", e.status, flush=True)
+                    logger.error("run http status:", e.status)
                 if e.status == self.http_status:
                     self.callback()
             except Exception as e:
-                print(f"Could not get run in httpstatus listener: {e}")
+                logger.error(f"Could not get run in httpstatus listener")
 
 
 def force_exit_callback():
-    print("Listener aborted plugin...", flush=True)
+    logger.info("Listener aborted plugin...")
     pid = os.getpid()
     os.kill(pid, signal.SIGINT)
 
