@@ -12,7 +12,6 @@ from ..data.basic import *
 from ..data.itembase import Edge, Item, ItemBase
 from ..data.schema import *
 from ..imports import *
-from ..plugin.schema import *
 from ..test_utils import get_ci_variables
 from .api import DEFAULT_POD_ADDRESS, POD_VERSION, PodAPI, PodError
 from .db import DB, Priority
@@ -573,12 +572,6 @@ class PodClient:
             new_item._client = self
         return new_item
 
-    def get_properties(self, expanded):
-        properties = copy(expanded)
-        if ALL_EDGES in properties:
-            del properties[ALL_EDGES]
-        return properties
-
     def _item_from_graphql(self, data):
         item = self.item_from_json(data)
         for prop in item.edges:
@@ -669,24 +662,3 @@ class PodClient:
             return oauth_items[-1]
         else:
             return None
-
-
-class Dog(Item):
-    properties = Item.properties + ["name", "age", "bites", "weight"]
-    edges = Item.edges + ["friend"]
-
-    def __init__(
-        self,
-        name: str = None,
-        age: int = None,
-        bites: bool = False,
-        weight: float = None,
-        friend: EdgeList["Person"] = None,
-        **kwargs,
-    ):
-        super().__init__(**kwargs)
-        self.name = name
-        self.age = age
-        self.bites = bites
-        self.weight = weight
-        self.friend = EdgeList("friend", "Person", friend)

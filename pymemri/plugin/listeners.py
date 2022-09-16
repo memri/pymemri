@@ -11,8 +11,6 @@ from loguru import logger
 from pymemri.pod.api import PodError
 from pymemri.pod.client import PodClient
 
-from .states import RUN_COMPLETED, RUN_FAILED
-
 
 class PluginRunStatusListener:
     def __init__(self, client, run_id, status, callback, interval=5, verbose=False):
@@ -123,7 +121,7 @@ def get_pod_restart_listener(client, run_id, **kwargs):
         run_id=run_id,
         callback=force_exit_callback,
         http_status=HTTPStatus.MISDIRECTED_REQUEST,
-        interval=60,
+        interval=5,
         **kwargs,
     )
     thread = Thread(target=listener.run)

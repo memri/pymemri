@@ -1,7 +1,7 @@
 {
 	"containerImage": "pymemri",
-	"pluginModule": "pymemri.plugin.pluginbase",
-	"plugin": "pymemri.plugin.pluginbase.ExamplePlugin",
+	"pluginModule": "pymemri.examples.example_plugin",
+	"plugin": "pymemri.examples.example_plugin.ExamplePlugin",
 	"pluginName": "ExamplePlugin",
 	"state": "not started",
 	"account": {
