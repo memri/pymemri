@@ -99,7 +99,7 @@ def create_plugin_config(
     try:
         plugin_cls = get_plugin_cls(plugin_module, plugin_name)
     except Exception as e:
-        logger.exception(e)
+        logger.error(e)
         return
     config = create_config(plugin_cls)
 

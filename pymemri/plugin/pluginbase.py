@@ -165,7 +165,7 @@ def write_run_info(plugin, id_):
         logger.info(f"writing run info to {run_path}")
         write_json({"id": id_}, run_path)
     except Exception as e:
-        logger.exception(f"""failed to write run info to {run_path}\n{e}""")
+        logger.error(f"""failed to write run info to {run_path}\n{e}""")
 
 
 def get_plugin_cls(plugin_module, plugin_name):

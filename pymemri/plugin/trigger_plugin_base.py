@@ -32,7 +32,6 @@ class TriggerPluginBase(PluginBase):
             except Exception as e:
                 msg = f"Error while handling the trigger for item {req}, reason {e}"
                 logger.error(msg)
-                logger.exception(e)
                 self.client.send_trigger_status(req.item_id, req.trigger_id, msg)
 
         threading.Thread(target=thread_fn, args=(req,)).start()

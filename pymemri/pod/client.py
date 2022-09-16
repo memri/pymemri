@@ -99,7 +99,7 @@ class PodClient:
                 item._client = self
             return True
         except Exception as e:
-            logger.exception(e)
+            logger.error(e)
             return False
 
     def create_photo(self, photo, asyncFlag=True):
@@ -180,7 +180,7 @@ class PodClient:
             self.api.bulk(create_items=create_items)
             return True
         except Exception as e:
-            logger.exception(e)
+            logger.error(e)
             return False
 
     def _upload_image(self, img, asyncFlag=True, callback=None):
@@ -354,7 +354,6 @@ class PodClient:
                     delete_items_batch,
                 )
             except PodError as e:
-                logger.exception(e)
                 logger.error("could not complete bulk action, aborting")
                 return False
         logger.info(f"Completed Bulk action, written {n} items/edges")
@@ -377,7 +376,7 @@ class PodClient:
             self.api.create_edge(edge_dict)
             return True
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
             return False
 
     def get(self, id, expanded=True, include_deleted=False):
@@ -414,7 +413,7 @@ class PodClient:
                 d["item"] = edge_item
             return result
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
             return
 
     def _get_item_with_properties(self, id):
@@ -426,7 +425,7 @@ class PodClient:
             item.reset_local_sync_state()
             return item
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
             return
 
     def get_update_dict(self, item, partial_update=True):
@@ -445,7 +444,7 @@ class PodClient:
             item.reset_local_sync_state()
             return True
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
             return False
 
     def exists(self, id):
@@ -455,7 +454,7 @@ class PodClient:
                 return True
             return False
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
             return False
 
     def search_paginate(
@@ -484,7 +483,7 @@ class PodClient:
                 ]
                 yield self.filter_deleted(result)
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
 
     def search(
         self,
@@ -506,14 +505,14 @@ class PodClient:
             try:
                 result = self.api.bulk(search=bulk_query)["search"]
             except PodError as e:
-                logger.exception(e)
+                logger.error(e)
 
             result = [item for sublist in result for item in sublist]
         else:
             try:
                 result = self.api.search(query)
             except PodError as e:
-                logger.exception(e)
+                logger.error(e)
 
         result = [
             self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority)
@@ -538,8 +537,7 @@ class PodClient:
                 edge_item.reset_local_sync_state()
                 item.add_edge(edge_name, edge_item)
             except Exception as e:
-                logger.error(f"Could not attach edge {edge_json['_item']} to {item}")
-                logger.exception(e)
+                logger.error(f"Could not attach edge {edge_json['_item']} to {item}, {e}")
                 continue
         return item
 
@@ -607,7 +605,7 @@ class PodClient:
             logger.info(f"succesfully sent email to {to}")
             return True
         except PodError as e:
-            logger.exception(e)
+            logger.error(e)
             return False
 
     def sync(self, priority: str = Priority.newest):
@@ -660,7 +658,7 @@ class PodClient:
             self.api.send_trigger_status(item_id, trigger_id, status)
             return True
         except Exception as e:
-            logger.exception(f"Failed to send trigger status to the POD, reason {e}")
+            logger.error(f"Failed to send trigger status to the POD")
             return False
 
     def get_oauth_item(self):
