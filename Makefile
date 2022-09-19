@@ -1,5 +1,7 @@
 .ONESHELL:
 SHELL := /bin/bash
+TWINE_PASSWORD := $TESTPYPI_TOKEN
+TWINE_USERNAME := __token__
 
 release: dist
 	twine upload --repository pypi dist/*

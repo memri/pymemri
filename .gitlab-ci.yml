@@ -27,8 +27,8 @@ memri-docs:
 
 release_to_pypi:
   stage: deploy
-  only:
-    - tags
+  # only:
+  #   - tags
   script:
     - version=$(python setup.py --version)
     - |
