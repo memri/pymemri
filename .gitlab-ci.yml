@@ -37,5 +37,4 @@ release_to_pypi:
           exit 1
       fi
     - echo "OK"
-    - make dist
     - make test_release
