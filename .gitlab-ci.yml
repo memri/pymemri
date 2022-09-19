@@ -3,20 +3,20 @@ default:
   before_script:
   - pip install -e .[dev]
 
-run tests:
-  stage: test
-  services:
-    - name: ${POD_IMAGE}
-      alias: pod
-      entrypoint:
-        - "/pod"
-        - "--owners=ANY"
-        - "--insecure-non-tls=0.0.0.0"
-  script:
-  - curl http://pod:3030/version
-  - export POD_ADDRESS='http://pod:3030'
-  - pre-commit run --all-files
-  - pytest
+# run tests:
+#   stage: test
+#   services:
+#     - name: ${POD_IMAGE}
+#       alias: pod
+#       entrypoint:
+#         - "/pod"
+#         - "--owners=ANY"
+#         - "--insecure-non-tls=0.0.0.0"
+#   script:
+#   - curl http://pod:3030/version
+#   - export POD_ADDRESS='http://pod:3030'
+#   - pre-commit run --all-files
+#   - pytest
 
 
 memri-docs:

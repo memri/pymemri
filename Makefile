@@ -1,13 +1,13 @@
 .ONESHELL:
 SHELL := /bin/bash
-TWINE_PASSWORD := $TESTPYPI_TOKEN
-TWINE_USERNAME := __token__
+
+
 
 release: dist
 	twine upload --repository pypi dist/*
 
 test_release: dist
-	twine upload --repository testpypi dist/*
+	TWINE_USERNAME=__token__ TWINE_PASSWORD=$TESTPYPI_TOKEN twine upload --repository testpypi dist/*
 
 dist: clean
 	python setup.py sdist bdist_wheel
