@@ -38,4 +38,4 @@ release_to_pypi:
     #   fi
     # - echo "OK"
     - pip install twine
-    - make test_release
+    - TWINE_USERNAME=__token__ TWINE_PASSWORD=${TESTPYPI_TOKEN} make test_release
