@@ -24,3 +24,17 @@ memri-docs:
   only:
     - dev
   trigger: memri/docs.memri.io
+
+release_to_pypi:
+  stage: deploy
+  only:
+    - tags
+  script:
+    - version=v$(python setup.py --version)
+    - |
+      if [[ "${CI_COMMIT_TAG}" != "${version}" ]]; then
+          echo "Tag '${CI_COMMIT_TAG}' does not match the expected version '${version}'"
+          exit 1
+      fi
+    - echo "OK"
+    - TWINE_USERNAME=__token__ TWINE_PASSWORD=${PYPI_TOKEN} make release
