@@ -30,11 +30,11 @@ release_to_pypi:
   # only:
   #   - tags
   script:
-    - version=$(python setup.py --version)
-    - |
-      if [[ "${CI_COMMIT_TAG}" != v"${version}" ]]; then
-          echo "Tag '${CI_COMMIT_TAG}' does not match the expected version '${version}'"
-          exit 1
-      fi
-    - echo "OK"
+    # - version=v$(python setup.py --version)
+    # - |
+    #   if [[ "${CI_COMMIT_TAG}" != "${version}" ]]; then
+    #       echo "Tag '${CI_COMMIT_TAG}' does not match the expected version '${version}'"
+    #       exit 1
+    #   fi
+    # - echo "OK"
     - make test_release
