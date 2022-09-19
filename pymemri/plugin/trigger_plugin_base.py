@@ -10,29 +10,6 @@ from pymemri.webserver.models.trigger import TriggerReq
 from .pluginbase import PluginBase
 
 
-class Trigger(Item):
-    properties = Item.properties + ["action", "triggerOn", "pluginRunId", "filterCreatedAfter"]
-
-    def __init__(
-        self,
-        name: str = None,
-        version: str = None,
-        action: str = None,
-        triggerOn: str = None,
-        pluginRunId: str = None,
-        filterCreatedAfter: datetime = None**kwargs,
-    ):
-        super().__init__(**kwargs)
-
-        # Properties
-        self.name: str = name
-        self.version: str = version
-        self.action: str = action
-        self.triggerOn: str = triggerOn
-        self.pluginRunId: str = pluginRunId
-        self.filterCreatedAfter: datetime = filterCreatedAfter
-
-
 class TriggerPluginBase(PluginBase):
     """Base class for plugins that are expected to expose HTTP interface used by the POD.
     Current use case is to notify the plugin about arrival of new data."""
