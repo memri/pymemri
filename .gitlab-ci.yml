@@ -3,20 +3,20 @@ default:
   before_script:
   - pip install -e .[dev]
 
-# run tests:
-#   stage: test
-#   services:
-#     - name: ${POD_IMAGE}
-#       alias: pod
-#       entrypoint:
-#         - "/pod"
-#         - "--owners=ANY"
-#         - "--insecure-non-tls=0.0.0.0"
-#   script:
-#   - curl http://pod:3030/version
-#   - export POD_ADDRESS='http://pod:3030'
-#   - pre-commit run --all-files
-#   - pytest
+run tests:
+  stage: test
+  services:
+    - name: ${POD_IMAGE}
+      alias: pod
+      entrypoint:
+        - "/pod"
+        - "--owners=ANY"
+        - "--insecure-non-tls=0.0.0.0"
+  script:
+  - curl http://pod:3030/version
+  - export POD_ADDRESS='http://pod:3030'
+  - pre-commit run --all-files
+  - pytest
 
 
 memri-docs:
@@ -27,15 +27,14 @@ memri-docs:
 
 release_to_pypi:
   stage: deploy
-  # only:
-  #   - tags
+  only:
+    - tags
   script:
-    # - version=v$(python setup.py --version)
-    # - |
-    #   if [[ "${CI_COMMIT_TAG}" != "${version}" ]]; then
-    #       echo "Tag '${CI_COMMIT_TAG}' does not match the expected version '${version}'"
-    #       exit 1
-    #   fi
-    # - echo "OK"
-    - pip install twine
-    - TWINE_USERNAME=__token__ TWINE_PASSWORD=${TESTPYPI_TOKEN} make test_release
+    - version=v$(python setup.py --version)
+    - |
+      if [[ "${CI_COMMIT_TAG}" != "${version}" ]]; then
+          echo "Tag '${CI_COMMIT_TAG}' does not match the expected version '${version}'"
+          exit 1
+      fi
+    - echo "OK"
+    - TWINE_USERNAME=__token__ TWINE_PASSWORD=${PYPI_TOKEN} make elease

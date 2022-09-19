@@ -1,8 +1,6 @@
 .ONESHELL:
 SHELL := /bin/bash
 
-
-
 release: dist
 	twine upload --repository pypi dist/*
 
