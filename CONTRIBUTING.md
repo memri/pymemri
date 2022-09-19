@@ -44,5 +44,11 @@ bash tools/generate_central_schema.sh
 To release a new version of pymemri, make sure that __version__ in `pymemri/__init__.py` is updated
 and has the format `x.y.z`, where `x` is the major version, `y` is the minor version, and `z` is the patch version.
 
-Then, create a tag with the same version and of the form `vx.y.z` with "v" infront of the version number.
+Then, create a git tag with the same version and of the form `vx.y.z` with "v" infront of the version number.
+
+```
+git tag -a vx.y.z -m "xyz feature is released in this tag."
+git push origin vx.y.z
+```
+
 This will trigger a gitlab CI that will build and publish the new version to pypi.
