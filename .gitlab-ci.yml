@@ -37,4 +37,4 @@ release_to_pypi:
           exit 1
       fi
     - echo "OK"
-    - TWINE_USERNAME=__token__ TWINE_PASSWORD=${PYPI_TOKEN} make elease
+    - TWINE_USERNAME=__token__ TWINE_PASSWORD=${PYPI_TOKEN} make release
