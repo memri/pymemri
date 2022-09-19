@@ -37,4 +37,5 @@ release_to_pypi:
     #       exit 1
     #   fi
     # - echo "OK"
+    - pip install twine
     - make test_release
