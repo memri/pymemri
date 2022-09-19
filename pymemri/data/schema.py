@@ -3,6 +3,8 @@ import string
 
 from loguru import logger
 
+from pymemri.plugin.pluginbase import Trigger
+
 from ._central_schema import *
 from .dataset import Dataset
 from .itembase import Edge, Item, ItemBase
@@ -61,7 +63,7 @@ class PluginRun(Item):
         "progress",
         "webserverPort",
     ]
-    edges = Item.edges + ["plugin", "view", "account"]
+    edges = Item.edges + ["plugin", "view", "account", "trigger"]
 
     def __init__(
         self,
@@ -80,6 +82,7 @@ class PluginRun(Item):
         plugin: EdgeList[Plugin] = None,
         view: EdgeList[CVUStoredDefinition] = None,
         account: EdgeList[Account] = None,
+        trigger: EdgeList[Edge] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -108,3 +111,4 @@ class PluginRun(Item):
         self.plugin: EdgeList[Plugin] = EdgeList("plugin", "Plugin", plugin)
         self.view: EdgeList[CVUStoredDefinition] = EdgeList("view", "CVUStoredDefinition", view)
         self.account: EdgeList[Account] = EdgeList("account", "Account", account)
+        self.account: EdgeList[Trigger] = EdgeList("account", "Account", trigger)

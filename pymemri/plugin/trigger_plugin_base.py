@@ -1,11 +1,36 @@
 import abc
+import datetime
 import threading
 
 from loguru import logger
 
+from pymemri.data.itembase import Item
 from pymemri.webserver.models.trigger import TriggerReq
 
 from .pluginbase import PluginBase
+
+
+class Trigger(Item):
+    properties = Item.properties + ["action", "triggerOn", "pluginRunId", "filterCreatedAfter"]
+
+    def __init__(
+        self,
+        name: str = None,
+        version: str = None,
+        action: str = None,
+        triggerOn: str = None,
+        pluginRunId: str = None,
+        filterCreatedAfter: datetime = None**kwargs,
+    ):
+        super().__init__(**kwargs)
+
+        # Properties
+        self.name: str = name
+        self.version: str = version
+        self.action: str = action
+        self.triggerOn: str = triggerOn
+        self.pluginRunId: str = pluginRunId
+        self.filterCreatedAfter: datetime = filterCreatedAfter
 
 
 class TriggerPluginBase(PluginBase):
