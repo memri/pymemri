@@ -1,8 +1,8 @@
 from datetime import datetime
 from pprint import pprint
-from typing import Dict, ForwardRef, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
-from pymemri.schema.item import Item, ItemBase, _field_is_edge, get_origin
+from pymemri.schema.item import Item, _field_is_edge, _field_is_property, get_origin
 
 
 class Account(Item):
@@ -45,6 +45,7 @@ def test_properties():
 
 def test_edges():
     item = TestItem(id=1)
+    pprint(_field_is_edge(item.__fields__["account_edge"]))
     item.add_edge("account_edge", Account())
     assert isinstance(item.account_edge, tuple)
     assert len(item.account_edge) == 1

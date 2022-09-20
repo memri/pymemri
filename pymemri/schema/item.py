@@ -1,11 +1,13 @@
 import sys
 import uuid
+from collections import UserList
 from datetime import datetime
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
     Dict,
+    ForwardRef,
     Generic,
     List,
     Optional,
@@ -19,13 +21,12 @@ from pydantic.fields import Field, FieldInfo, ModelField
 from pydantic.generics import GenericModel
 from pydantic.main import ModelMetaclass
 
+from .utils import EdgeTargets, get_args, get_origin, type_to_str
+
 if sys.version_info >= (3, 9, 0):
     from pydantic.main import __dataclass_transform__ as dataclass_transform
 else:
     from pydantic.main import dataclass_transform
-
-if TYPE_CHECKING:
-    from ..pod.client import PodClient
 
 POD_TYPES: Dict[type, str] = {
     bool: "Bool",
@@ -36,38 +37,18 @@ POD_TYPES: Dict[type, str] = {
 }
 
 PodType = Union[bool, str, int, float, datetime]
+if TYPE_CHECKING:
+    from ..pod.client import PodClient
 
-# typing utils for python 3.7
-def get_args(type_annotation: Any) -> Any:
-    return getattr(type_annotation, "__args__", tuple())
-
-
-def get_origin(type_annotation: Any) -> Any:
-    return getattr(type_annotation, "__origin__", None)
-
-
-def _field_is_property(field: ModelField) -> bool:
-    return field.outer_type_ in POD_TYPES and not field.name.startswith("_")
-
-
-def _field_is_edge(field: ModelField) -> bool:
-    try:
-        if field.name.startswith("_") or get_origin(field.outer_type_) != list:
-            return False
-        args = get_args(field.outer_type_)
-        if len(args) != 1:
-            return False
-        if get_origin(args[0]) == Union:
-            target_types = get_args(args[0])
-        else:
-            target_types = [args[0]]
-
-        return all(issubclass(target_type, ItemBase) for target_type in target_types)
-    except Exception:
-        return False
-
-
-TargetType = TypeVar("TargetType")
+ALL_EDGES = "allEdges"
+SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE = (
+    "_source",
+    "_target",
+    "_type",
+    "_type",
+    "label",
+    "sequence",
+)
 
 
 @dataclass_transform(kw_only_default=True, field_descriptors=(Field, FieldInfo))
@@ -112,6 +93,31 @@ class _ItemMeta(ModelMetaclass):
         return res
 
 
+def _field_is_property(field: ModelField) -> bool:
+    return field.outer_type_ in POD_TYPES and not field.name.startswith("_")
+
+
+def _field_is_edge(field: ModelField) -> bool:
+    print(field.name)
+    try:
+        if field.name.startswith("_") or get_origin(field.outer_type_) != list:
+            return False
+        args = get_args(field.outer_type_)
+        if args is None or len(args) != 1:
+            return False
+        if get_origin(args[0]) == Union:
+            target_types = get_args(args[0])
+        else:
+            target_types = [args[0]]
+
+        return all(issubclass(target_type, ItemBase) for target_type in target_types)
+    except Exception:
+        return False
+
+
+TargetType = TypeVar("TargetType")
+
+
 class Edge(GenericModel, Generic[TargetType], metaclass=_EdgeMeta, smart_union=True):
     _type: Optional[str]
     source: Any
@@ -119,17 +125,28 @@ class Edge(GenericModel, Generic[TargetType], metaclass=_EdgeMeta, smart_union=T
     created: bool = False
 
     @classmethod
-    def get_target_type(cls) -> List[type]:
-        return cls.__annotations__["target"]
+    def get_target_types(cls) -> List[type]:
+        outer_type = cls.__annotations__["target"]
+        if get_origin(outer_type) == Union:
+            target_types = get_args(outer_type)
+        else:
+            target_types = [outer_type]
+
+        return target_types
+
+    @classmethod
+    def get_target_types_as_str(cls) -> List[str]:
+        """
+        Utility method for generating schema, returns all target types as string
+        """
+        return [type_to_str(t) for t in cls.get_target_types()]
 
     @validator("target", pre=True)
     def validate_target(cls, val: Any) -> TargetType:
-        target_type = cls.get_target_type()
-        if getattr(target_type, "__origin__", None) == Union:
-            target_type = target_type.__args__
-        if not isinstance(val, target_type):
-            raise ValueError(f"value type is not a {cls.__fields__['target']._type_display()}")
-
+        target_types = cls.get_target_types()
+        if not isinstance(val, target_types):
+            ttype_display = cls.__fields__["target"]._type_display()
+            raise ValueError(f"value type is not a {ttype_display}")
         return val
 
     def __eq__(self, other):
@@ -149,6 +166,18 @@ class Edge(GenericModel, Generic[TargetType], metaclass=_EdgeMeta, smart_union=T
             return self.source
         else:
             raise ValueError("`start` is not source or target")
+
+    def from_json(cls, json):
+        from . import get_constructor
+
+        # we only set the target here
+        _type = json[EDGE_TYPE]
+        json_target = json[TARGET]
+        target_type = json_target["_type"]
+        plugin_class = json_target.get("pluginClass", None)
+        target_constructor = get_constructor(target_type, plugin_class)
+        target = target_constructor.from_json(json_target)
+        return cls(source=None, target=target, _type=_type)
 
 
 ItemType = TypeVar("ItemType", bound="ItemBase")
@@ -196,9 +225,9 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
     def __getattribute__(self, __name: str) -> Any:
         edge_fields = super().__getattribute__("__edge_fields__")
         if __name in edge_fields:
-            # TODO Returning as list might be unclear for user, as appending to this list wont change
-            # any edges. Using list for now to conform to type annotations.
-            return list(e.traverse(self) for e in super().__getattribute__("__edges__")[__name])
+            return EdgeTargets(
+                e.traverse(self) for e in super().__getattribute__("__edges__")[__name]
+            )
         return super().__getattribute__(__name)
 
     def add_edge(self, edge_name: str, target: "ItemBase") -> None:
@@ -234,7 +263,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
         return super().__eq__(other)
 
     @classmethod
-    def pod_schema(cls) -> List[Dict[str, Any]]:
+    def pod_schema(cls) -> List[Dict[str, str]]:
         """Generates the schema as required by the Pod.
 
         Returns:
@@ -251,18 +280,15 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
             schema.append(property_schema)
 
         for field in cls.__edge_fields__.values():
-            target_types = field.type_
-            if getattr(target_types, "__origin__", None) == Union:
-                target_types = target_types.__args__
-            else:
-                target_types = [target_types]
+            edge_type = field.outer_type_
+            target_types = edge_type.get_target_types()
 
             for target_type in target_types:
                 edge_schema = {
                     "type": "ItemEdgeSchema",
                     "edgeName": field.name,
                     "sourceType": cls.__name__,
-                    "targetType": target_type.__name__,
+                    "targetType": type_to_str(target_type),
                 }
                 schema.append(edge_schema)
         return schema
@@ -328,9 +354,8 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
         raise NotImplementedError()
 
     @classmethod
-    def from_json(cls: Type[ItemType], json: Dict[str, Any]) -> ItemType:
-        # TODO
-        raise NotImplementedError()
+    def from_property_json(cls: Type[ItemType], json: Dict[str, Any]) -> ItemType:
+        return cls.__init__(**json)
 
 
 Edge.update_forward_refs()
