@@ -33,13 +33,32 @@ class GitlabAPI:
         self.request_auth_if_needed = request_auth_if_needed
         self.get_registry_params_headers()
 
+    def refresh_oauth_item(self, oauth_item):
+        code_verifier = ""
+        parameters = {
+            "client_id": oauth_item.clientId,
+            "refresh_token": oauth_item.refreshToken,
+            "grant_type": "refresh_token",
+            "redirect_uri": oauth_item.redirectUrl,
+            "code_verifier": code_verifier,
+        }
+        response = requests.post(f"{MEMRI_GITLAB_BASE_URL}/oauth/token", parameters)
+        oauth_item.accessToken = response.json()["access_token"]
+        oauth_item.refreshToken = response.json()["refresh_token"]
+        return oauth_item
+
     def get_registry_params_headers(self):
         job_token = os.environ.get("CI_JOB_TOKEN", None)
         if job_token is not None:
             self.auth_initialized = True
             self.auth_headers = {"JOB-TOKEN": job_token}
         elif self.client is not None:
-            self.auth_params = {"access_token": self.client.get_oauth_item().accessToken}
+            oauth_item = self.client.get_oauth_item()
+            if oauth_item is None:
+                raise RuntimeError("No oauth item found")
+            oauth_item = self.refresh_oauth_item(oauth_item)
+            self.client.update_item(oauth_item)
+            self.auth_params = {"access_token": oauth_item.accessToken}
             self.auth_initialized = True
         else:
             ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)

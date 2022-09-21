@@ -803,6 +803,8 @@ class OauthFlow(Item):
         "accessTokenSecret",
         "refreshToken",
         "service",
+        "clientId",
+        "redirectUrl",
     ]
     edges = Item.edges + []
 
@@ -812,6 +814,8 @@ class OauthFlow(Item):
         accessTokenSecret: str = None,
         refreshToken: str = None,
         service: str = None,
+        clientId: str = None,
+        redirectUrl: str = None,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -821,6 +825,8 @@ class OauthFlow(Item):
         self.accessTokenSecret: Optional[str] = accessTokenSecret
         self.refreshToken: Optional[str] = refreshToken
         self.service: Optional[str] = service
+        self.clientId: Optional[str] = clientId
+        self.redirectUrl: Optional[str] = redirectUrl
 
 
 class Person(Item):
