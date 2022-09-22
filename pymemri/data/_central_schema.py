@@ -1031,13 +1031,14 @@ class Post(Item):
 
 class Project(Item):
     description = """Labelling project"""
-    properties = Item.properties + ["name", "gitlabUrl"]
+    properties = Item.properties + ["name", "gitlabUrl", "dataSource"]
     edges = Item.edges + ["dataset", "labellingPlugin"]
 
     def __init__(
         self,
         name: str = None,
         gitlabUrl: str = None,
+        dataSource: str = None,
         dataset: EdgeList["Dataset"] = None,
         labellingPlugin: EdgeList["Plugin"] = None,
         **kwargs
@@ -1047,6 +1048,7 @@ class Project(Item):
         # Properties
         self.name: Optional[str] = name
         self.gitlabUrl: Optional[str] = gitlabUrl
+        self.dataSource: Optional[str] = dataSource
 
         # Edges
         self.dataset: EdgeList["Dataset"] = EdgeList("dataset", "Dataset", dataset)
