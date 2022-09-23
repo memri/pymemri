@@ -654,11 +654,5 @@ class PodClient:
             logger.error(f"Failed to send trigger status to the POD")
             return False
 
-    def get_oauth_item(self):
-        oauth_items = sorted(
-            [x for x in self.search({"type": "OauthFlow"})], key=lambda x: x.dateCreated
-        )
-        if len(oauth_items) > 0:
-            return oauth_items[-1]
-        else:
-            return None
+    def get_oauth2_access_token(self, platform):
+        return self.api.oauth2get_access_token(platform)["accessToken"]
