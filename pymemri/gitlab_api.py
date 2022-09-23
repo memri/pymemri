@@ -11,6 +11,8 @@ from fastprogress.fastprogress import progress_bar
 from git import Repo
 from loguru import logger
 
+from pymemri.pod.client import PodClient
+
 from .data.basic import *
 from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
 
@@ -25,7 +27,7 @@ PROJET_ID_PATTERN = '(?<=<span class="gl-button-text">Project ID: )[0-9]+(?=</sp
 
 
 class GitlabAPI:
-    def __init__(self, client=None, request_auth_if_needed=False):
+    def __init__(self, client: PodClient = None, request_auth_if_needed: bool = False):
         self.client = client
         self.auth_headers = dict()
         self.auth_params = dict()
@@ -33,13 +35,22 @@ class GitlabAPI:
         self.request_auth_if_needed = request_auth_if_needed
         self.get_registry_params_headers()
 
+    def init_auth_params(self):
+        access_token = self.client.get_oauth2_access_token("gitlab")
+        if access_token is None:
+            raise ValueError(
+                "No gitlab access token found in the pod."
+                "Please authenticate with gitlab in the frontend."
+            )
+        self.auth_params = {"access_token": access_token}
+
     def get_registry_params_headers(self):
         job_token = os.environ.get("CI_JOB_TOKEN", None)
         if job_token is not None:
             self.auth_initialized = True
             self.auth_headers = {"JOB-TOKEN": job_token}
         elif self.client is not None:
-            self.auth_params = {"access_token": self.client.get_oauth_item().accessToken}
+            self.init_auth_params()
             self.auth_initialized = True
         else:
             ACCESS_TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -78,7 +89,7 @@ class GitlabAPI:
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{package_name}/{version}/{file_name}"
         logger.info(f"uploading {file_path}")
         it = upload_in_chunks(file_path)
-        res = requests.put(
+        res = self.put(
             url=url,
             data=IterableToFileAdapter(it),
             headers=self.auth_headers,
@@ -92,15 +103,39 @@ class GitlabAPI:
             if trigger_pipeline:
                 self.trigger_pipeline(project_id)
 
+    def _authenticated_request(self, request_function, *args, **kwargs):
+        try:
+            return request_function(*args, **kwargs)
+        except Exception as e:
+            logger.error(e)
+            if self.auth_params:
+                logger.debug("Maybe access_token is expired, trying again with new auth params")
+                self.init_auth_params()
+                return request_function(*args, **kwargs)
+            else:
+                raise e
+
+    def get(self, *args, **kwargs):
+        return self._authenticated_request(requests.get, *args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        return self._authenticated_request(requests.post, *args, **kwargs)
+
+    def put(self, *args, **kwargs):
+        return self._authenticated_request(requests.put, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return self._authenticated_request(requests.delete, *args, **kwargs)
+
     def trigger_pipeline(self, project_id):
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/pipeline?ref=main"
-        res = requests.post(url, headers=self.auth_headers, params=self.auth_params)
+        res = self.post(url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201]:
             logger.error(f"Failed to trigger pipeline")
 
     def project_id_from_name(self, project_name):
         iden = str_to_gitlab_identifier(project_name)
-        res = requests.get(
+        res = self.get(
             f"{GITLAB_API_BASE_URL}/projects",
             headers=self.auth_headers,
             params={**self.auth_params, **{"owned": True, "search": project_name}},
@@ -119,7 +154,7 @@ class GitlabAPI:
 
     def get_project_id_from_project_path_unsafe(self, project_path):
         try:
-            res = requests.get(f"{MEMRI_GITLAB_BASE_URL}/{project_path}")
+            res = self.get(f"{MEMRI_GITLAB_BASE_URL}/{project_path}")
             html = str(res.content)
             match = re.search(PROJET_ID_PATTERN, html)
             return match.group()
@@ -152,7 +187,7 @@ class GitlabAPI:
 
         logger.info(f"downloading {filename} from project {project_path}, package {package_name}")
 
-        res = requests.get(
+        res = self.get(
             url=f"{GITLAB_API_BASE_URL}/projects/{project_id}/packages/generic/{package_name}/{package_version}/{filename}"
         )
         res.raise_for_status()
@@ -164,9 +199,7 @@ class GitlabAPI:
     def create_repo(self, repo_name, client=None):
         url = f"{GITLAB_API_BASE_URL}/projects/"
         payload = {"name": repo_name}
-        res = requests.post(
-            url=url, json=payload, headers=self.auth_headers, params=self.auth_params
-        )
+        res = self.post(url=url, json=payload, headers=self.auth_headers, params=self.auth_params)
 
         if res.status_code not in [200, 201]:
             raise ValueError(f"failed to create repo:\n {res.text}")
@@ -174,7 +207,7 @@ class GitlabAPI:
 
     def get_current_username(self, client=None):
         url = f"{GITLAB_API_BASE_URL}/user/"
-        res = requests.get(url=url, headers=self.auth_headers, params=self.auth_params)
+        res = self.get(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201]:
             raise ValueError(f"Could not find current user {res.content}")
         else:
@@ -185,7 +218,7 @@ class GitlabAPI:
     def delete_project(self, path_or_id, client=None):
         url_escape_id = urllib.parse.quote(path_or_id, safe="")
         url = f"{GITLAB_API_BASE_URL}/projects/{url_escape_id}"
-        res = requests.delete(url=url, headers=self.auth_headers, params=self.auth_params)
+        res = self.delete(url=url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201, 202]:
             raise ValueError(f"failed to delete repo:\n {res.text}")
         logger.info(f"deleted project {path_or_id}")
@@ -198,7 +231,11 @@ class GitlabAPI:
 
         for file_in_path, file_out_path in path_in2out.items():
             content = read_file(file_in_path)
-            action_payload = {"action": "create", "file_path": file_out_path, "content": content}
+            action_payload = {
+                "action": "create",
+                "file_path": file_out_path,
+                "content": content,
+            }
             actions.append(action_payload)
 
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/repository/commits"
@@ -209,9 +246,7 @@ class GitlabAPI:
             "actions": actions,
         }
 
-        res = requests.post(
-            url=url, json=payload, headers=self.auth_headers, params=self.auth_params
-        )
+        res = self.post(url=url, json=payload, headers=self.auth_headers, params=self.auth_params)
         files_in = list(path_in2out.keys())
         if res.status_code not in [200, 201, 202]:
             raise ValueError(f"failed to make commit with files {files_in}:\n {res.text}")
