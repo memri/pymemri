@@ -461,7 +461,7 @@ class Item(ItemBase):
                             res.append((k, cls.__name__, arg.__forward_arg__))
                         else:
                             res.append((k, cls.__name__, arg.__name__))
-                    break
+                    continue
                 elif isinstance(v, type):
                     v = v.__name__
                 elif isinstance(v, ForwardRef):
