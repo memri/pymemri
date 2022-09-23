@@ -655,4 +655,8 @@ class PodClient:
             return False
 
     def get_oauth2_access_token(self, platform):
-        return self.api.oauth2get_access_token(platform)["accessToken"]
+        try:
+            return self.api.oauth2get_access_token(platform)["accessToken"]
+        except PodError as e:
+            logger.error(e)
+            return None

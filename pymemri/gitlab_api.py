@@ -37,6 +37,11 @@ class GitlabAPI:
 
     def init_auth_params(self):
         access_token = self.client.get_oauth2_access_token("gitlab")
+        if access_token is None:
+            raise ValueError(
+                "No gitlab access token found in the pod."
+                "Please authenticate with gitlab in the frontend."
+            )
         self.auth_params = {"access_token": access_token}
 
     def get_registry_params_headers(self):
@@ -226,7 +231,11 @@ class GitlabAPI:
 
         for file_in_path, file_out_path in path_in2out.items():
             content = read_file(file_in_path)
-            action_payload = {"action": "create", "file_path": file_out_path, "content": content}
+            action_payload = {
+                "action": "create",
+                "file_path": file_out_path,
+                "content": content,
+            }
             actions.append(action_payload)
 
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/repository/commits"
