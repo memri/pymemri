@@ -1,22 +1,17 @@
-import urllib
-import uuid
+import random
 import warnings
 from datetime import datetime
-from hashlib import sha256
 from threading import Thread
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Optional, Type, Union
 
+import numpy as np
 from loguru import logger
 
-from ..data.basic import *
-from ..data.itembase import Edge, Item, ItemBase
-from ..data.schema import *
-from ..imports import *
-from ..test_utils import get_ci_variables
+from ..schema import Account, File, Item, Photo, PluginRun, get_schema_cls
 from .api import DEFAULT_POD_ADDRESS, POD_VERSION, PodAPI, PodError
 from .db import DB, Priority
 from .graphql_utils import GQLQuery
-from .utils import *
+from .utils import DEFAULT_POD_KEY_PATH, read_pod_key
 
 
 class PodClient:
@@ -72,7 +67,7 @@ class PodClient:
         return "".join([str(random.randint(0, 9)) for i in range(64)])
 
     def register_base_schemas(self):
-        assert self.add_to_schema(PluginRun, CVUStoredDefinition, Account, Photo)
+        assert self.add_to_schema(PluginRun, Account)
 
     def add_to_store(self, item: Item, priority: Priority = None) -> Item:
         item.create_id_if_not_exists()
@@ -82,16 +77,10 @@ class PodClient:
     def reset_local_db(self):
         self.local_db = DB()
 
-    def get_create_dict(self, item):
-        properties = item.to_json()
-        properties = {k: v for k, v in properties.items() if v != []}
-        return properties
-
     def create(self, item):
         self.add_to_store(item)
-        create_dict = self.get_create_dict(item)
         try:
-            result = self.api.create_item(create_dict)
+            result = self.api.create_item(item.to_json())
             item.id = result
             item.reset_local_sync_state()
             if getattr(item, "requires_client_ref", False):
@@ -113,70 +102,18 @@ class PodClient:
 
         return self._upload_image(photo.data, asyncFlag=asyncFlag)
 
-        return self._upload_image(photo.data)
-
-    @classmethod
-    def _property_dicts_from_instance(cls, item):
-        create_items = []
-        attributes = item.to_json()
-        for k, v in attributes.items():
-            if type(v) not in cls.TYPE_TO_SCHEMA:
-                raise ValueError(f"Could not add property {k} with type {type(v)}")
-            value_type = cls.TYPE_TO_SCHEMA[type(v)]
-
-            create_items.append(
-                {
-                    "type": "ItemPropertySchema",
-                    "itemType": attributes["type"],
-                    "propertyName": k,
-                    "valueType": value_type,
-                }
-            )
-        return create_items
-
-    @classmethod
-    def _property_dicts_from_type(cls, item):
-        create_items = []
-        for property, p_type in item.get_property_types().items():
-            p_type = cls.TYPE_TO_SCHEMA[p_type]
-            create_items.append(
-                {
-                    "type": "ItemPropertySchema",
-                    "itemType": item.__name__,
-                    "propertyName": property,
-                    "valueType": p_type,
-                }
-            )
-        return create_items
-
-    @classmethod
-    def _edge_dicts_from_type_or_instance(cls, item):
-        edge_items = []
-        for (edge_name, source_type, target_type) in item.get_edge_types():
-            edge_items.append(
-                {
-                    "type": "ItemEdgeSchema",
-                    "edgeName": edge_name,
-                    "sourceType": source_type,
-                    "targetType": target_type,
-                }
-            )
-        return edge_items
-
     def add_to_schema(self, *items: List[Union[object, type]]):
         create_items = []
         for item in items:
-            if isinstance(item, type):
-                property_dicts = self._property_dicts_from_type(item)
-            else:
-                property_dicts = self._property_dicts_from_instance(item)
-                item = type(item)
-            create_items.extend(self._edge_dicts_from_type_or_instance(item))
-            create_items.extend(property_dicts)
-            self.registered_classes[item.__name__] = item
+            if not (isinstance(item, Item) or issubclass(item, Item)):
+                raise ValueError(f"{item} is not an instance or subclass of Item")
+            create_items.extend(item.pod_schema())
 
         try:
             self.api.bulk(create_items=create_items)
+            for item in items:
+                item_cls = type(item) if isinstance(item, Item) else item
+                self.registered_classes[item.__name__] = item_cls
             return True
         except Exception as e:
             logger.error(e)
@@ -247,10 +184,6 @@ class PodClient:
     def delete_items(self, items):
         return self.bulk_action(delete_items=items)
 
-    def delete_all(self):
-        items = self.get_all_items()
-        self.delete_items(items)
-
     @staticmethod
     def gather_batch(items, start_idx, start_size=0, max_size=5000000):
         idx = start_idx
@@ -295,9 +228,7 @@ class PodClient:
                 if not self.local_db.contains(c):
                     self.add_to_store(c, priority=priority)
 
-        create_items = (
-            [self.get_create_dict(i) for i in create_items] if create_items is not None else []
-        )
+        create_items = [item.to_json() for item in create_items] if create_items is not None else []
         update_items = (
             [self.get_update_dict(i, partial_update=partial_update) for i in update_items]
             if update_items is not None
@@ -365,7 +296,7 @@ class PodClient:
         return {
             "_source": edge.source.id,
             "_target": edge.target.id,
-            "_name": edge._type,
+            "_name": edge.name,
         }
 
     def create_edge(self, edge):
@@ -390,9 +321,6 @@ class PodClient:
             return
         return res
 
-    def get_all_items(self):
-        raise NotImplementedError()
-
     def filter_deleted(self, items):
         return [i for i in items if not i.deleted == True]
 
@@ -406,10 +334,10 @@ class PodClient:
     def get_edges(self, id):
         try:
             result = self.api.get_edges(id)
-            for d in result:
-                edge_item = self.item_from_json(d["item"])
+            for edge_name in result:
+                edge_item = self.item_from_json(edge_name["item"])
                 edge_item.reset_local_sync_state()
-                d["item"] = edge_item
+                edge_name["item"] = edge_item
             return result
         except PodError as e:
             logger.error(e)
@@ -427,9 +355,8 @@ class PodClient:
             logger.error(e)
             return
 
-    def get_update_dict(self, item, partial_update=True):
-        properties = item.to_json(dates=False)
-        properties.pop("type", None)
+    def get_update_dict(self, item: Item):
+        properties = item.property_dict()
         properties.pop("deleted", None)
         properties = {
             k: v for k, v in properties.items() if k == "id" or k in item._updated_properties
@@ -556,12 +483,8 @@ class PodClient:
     ) -> Item:
         priority = Priority(priority) if priority else None
 
-        plugin_class = json.get("pluginClass", None)
-        plugin_package = json.get("pluginPackage", None)
-        item_class = get_constructor(
+        item_class = get_schema_cls(
             json["type"],
-            plugin_class,
-            plugin_package=plugin_package,
             extra=self.registered_classes,
         )
 
@@ -625,7 +548,7 @@ class PodClient:
                     create_edges.append(edge)
                 else:
                     warnings.warn(
-                        f"Could not sync `{edge._type}` for {item}: edge target missing in sync."
+                        f"Could not sync `{edge.name}` for {item}: edge target missing in sync."
                     )
 
         update_ids = [item.id for item in update_items]

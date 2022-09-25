@@ -10,19 +10,20 @@ from pymemri.schema.item import Item
 
 class Account(Item):
     # Properties
-    avatarUrl: str = None
-    authEmail: str = None
-    code: str = None
-    displayName: str = None
-    externalId: str = None
-    handle: str = None
-    identifier: str = None
-    isMe: bool = None
-    itemType: str = None
-    secret: str = None
-    service: str = None
-    accessToken: str = None
-    refreshToken: str = None
+    avatarUrl: Optional[str] = None
+    authEmail: Optional[str] = None
+    code: Optional[str] = None
+    displayName: Optional[str] = None
+    externalId: Optional[str] = None
+    handle: Optional[str] = None
+    identifier: Optional[str] = None
+    isMe: Optional[bool] = None
+    itemType: Optional[str] = None
+    secret: Optional[str] = None
+    service: Optional[str] = None
+    accessToken: Optional[str] = None
+    refreshToken: Optional[str] = None
+
     # Edges
     changelog: List["AuditItem"] = []
     cryptoTransaction: List["CryptoTransaction"] = []
@@ -36,42 +37,44 @@ class Account(Item):
 
 class AuditItem(Item):
     # Properties
-    actionname: str = None
-    content: str = None
-    date: datetime = None
+    actionname: Optional[str] = None
+    content: Optional[str] = None
+    date: Optional[datetime] = None
 
 
 class CVUStoredDefinition(Item):
     # Properties
-    definition: str = None
-    domain: str = None
-    itemType: str = None
-    name: str = None
-    queryStr: str = None
-    renderer: str = None
-    selector: str = None
-    definitionType: str = None
+    definition: Optional[str] = None
+    domain: Optional[str] = None
+    itemType: Optional[str] = None
+    name: Optional[str] = None
+    queryStr: Optional[str] = None
+    renderer: Optional[str] = None
+    selector: Optional[str] = None
+    definitionType: Optional[str] = None
 
 
 class CategoricalPrediction(Item):
     # Properties
-    source: str = None
-    value: str = None
-    probs: str = None
+    source: Optional[str] = None
+    value: Optional[str] = None
+    probs: Optional[str] = None
+
     # Edges
     model: List["Model"] = []
 
 
 class CreativeWork(Item):
     # Properties
-    abstract: str = None
-    content: str = None
-    datePublished: datetime = None
-    itemType: str = None
-    keyword: str = None
-    textContent: str = None
-    title: str = None
-    transcript: str = None
+    abstract: Optional[str] = None
+    content: Optional[str] = None
+    datePublished: Optional[datetime] = None
+    itemType: Optional[str] = None
+    keyword: Optional[str] = None
+    textContent: Optional[str] = None
+    title: Optional[str] = None
+    transcript: Optional[str] = None
+
     # Edges
     contentLocation: List["Location"] = []
     file: List["File"] = []
@@ -81,9 +84,10 @@ class CreativeWork(Item):
 
 class CryptoCurrency(Item):
     # Properties
-    myToken: float = None
-    name: str = None
-    topic: str = None
+    myToken: Optional[float] = None
+    name: Optional[str] = None
+    topic: Optional[str] = None
+
     # Edges
     currencySetting: List["CurrencySetting"] = []
     picture: List["Photo"] = []
@@ -91,20 +95,22 @@ class CryptoCurrency(Item):
 
 class CryptoKey(Item):
     # Properties
-    active: bool = None
-    itemType: str = None
-    keystr: str = None
-    name: str = None
-    role: str = None
-    starred: bool = None
+    active: Optional[bool] = None
+    itemType: Optional[str] = None
+    keystr: Optional[str] = None
+    name: Optional[str] = None
+    role: Optional[str] = None
+    starred: Optional[bool] = None
+
     # Edges
     owner: List["Person"] = []
 
 
 class CryptoTransaction(Item):
     # Properties
-    outward: bool = None
-    quantity: float = None
+    outward: Optional[bool] = None
+    quantity: Optional[float] = None
+
     # Edges
     cryptoCurrency: List["CryptoCurrency"] = []
     relateToOther: List["Account"] = []
@@ -113,18 +119,20 @@ class CryptoTransaction(Item):
 
 class CurrencySetting(Item):
     # Properties
-    deviceAddress: str = None
-    profileAddress: str = None
-    seedPhrase: str = None
-    tokenAddress: str = None
+    deviceAddress: Optional[str] = None
+    profileAddress: Optional[str] = None
+    seedPhrase: Optional[str] = None
+    tokenAddress: Optional[str] = None
+
     # Edges
     wallet: List["Wallet"] = []
 
 
 class Dataset(Item):
     # Properties
-    name: str = None
-    queryStr: str = None
+    name: Optional[str] = None
+    queryStr: Optional[str] = None
+
     # Edges
     entry: List["DatasetEntry"] = []
     feature: List["ItemPropertySchema"] = []
@@ -134,7 +142,8 @@ class Dataset(Item):
 
 class DatasetEntry(Item):
     # Properties
-    skippedByLabeller: bool = None
+    skippedByLabeller: Optional[bool] = None
+
     # Edges
     data: List[Union["Message", "Tweet", "EmailMessage"]] = []
     annotation: List["CategoricalLabel"] = []
@@ -142,24 +151,26 @@ class DatasetEntry(Item):
 
 class DatasetType(Item):
     # Properties
-    name: str = None
-    queryStr: str = None
+    name: Optional[str] = None
+    queryStr: Optional[str] = None
+
     # Edges
     datasetPlugin: List["Plugin"] = []
 
 
 class Diet(Item):
     # Properties
-    abstract: str = None
-    content: str = None
-    datePublished: datetime = None
-    duration: int = None
-    itemType: str = None
-    keyword: str = None
-    name: str = None
-    textContent: str = None
-    title: str = None
-    transcript: str = None
+    abstract: Optional[str] = None
+    content: Optional[str] = None
+    datePublished: Optional[datetime] = None
+    duration: Optional[int] = None
+    itemType: Optional[str] = None
+    keyword: Optional[str] = None
+    name: Optional[str] = None
+    textContent: Optional[str] = None
+    title: Optional[str] = None
+    transcript: Optional[str] = None
+
     # Edges
     contentLocation: List["Location"] = []
     file: List["File"] = []
@@ -169,61 +180,62 @@ class Diet(Item):
 
 class File(Item):
     # Properties
-    filename: str = None
-    keystr: str = None
-    nonce: str = None
-    sha256: str = None
-    starred: bool = None
+    filename: Optional[str] = None
+    keystr: Optional[str] = None
+    nonce: Optional[str] = None
+    sha256: Optional[str] = None
+    starred: Optional[bool] = None
 
 
 class Integrator(Item):
     # Properties
-    name: str = None
-    repository: str = None
+    name: Optional[str] = None
+    repository: Optional[str] = None
 
 
 class ItemEdgeSchema(Item):
     # Properties
-    edgeName: str = None
-    sourceType: str = None
-    targetType: str = None
+    edgeName: Optional[str] = None
+    sourceType: Optional[str] = None
+    targetType: Optional[str] = None
 
 
 class ItemPropertySchema(Item):
     # Properties
-    itemType: str = None
-    propertyName: str = None
-    valueType: str = None
+    itemType: Optional[str] = None
+    propertyName: Optional[str] = None
+    valueType: Optional[str] = None
 
 
 class Label(Item):
     # Properties
-    color: str = None
-    name: str = None
+    color: Optional[str] = None
+    name: Optional[str] = None
 
 
 class LabelAnnotation(Item):
     # Properties
-    allowSharing: bool = None
-    isSubmitted: bool = None
+    allowSharing: Optional[bool] = None
+    isSubmitted: Optional[bool] = None
 
 
 class LabelOption(Item):
     # Properties
-    color: str = None
-    name: str = None
+    color: Optional[str] = None
+    name: Optional[str] = None
 
 
 class LabellingDataType(Item):
     # Properties
-    name: str = None
-    labelType: str = None
+    name: Optional[str] = None
+    labelType: Optional[str] = None
 
 
 class LabellingTask(Item):
     # Properties
-    name: str = None
-    currentLabelOption: str = None
+    name: Optional[str] = None
+    currentLabelOption: Optional[str] = None
+
     # Edges
     taskType: List["TextClassification"] = []
     labelOption: List["LabelOption"] = []
@@ -232,17 +244,18 @@ class LabellingTask(Item):
 
 class Location(Item):
     # Properties
-    latitude: float = None
-    longitude: float = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class MediaObject(Item):
     # Properties
-    bitrate: int = None
-    duration: int = None
-    endTime: datetime = None
-    fileLocation: str = None
-    startTime: datetime = None
+    bitrate: Optional[int] = None
+    duration: Optional[int] = None
+    endTime: Optional[datetime] = None
+    fileLocation: Optional[str] = None
+    startTime: Optional[datetime] = None
+
     # Edges
     file: List["File"] = []
     includes: List["Person"] = []
@@ -250,18 +263,19 @@ class MediaObject(Item):
 
 class MedicalCondition(Item):
     # Properties
-    conditiontype: str = None
-    itemType: str = None
-    name: str = None
+    conditiontype: Optional[str] = None
+    itemType: Optional[str] = None
+    name: Optional[str] = None
 
 
 class MessageChannel(Item):
     # Properties
-    encrypted: bool = None
-    externalId: str = None
-    name: str = None
-    topic: str = None
-    service: str = None
+    encrypted: Optional[bool] = None
+    externalId: Optional[str] = None
+    name: Optional[str] = None
+    topic: Optional[str] = None
+    service: Optional[str] = None
+
     # Edges
     photo: List["Photo"] = []
     receiver: List["Account"] = []
@@ -269,47 +283,49 @@ class MessageChannel(Item):
 
 class Model(Item):
     # Properties
-    name: str = None
-    version: str = None
+    name: Optional[str] = None
+    version: Optional[str] = None
 
 
 class NavigationItem(Item):
     # Properties
-    icon: str = None
-    itemType: str = None
-    sequence: int = None
-    sessionName: str = None
-    title: str = None
+    icon: Optional[str] = None
+    itemType: Optional[str] = None
+    sequence: Optional[int] = None
+    sessionName: Optional[str] = None
+    title: Optional[str] = None
 
 
 class Network(Item):
     # Properties
-    name: str = None
+    name: Optional[str] = None
+
     # Edges
     website: List["Website"] = []
 
 
 class OauthFlow(Item):
     # Properties
-    accessToken: str = None
-    accessTokenSecret: str = None
-    refreshToken: str = None
-    service: str = None
+    accessToken: Optional[str] = None
+    accessTokenSecret: Optional[str] = None
+    refreshToken: Optional[str] = None
+    service: Optional[str] = None
 
 
 class Person(Item):
     # Properties
-    addressBookId: str = None
-    birthDate: datetime = None
-    deathDate: datetime = None
-    displayName: str = None
-    email: str = None
-    firstName: str = None
-    gender: str = None
-    lastName: str = None
-    role: str = None
-    sexualOrientation: str = None
-    starred: bool = None
+    addressBookId: Optional[str] = None
+    birthDate: Optional[datetime] = None
+    deathDate: Optional[datetime] = None
+    displayName: Optional[str] = None
+    email: Optional[str] = None
+    firstName: Optional[str] = None
+    gender: Optional[str] = None
+    lastName: Optional[str] = None
+    role: Optional[str] = None
+    sexualOrientation: Optional[str] = None
+    starred: Optional[bool] = None
+
     # Edges
     account: List["Account"] = []
     address: List["Address"] = []
@@ -329,34 +345,56 @@ class Person(Item):
 
 class PhoneNumber(Item):
     # Properties
-    phoneNumber: str = None
+    phoneNumber: Optional[str] = None
 
 
 class Plugin(Item):
     # Properties
-    bundleImage: str = None
-    containerImage: str = None
-    configJson: str = None
-    config: str = None
-    dataType: str = None
-    icon: str = None
-    pluginDescription: str = None
-    name: str = None
-    pluginModule: str = None
-    pluginName: str = None
-    pluginType: str = None
-    gitProjectId: int = None
+    bundleImage: Optional[str] = None
+    containerImage: Optional[str] = None
+    configJson: Optional[str] = None
+    config: Optional[str] = None
+    dataType: Optional[str] = None
+    icon: Optional[str] = None
+    pluginDescription: Optional[str] = None
+    name: Optional[str] = None
+    pluginModule: Optional[str] = None
+    pluginName: Optional[str] = None
+    pluginType: Optional[str] = None
+    gitProjectId: Optional[int] = None
+
     # Edges
     view: List["CVUStoredDefinition"] = []
 
 
+class PluginRun(Item):
+    # Properties
+    authUrl: Optional[str] = None
+    containerImage: Optional[str] = None
+    config: Optional[str] = None
+    pluginModule: Optional[str] = None
+    pluginName: Optional[str] = None
+    progress: Optional[float] = None
+    status: Optional[str] = None
+    targetItemId: Optional[str] = None
+    error: Optional[str] = None
+    containerId: Optional[str] = None
+    webServerPort: Optional[int] = None
+
+    # Edges
+    plugin: List["Plugin"] = []
+    view: List["CVUStoredDefinition"] = []
+    account: List["Account"] = []
+
+
 class Post(Item):
     # Properties
-    externalId: str = None
-    message: str = None
-    postDate: datetime = None
-    postType: str = None
-    isMock: bool = None
+    externalId: Optional[str] = None
+    message: Optional[str] = None
+    postDate: Optional[datetime] = None
+    postType: Optional[str] = None
+    isMock: Optional[bool] = None
+
     # Edges
     author: List["Account"] = []
     comment: List["Post"] = []
@@ -366,62 +404,50 @@ class Post(Item):
 
 class Project(Item):
     # Properties
-    name: str = None
-    gitlabUrl: str = None
-    dataSource: str = None
+    name: Optional[str] = None
+    gitlabUrl: Optional[str] = None
+    dataSource: Optional[str] = None
+
     # Edges
     dataset: List["Dataset"] = []
     labellingPlugin: List["Plugin"] = []
 
 
-class Receipt(Item):
-    # Properties
-    category: str = None
-    store: str = None
-    totalCost: float = None
-    # Edges
-    file: List["File"] = []
-    photo: List["Photo"] = []
-
-
 class Relationship(Item):
     # Properties
-    label: str = None
-    proximityValue: int = None
+    label: Optional[str] = None
+    proximityValue: Optional[int] = None
+
     # Edges
     relationship: List["Person"] = []
 
 
-class Setting(Item):
-    # Properties
-    json: str = None
-    keystr: str = None
-
-
 class SuggestedMerge(Item):
     # Properties
-    score: float = None
-    task: str = None
+    score: Optional[float] = None
+    task: Optional[str] = None
+
     # Edges
     mergeFrom: List["Person"] = []
 
 
 class VoteAction(Item):
     # Properties
-    dateExecuted: datetime = None
+    dateExecuted: Optional[datetime] = None
 
 
 class Wallet(Item):
     # Properties
-    name: str = None
+    name: Optional[str] = None
+
     # Edges
     picture: List["Photo"] = []
 
 
 class Website(Item):
     # Properties
-    itemType: str = None
-    url: str = None
+    itemType: Optional[str] = None
+    url: Optional[str] = None
 
 
 class WrittenWork(CreativeWork):
@@ -430,31 +456,33 @@ class WrittenWork(CreativeWork):
 
 class Indexer(Integrator):
     # Properties
-    bundleImage: str = None
-    icon: str = None
-    indexerClass: str = None
-    itemDescription: str = None
-    queryStr: str = None
-    runDestination: str = None
+    bundleImage: Optional[str] = None
+    icon: Optional[str] = None
+    indexerClass: Optional[str] = None
+    itemDescription: Optional[str] = None
+    queryStr: Optional[str] = None
+    runDestination: Optional[str] = None
+
     # Edges
     indexerRun: List["IndexerRun"] = []
 
 
 class IndexerRun(Integrator):
     # Properties
-    errorMessage: str = None
-    progress: float = None
-    progressMessage: str = None
-    queryStr: str = None
-    runStatus: str = None
-    targetDataType: str = None
+    errorMessage: Optional[str] = None
+    progress: Optional[float] = None
+    progressMessage: Optional[str] = None
+    queryStr: Optional[str] = None
+    runStatus: Optional[str] = None
+    targetDataType: Optional[str] = None
+
     # Edges
     indexer: List["Indexer"] = []
 
 
 class CategoricalLabel(LabelAnnotation):
     # Properties
-    labelValue: str = None
+    labelValue: Optional[str] = None
 
 
 class TextClassification(LabellingDataType):
@@ -463,12 +491,13 @@ class TextClassification(LabellingDataType):
 
 class Address(Location):
     # Properties
-    city: str = None
-    itemType: str = None
-    locationAutoLookupHash: str = None
-    postalCode: str = None
-    state: str = None
-    street: str = None
+    city: Optional[str] = None
+    itemType: Optional[str] = None
+    locationAutoLookupHash: Optional[str] = None
+    postalCode: Optional[str] = None
+    state: Optional[str] = None
+    street: Optional[str] = None
+
     # Edges
     changelog: List["AuditItem"] = []
     country: List["Country"] = []
@@ -477,7 +506,8 @@ class Address(Location):
 
 class Country(Location):
     # Properties
-    name: str = None
+    name: Optional[str] = None
+
     # Edges
     flag: List["Photo"] = []
     location: List["Location"] = []
@@ -485,9 +515,10 @@ class Country(Location):
 
 class Photo(MediaObject):
     # Properties
-    caption: str = None
-    exifData: str = None
-    name: str = None
+    caption: Optional[str] = None
+    exifData: Optional[str] = None
+    name: Optional[str] = None
+
     # Edges
     changelog: List["AuditItem"] = []
     label: List["Label"] = []
@@ -496,20 +527,22 @@ class Photo(MediaObject):
 
 class Tweet(Post):
     # Properties
-    service: str = None
+    service: Optional[str] = None
+
     # Edges
     mention: List["Account"] = []
 
 
 class Message(WrittenWork):
     # Properties
-    dateReceived: datetime = None
-    dateSent: datetime = None
-    externalId: str = None
-    service: str = None
-    subject: str = None
-    sourceProject: str = None
-    isMock: bool = None
+    dateReceived: Optional[datetime] = None
+    dateSent: Optional[datetime] = None
+    externalId: Optional[str] = None
+    service: Optional[str] = None
+    subject: Optional[str] = None
+    sourceProject: Optional[str] = None
+    isMock: Optional[bool] = None
+
     # Edges
     message: List["Message"] = []
     messageChannel: List["MessageChannel"] = []
@@ -521,14 +554,16 @@ class Message(WrittenWork):
 
 class Note(WrittenWork):
     # Properties
-    starred: bool = None
+    starred: Optional[bool] = None
+
     # Edges
     label: List["Label"] = []
 
 
 class EmailMessage(Message):
     # Properties
-    starred: bool = None
+    starred: Optional[bool] = None
+
     # Edges
     bcc: List["Account"] = []
     cc: List["Account"] = []

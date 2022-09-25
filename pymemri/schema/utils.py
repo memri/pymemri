@@ -1,5 +1,5 @@
 from collections import UserList
-from typing import Any, ForwardRef
+from typing import Any, ForwardRef, Tuple, Union
 
 
 # typing utils for python 3.7
@@ -12,11 +12,21 @@ def get_origin(type_annotation: Any) -> Any:
 
 
 def type_to_str(_type: type) -> str:
-    """Returns string representation of `_type`, ForwardRef['type'] is supported."""
+    """Returns string representation of `_type`, ForwardRef is supported."""
     if isinstance(_type, type):
         return _type.__name__
     elif isinstance(_type, ForwardRef):
         return _type.__forward_arg__
+
+
+def type_or_union_to_tuple(_type: type) -> Tuple[type]:
+    """converts Union[TypeA, TypeB] to (TypeA, TypeB)
+
+    If _type is not a union, return (_type,)
+    """
+    if get_origin(_type) == Union:
+        return tuple(get_args(_type))
+    return (_type,)
 
 
 class EdgeTargets(UserList):
