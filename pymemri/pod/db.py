@@ -2,8 +2,7 @@ from enum import Enum
 
 from loguru import logger
 
-from ..data.itembase import Item
-from ..data.schema import File, Photo
+from ..data.schema import Item
 
 
 class Priority(Enum):

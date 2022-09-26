@@ -15,18 +15,12 @@ from typing import (
     Union,
 )
 
-from pydantic import BaseModel, PrivateAttr, validator
+from pydantic import BaseModel, Extra, PrivateAttr, validator
 from pydantic.fields import Field, FieldInfo, ModelField
 from pydantic.generics import GenericModel
 from pydantic.main import ModelMetaclass
 
-from .utils import (
-    EdgeTargets,
-    get_args,
-    get_origin,
-    type_or_union_to_tuple,
-    type_to_str,
-)
+from .utils import get_args, get_origin, type_or_union_to_tuple, type_to_str
 
 if sys.version_info >= (3, 9, 0):
     from pydantic.main import __dataclass_transform__ as dataclass_transform
@@ -149,7 +143,7 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True):
         To allow for overwriting schema classes on a different place, validator
         only checks by class name.
 
-        i.e. `Edge[module_1.MyItem](target=module_2.MyItem(), ...)` is allowed.
+        i.e. `Edge[schema.MyItem](target=plugin.MyItem(), ...)` is allowed.
         """
         val_type_str = type(val).__name__
         for ttype_str in cls.get_target_types_as_str():
@@ -180,7 +174,7 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True):
 ItemType = TypeVar("ItemType")
 
 
-class ItemBase(BaseModel, metaclass=_ItemMeta):
+class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
     if TYPE_CHECKING:
         # class variables populated by the metaclass, defined here to help IDEs only
         __edge_fields__: ClassVar[Dict[str, ModelField]] = {}
@@ -188,7 +182,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
         properties: ClassVar[List[str]] = []
         edges: ClassVar[List[str]] = []
 
-    def __init__(self, **data: Any) -> None:
+    def __init__(self, **data: Dict[str, Any]) -> None:
         if TYPE_CHECKING:
             # instance variables populated by the metaclass, defined here to help IDEs only
             self.__edges__: Dict[str, List[Edge[Any]]] = {}
@@ -197,22 +191,20 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
             self._date_local_modified: Dict[str, datetime] = {}
             self._original_properties: Dict[str, PodType] = {}
 
-        # Remove edges from data
+        # Edges are added after super().__init__
         edge_data = {}
         for edge_name in self.__edge_fields__:
-            targets = data.pop(edge_name, None)
-            if targets is not None:
-                edge_data[edge_name] = targets
+            edge_data[edge_name] = data.pop(edge_name, None)
 
         super().__init__(**data)
         self._init_edges(**edge_data)
 
     def _init_edges(self, **data: Dict[str, List["ItemBase"]]) -> None:
         self.__edges__ = {k: list() for k in self.__edge_fields__.keys()}
-        for k, v in data.items():
-            if k in self.__edge_fields__:
-                for edge_target in v:
-                    self.add_edge(k, edge_target)
+        for edge_name, edge_targets in data.items():
+            if edge_targets is not None:
+                for edge_target in edge_targets:
+                    self.add_edge(edge_name, edge_target)
         self._new_edges = []
 
     def __setattr__(self, name: str, value: Any) -> None:
@@ -232,9 +224,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
     def __getattribute__(self, __name: str) -> Any:
         edge_fields = super().__getattribute__("__edge_fields__")
         if __name in edge_fields:
-            return EdgeTargets(
-                e.traverse(self) for e in super().__getattribute__("__edges__")[__name]
-            )
+            return [e.traverse(self) for e in super().__getattribute__("__edges__")[__name]]
         return super().__getattribute__(__name)
 
     def add_edge(self, edge_name: str, target: "ItemBase") -> None:
@@ -346,9 +336,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
 
     @staticmethod
     def _datetime_to_timestamp(dt: datetime) -> int:
-        """
-        Convert datetime to Pod timestamp format
-        """
+        """Convert datetime to Pod timestamp format"""
         return round(dt.timestamp() * 1000)
 
     def property_dict(
@@ -359,7 +347,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
         """Returns a dict of values of all properties of self
 
         Args:
-            exclude (bool, optional): Remove `None` value. Defaults to True.
+            exclude (bool, optional): Remove `None` values. Defaults to True.
             datetime_to_timestamp (bool, optional): convert datetime values to timestamp in milliseconds. Defaults to True.
 
         Returns:
@@ -385,16 +373,20 @@ class ItemBase(BaseModel, metaclass=_ItemMeta):
 
     @classmethod
     def from_data(cls: Type[ItemType], **kwargs: Dict[str, Any]) -> ItemType:
-        # TODO remove and use init
+        # TODO remove and use __init__
         return cls(**kwargs)
 
     @classmethod
-    def from_json(cls: Type[ItemType], json: Dict[str, Any]) -> ItemType:
-        json = {k: v for k, v in json.items() if k in cls.properties}
+    def from_json(
+        cls: Type[ItemType], json: Dict[str, Any], properties_only: bool = True
+    ) -> ItemType:
+        if properties_only:
+            json = {k: v for k, v in json.items() if k in cls.properties}
         return cls(**json)
 
 
 Edge.update_forward_refs()
+ItemBase.update_forward_refs()
 
 
 class Item(ItemBase):

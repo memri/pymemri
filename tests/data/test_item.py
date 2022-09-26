@@ -1,11 +1,12 @@
 from datetime import datetime
+from optparse import Option
 from typing import List, Optional, Union
 
 import pytest
 from pydantic import ValidationError
 
+from pymemri.data.schema import Account, Item, Person, get_schema
 from pymemri.pod.client import PodClient
-from pymemri.schema.schema import Account, Item, Person, get_schema
 
 
 class MyItem(Item):
@@ -25,12 +26,15 @@ def test_item_init():
     item3 = Account.from_json(item.to_json())
     assert item == item2 == item3
 
+    with pytest.raises(ValidationError):
+        item = Account(handle="my_account", not_a_property=False)
+
 
 def test_init_with_edges():
     accounts = [Account(handle="1"), Account(handle="2")]
     item = MyItem(str_property="test", account_edge=accounts)
     assert item.property_dict() == {"deleted": False, "str_property": "test"}
-    assert len(item.account_edge) == 2
+    assert len(item.account_edge) == len(item.__edges__["account_edge"]) == 2
 
 
 def test_property_dict():
@@ -65,8 +69,6 @@ def test_add_edge():
 
     with pytest.raises(ValidationError):
         item.add_edge("account_edge", person)
-    with pytest.raises(RuntimeError):
-        item.account_edge.append(account)
 
     assert len(item.account_edge) == 1
 
@@ -87,10 +89,29 @@ def test_get_edge():
     assert person in targets and account in targets
 
 
-def test_central_schema_pod():
+def test_central_schema_to_pod():
     client = PodClient()
     for k, v in get_schema().items():
         assert client.add_to_schema(v), f"Could not add {k} to schema"
 
     assert len(client.api.search({"type": "ItemPropertySchema"}))
     assert len(client.api.search({"type": "ItemEdgeSchema"}))
+
+
+def test_create_and_read_item():
+    # TODO clean up this test
+    client = PodClient()
+    assert client.add_to_schema(Account, MyItem)
+
+    item = MyItem(str_property="test", int_property=1)
+    account = Account(handle="friend")
+    item.add_edge("account_edge", account)
+
+    assert client.create(item)
+    assert client.create(account)
+
+    item_2 = client.get(item.id)
+    assert len(item_2.account_edge) == 1
+    assert item_2.account_edge[0].handle == "friend"
+    assert item_2.str_property == "test"
+    assert item_2.int_property == 1

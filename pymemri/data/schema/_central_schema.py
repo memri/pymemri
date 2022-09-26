@@ -5,7 +5,7 @@
 from datetime import datetime
 from typing import Any, List, Optional, Union
 
-from pymemri.schema.item import Item
+from .item import Item
 
 
 class Account(Item):

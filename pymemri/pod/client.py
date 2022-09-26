@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional, Type, Union
 import numpy as np
 from loguru import logger
 
-from ..schema import Account, File, Item, Photo, PluginRun, get_schema_cls
+from ..data.schema import Account, File, Item, Photo, PluginRun, get_schema_cls
 from .api import DEFAULT_POD_ADDRESS, POD_VERSION, PodAPI, PodError
 from .db import DB, Priority
 from .graphql_utils import GQLQuery

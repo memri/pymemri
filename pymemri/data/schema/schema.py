@@ -1,11 +1,13 @@
 import inspect
-from typing import Dict
+from typing import Dict, Type, TypeVar
 from uuid import uuid4
 
 from pydantic import validator
 
 from ._central_schema import *  # noqa: F405, type: ignore
-from .item import Item, ItemType  # noqa: F405, type: ignore
+from .item import Item  # noqa: F405, type: ignore
+
+ItemType = TypeVar("ItemType", bound=Item)
 
 
 def get_schema() -> Dict[str, ItemType]:
@@ -40,13 +42,17 @@ def get_schema_cls(cls_name: str, extra: Dict[str, ItemType] = None) -> ItemType
 
 class PluginRun(PluginRun):
     @validator("id", always=True)
-    def validate_has_run_id(cls, value, values, **kwargs):
+    def validate_has_run_id(
+        cls: Type[ItemType], value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
+    ) -> Any:
         if value is None:
             value = cls.create_id()
         return value
 
     @validator("targetItemId", always=True)
-    def validate_id_is_targetItemId(cls, value, values, **kwargs):
+    def validate_id_is_targetItemId(
+        cls: Type[ItemType], value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
+    ) -> Any:
         uid = values.get("id")
         if value is None:
             value = uid
