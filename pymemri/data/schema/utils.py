@@ -1,14 +1,23 @@
+import sys
 from collections import UserList
 from typing import Any, Dict, ForwardRef, Tuple, Union
 
+if sys.version_info >= (3, 9, 0):
+    from typing import get_args, get_origin
 
-# typing utils for python 3.7
-def get_args(type_annotation: Any) -> Any:
-    return getattr(type_annotation, "__args__", tuple())
+    def evaluate_type(type_: Any, localns) -> Any:
+        return type_._evaluate(globalns=None, localns=localns, recursive_guard=set())
 
+else:
 
-def get_origin(type_annotation: Any) -> Any:
-    return getattr(type_annotation, "__origin__", None)
+    def get_args(type_annotation: Any) -> Any:
+        return getattr(type_annotation, "__args__", tuple())
+
+    def get_origin(type_annotation: Any) -> Any:
+        return getattr(type_annotation, "__origin__", None)
+
+    def evaluate_type(type_: Any, localns) -> Any:
+        return type_._evaluate(globalns=None, localns=localns)
 
 
 def type_to_str(_type: type) -> str:
@@ -34,7 +43,7 @@ def update_union_forward_refs(field, schema):
     # TODO log as issue with Pydantic
     if get_origin(field.type_) == Union:
         new_args = tuple(
-            arg._evaluate(globalns=None, localns=schema, recursive_guard=set())
+            evaluate_type(arg, localns=schema)
             for arg in get_args(field.type_)
             if isinstance(arg, ForwardRef)
         )

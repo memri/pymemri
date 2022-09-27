@@ -46,7 +46,7 @@ class PluginRun(PluginRun):
     # Need to check FE+Pod
     webserverPort: Optional[int] = None
 
-    @validator("id", always=True)
+    @validator("id", always=True, allow_reuse=True)
     def validate_has_run_id(
         cls, value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
     ) -> Any:
@@ -54,7 +54,7 @@ class PluginRun(PluginRun):
             value = cls.create_id()
         return value
 
-    @validator("targetItemId", always=True)
+    @validator("targetItemId", always=True, allow_reuse=True)
     def validate_id_is_targetItemId(
         cls, value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
     ) -> Any:
@@ -68,4 +68,6 @@ class PluginRun(PluginRun):
         return value
 
 
+# Required for typechecking on forward refs in schema
+# Leave at bottom of schema.py
 resolve_forward_refs(get_schema())
