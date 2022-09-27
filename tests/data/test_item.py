@@ -1,5 +1,4 @@
 from datetime import datetime
-from optparse import Option
 from typing import List, Optional, Union
 
 import pytest

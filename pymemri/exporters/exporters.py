@@ -1,9 +1,11 @@
 import json
-from typing import Any, Dict, Iterable, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional
 
 import pandas as pd
 
-from ..data.itembase import Item
+if TYPE_CHECKING:
+    from ..data.schema.item import Item
+    from ..pod.client import PodClient
 
 
 class Query:
@@ -18,8 +20,8 @@ class Query:
         self.properties = list(properties)
 
     def traverse_edges(
-        self, client: "PodClient", items: List[Item], edges: List[str]
-    ) -> List[Item]:
+        self, client: "PodClient", items: List["Item"], edges: List[str]
+    ) -> List["Item"]:
         items = items.copy()
 
         for edge in edges:
@@ -48,7 +50,7 @@ class Query:
                     items[i] = None
         return items
 
-    def get_property_values(self, client: "PodClient", prop: str, items: List[Item]) -> list:
+    def get_property_values(self, client: "PodClient", prop: str, items: List["Item"]) -> list:
         edges, prop_name = self.parse_property(prop)
         target_items = self.traverse_edges(client, items, edges)
 
@@ -72,6 +74,6 @@ class Query:
         else:
             raise ValueError(f"Unknown dtype: {dtype}")
 
-    def execute(self, client: "PodClient", items: List[Item], dtype="dict") -> Any:
+    def execute(self, client: "PodClient", items: List["Item"], dtype="dict") -> Any:
         result = {prop: self.get_property_values(client, prop, items) for prop in self.properties}
         return self.convert_dtype(result, dtype)

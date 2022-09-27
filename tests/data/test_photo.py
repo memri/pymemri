@@ -2,8 +2,9 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from pymemri.data.photo import DEFAULT_ENCODING
 from pymemri.data.schema import Photo
+from pymemri.data.schema.photo import DEFAULT_ENCODING
+from pymemri.pod.client import PodClient
 from pymemri.test_utils import get_project_root
 
 
@@ -36,3 +37,19 @@ def test_photo_from_numpy(photo_path):
     assert photo_np.encoding == DEFAULT_ENCODING
     assert photo_np.mode == "RGB"
     assert photo_np.width and photo_np.height
+
+
+def test_create_get_photo(photo_path):
+    photo = Photo.from_path(photo_path)
+
+    client = PodClient()
+    client.add_to_schema(Photo)
+    client.create_photo(photo, asyncFlag=False)
+
+    client.reset_local_db()
+    photo_2 = client.get_photo(photo.id)
+    assert isinstance(photo_2.to_PIL(), Image.Image)
+
+    p2_json = photo_2.to_json()
+    for k, v in photo.to_json().items():
+        assert p2_json[k] == v

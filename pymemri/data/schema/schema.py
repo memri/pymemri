@@ -1,20 +1,21 @@
 import inspect
-from typing import Dict, Type, TypeVar
-from uuid import uuid4
+from typing import Dict, ForwardRef, TypeVar
 
 from pydantic import validator
+from pydantic.fields import Field
 
-from ._central_schema import *  # noqa: F405, type: ignore
-from .item import Item  # noqa: F405, type: ignore
+from ._central_schema import *  # noqa
+from .dataset import Dataset  # noqa
+from .item import Item
+from .photo import Photo  # noqa
+from .utils import resolve_forward_refs
 
-ItemType = TypeVar("ItemType", bound=Item)
 
-
-def get_schema() -> Dict[str, ItemType]:
+def get_schema() -> Dict[str, type]:
     return {k: v for k, v in globals().items() if inspect.isclass(v) and issubclass(v, Item)}
 
 
-def get_schema_cls(cls_name: str, extra: Dict[str, ItemType] = None) -> ItemType:
+def get_schema_cls(cls_name: str, extra: Optional[Dict[str, type]] = None) -> type:
     """Returns the schema model for `cls_name` if it is in central schema or extra.
 
     If both central schema and extra contain a class with the same `__name__`, extra
@@ -43,7 +44,7 @@ def get_schema_cls(cls_name: str, extra: Dict[str, ItemType] = None) -> ItemType
 class PluginRun(PluginRun):
     @validator("id", always=True)
     def validate_has_run_id(
-        cls: Type[ItemType], value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
+        cls, value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
     ) -> Any:
         if value is None:
             value = cls.create_id()
@@ -51,7 +52,7 @@ class PluginRun(PluginRun):
 
     @validator("targetItemId", always=True)
     def validate_id_is_targetItemId(
-        cls: Type[ItemType], value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
+        cls, value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]
     ) -> Any:
         uid = values.get("id")
         if value is None:
@@ -63,7 +64,4 @@ class PluginRun(PluginRun):
         return value
 
 
-# Leave at bottom of schema.py
-# Pydantic needs to resolve forward refs for all schemas
-for schema_cls in get_schema().values():
-    schema_cls.update_forward_refs(localns=locals())
+resolve_forward_refs(get_schema())

@@ -6,9 +6,9 @@ from typing import Any, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
-from _central_schema import File
 from PIL import Image
 
+from ._central_schema import File
 from .item import Item
 
 DEFAULT_ENCODING = "PNG"
@@ -21,7 +21,7 @@ class Photo(Item):
     channels: Optional[int] = None
     encoding: Optional[str] = None
     mode: Optional[str] = None
-    file: List[File] = None
+    file: List[File] = []
 
     def show(self):
         raise NotImplementedError()
