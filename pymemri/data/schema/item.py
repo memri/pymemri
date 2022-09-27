@@ -1,6 +1,6 @@
 import sys
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -223,7 +223,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         prev_val = getattr(self, name, None)
         super().__setattr__(name, value)
         if name in self.__property_fields__ and value != prev_val:
-            self._date_local_modified[name] = datetime.utcnow()
+            self._date_local_modified[name] = datetime.now(timezone.utc)
             if name not in self._original_properties:
                 self._original_properties[name] = prev_val
 
@@ -406,4 +406,5 @@ class Item(ItemBase):
     dateCreated: Optional[datetime] = None
     dateModified: Optional[datetime] = None
     dateServerModified: Optional[datetime] = None
+    externalId: Optional[str] = None
     deleted: bool = False

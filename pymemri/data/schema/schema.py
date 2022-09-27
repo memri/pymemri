@@ -42,6 +42,10 @@ def get_schema_cls(cls_name: str, extra: Optional[Dict[str, type]] = None) -> ty
 
 
 class PluginRun(PluginRun):
+    # TODO fix schema typo issue: central schema uses webServerPort, pymemri uses webserverPort.
+    # Need to check FE+Pod
+    webserverPort: Optional[int] = None
+
     @validator("id", always=True)
     def validate_has_run_id(
         cls, value: Any, values: Dict[str, Any], **kwargs: Dict[str, Any]

@@ -355,12 +355,13 @@ class PodClient:
             logger.error(e)
             return
 
-    def get_update_dict(self, item: Item):
+    def get_update_dict(self, item: Item, partial_update: bool = True):
         properties = item.property_dict()
         properties.pop("deleted", None)
-        properties = {
-            k: v for k, v in properties.items() if k == "id" or k in item._updated_properties
-        }
+        if partial_update:
+            properties = {
+                k: v for k, v in properties.items() if k == "id" or k in item._updated_properties
+            }
         return properties
 
     def update_item(self, item, partial_update=True):

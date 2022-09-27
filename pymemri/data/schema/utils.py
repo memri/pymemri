@@ -1,5 +1,5 @@
 from collections import UserList
-from typing import Any, ForwardRef, Tuple, Union
+from typing import Any, Dict, ForwardRef, Tuple, Union
 
 
 # typing utils for python 3.7
@@ -30,6 +30,8 @@ def type_or_union_to_tuple(_type: type) -> Tuple[type]:
 
 
 def update_union_forward_refs(field, schema):
+    # Standard pydantic resolver does not handle Union[ForwardRef(A), ForwardRef(B)] -> Union[A, B]
+    # TODO log as issue with Pydantic
     if get_origin(field.type_) == Union:
         new_args = tuple(
             arg._evaluate(globalns=None, localns=schema, recursive_guard=set())
@@ -39,7 +41,10 @@ def update_union_forward_refs(field, schema):
         field.type_.__args__ = new_args
 
 
-def resolve_forward_refs(schema):
+def resolve_forward_refs(schema: Dict[str, type]):
+    """
+    Resolve forward refs for all classes in schema.values()
+    """
     for schema_cls in list(schema.values()):
         schema_cls.update_forward_refs(**schema)
         for field in schema_cls.__edge_fields__.values():

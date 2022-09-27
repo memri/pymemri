@@ -3,8 +3,7 @@ import uuid
 
 import pytest
 
-from pymemri.data.itembase import Edge
-from pymemri.data.schema import Account, Message, Person
+from pymemri.data.schema import Account, Edge, Message, Person
 from pymemri.pod.api import PodAPI, PodError
 from pymemri.pod.client import PodClient
 from pymemri.pod.graphql_utils import GQLQuery

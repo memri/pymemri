@@ -91,31 +91,10 @@ class PluginBase(metaclass=ABCMeta):
             self.client.add_to_schema(*self.schema_classes)
 
     @classmethod
-    def get_schema_properties(cls):
+    def get_schema(cls):
         schema = []
-        for item in cls.schema_classes:
-            item_schema = PodClient._property_dicts_from_type(item)
-            schema.extend(item_schema)
-        return schema
-
-    @classmethod
-    def get_schema_edges(cls):
-        schema = []
-        for item in cls.schema_classes:
-            edge_types = item.get_edge_types()
-            edge_schema = [
-                {"type": "ItemEdgeSchema", "edgeName": k, "sourceType": s, "targetType": t}
-                for (k, s, t) in edge_types
-            ]
-            schema.extend(edge_schema)
-        return schema
-
-    @classmethod
-    def get_schema(cls, include_edges: bool = True):
-        schema = cls.get_schema_properties()
-        if include_edges:
-            edges = cls.get_schema_edges()
-            schema.extend(edges)
+        for schema_cls in cls.schema_classes:
+            schema.extend(schema_cls.pod_schema())
         return schema
 
 
