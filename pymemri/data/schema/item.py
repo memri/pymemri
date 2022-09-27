@@ -124,18 +124,21 @@ TargetType = TypeVar("TargetType")
 
 
 class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_validation=False):
-    name: str
     source: Any
     target: TargetType
+    name: str
 
-    def __init__(self, name: str = None, source: Any = None, target: TargetType = None) -> None:
-        super().__init__(name=name, source=source, target=target)
+    def __init__(self, source: Any = None, target: TargetType = None, name: str = None) -> None:
+        super().__init__(source=source, target=target, name=name)
         self.source = source
         self.target = target
 
     @classmethod
     def get_target_types(cls) -> Tuple[type]:
-        return type_or_union_to_tuple(cls.__annotations__["target"])
+        target_annotation = cls.__annotations__["target"]
+        if target_annotation == TargetType:
+            return tuple()
+        return type_or_union_to_tuple(target_annotation)
 
     @classmethod
     def get_target_types_as_str(cls) -> Tuple[str]:
@@ -149,7 +152,11 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_va
 
         i.e. `Edge[schema.MyItem](target=plugin.MyItem(), ...)` is allowed.
         """
-        if isinstance(val, cls.get_target_types()):
+        target_types = cls.get_target_types()
+        if len(target_types) == 0:
+            # cls has no target type annotations, validator always succeeds
+            return val
+        if isinstance(val, target_types):
             return val
         ttype_display = cls.__fields__["target"]._type_display()
         raise ValueError(f"target with type `{type(val).__name__}` is not a `{ttype_display}`")
