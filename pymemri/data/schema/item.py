@@ -120,11 +120,11 @@ class _ItemMeta(ModelMetaclass):
         return cls
 
 
-TargetType = TypeVar("TargetType")
+TargetType = TypeVar("TargetType", bound="Item")
 
 
 class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_validation=False):
-    source: Any
+    source: "Item"
     target: TargetType
     name: str
 
@@ -397,10 +397,6 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         return cls(**json)
 
 
-Edge.update_forward_refs()
-ItemBase.update_forward_refs()
-
-
 class Item(ItemBase):
     id: Optional[str] = None
     dateCreated: Optional[datetime] = None
@@ -408,3 +404,7 @@ class Item(ItemBase):
     dateServerModified: Optional[datetime] = None
     externalId: Optional[str] = None
     deleted: bool = False
+
+
+Edge.update_forward_refs()
+ItemBase.update_forward_refs()

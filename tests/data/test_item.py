@@ -5,6 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from pymemri.data.schema import Account, Item, Person, get_schema
+from pymemri.data.schema.item import Edge
 from pymemri.pod.client import PodClient
 
 
@@ -17,6 +18,19 @@ class MyItem(Item):
 
     account_edge: List[Account] = []
     union_edge: List[Union[Account, Person]] = []
+
+
+def test_definition():
+    assert MyItem.properties == Item.properties + [
+        "str_property",
+        "int_property",
+        "float_property",
+        "bool_property",
+        "dt_property",
+    ]
+    assert MyItem.edges == Item.edges + ["account_edge", "union_edge"]
+    # + 1 for union edge
+    assert len(MyItem.pod_schema()) == len(MyItem.edges) + len(MyItem.properties) + 1
 
 
 def test_item_init():
@@ -57,6 +71,19 @@ def test_private_attrs():
     assert item._in_pod == False
     item._in_pod = True
     assert item._in_pod == True
+    assert "_in_pod" not in item.to_json()
+
+
+def test_validate_edge():
+    _ = Edge(MyItem(), Account(), "test")
+    _ = Edge[Account](MyItem(), Account(), "test")
+
+    with pytest.raises(ValidationError):
+        _ = Edge(1, Account(), "test")
+    with pytest.raises(ValidationError):
+        _ = Edge(Account(), 1, "test")
+    with pytest.raises(ValidationError):
+        _ = Edge[Account](Account(), Person(), "test")
 
 
 def test_add_edge():
@@ -70,6 +97,19 @@ def test_add_edge():
         item.add_edge("account_edge", person)
 
     assert len(item.account_edge) == 1
+
+
+def test_union_edge():
+    item = MyItem()
+    account = Account(handle="test1")
+    person = Person(firstName="test2")
+
+    item.add_edge("union_edge", account)
+    item.add_edge("union_edge", person)
+
+    assert len(item.union_edge) == 2
+    assert item.union_edge[0].handle == "test1"
+    assert item.union_edge[1].firstName == "test2"
 
 
 def test_get_edge():
