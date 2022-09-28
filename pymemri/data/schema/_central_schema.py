@@ -385,7 +385,6 @@ class PluginRun(Item):
     plugin: List["Plugin"] = []
     view: List["CVUStoredDefinition"] = []
     account: List["Account"] = []
-    trigger: List["Trigger"] = []
 
 
 class Post(Item):
@@ -434,12 +433,14 @@ class SuggestedMerge(Item):
 
 class Trigger(Item):
     # Properties
-    name: Optional[str] = None
-    version: Optional[str] = None
     action: Optional[str] = None
-    triggerOn: Optional[str] = None
-    pluginRunId: Optional[str] = None
     filterCreatedAfter: Optional[datetime] = None
+    filterCreatedAfterPropertyName: Optional[str] = None
+    pluginRunId: Optional[str] = None
+    triggerOn: Optional[str] = None
+
+    # Edges
+    trigger: List["PluginRun"] = []
 
 
 class VoteAction(Item):
