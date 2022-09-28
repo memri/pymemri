@@ -1,5 +1,4 @@
 import itertools
-from pprint import pprint
 
 import pandas as pd
 import pytest

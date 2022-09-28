@@ -31,23 +31,19 @@ All interaction between plugins and the pod goes via the Pymemri `PodClient`. To
 If you have a running pod, you can define and add your own item definitions:
 
 ```python
-from pymemri.data.itembase import Item
+from pymemri.data.schema import Item
 from pymemri.pod.client import PodClient
 
 class Dog(Item):
-    properties = Item.properties + ["name", "age"]
-
-    def __init__(self, name: str = None, age: int = None, **kwargs):
-        super().__init__(**kwargs)
-        self.name = name
-        self.age = age
+    name: Optional[str] = None
+    age: Optional[int] = None
 
 # Connect to the pod and add the Dog item definition
 client = PodClient()
 client.add_to_schema(Dog)
 
 # Add a Dog to the pod
-dog = Dog("bob", 3)
+dog = Dog(name="Rita", age=3)
 client.create(dog)
 ```
 
