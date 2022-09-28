@@ -30,6 +30,7 @@ else:
 
 if TYPE_CHECKING:
     from ...pod.client import PodClient
+    from ._central_schema import CategoricalPrediction
 
 SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE, ALL_EDGES = (
     "_source",
@@ -404,8 +405,15 @@ class Item(ItemBase):
     dateCreated: Optional[datetime] = None
     dateModified: Optional[datetime] = None
     dateServerModified: Optional[datetime] = None
-    externalId: Optional[str] = None
     deleted: bool = False
+
+    # TODO following edges and properties are not ItemBase properties in central schema/pod,
+    # Taken from old ItemBase
+    externalId: Optional[str] = None
+    isMock: Optional[bool] = None
+
+    # Edges
+    label: List["CategoricalPrediction"]
 
 
 Edge.update_forward_refs()
