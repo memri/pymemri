@@ -240,7 +240,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
             return [e.traverse(self) for e in super().__getattribute__("__edges__")[__name]]
         return super().__getattribute__(__name)
 
-    def add_edge(self, edge_name: str, target: "ItemBase") -> None:
+    def add_edge(self, edge_name: str, target: "ItemBase") -> Edge:
         """Add a new edge between `self` and `target` with name `edge_name`
 
         Args:
@@ -257,6 +257,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
             if edge not in existing_edges:
                 existing_edges.append(edge)
                 self._new_edges.append(edge)
+            return edge
         else:
             raise ValueError(f"{edge_name} is not an edge on {type(self).__name__}")
 
