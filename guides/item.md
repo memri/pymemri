@@ -13,19 +13,23 @@ In pymemri, the schema is implemented with Pydantic models. Pydantic is a librar
 Consider the following schema definition for a `Dog` item:
 
 ```python
-from typing import Union
+from datetime import datetime
+from typing import List, Optional, Union
+
 from pydantic import PrivateAttr
-from pymemri.data.schema import Item, Message, Tweet, Person
+
+from pymemri.data.schema import Item, Message, Person, Tweet
+
 
 class Dog(Item):
     _hasBeenFed: bool = PrivateAttr(False)
-        
+
     # Properties
     name: Optional[str] = None
     age: Optional[int] = None
     bites: Optional[bool] = None
     weight: Optional[float] = None
-    dateOfBirth = Optional[datetime] = None
+    dateOfBirth: Optional[datetime] = None
 
     # Edges
     owner: List[Person] = []
