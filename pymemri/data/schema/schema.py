@@ -1,5 +1,5 @@
 import inspect
-from typing import Dict, ForwardRef, TypeVar
+from typing import Any, Dict
 
 from pydantic import validator
 from pydantic.fields import Field

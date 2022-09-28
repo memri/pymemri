@@ -285,10 +285,3 @@ def test_bulk_update_delete(client: PodClient):
     client.reset_local_db()
     assert client.get(person2.id, include_deleted=True).deleted
     assert client.get(person1.id).firstName == "updated"
-
-
-def test_oauth_search(client: PodClient):
-    oauth_item = OauthFlow(accessToken="", refreshToken="")
-    client.add_to_schema(oauth_item)
-    client.create(oauth_item)
-    assert client.get_oauth_item() != None

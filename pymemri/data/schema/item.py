@@ -290,6 +290,47 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
                 schema.append(edge_schema)
         return schema
 
+    @classmethod
+    def central_schema_definition(cls) -> Dict[str, Any]:
+        """Experimental feature, not covered by tests yet.
+
+        Returns schema definition like in the central schema repository
+
+        Returns:
+            Dict[str, Any]: Central schema definition
+        """
+        schema = {}
+        schema["description"] = getattr(cls, "description", None) or ""
+        base = cls.__bases__[0]
+        if base != "Item":
+            schema["base_schema"] = base.__name__
+        schema["properties"] = []
+        for field in cls.__property_fields__.values():
+            if (
+                field.name not in base.properties
+                or base.__property_fields__[field.name].type_ != field.type_
+            ):
+                property_schema = {
+                    "name": field.name,
+                    "type": POD_TYPES[field.type_],
+                }
+                schema["properties"].append(property_schema)
+
+        schema["edges"] = []
+        for field in cls.__edge_fields__.values():
+            if (
+                field.name not in base.edges
+                or base.__edge_fields__[field.name].type_ != field.type_
+            ):
+                target_types = type_or_union_to_tuple(field.type_)
+                ttype_json = [type_to_str(t) for t in target_types]
+                if len(ttype_json) == 1:
+                    ttype_json = ttype_json[0]
+                    edge_schema = {"name": field.name, "target": ttype_json}
+                    schema["edges"].append(edge_schema)
+
+        return schema
+
     @property
     def _updated_properties(self):
         return set(self._original_properties.keys())
@@ -413,7 +454,7 @@ class Item(ItemBase):
     isMock: Optional[bool] = None
 
     # Edges
-    label: List["CategoricalPrediction"]
+    label: List["CategoricalPrediction"] = []
 
 
 Edge.update_forward_refs()

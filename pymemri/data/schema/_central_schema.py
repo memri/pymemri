@@ -3,9 +3,9 @@
 # Visit https://gitlab.memri.io/memri/schema to learn more
 
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union
 
-from .item import Item
+from pymemri.data.schema.item import Item
 
 
 class Account(Item):
@@ -385,6 +385,7 @@ class PluginRun(Item):
     plugin: List["Plugin"] = []
     view: List["CVUStoredDefinition"] = []
     account: List["Account"] = []
+    trigger: List["Trigger"] = []
 
 
 class Post(Item):
@@ -429,6 +430,16 @@ class SuggestedMerge(Item):
 
     # Edges
     mergeFrom: List["Person"] = []
+
+
+class Trigger(Item):
+    # Properties
+    name: Optional[str] = None
+    version: Optional[str] = None
+    action: Optional[str] = None
+    triggerOn: Optional[str] = None
+    pluginRunId: Optional[str] = None
+    filterCreatedAfter: Optional[datetime] = None
 
 
 class VoteAction(Item):
