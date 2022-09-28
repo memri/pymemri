@@ -130,6 +130,7 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_va
 
     def __init__(self, source: Any = None, target: TargetType = None, name: str = None) -> None:
         super().__init__(source=source, target=target, name=name)
+        # Workaround, occasionally validators will set source or target with a clone
         self.source = source
         self.target = target
 
