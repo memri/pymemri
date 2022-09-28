@@ -18,4 +18,4 @@ class Dog(Item):
 
     # Edges
     owner: List[Person] = []
-    referredBy: List[Union[Message, Tweet]] = []
+    referencedBy: List[Union[Message, Tweet]] = []
