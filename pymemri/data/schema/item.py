@@ -20,13 +20,9 @@ from pydantic import BaseModel, Extra, PrivateAttr, validator
 from pydantic.fields import Field, FieldInfo, ModelField
 from pydantic.generics import GenericModel
 from pydantic.main import ModelMetaclass
+from typing_extensions import dataclass_transform
 
 from .utils import get_args, get_origin, type_or_union_to_tuple, type_to_str
-
-if sys.version_info >= (3, 9, 0):
-    from pydantic.main import __dataclass_transform__ as dataclass_transform
-else:
-    from pydantic.main import dataclass_transform
 
 if TYPE_CHECKING:
     from ...pod.client import PodClient
