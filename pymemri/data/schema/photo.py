@@ -1,10 +1,8 @@
 import io
 from hashlib import sha256
-from multiprocessing.sharedctypes import Value
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
-import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
