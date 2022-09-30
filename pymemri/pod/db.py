@@ -2,8 +2,7 @@ from enum import Enum
 
 from loguru import logger
 
-from ..data.itembase import Item
-from ..data.schema import File, Photo
+from ..data.schema import Item
 
 
 class Priority(Enum):
@@ -95,8 +94,8 @@ class DB:
 
     def _merge_edges(self, local_item, remote_item):
         for edge in local_item.edges:
-            local_edges = object.__getattribute__(local_item, edge)
-            remote_edges = object.__getattribute__(remote_item, edge)
+            local_edges = local_item.__edges__[edge]
+            remote_edges = remote_item.__edges__[edge]
             local_edges.extend([edge for edge in remote_edges if edge not in local_edges])
             for edge in local_edges:
                 edge.source = local_item

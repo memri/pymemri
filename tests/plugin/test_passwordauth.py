@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from pymemri.data.schema import Account, PluginRun
+from pymemri.data.schema import Account, CVUStoredDefinition, PluginRun
 from pymemri.plugin.authenticators.password import (
     PasswordAuthenticator,
     set_account_credentials,
@@ -14,7 +14,9 @@ from pymemri.pod.client import PodClient
 
 @pytest.fixture
 def client():
-    return PodClient()
+    client = PodClient()
+    client.add_to_schema(CVUStoredDefinition)
+    return client
 
 
 class MyAuthenticatedPlugin(PluginBase):
@@ -35,7 +37,7 @@ class MyAuthenticatedPlugin(PluginBase):
 
 def test_password_plugin(client):
     # Create Plugin
-    run = PluginRun("", "", "")
+    run = PluginRun(containerImage="")
     account = Account(service="myAccount")
     run.add_edge("account", account)
     client.create(run)

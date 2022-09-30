@@ -2,32 +2,10 @@ from typing import List
 
 import pytest
 
-from pymemri.data.oauth import OauthFlow
-from pymemri.data.schema import Account, Edge, EdgeList, EmailMessage, Item, Person
+from pymemri.data.schema import Account, Edge, EmailMessage, Item, OauthFlow, Person
+from pymemri.examples.example_schema import Dog
 from pymemri.pod.client import PodClient
 from pymemri.pod.graphql_utils import GQLQuery
-
-
-class Dog(Item):
-    properties = Item.properties + ["name", "age", "bites", "weight"]
-    edges = Item.edges + ["owner"]
-
-    def __init__(
-        self,
-        name: str = None,
-        age: int = None,
-        bites: bool = False,
-        weight: float = None,
-        owner: EdgeList["Person"] = None,
-        **kwargs,
-    ):
-        super().__init__(**kwargs)
-        self.name = name
-        self.age = age
-        self.bites = bites
-        self.weight = weight
-
-        self.owner = EdgeList("owner", "Person", owner)
 
 
 @pytest.fixture(scope="module")
@@ -135,7 +113,7 @@ def test_partial_update(client: PodClient):
     assert len(person_from_db._updated_properties) == 0
 
     # Change non-property
-    person_from_db.non_property = "test"
+    person_from_db._in_pod = None
     assert len(person_from_db._updated_properties) == 0
 
     # Empty update

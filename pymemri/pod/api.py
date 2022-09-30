@@ -8,7 +8,6 @@ from typing import Any, Deque, Dict, Generator, List, Optional, Union
 import requests
 from loguru import logger
 
-from ..data.itembase import Item
 from .graphql_utils import GQLQuery
 
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
@@ -108,7 +107,7 @@ class PodAPI:
         if not even_page_size:
             yield from paginator
 
-        remaining: Deque[Item] = deque()
+        remaining: Deque[Dict[str, Any]] = deque()
         while True:
             if len(remaining) >= limit:
                 yield [remaining.popleft() for _ in range(limit)]

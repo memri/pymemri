@@ -5,8 +5,7 @@ import time
 
 import pytest
 
-from pymemri.data.itembase import EdgeList
-from pymemri.data.schema import Account, Message, PluginRun
+from pymemri.data.schema import Account, PluginRun
 from pymemri.examples.example_plugin import ExamplePlugin
 from pymemri.plugin import states
 from pymemri.plugin.pluginbase import PluginBase, run_plugin_from_run_id

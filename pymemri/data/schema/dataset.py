@@ -1,9 +1,10 @@
 from pathlib import Path
-from typing import Any, List, Optional, Union
+from typing import Any, ClassVar, List, Optional, Union
 
-from ..exporters.exporters import Query
-from . import _central_schema
-from .itembase import EdgeList, Item
+from pydantic import PrivateAttr
+
+from ...exporters.exporters import Query
+from ._central_schema import Dataset
 
 
 def filter_rows(dataset: dict, filter_val=None) -> dict:
@@ -15,22 +16,14 @@ def filter_rows(dataset: dict, filter_val=None) -> dict:
     }
 
 
-class Dataset(_central_schema.Dataset):
-    """
-    The main Dataset class
-    """
-
-    requires_client_ref = True
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._client = None
+class Dataset(Dataset):
+    requires_client_ref: ClassVar[bool] = True
+    _client: Optional[Any] = PrivateAttr(None)
 
     def _get_items(self):
         if self._client is None:
             raise ValueError("Dataset does not have associated PodClient.")
         if not len(self.entry):
-            edges = self._client.get_edges(self.id)
             for e in self._client.get_edges(self.id):
                 self.add_edge(e["name"], e["item"])
 
