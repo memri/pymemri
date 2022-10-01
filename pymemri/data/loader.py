@@ -1,25 +1,8 @@
-import os
-import re
-import sys
-from datetime import datetime
-from getpass import getpass
 from pathlib import Path
 
-import requests
-from fastprogress.fastprogress import progress_bar
-from git import Repo
 from loguru import logger
 
-from ..gitlab_api import (
-    ACCESS_TOKEN_PATH,
-    DEFAULT_PACKAGE_VERSION,
-    GITLAB_API_BASE_URL,
-    MEMRI_GITLAB_BASE_URL,
-    MEMRI_PATH,
-    PROJET_ID_PATTERN,
-    TIME_FORMAT_GITLAB,
-    GitlabAPI,
-)
+from ..gitlab_api import DEFAULT_PACKAGE_VERSION, GitlabAPI
 
 DEFAULT_PLUGIN_MODEL_PACKAGE_NAME = "plugin-model-package"
 DEFAULT_PYTORCH_MODEL_NAME = "pytorch_model.bin"

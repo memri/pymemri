@@ -144,7 +144,7 @@ def simulate_run_plugin_from_frontend(
         owner_key = read_pod_key("owner_key")
     params = [pod_full_address, database_key, owner_key]
     if None in params:
-        raise ValueError(f"Missing Pod credentials")
+        raise ValueError("Missing Pod credentials")
 
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
@@ -171,5 +171,5 @@ def simulate_run_plugin_from_frontend(
     plugin_dir = run.containerImage
     write_run_info(plugin_dir, run.id)
 
-    print(f"*Check the pod log/console for debug output.*")
+    print("*Check the pod log/console for debug output.*")
     return run

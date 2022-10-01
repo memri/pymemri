@@ -2,7 +2,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from ..data.basic import *
+from ..data.basic import read_json
 
 PYMEMRI_FOLDER = ".pymemri"
 POD_KEYS_FOLDER = "pod_keys"
