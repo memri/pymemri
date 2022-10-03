@@ -1,6 +1,5 @@
 import re
 import subprocess
-import urllib
 import zipfile
 from pathlib import Path, PurePosixPath
 from string import Template
@@ -25,7 +24,7 @@ GITLAB_GROUPS = ["memri", "plugins"]
 
 def get_remote_url():
     path = Path(".")
-    url = subprocess.getoutput(f"git config --get remote.origin.url")
+    url = subprocess.getoutput("git config --get remote.origin.url")
     if not url:
         raise ValueError(
             f"You can only run this from a initialized gitlab repository, and '{path}' is not an initialized git repository"
@@ -176,7 +175,7 @@ def get_template_replace_dict(
     try:
         repo_owner, repo_name = infer_git_info(repo_url)
     except ValueError:
-        url_inf, owner_inf, name_inf = None, None, None
+        url_inf = None
         logger.error(
             "Could not infer git information from current directory, no initialized repository found."
         )

@@ -40,7 +40,7 @@ class PluginRunStatusListener:
                 if run.status == self.status:
                     self.callback()
             except Exception as e:
-                logger.error(f"Could not get run in status listener")
+                logger.error("Could not get run in status listener")
 
 
 class PodHTTPStatusListener:
@@ -95,7 +95,7 @@ class PodHTTPStatusListener:
                 if e.status == self.http_status:
                     self.callback()
             except Exception as e:
-                logger.error(f"Could not get run in httpstatus listener")
+                logger.error("Could not get run in httpstatus listener")
 
 
 def force_exit_callback():

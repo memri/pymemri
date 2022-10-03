@@ -58,7 +58,7 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def get_oauth_url(self):
-        raise NotImplemented()
+        raise NotImplementedError
 
     @abc.abstractmethod
     def get_tokens_from_code(self, code):
@@ -69,7 +69,7 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
                 'refresh_token': '...'
             }
         """
-        raise NotImplemented()
+        raise NotImplementedError
 
     @abc.abstractmethod
     def refresh_tokens(self):
@@ -82,11 +82,11 @@ class OAuthAuthenticator(metaclass=abc.ABCMeta):
 
         """
         # use self.pluginRun.account[0].refreshToken
-        raise NotImplemented()
+        raise NotImplementedError
 
     @abc.abstractmethod
     def verify_access_token(self, token):
         """
         Check if existing token is working. If this returns True, then user interaction will not be needed.
         """
-        raise NotImplemented()
+        raise NotImplementedError

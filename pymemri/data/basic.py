@@ -1,10 +1,6 @@
+import json
 import zipfile
-from urllib.request import urlretrieve
-
-import requests
-from tqdm import tqdm
-
-from ..imports import *
+from pathlib import Path
 
 Path.ls = lambda x: list(x.iterdir())
 PYI_HOME = Path.cwd().parent
@@ -13,10 +9,6 @@ HOME_DIR = Path.home()
 MODEL_DIR = HOME_DIR / ".memri" / "models"
 MEMRI_S3 = "https://memri.s3-eu-west-1.amazonaws.com"
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
-
-
-def read_file(path):
-    return open(path, "r").read()
 
 
 def read_json(path):

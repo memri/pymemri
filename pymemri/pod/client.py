@@ -575,7 +575,7 @@ class PodClient:
             self.api.send_trigger_status(item_id, trigger_id, status)
             return True
         except Exception as e:
-            logger.error(f"Failed to send trigger status to the POD")
+            logger.error("Failed to send trigger status to the POD")
             return False
 
     def get_oauth2_access_token(self, platform):

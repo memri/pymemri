@@ -9,6 +9,7 @@ from ...cvu.utils import get_default_cvu
 from ...pod.client import DEFAULT_POD_ADDRESS, PodClient
 from ...pod.utils import read_pod_key
 from ..states import RUN_USER_ACTION_COMPLETED, RUN_USER_ACTION_NEEDED
+from .credentials import PLUGIN_DIR, read_json, read_username_password
 
 
 class PasswordAuthenticator:
@@ -91,14 +92,6 @@ def set_account_credentials(pod_client, run_id, username, password):
     print(f"Setting username and password for {run_id}'s Account'")
 
 
-from fastscript import Param, call_parse
-
-from ...data.basic import *
-from ...pod.client import DEFAULT_POD_ADDRESS, PodClient
-from .credentials import *
-from .credentials import PLUGIN_DIR
-
-
 @call_parse
 def simulate_enter_credentials(
     run_id: Param("run id that requires the password", str) = None,
@@ -131,5 +124,5 @@ def simulate_enter_credentials(
             logger.info(f"Reading run id from {run_path}")
             run_id = read_json(run_path)["id"]
         except Exception as e:
-            logger.error(f"No run_id specified and could not read current run information")
+            logger.error("No run_id specified and could not read current run information")
     set_account_credentials(client, run_id, username, password)

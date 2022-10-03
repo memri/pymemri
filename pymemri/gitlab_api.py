@@ -2,7 +2,6 @@ import os
 import re
 import sys
 import urllib
-from datetime import datetime
 from getpass import getpass
 from pathlib import Path
 
@@ -13,7 +12,6 @@ from loguru import logger
 
 from pymemri.pod.client import PodClient
 
-from .data.basic import *
 from .template.formatter import _plugin_from_template, str_to_gitlab_identifier
 
 MEMRI_PATH = Path.home() / ".memri"
@@ -61,7 +59,7 @@ class GitlabAPI:
             else:
                 if self.request_auth_if_needed:
                     print(
-                        f"""
+                        """
                     The first time you are uploading a model you need to create an access_token
                     at https://gitlab.memri.io/-/profile/personal_access_tokens?name=Model+Access+token&scopes=api
                     Click at the blue button with 'Create personal access token'"
@@ -131,7 +129,7 @@ class GitlabAPI:
         url = f"{GITLAB_API_BASE_URL}/projects/{project_id}/pipeline?ref=main"
         res = self.post(url, headers=self.auth_headers, params=self.auth_params)
         if res.status_code not in [200, 201]:
-            logger.error(f"Failed to trigger pipeline")
+            logger.error("Failed to trigger pipeline")
 
     def project_id_from_name(self, project_name):
         iden = str_to_gitlab_identifier(project_name)
@@ -230,7 +228,7 @@ class GitlabAPI:
         actions = []
 
         for file_in_path, file_out_path in path_in2out.items():
-            content = read_file(file_in_path)
+            content = Path(file_in_path).read_text()
             action_payload = {
                 "action": "create",
                 "file_path": file_out_path,
