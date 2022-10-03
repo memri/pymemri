@@ -139,9 +139,9 @@ class GitlabAPI:
         if res.status_code not in [200, 201]:
             logger.error("Failed to trigger pipeline")
 
-    def project_id_from_name(self, project_name):
+    def project_id_from_name(self, project_name, username=None):
         iden = gitlab_slugify(project_name)
-        username = self.get_current_username()
+        username = username or self.get_current_username()
         uri_encoded_name = urllib.parse.quote_plus(f"{username}/{iden}")
         res = self.get(
             f"{GITLAB_API_BASE_URL}/projects/{uri_encoded_name}",
