@@ -67,7 +67,9 @@ class PodClient:
         return "".join([str(random.randint(0, 9)) for i in range(64)])
 
     def register_base_schemas(self):
-        assert self.add_to_schema(PluginRun, Account)
+        result = self.add_to_schema(PluginRun, Account)
+        if not result:
+            raise ValueError("Could not register base schemas")
 
     def add_to_store(self, item: Item, priority: Priority = None) -> Item:
         item.create_id_if_not_exists()
@@ -109,15 +111,11 @@ class PodClient:
                 raise ValueError(f"{item} is not an instance or subclass of Item")
             create_items.extend(item.pod_schema())
 
-        try:
-            self.api.bulk(create_items=create_items)
-            for item in items:
-                item_cls = type(item) if isinstance(item, Item) else item
-                self.registered_classes[item.__name__] = item_cls
-            return True
-        except Exception as e:
-            logger.error(e)
-            return False
+        self.api.bulk(create_items=create_items)
+        for item in items:
+            item_cls = type(item) if isinstance(item, Item) else item
+            self.registered_classes[item.__name__] = item_cls
+        return True
 
     def _upload_image(self, img, asyncFlag=True, callback=None):
         if isinstance(img, np.ndarray):
