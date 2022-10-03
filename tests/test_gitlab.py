@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from pymemri.gitlab_api import GitlabAPI
@@ -18,13 +20,6 @@ from pymemri.template.formatter import gitlab_slugify
 )
 def test_gitlab_slugify(input, expected):
     assert gitlab_slugify(input) == expected
-
-
-def test_gitlab_missing_oauth():
-    # Create a random owner/database key pair
-    client = PodClient()
-    with pytest.raises(RuntimeError):
-        gitlab = GitlabAPI(client)
 
 
 @pytest.mark.skip(
