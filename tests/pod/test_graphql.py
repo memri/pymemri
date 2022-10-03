@@ -17,23 +17,6 @@ def api():
     client = PodClient()
     client.add_to_schema(Account, Person, Message)
 
-    client.api.create_item(
-        {
-            "type": "ItemEdgeSchema",
-            "edgeName": "sender",
-            "sourceType": "Message",
-            "targetType": "Account",
-        }
-    )
-    client.api.create_item(
-        {
-            "type": "ItemEdgeSchema",
-            "edgeName": "owner",
-            "sourceType": "Account",
-            "targetType": "Person",
-        }
-    )
-
     # Create dummy data
     person = Person(displayName="Alice")
     accounts = [
