@@ -22,12 +22,12 @@ def test_gitlab_slugify(input, expected):
     assert gitlab_slugify(input) == expected
 
 
-@pytest.mark.skip(
-    reason="This test requires a valid Gitlab API token, which is not available in CI"
+@pytest.mark.skipif(
+    os.environ.get("CI_JOB_TOKEN") is None,
+    reason="CI_JOB_TOKEN environment variable not set",
 )
 def test_gitlab_project_id():
-    owner_key = ""
-    database_key = ""
-    client = PodClient(owner_key=owner_key, database_key=database_key)
+    client = PodClient()
     gitlab = GitlabAPI(client)
-    project_id = gitlab.project_id_from_name("test-proj")
+    project_id = gitlab.project_id_from_name("pymemri", "memri")
+    assert project_id == 80
