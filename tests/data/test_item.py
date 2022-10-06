@@ -4,8 +4,7 @@ from typing import List, Optional, Union
 import pytest
 from pydantic import ValidationError
 
-from pymemri.data.schema import Account, Item, Person, get_schema
-from pymemri.data.schema.item import Edge
+from pymemri.data.schema import Account, Edge, Item, Person, get_schema
 from pymemri.pod.client import PodClient
 
 
@@ -46,7 +45,7 @@ def test_item_init():
 def test_init_with_edges():
     accounts = [Account(handle="1"), Account(handle="2")]
     item = MyItem(str_property="test", account_edge=accounts)
-    assert item.property_dict() == {"deleted": False, "str_property": "test"}
+    assert item.property_dict() == {"str_property": "test"}
     assert len(item.account_edge) == len(item.__edges__["account_edge"]) == 2
 
 
@@ -61,7 +60,6 @@ def test_property_dict():
         "float_property": 3.0,
         "bool_property": False,
         "dt_property": round(dt.timestamp() * 1000),
-        "deleted": False,
     }
     assert property_dict == correct_properties
 

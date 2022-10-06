@@ -1,2 +1,2 @@
-from .item import Edge, Item, ItemBase  # noqa: F405, type: ignore
+from .itembase import Edge, ItemBase  # noqa: F405, type: ignore
 from .schema import *  # noqa: F405, type: ignore

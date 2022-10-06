@@ -5,7 +5,22 @@
 from datetime import datetime
 from typing import List, Optional, Union
 
-from pymemri.data.schema.item import Item
+from pymemri.data.schema.itembase import ItemBase
+
+
+class Item(ItemBase):
+    # Properties
+    id: Optional[str] = None
+    dateCreated: Optional[datetime] = None
+    dateModified: Optional[datetime] = None
+    dateServerModified: Optional[datetime] = None
+    deleted: Optional[bool] = None
+    externalId: Optional[str] = None
+    isMock: Optional[bool] = None
+
+    # Edges
+    language: List["Language"] = []
+    label: List["CategoricalPrediction"] = []
 
 
 class Account(Item):
@@ -240,6 +255,12 @@ class LabellingTask(Item):
     taskType: List["TextClassification"] = []
     labelOption: List["LabelOption"] = []
     view: List["CVUStoredDefinition"] = []
+
+
+class Language(Item):
+    # Properties
+    languageCode: Optional[str] = None
+    languageName: Optional[str] = None
 
 
 class Location(Item):
