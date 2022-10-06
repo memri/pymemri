@@ -7,7 +7,9 @@ from typing import Any, Dict, List, Optional, Type, Union
 import numpy as np
 from loguru import logger
 
-from ..data.schema import Account, File, Item, Photo, PluginRun, get_schema_cls
+from pymemri.data.schema.itembase import ItemBase
+
+from ..data.schema import Account, File, Photo, PluginRun, get_schema_cls
 from .api import DEFAULT_POD_ADDRESS, POD_VERSION, PodAPI, PodError
 from .db import DB, Priority
 from .graphql_utils import GQLQuery
@@ -71,7 +73,7 @@ class PodClient:
         if not result:
             raise ValueError("Could not register base schemas")
 
-    def add_to_store(self, item: Item, priority: Priority = None) -> Item:
+    def add_to_store(self, item: ItemBase, priority: Priority = None) -> ItemBase:
         item.create_id_if_not_exists()
         priority = priority if priority is not None else self.default_priority
         return self.local_db.merge(item, priority)
@@ -107,13 +109,13 @@ class PodClient:
     def add_to_schema(self, *items: List[Union[object, type]]):
         create_items = []
         for item in items:
-            if not (isinstance(item, Item) or issubclass(item, Item)):
+            if not (isinstance(item, ItemBase) or issubclass(item, ItemBase)):
                 raise ValueError(f"{item} is not an instance or subclass of Item")
             create_items.extend(item.pod_schema())
 
         self.api.bulk(create_items=create_items)
         for item in items:
-            item_cls = type(item) if isinstance(item, Item) else item
+            item_cls = type(item) if isinstance(item, ItemBase) else item
             self.registered_classes[item.__name__] = item_cls
         return True
 
@@ -353,7 +355,7 @@ class PodClient:
             logger.error(e)
             return
 
-    def get_update_dict(self, item: Item, partial_update: bool = True):
+    def get_update_dict(self, item: ItemBase, partial_update: bool = True):
         properties = item.property_dict()
         properties.pop("deleted", None)
         if partial_update:
@@ -479,7 +481,7 @@ class PodClient:
         json: dict,
         add_to_local_db: bool = True,
         priority=None,
-    ) -> Item:
+    ) -> ItemBase:
         priority = Priority(priority) if priority else None
 
         item_class = get_schema_cls(
@@ -505,7 +507,7 @@ class PodClient:
 
     def search_graphql(
         self, query: Union[str, GQLQuery], variables: Optional[Dict[str, Any]] = None
-    ) -> List[Item]:
+    ) -> List[ItemBase]:
         response = self.api.graphql(query, variables)
         data = response["data"]
         result = []
