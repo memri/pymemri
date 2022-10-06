@@ -8,7 +8,6 @@ from typing import (
     Dict,
     Generic,
     List,
-    Optional,
     Tuple,
     Type,
     TypeVar,
@@ -26,7 +25,6 @@ from .utils import get_args, get_origin, type_or_union_to_tuple, type_to_str
 
 if TYPE_CHECKING:
     from ...pod.client import PodClient
-    from ._central_schema import CategoricalPrediction
 
 SOURCE, TARGET, TYPE, EDGE_TYPE, LABEL, SEQUENCE, ALL_EDGES = (
     "_source",
@@ -117,11 +115,11 @@ class _ItemMeta(ModelMetaclass):
         return cls
 
 
-TargetType = TypeVar("TargetType", bound="Item")
+TargetType = TypeVar("TargetType", bound="ItemBase")
 
 
 class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_validation=False):
-    source: "Item"
+    source: "ItemBase"
     target: TargetType
     name: str
 
@@ -142,7 +140,7 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_va
     def get_target_types_as_str(cls) -> Tuple[str]:
         return tuple(type_to_str(t) for t in cls.get_target_types())
 
-    @validator("target", pre=True)
+    @validator("target", pre=True, allow_reuse=True)
     def validate_target(cls, val: Any) -> TargetType:
         """
         To allow for overwriting schema classes on a different place, validator
@@ -435,22 +433,6 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         if properties_only:
             json = {k: v for k, v in json.items() if k in cls.properties}
         return cls(**json)
-
-
-class Item(ItemBase):
-    id: Optional[str] = None
-    dateCreated: Optional[datetime] = None
-    dateModified: Optional[datetime] = None
-    dateServerModified: Optional[datetime] = None
-    deleted: bool = False
-
-    # TODO following edges and properties are not ItemBase properties in central schema/pod,
-    # Taken from old ItemBase
-    externalId: Optional[str] = None
-    isMock: Optional[bool] = None
-
-    # Edges
-    label: List["CategoricalPrediction"] = []
 
 
 Edge.update_forward_refs()

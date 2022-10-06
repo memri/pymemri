@@ -6,8 +6,7 @@ from typing import Any, List, Optional, Tuple
 import numpy as np
 from PIL import Image
 
-from ._central_schema import File
-from .item import Item
+from ._central_schema import File, Item
 
 DEFAULT_ENCODING = "PNG"
 

@@ -6,7 +6,6 @@ from pydantic.fields import Field
 
 from ._central_schema import *  # noqa
 from .dataset import Dataset  # noqa
-from .item import Item
 from .photo import Photo  # noqa
 from .utils import resolve_forward_refs
 

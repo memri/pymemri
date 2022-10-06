@@ -3,8 +3,7 @@ import random
 import pandas as pd
 import pytest
 
-from pymemri.data.schema import Account, CategoricalPrediction, Message, Person
-from pymemri.data.schema.item import Edge
+from pymemri.data.schema import Account, CategoricalPrediction, Edge, Message, Person
 from pymemri.exporters.exporters import Query
 from pymemri.pod.client import PodClient
 

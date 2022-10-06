@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, List
 import pandas as pd
 
 if TYPE_CHECKING:
-    from ..data.schema.item import Item
+    from ..data.schema import Item
     from ..pod.client import PodClient
 
 
