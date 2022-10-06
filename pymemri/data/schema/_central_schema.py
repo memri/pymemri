@@ -400,7 +400,7 @@ class PluginRun(Item):
     targetItemId: Optional[str] = None
     error: Optional[str] = None
     containerId: Optional[str] = None
-    webServerPort: Optional[int] = None
+    webserverPort: Optional[int] = None
 
     # Edges
     plugin: List["Plugin"] = []
