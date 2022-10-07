@@ -215,7 +215,7 @@ def get_template_replace_dict(
     if template_name == "classifier_plugin":
         assert package_name is not None
         assert user is not None
-        repo_name_gitlab = str_to_gitlab_identifier(repo_name)
+        repo_name_gitlab = gitlab_slugify(repo_name)
 
         # hacky, dont change!
         model_imports_ = (
