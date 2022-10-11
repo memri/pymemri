@@ -34,7 +34,7 @@ def test_run_from_id(client):
     sys.path.append(get_project_root() / "examples")
 
     run = PluginRun(
-        containerImage="some-image",
+        containerImage="gitlab.memri.io:5050/szimnowoda/plugin_to_trigger:main-latest",
         pluginModule="pymemri.examples.example_plugin",
         pluginName="ExamplePlugin",
         status="not started",
