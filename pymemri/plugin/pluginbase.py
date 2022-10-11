@@ -61,7 +61,9 @@ class PluginBase(metaclass=ABCMeta):
             pod_restart_listener = get_pod_restart_listener(self.client, self.pluginRun.id)
             self._status_listeners.extend([status_abort_listener, pod_restart_listener])
 
-        self._webserver.run()
+        if self._webserver.run():
+            # If user registered any endpoint, add also health check
+            self._webserver.app.add_api_route("/v1/health", self.health_endpoint, methods=["GET"])
 
     def teardown(self):
         for listener in self._status_listeners:
@@ -96,6 +98,9 @@ class PluginBase(metaclass=ABCMeta):
         for schema_cls in cls.schema_classes:
             schema.extend(schema_cls.pod_schema())
         return schema
+
+    def health_endpoint(self):
+        return "StatusFromEndpoint"
 
 
 class PluginError(Exception):
