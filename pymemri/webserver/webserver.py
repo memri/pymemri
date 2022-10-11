@@ -12,7 +12,6 @@ class WebServer:
         self._server_handle = None
         self._uvicorn = None
         self._port = port
-        self._daemon = False
 
     def _setup_app(self) -> FastAPI:
         app = FastAPI(title="Plugin Webserver", redoc_url=None, swagger_ui_oauth2_redirect_url=None)
