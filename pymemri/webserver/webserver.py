@@ -36,32 +36,20 @@ class WebServer:
     def app(self) -> FastAPI:
         return self._app
 
-    def run(self) -> bool:
-        """Starts the webserver, only if any route was registered.
+    def run(self):
+        """Starts the webserver, if not done already.
         Call returns immediately, server itself is offloaded to
         the thread.
-        Returns bool if the webserver actually started"""
+        """
 
         # Bare application has two endpoints registered:
         # /openapi.json and /docs
-        DEFAULT_ROUTES = 2
-        if len(self.app.routes) > DEFAULT_ROUTES:
+        if not self.is_running():
             config = Config(app=self.app, host="0.0.0.0", port=self._port, workers=1)
             self._uvicorn = Server(config=config)
 
             self._server_handle = threading.Thread(target=self._uvicorn.run, daemon=False)
             self._server_handle.start()
-            return True
-
-        return False
-
-    @property
-    def daemon(self) -> bool:
-        return self._daemon
-
-    @daemon.setter
-    def daemon(self, daemon: bool):
-        self._daemon = daemon
 
     def is_running(self):
         return self._server_handle is not None

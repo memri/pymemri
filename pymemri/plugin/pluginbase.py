@@ -36,6 +36,7 @@ class PluginBase(metaclass=ABCMeta):
         self.client = client
         self._status_listeners = []
         self._config_dict = kwargs
+        self._daemon = False
 
         if pluginRun is None:
             self._webserver = WebServer(8080)
@@ -79,7 +80,7 @@ class PluginBase(metaclass=ABCMeta):
         self.setup()
         self.run()
 
-        if self._webserver.daemon:
+        if self.daemon:
             self.set_run_status(RUN_DAEMON)
         else:
             self.teardown()
@@ -105,6 +106,15 @@ class PluginBase(metaclass=ABCMeta):
 
     def health_endpoint(self):
         return self._status
+
+    @property
+    def daemon(self) -> bool:
+        return self._daemon
+
+    @daemon.setter
+    def daemon(self, daemon: bool):
+        """Setting to True will not close the plugin after calling run(), default if False"""
+        self._daemon = daemon
 
 
 class PluginError(Exception):
