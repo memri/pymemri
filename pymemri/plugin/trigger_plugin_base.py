@@ -18,6 +18,8 @@ class TriggerPluginBase(PluginBase):
 
         # Pass a closure to the fastapi route
         self._webserver.app.add_api_route("/v1/item/trigger", self.do_trigger, methods=["POST"])
+        # Do not close the webserver
+        self._webserver.daemon = True
 
     def do_trigger(self, req: TriggerReq):
         """Handle trigger request for given item. Item must be present already in the POD.

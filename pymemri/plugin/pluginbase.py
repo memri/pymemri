@@ -42,6 +42,8 @@ class PluginBase(metaclass=ABCMeta):
         else:
             self._webserver = WebServer(pluginRun.webserverPort or 8080)
 
+        self._webserver.register_health_endpoint(self.health_endpoint)
+
         self.set_run_status(RUN_INITIALIZED)
 
     def set_run_status(self, status):
@@ -49,6 +51,8 @@ class PluginBase(metaclass=ABCMeta):
         if self.pluginRun and self.client:
             self.pluginRun.status = status
             self.client.update_item(self.pluginRun)
+
+        self._status = status
 
     def set_progress(self, progress):
         if self.pluginRun and self.client:
@@ -61,13 +65,13 @@ class PluginBase(metaclass=ABCMeta):
             pod_restart_listener = get_pod_restart_listener(self.client, self.pluginRun.id)
             self._status_listeners.extend([status_abort_listener, pod_restart_listener])
 
-        if self._webserver.run():
-            # If user registered any endpoint, add also health check
-            self._webserver.app.add_api_route("/v1/health", self.health_endpoint, methods=["GET"])
+        self._webserver.run()
 
     def teardown(self):
         for listener in self._status_listeners:
             listener.stop()
+
+        self._webserver.shutdown()
 
     def _run(self):
         self.set_run_status(RUN_STARTED)
@@ -75,7 +79,7 @@ class PluginBase(metaclass=ABCMeta):
         self.setup()
         self.run()
 
-        if self._webserver.is_running():
+        if self._webserver.daemon:
             self.set_run_status(RUN_DAEMON)
         else:
             self.teardown()
@@ -100,7 +104,7 @@ class PluginBase(metaclass=ABCMeta):
         return schema
 
     def health_endpoint(self):
-        return "StatusFromEndpoint"
+        return self._status
 
 
 class PluginError(Exception):

@@ -12,6 +12,7 @@ class WebServer:
         self._server_handle = None
         self._uvicorn = None
         self._port = port
+        self._daemon = False
 
     def _setup_app(self) -> FastAPI:
         app = FastAPI(title="Plugin Webserver", redoc_url=None, swagger_ui_oauth2_redirect_url=None)
@@ -25,6 +26,11 @@ class WebServer:
         )
 
         return app
+
+    def register_health_endpoint(self, endpoint):
+        """Sets user defined handler for /v1/health endpoint that is
+        used to retrieve the plugin state"""
+        self.app.add_api_route("/v1/health", endpoint, methods=["GET"])
 
     @property
     def app(self) -> FastAPI:
@@ -48,6 +54,14 @@ class WebServer:
             return True
 
         return False
+
+    @property
+    def daemon(self) -> bool:
+        return self._daemon
+
+    @daemon.setter
+    def daemon(self, daemon: bool):
+        self._daemon = daemon
 
     def is_running(self):
         return self._server_handle is not None
