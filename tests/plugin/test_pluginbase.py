@@ -34,7 +34,7 @@ def test_run_from_id(client):
     sys.path.append(get_project_root() / "examples")
 
     run = PluginRun(
-        containerImage="gitlab.memri.io:5050/szimnowoda/plugin_to_trigger:main-latest",
+        containerImage="",
         pluginModule="pymemri.examples.example_plugin",
         pluginName="ExamplePlugin",
         status="not started",
@@ -42,7 +42,7 @@ def test_run_from_id(client):
     account = Account(identifier="login", secret="password")
     run.add_edge("account", account)
 
-    assert client.create(run)
+    client.create(run)
     assert client.create(account)
     assert client.create_edge(run.get_edges("account")[0])
 
