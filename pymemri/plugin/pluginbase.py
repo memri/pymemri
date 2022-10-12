@@ -36,11 +36,14 @@ class PluginBase(metaclass=ABCMeta):
         self.client = client
         self._status_listeners = []
         self._config_dict = kwargs
+        self._daemon = False
 
         if pluginRun is None:
             self._webserver = WebServer(8080)
         else:
             self._webserver = WebServer(pluginRun.webserverPort or 8080)
+
+        self._webserver.register_health_endpoint(self.health_endpoint)
 
         self.set_run_status(RUN_INITIALIZED)
 
@@ -49,6 +52,8 @@ class PluginBase(metaclass=ABCMeta):
         if self.pluginRun and self.client:
             self.pluginRun.status = status
             self.client.update_item(self.pluginRun)
+
+        self._status = status
 
     def set_progress(self, progress):
         if self.pluginRun and self.client:
@@ -67,13 +72,15 @@ class PluginBase(metaclass=ABCMeta):
         for listener in self._status_listeners:
             listener.stop()
 
+        self._webserver.shutdown()
+
     def _run(self):
         self.set_run_status(RUN_STARTED)
 
         self.setup()
         self.run()
 
-        if self._webserver.is_running():
+        if self.daemon:
             self.set_run_status(RUN_DAEMON)
         else:
             self.teardown()
@@ -96,6 +103,18 @@ class PluginBase(metaclass=ABCMeta):
         for schema_cls in cls.schema_classes:
             schema.extend(schema_cls.pod_schema())
         return schema
+
+    def health_endpoint(self):
+        return self._status
+
+    @property
+    def daemon(self) -> bool:
+        return self._daemon
+
+    @daemon.setter
+    def daemon(self, daemon: bool):
+        """Setting to True will not close the plugin after calling run(), default if False"""
+        self._daemon = daemon
 
 
 class PluginError(Exception):
