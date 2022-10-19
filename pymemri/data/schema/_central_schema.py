@@ -386,6 +386,9 @@ class Plugin(Item):
 
     # Edges
     view: List["CVUStoredDefinition"] = []
+    templateSettings: List["TemplateSettings"] = []
+    project: List["Project"] = []
+    run: List["PluginRun"] = []
 
 
 class PluginRun(Item):
@@ -450,6 +453,14 @@ class SuggestedMerge(Item):
 
     # Edges
     mergeFrom: List["Person"] = []
+
+
+class TemplateSettings(Item):
+    # Properties
+    name: Optional[str] = None
+
+    # Edges
+    labelOption: List["LabelOption"] = []
 
 
 class Trigger(Item):
