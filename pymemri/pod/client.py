@@ -584,3 +584,10 @@ class PodClient:
         except PodError as e:
             logger.error(e)
             return None
+
+    def plugin_status(self, plugins):
+        try:
+            return self.api.plugin_status(plugins)["plugins"]
+        except PodError as e:
+            logger.error(e)
+            return None
