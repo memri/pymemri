@@ -56,6 +56,9 @@ class DummyPlugin:
     def function_with_complex_types(self, l: typing.List, t: tuple, s: typing.AnyStr):
         self.call_history.append("function_with_complex_types")
 
+    def function_with_boolean(self, flag: bool):
+        self.call_history.append("function_with_boolean")
+
 
 def test_can_register_different_functions():
     dummy_plugin = DummyPlugin()
@@ -71,11 +74,11 @@ def test_can_register_different_functions():
 
     with pytest.raises(RuntimeError) as exinfo:
         add_to_api(dummy_plugin.function_without_types)
-    assert "lacks of type annotations" in str(exinfo.value)
+    assert "arguments: ['a', 'b', 'c'] does not have type annotation" in str(exinfo.value)
 
     with pytest.raises(RuntimeError) as exinfo:
         add_to_api(dummy_plugin.function_with_some_types)
-    assert "lacks of type annotations" in str(exinfo.value)
+    assert "arguments: ['b'] does not have type annotation" in str(exinfo.value)
 
     with pytest.raises(RuntimeError) as exinfo:
         add_to_api(dummy_plugin.function_with_defaults)
@@ -109,6 +112,10 @@ def test_can_register_function_with_complex_arguments():
     assert {
         "function_with_complex_types": {"l": "typing.List", "t": "tuple", "s": "AnyStr"}
     } == get_api()
+
+    add_to_api(dummy_plugin.function_with_boolean)
+
+    call_api(CallReq(function="function_with_boolean", args={"flag": "true"}))
 
 
 def test_can_call_different_functions():
