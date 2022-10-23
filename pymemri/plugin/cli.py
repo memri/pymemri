@@ -7,6 +7,8 @@ from pathlib import Path
 from fastcore.script import Param, call_parse
 from loguru import logger
 
+from pymemri import __version__ as pymemri_version
+
 from ..data.basic import write_json
 from ..data.schema import PluginRun
 from ..pod.client import DEFAULT_POD_ADDRESS, DEFAULT_POD_KEY_PATH, PodClient
@@ -27,6 +29,8 @@ from .pluginbase import (
     write_run_info,
 )
 from .states import RUN_FAILED
+
+logger.info(f"Pymemri version: {pymemri_version}")
 
 
 def _parse_env():
