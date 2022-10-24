@@ -5,8 +5,6 @@ from loguru import logger
 from starlette.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
 
-from pymemri.webserver.public_api import router as public_api_router
-
 
 class WebServer:
     def __init__(self, port: int):

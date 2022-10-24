@@ -1,29 +1,17 @@
 import typing
-from datetime import datetime, timedelta
+from datetime import datetime
 from time import sleep
-from typing import Any, Dict, List, Optional
+from typing import Optional
 
 import pytest
-from fastapi import HTTPException
+import requests
 from pydantic import BaseModel
 
 from pymemri.data.schema import PluginRun
 from pymemri.plugin.pluginbase import PluginBase
-from pymemri.plugin.states import RUN_STARTED
+from pymemri.plugin.states import RUN_INITIALIZED
 from pymemri.pod.client import PodClient
-from pymemri.webserver.models.api_call import CallReq
-from pymemri.webserver.public_api import (
-    _PUBLIC_API,
-    add_to_api,
-    call_api,
-    get_api,
-    register_endpoint,
-    remove_from_api,
-)
-
-# def teardown_function(function):
-#     _PUBLIC_API.clear()
-
+from pymemri.webserver.public_api import register_endpoint
 
 # class DummyPlugin:
 #     def __init__(self):
@@ -105,6 +93,8 @@ class MockPlugin(PluginBase):
         super().__init__(
             client=PodClient(), pluginRun=PluginRun(containerImage="", webserverPort=8080)
         )
+
+        self.base_endpoint = "http://127.0.0.1:8080"
 
     def run():
         pass
@@ -217,56 +207,144 @@ def test_can_register_different_endpoints():
     _plugin = Plugin()
 
 
-class PluginRunModel(BaseModel):
-    the_port: int
+# Integration tests
+def _wait_for_webapi(endpoint, attempts=30):
+    while attempts > 0:
+        try:
+            requests.get(f"{endpoint}/v1/api")
+            return
+        except Exception as e:
+            print(f"waiting for server {e}")
+            attempts -= 1
+            sleep(1)
 
-    def build(self) -> PluginRun:
-        return PluginRun(webserverPort=self.the_port)
-
-
-class ReqModel(BaseModel):
-    x: int
-    # that allows to set bool to null, or discard from the request body completely
-    y: Optional[bool]
-
-    # pydantic will try to convert to datetime:
-    # int or float, assumed as Unix time,
-    # str, following formats work:
-    #   YYYY-MM-DD[T]HH:MM[:SS[.ffffff]][Z or [±]HH[:]MM]]]
-    #   int or float as a string (assumed as Unix time)
-    d: datetime
-
-    prm: PluginRunModel
+    raise RuntimeError(f"Cannot connect to plugin's {endpoint} webapi")
 
 
-# TODO: move to integration tests
-# check that call works
-# check get /api endpoint
-# check get /health endpoint
-def test_start_webserver_with_endpoints():
+def test_webserver_reports_base_api():
+    # Base class defines v1/health, and v1/api endpoints
     class Plugin(MockPlugin):
-        @register_endpoint(endpoint_name="/v1/api1", method="POST")
-        def api1(self, a: list, b: dict, x: int, req: ReqModel, bla: tuple = (1, 2, 3)):
+        pass
 
-            # # you can call datetime methods without fear
-            # _date = req.d.date()
+    p = Plugin()
+    p.setup()
 
-            # # for pymemri custom types we need glue in a form of a Model, that will create
-            # # pymemri specific instance:
-            # _plugin_run : PluginRun = req.prm.build()
+    _wait_for_webapi(p.base_endpoint)
 
-            # # and now use internal plugin method:
-            # self._internal_api(_plugin_run)
+    resp = requests.get(f"{p.base_endpoint}/v1/api")
 
-            print(f"routes: {self._webserver.app.routes}")
+    assert resp.status_code == 200
+    assert {
+        "/v1/api": {"method": "GET", "args": {}},
+        "/v1/health": {"method": "GET", "args": {}},
+    } == resp.json()
 
-        @register_endpoint("/v1/gonna_raise", method="POST")
-        def function_that_raises(self) -> str:
-            raise RuntimeError("function_that_raises")
+    resp = requests.get(f"{p.base_endpoint}/v1/health")
+    assert resp.status_code == 200
+    assert resp.json() == RUN_INITIALIZED
 
-    # p = Plugin()
+    # Shuting down takes some time due to the listeners
+    p.teardown()
 
-    # p.setup()
 
-    # print("webserver should run")
-    # sleep(600)
+def test_different_types_in_endpoint():
+    class ReqModel(BaseModel):
+        x: int
+        # that allows to set bool to null, or discard from the request body completely
+        y: Optional[bool]
+
+        # pydantic will try to convert to datetime:
+        # int or float, assumed as Unix time,
+        # str, following formats work:
+        #   YYYY-MM-DD[T]HH:MM[:SS[.ffffff]][Z or [±]HH[:]MM]]]
+        #   int or float as a string (assumed as Unix time)
+        d: datetime
+
+    class Plugin(MockPlugin):
+        @register_endpoint(endpoint_name="/v1/echo", method="POST")
+        def echo(
+            self,
+            a: typing.List[typing.AnyStr],
+            b: dict,
+            x: int,
+            req: ReqModel,
+            t: tuple = (1, 2, 3),
+        ):
+            return {"a": a, "b": b, "x": x, "req": req, "t": t}
+
+    p = Plugin()
+    p.setup()
+
+    _wait_for_webapi(p.base_endpoint)
+
+    # Valid call
+    req = {
+        "a": ["string", "string"],
+        "b": {},
+        "req": {"x": 0, "y": True, "d": "2022-10-24T19:38:09.718Z"},
+        "t": [1, 2, 3],
+    }
+
+    resp = requests.post(f"{p.base_endpoint}/v1/echo?x=13", json=req)
+    assert resp.status_code == 200
+    assert {
+        "a": ["string", "string"],
+        "b": {},
+        "req": {"x": 0, "y": True, "d": "2022-10-24T19:38:09.718000+00:00"},
+        "t": [1, 2, 3],
+        "x": 13,
+    } == resp.json()
+
+    # Valid call, removed optional 'y' field
+    req = {
+        "a": ["string", "string"],
+        "b": {},
+        "req": {
+            "x": 0,
+            # "y": True,
+            "d": "2022-10-24T19:38:09.718Z",
+        },
+        "t": [1, 2, 3],
+    }
+
+    resp = requests.post(f"{p.base_endpoint}/v1/echo?x=13", json=req)
+    assert resp.status_code == 200
+    assert {
+        "a": ["string", "string"],
+        "b": {},
+        "req": {"x": 0, "y": None, "d": "2022-10-24T19:38:09.718000+00:00"},
+        "t": [1, 2, 3],
+        "x": 13,
+    } == resp.json()
+
+    # Invalid method 'get'
+    resp = requests.get(f"{p.base_endpoint}/v1/echo")
+    assert resp.status_code == 405
+
+    # Invalid request, missing required 'b'
+    req = {
+        "a": ["string", "string"],
+        "req": {"x": 0, "y": True, "d": "2022-10-24T19:38:09.718Z"},
+        "t": [1, 2, 3],
+    }
+
+    resp = requests.post(f"{p.base_endpoint}/v1/echo?x=13", json=req)
+
+    assert resp.status_code == 422
+    assert "field required" in resp.json()["detail"][0]["msg"]
+
+    # Invalid request, violating schema, by introducing non-string element in the List[AnyStr]
+    req = {
+        "a": ["string", "string", None],
+        "b": {},
+        "req": {"x": 0, "y": True, "d": "2022-10-24T19:38:09.718Z"},
+        "t": [1, 2, 3],
+    }
+
+    resp = requests.post(f"{p.base_endpoint}/v1/echo?x=13", json=req)
+
+    assert resp.status_code == 422
+    assert "none is not an allowed value" in resp.json()["detail"][0]["msg"]
+
+    # Shuting down takes some time due to the listeners
+    p.teardown()
