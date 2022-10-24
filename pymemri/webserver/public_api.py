@@ -33,6 +33,7 @@ def register_endpoint(endpoint_name: str, method: str):
 
         metadata = (endpoint_name, method)
 
+        # Prevent nested decoration
         if hasattr(fn, ENDPOINT_METADATA):
             raise RuntimeError(
                 f"Trying to register function {fn.__name__} to {metadata} but is already used in: {fn.__endpoint_metadata__}"
