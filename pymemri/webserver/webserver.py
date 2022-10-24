@@ -26,14 +26,7 @@ class WebServer:
             allow_headers=["*"],
         )
 
-        app.include_router(prefix="/v1", router=public_api_router)
-
         return app
-
-    def register_health_endpoint(self, endpoint):
-        """Sets user defined handler for /v1/health endpoint that is
-        used to retrieve the plugin state"""
-        self.app.add_api_route("/v1/health", endpoint, methods=["GET"])
 
     @property
     def app(self) -> FastAPI:
@@ -47,6 +40,7 @@ class WebServer:
 
         # Bare application has two endpoints registered:
         # /openapi.json and /docs
+        # Rest is registered by the plugin owner
         if not self.is_running():
             config = Config(app=self.app, host="0.0.0.0", port=self._port, workers=1)
             self._uvicorn = Server(config=config)

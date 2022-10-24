@@ -1,12 +1,15 @@
 import abc
 import importlib
+import inspect
 import json
 import warnings
 from abc import ABCMeta
 
 from loguru import logger
 
+import pymemri
 from pymemri.data.basic import read_json
+from pymemri.webserver.public_api import ENDPOINT_METADATA, register_endpoint
 
 from ..data.basic import write_json
 from ..data.schema import Account, PluginRun
@@ -43,7 +46,8 @@ class PluginBase(metaclass=ABCMeta):
         else:
             self._webserver = WebServer(pluginRun.webserverPort or 8080)
 
-        self._webserver.register_health_endpoint(self.health_endpoint)
+        self.endpoints = self._get_endpoint_methods()
+        self._register_api_endpoints()
 
         self.set_run_status(RUN_INITIALIZED)
 
@@ -104,8 +108,63 @@ class PluginBase(metaclass=ABCMeta):
             schema.extend(schema_cls.pod_schema())
         return schema
 
+    def _register_api_endpoints(self):
+        """Collect decorated methods and add them to the webserver routes"""
+        for (path, method), endpoint in self.endpoints.items():
+            self._webserver.app.add_api_route(path=path, endpoint=endpoint, methods=[method])
+
+    def _get_endpoint_methods(self):
+        """Collect decorated methods, bind them with `self`, and store in `endpoints`"""
+        endpoints = {}
+        for _method_name, method in inspect.getmembers(self, predicate=inspect.ismethod):
+            if hasattr(method, ENDPOINT_METADATA):
+                metadata = method.__endpoint_metadata__
+
+                if metadata in endpoints:
+                    raise RuntimeError(
+                        f"endpoint {metadata[0]} with method {metadata[1]} is already registered"
+                    )
+
+                endpoints[metadata] = method
+
+        return endpoints
+
+    @register_endpoint("/v1/health", "GET")
     def health_endpoint(self):
+        """Returns current state of the plugin"""
         return self._status
+
+    @register_endpoint("/v1/api", "GET")
+    def get_public_api(self):
+        """Returns exposed functions of the plugin"""
+
+        def get_friendly_annotation_name(kv):
+            """Annotation can be done by class, like: int, list, str
+            or by alias from typing module, like List, Sequence, Tuple.
+            """
+            k, v = kv
+            if hasattr(v, "__name__"):
+                # For classes, use __name__ that returns
+                # more concise value
+                return (k, v.__name__)
+            else:
+                # The typing aliases do not provide __name__ attribute, so use
+                # __repr__ implementation.
+                return (k, str(v))
+
+        resp = {
+            func_name: {
+                "method": method,
+                "args": dict(
+                    map(
+                        get_friendly_annotation_name,
+                        inspect.getfullargspec(func).annotations.items(),
+                    )
+                ),
+            }
+            for ((func_name, method), func) in self.endpoints.items()
+        }
+        return resp
 
     @property
     def daemon(self) -> bool:
