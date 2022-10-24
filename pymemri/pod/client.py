@@ -328,7 +328,10 @@ class PodClient:
         item = self._get_item_with_properties(id)
         edges = self.get_edges(id)
         for e in edges:
-            item.add_edge(e["name"], e["item"])
+            if e["name"] in item.edges:
+                item.add_edge(e["name"], e["item"])
+            else:
+                logger.debug(f"Could not add edge {e['name']}: Edge is not defined on Item.")
         return item
 
     def get_edges(self, id):
