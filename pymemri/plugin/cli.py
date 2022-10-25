@@ -20,6 +20,7 @@ from .constants import (
     POD_PLUGIN_DNS_ENV,
     POD_TARGET_ITEM_ENV,
 )
+from .oauth_handler import run_twitter_oauth_flow
 from .pluginbase import (
     PluginError,
     create_run_expanded,
@@ -177,3 +178,34 @@ def simulate_run_plugin_from_frontend(
 
     print("*Check the pod log/console for debug output.*")
     return run
+
+
+@call_parse
+def simulate_oauth1_flow(
+    pod_full_address: Param("The pod full address", str) = DEFAULT_POD_ADDRESS,
+    port: Param("Port to listen on", int) = 3667,
+    host: Param("Host to listen on", str) = "localhost",
+    callback_url: Param("Callback url", str) = None,
+    database_key: Param("Database key of the pod", str) = None,
+    owner_key: Param("Owner key of the pod", str) = None,
+    metadata: Param("metadata file for the PluginRun", str) = None,
+):
+    if database_key is None:
+        database_key = read_pod_key("database_key")
+    if owner_key is None:
+        owner_key = read_pod_key("owner_key")
+    if metadata is None:
+        raise ValueError("Missing metadata file")
+    else:
+        run = parse_metadata(metadata)
+    params = [pod_full_address, database_key, owner_key]
+    if None in params:
+        raise ValueError("Missing Pod credentials")
+
+    print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
+    client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
+
+    if run.pluginName == "TwitterPlugin":
+        run_twitter_oauth_flow(client=client, host=host, port=port, callback_url=callback_url)
+    else:
+        raise ValueError("Unsupported plugin")
