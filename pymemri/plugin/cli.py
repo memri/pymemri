@@ -180,65 +180,15 @@ def simulate_run_plugin_from_frontend(
     return run
 
 
-import http.server
-import socketserver
-import urllib
-from urllib.parse import parse_qs, urlsplit
-
-from pymemri.data.schema import OauthFlow
-from pymemri.pod.client import PodClient
-
-
-def get_request_handler(
-    client: PodClient, oauth_token_secret: str
-) -> http.server.BaseHTTPRequestHandler:
-    """
-    This is a factory function that returns a request handler class.
-
-    The returned class will have a reference to the client and oauth_token_secret
-    variables that are passed to this function.
-
-    This is needed because the request handler class is instantiated by the
-    TCPServer class, and we need to pass the client and oauth_token_secret
-    variables to the request handler class.
-    """
-
-    class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
-        def do_GET(self):
-            params = urlsplit(self.path)
-            if params.path == "/oauth":
-                args = parse_qs(params.query)
-                oauth_verifier = args.get("oauth_verifier")[0]
-                oauth_token = args.get("oauth_token")[0]
-                response = client.api.oauth1access_token(
-                    oauth_token=oauth_token,
-                    oauth_verifier=oauth_verifier,
-                    oauth_token_secret=oauth_token_secret,
-                )
-                access_token = response["oauth_token"]
-                access_token_secret = response["oauth_token_secret"]
-                item = OauthFlow(
-                    service="twitter",
-                    accessToken=access_token,
-                    accessTokenSecret=access_token_secret,
-                )
-                client.create(item)
-
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(bytes("Authenticated, succesfully created oauth item", "utf-8"))
-
-    return MyHttpRequestHandler
-
-
 @call_parse
-def simulate_twitter_flow(
+def simulate_oauth1_flow(
     pod_full_address: Param("The pod full address", str) = DEFAULT_POD_ADDRESS,
     port: Param("Port to listen on", int) = 3667,
-    callback_url: Param("Callback url", str) = "http://localhost:3667/oauth?state=twitter",
+    host: Param("Host to listen on", str) = "localhost",
+    callback_url: Param("Callback url", str) = None,
     database_key: Param("Database key of the pod", str) = None,
     owner_key: Param("Owner key of the pod", str) = None,
+    metadata: Param("metadata file for the PluginRun", str) = None,
 ):
 
     if database_key is None:
@@ -251,4 +201,11 @@ def simulate_twitter_flow(
 
     print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
-    run_twitter_oauth_flow(client=client, port=port, callback_url=callback_url)
+
+    if metadata is not None:
+        run = parse_metadata(metadata)
+
+    if run.pluginName == "TwitterPlugin":
+        run_twitter_oauth_flow(client=client, host=host, port=port, callback_url=callback_url)
+    else:
+        raise ValueError("Unsupported plugin")

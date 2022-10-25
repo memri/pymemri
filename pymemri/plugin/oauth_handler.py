@@ -54,8 +54,10 @@ def run_twitter_oauth_flow(
     *,
     client: PodClient,
     callback_url: str,
-    port: int,
+    host: str = "localhost",
+    port: int = 3667,
 ) -> None:
+    callback_url = callback_url or f"http://{host}:{port}/oauth?state=twitter"
     response = client.get_oauth1_request_token("twitter", callback_url)
 
     oauth_token_secret = response["oauth_token_secret"]
@@ -64,7 +66,9 @@ def run_twitter_oauth_flow(
     print(f"*** \n\nGo to https://api.twitter.com/oauth/authorize?{encoded} \n\n***\n\n")
 
     socketserver.TCPServer.allow_reuse_address = True
-    my_server = socketserver.TCPServer(("", port), get_request_handler(client, oauth_token_secret))
+    my_server = socketserver.TCPServer(
+        (host, port), get_request_handler(client, oauth_token_secret)
+    )
 
     client.add_to_schema(OauthFlow)
     my_server.handle_request()
