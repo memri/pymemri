@@ -212,3 +212,18 @@ class PodAPI:
 
     def oauth2get_access_token(self, platform: str) -> Any:
         return self.post("oauth2/access_token", {"platform": platform}).json()
+
+    def oauth1_request_token(self, platform: str, callback_url: str) -> Any:
+        return self.post(
+            "oauth1_request_token", {"service": platform, "callbackUrl": callback_url}
+        ).json()
+
+    def oauth1_access_token(self, *, oauth_token, oauth_token_secret, oauth_verifier) -> Any:
+        return self.post(
+            "oauth1_access_token",
+            {
+                "oauthVerifier": oauth_verifier,
+                "oauthToken": oauth_token,
+                "oauthTokenSecret": oauth_token_secret,
+            },
+        ).json()
