@@ -29,12 +29,12 @@ class TriggerPluginBase(PluginBase):
         def thread_fn(req: TriggerReq):
             try:
                 self.trigger(req)
-                self.client.send_trigger_status(req.item_id, req.trigger_id, "OK")
+                self.client.send_trigger_status(req.item_ids, req.trigger_id, "OK")
 
             except Exception as e:
-                msg = f"Error while handling the trigger for item {req}, reason {e}"
+                msg = f"Error while handling the trigger {req.trigger_id}, reason {e}"
                 logger.error(msg)
-                self.client.send_trigger_status(req.item_id, req.trigger_id, msg)
+                self.client.send_trigger_status(req.item_ids, req.trigger_id, msg)
 
         threading.Thread(target=thread_fn, args=(req,)).start()
 

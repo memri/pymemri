@@ -206,8 +206,8 @@ class PodAPI:
         payload = {"to": to, "subject": subject, "body": body}
         return self.post("send_email", payload)
 
-    def send_trigger_status(self, item_id: str, trigger_id: str, status: str) -> Any:
-        payload = {"item_id": item_id, "trigger_id": trigger_id, "status": status}
+    def send_trigger_status(self, item_ids: List[str], trigger_id: str, status: str) -> Any:
+        payload = {"item_ids": item_ids, "trigger_id": trigger_id, "status": status}
         return self.post("trigger/status", payload)
 
     def oauth2get_access_token(self, platform: str) -> Any:
