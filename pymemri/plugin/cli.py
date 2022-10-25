@@ -20,6 +20,7 @@ from .constants import (
     POD_PLUGIN_DNS_ENV,
     POD_TARGET_ITEM_ENV,
 )
+from .oauth_handler import run_twitter_oauth_flow
 from .pluginbase import (
     PluginError,
     create_run_expanded,
@@ -157,7 +158,7 @@ def simulate_run_plugin_from_frontend(
         run = parse_metadata(metadata)
         create_run_expanded(client, run)
     else:
-        if container is not None:
+        if container is None:
             container = plugin_path.split(".", 1)[0]
         print(f"Inferred '{container}' as plugin container name")
         plugin_module, plugin_name = plugin_path.rsplit(".", 1)
@@ -248,20 +249,6 @@ def simulate_twitter_flow(
     if None in params:
         raise ValueError("Missing Pod credentials")
 
-    client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
     print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
-    response = client.api.oauth1request_token("twitter", callback_url)
-
-    oauth_token_secret = response["oauth_token_secret"]
-    queryParameters = {"oauth_token": response["oauth_token"]}
-    encoded = urllib.parse.urlencode(queryParameters)
-    print(f"*** \n\nGo to https://api.twitter.com/oauth/authorize?{encoded} \n\n***\n\n")
-
-    socketserver.TCPServer.allow_reuse_address = True
-    my_server = socketserver.TCPServer(("", port), get_request_handler(client, oauth_token_secret))
-
-    client.add_to_schema(OauthFlow)
-    my_server.handle_request()
-
-
-# oauth1_flow()
+    client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
+    run_twitter_oauth_flow(client=client, port=port, callback_url=callback_url)

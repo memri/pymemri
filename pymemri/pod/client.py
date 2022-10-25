@@ -584,3 +584,13 @@ class PodClient:
         except PodError as e:
             logger.error(e)
             return None
+
+    def get_oauth1_request_token(self, platform, callback_url):
+        return self.api.oauth1_request_token(platform, callback_url)
+
+    def get_oauth1_access_token(self, oauth_token, oauth_verifier, oauth_token_secret):
+        return self.api.oauth1_access_token(
+            oauth_token=oauth_token,
+            oauth_verifier=oauth_verifier,
+            oauth_token_secret=oauth_token_secret,
+        )

@@ -93,9 +93,6 @@ class PodAPI:
     def delete_item(self, uid) -> list:
         return self.post("delete_item", uid).json()
 
-    def delete_user(self) -> list:
-        return self.post("delete_user", "").json()
-
     def search(self, query: dict) -> List[dict]:
         return self.post("search", query).json()
 
@@ -216,12 +213,12 @@ class PodAPI:
     def oauth2get_access_token(self, platform: str) -> Any:
         return self.post("oauth2/access_token", {"platform": platform}).json()
 
-    def oauth1request_token(self, platform: str, callback_url) -> Any:
+    def oauth1_request_token(self, platform: str, callback_url: str) -> Any:
         return self.post(
             "oauth1_request_token", {"service": platform, "callbackUrl": callback_url}
         ).json()
 
-    def oauth1access_token(self, *, oauth_token, oauth_token_secret, oauth_verifier) -> Any:
+    def oauth1_access_token(self, *, oauth_token, oauth_token_secret, oauth_verifier) -> Any:
         return self.post(
             "oauth1_access_token",
             {
