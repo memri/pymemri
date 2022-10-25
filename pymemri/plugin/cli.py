@@ -190,20 +190,20 @@ def simulate_oauth1_flow(
     owner_key: Param("Owner key of the pod", str) = None,
     metadata: Param("metadata file for the PluginRun", str) = None,
 ):
-
     if database_key is None:
         database_key = read_pod_key("database_key")
     if owner_key is None:
         owner_key = read_pod_key("owner_key")
+    if metadata is None:
+        raise ValueError("Missing metadata file")
+    else:
+        run = parse_metadata(metadata)
     params = [pod_full_address, database_key, owner_key]
     if None in params:
         raise ValueError("Missing Pod credentials")
 
     print(f"pod_full_address={pod_full_address}\nowner_key={owner_key}\n")
     client = PodClient(url=pod_full_address, database_key=database_key, owner_key=owner_key)
-
-    if metadata is not None:
-        run = parse_metadata(metadata)
 
     if run.pluginName == "TwitterPlugin":
         run_twitter_oauth_flow(client=client, host=host, port=port, callback_url=callback_url)
