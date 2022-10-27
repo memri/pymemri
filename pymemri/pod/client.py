@@ -284,7 +284,7 @@ class PodClient:
                     delete_items_batch,
                 )
             except PodError as e:
-                logger.error("could not complete bulk action, aborting")
+                logger.error(f"could not complete bulk action {e}, aborting")
                 return False
         logger.info(f"Completed Bulk action, written {n} items/edges")
 
