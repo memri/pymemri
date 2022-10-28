@@ -2,7 +2,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from ..gitlab_api import DEFAULT_PACKAGE_VERSION, GitlabAPI
+from ..gitlab_api import DEFAULT_PACKAGE_VERSION, GitlabAPI, find_git_repo
 
 DEFAULT_PLUGIN_MODEL_PACKAGE_NAME = "plugin-model-package"
 DEFAULT_PYTORCH_MODEL_NAME = "pytorch_model.bin"
@@ -26,8 +26,13 @@ def write_huggingface_model_to_package_registry(
             f"writing {f} to package registry of {project_name} with project id {project_id}"
         )
         api.write_file_to_package_registry(
-            project_id, file_path, package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME, version=version
+            project_id,
+            file_path,
+            package_name=DEFAULT_PLUGIN_MODEL_PACKAGE_NAME,
+            version=version,
+            trigger_pipeline=False,
         )
+    api.trigger_pipeline(project_id=project_id)
 
 
 def write_model_to_package_registry(model, project_name=None, client=None):
