@@ -87,7 +87,7 @@ class GitlabAPI:
         file_path,
         package_name,
         version=DEFAULT_PACKAGE_VERSION,
-        trigger_pipeline=True,
+        trigger_pipeline=False,
     ):
         file_path = Path(file_path)
         file_name = file_path.name
