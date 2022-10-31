@@ -295,7 +295,7 @@ def test_bulk_update_delete(client: PodClient):
     assert client.get(person1.id).firstName == "updated"
 
 
-def test_plugin_statis(client: PodClient):
+def test_plugin_status(client: PodClient):
     run = PluginRun(containerImage="")
     client.create(run)
     assert client.plugin_status([run.id])[run.id] == "unreachable"
