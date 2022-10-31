@@ -231,7 +231,7 @@ class PodAPI:
     def plugin_status(self, plugins: List[str]) -> Any:
         return self.post("plugin/status", {"plugins": plugins}).json()
 
-    def plugin_api(self, plugin_id: str):
+    def plugin_api(self, plugin_id: str) -> Any:
         return self.post("plugin/api", {"id": plugin_id}).json()
 
     def plugin_api_call(
@@ -239,9 +239,9 @@ class PodAPI:
         plugin_id: str,
         method: str,
         endpoint: str,
-        query: Dict[str, Any],
-        jsonBody: Dict[str, Any],
-    ):
+        query: Dict[str, Any] = None,
+        jsonBody: Dict[str, Any] = None,
+    ) -> Any:
         payload = {
             "id": plugin_id,
             "method": method,
