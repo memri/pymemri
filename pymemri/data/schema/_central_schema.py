@@ -296,6 +296,8 @@ class MessageChannel(Item):
     name: Optional[str] = None
     topic: Optional[str] = None
     service: Optional[str] = None
+    isMock: Optional[bool] = None
+    sourceProject: Optional[str] = None
 
     # Edges
     photo: List["Photo"] = []
@@ -386,6 +388,9 @@ class Plugin(Item):
 
     # Edges
     view: List["CVUStoredDefinition"] = []
+    templateSettings: List["TemplateSettings"] = []
+    project: List["Project"] = []
+    run: List["PluginRun"] = []
 
 
 class PluginRun(Item):
@@ -406,6 +411,7 @@ class PluginRun(Item):
     plugin: List["Plugin"] = []
     view: List["CVUStoredDefinition"] = []
     account: List["Account"] = []
+    trigger: List["Trigger"] = []
 
 
 class Post(Item):
@@ -415,6 +421,7 @@ class Post(Item):
     postDate: Optional[datetime] = None
     postType: Optional[str] = None
     isMock: Optional[bool] = None
+    sourceProject: Optional[str] = None
 
     # Edges
     author: List["Account"] = []
@@ -450,6 +457,16 @@ class SuggestedMerge(Item):
 
     # Edges
     mergeFrom: List["Person"] = []
+
+
+class TemplateSettings(Item):
+    # Properties
+    templateName: Optional[str] = None
+    templateId: Optional[int] = None
+    dataSource: Optional[str] = None
+
+    # Edges
+    labelOption: List["LabelOption"] = []
 
 
 class Trigger(Item):

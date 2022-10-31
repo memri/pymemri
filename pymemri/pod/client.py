@@ -284,7 +284,7 @@ class PodClient:
                     delete_items_batch,
                 )
             except PodError as e:
-                logger.error("could not complete bulk action, aborting")
+                logger.error(f"could not complete bulk action {e}, aborting")
                 return False
         logger.info(f"Completed Bulk action, written {n} items/edges")
 
@@ -328,7 +328,10 @@ class PodClient:
         item = self._get_item_with_properties(id)
         edges = self.get_edges(id)
         for e in edges:
-            item.add_edge(e["name"], e["item"])
+            if e["name"] in item.edges:
+                item.add_edge(e["name"], e["item"])
+            else:
+                logger.debug(f"Could not add edge {e['name']}: Edge is not defined on Item.")
         return item
 
     def get_edges(self, id):
@@ -591,3 +594,13 @@ class PodClient:
         except PodError as e:
             logger.error(e)
             return None
+
+    def get_oauth1_request_token(self, platform, callback_url):
+        return self.api.oauth1_request_token(platform, callback_url)
+
+    def get_oauth1_access_token(self, oauth_token, oauth_verifier, oauth_token_secret):
+        return self.api.oauth1_access_token(
+            oauth_token=oauth_token,
+            oauth_verifier=oauth_verifier,
+            oauth_token_secret=oauth_token_secret,
+        )

@@ -206,8 +206,8 @@ class PodAPI:
         payload = {"to": to, "subject": subject, "body": body}
         return self.post("send_email", payload)
 
-    def send_trigger_status(self, item_id: str, trigger_id: str, status: str) -> Any:
-        payload = {"item_id": item_id, "trigger_id": trigger_id, "status": status}
+    def send_trigger_status(self, item_ids: List[str], trigger_id: str, status: str) -> Any:
+        payload = {"item_ids": item_ids, "trigger_id": trigger_id, "status": status}
         return self.post("trigger/status", payload)
 
     def oauth2get_access_token(self, platform: str) -> Any:
@@ -215,3 +215,18 @@ class PodAPI:
 
     def plugin_status(self, plugins: List[str]) -> Any:
         return self.post("plugin/status", {"plugins": plugins}).json()
+
+    def oauth1_request_token(self, platform: str, callback_url: str) -> Any:
+        return self.post(
+            "oauth1_request_token", {"service": platform, "callbackUrl": callback_url}
+        ).json()
+
+    def oauth1_access_token(self, *, oauth_token, oauth_token_secret, oauth_verifier) -> Any:
+        return self.post(
+            "oauth1_access_token",
+            {
+                "oauthVerifier": oauth_verifier,
+                "oauthToken": oauth_token,
+                "oauthTokenSecret": oauth_token_secret,
+            },
+        ).json()

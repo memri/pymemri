@@ -31,14 +31,15 @@ class WebServer:
         return self._app
 
     def run(self):
-        """Starts the webserver, only if any route was registered.
+        """Starts the webserver, if not done already.
         Call returns immediately, server itself is offloaded to
-        the thread."""
+        the thread.
+        """
 
         # Bare application has two endpoints registered:
         # /openapi.json and /docs
-        DEFAULT_ROUTES = 2
-        if len(self.app.routes) > DEFAULT_ROUTES:
+        # Rest is registered by the plugin owner
+        if not self.is_running():
             config = Config(app=self.app, host="0.0.0.0", port=self._port, workers=1)
             self._uvicorn = Server(config=config)
 

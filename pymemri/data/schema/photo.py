@@ -6,19 +6,18 @@ from typing import Any, List, Optional, Tuple
 import numpy as np
 from PIL import Image
 
-from ._central_schema import File, Item
+from ._central_schema import File, Photo
 
 DEFAULT_ENCODING = "PNG"
 
 
-class Photo(Item):
+class Photo(Photo):
     data: Optional[bytes] = None
     height: Optional[int] = None
     width: Optional[int] = None
     channels: Optional[int] = None
     encoding: Optional[str] = None
     mode: Optional[str] = None
-    file: List[File] = []
 
     def show(self):
         raise NotImplementedError()
