@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
 import numpy as np
-from PIL import Image, ExifTags
+from PIL import ExifTags, Image
 
 from ._central_schema import File, Photo
 
