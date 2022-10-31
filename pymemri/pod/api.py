@@ -213,9 +213,6 @@ class PodAPI:
     def oauth2get_access_token(self, platform: str) -> Any:
         return self.post("oauth2/access_token", {"platform": platform}).json()
 
-    def plugin_status(self, plugins: List[str]) -> Any:
-        return self.post("plugin/status", {"plugins": plugins}).json()
-
     def oauth1_request_token(self, platform: str, callback_url: str) -> Any:
         return self.post(
             "oauth1_request_token", {"service": platform, "callbackUrl": callback_url}
@@ -230,3 +227,27 @@ class PodAPI:
                 "oauthTokenSecret": oauth_token_secret,
             },
         ).json()
+
+    def plugin_status(self, plugins: List[str]) -> Any:
+        return self.post("plugin/status", {"plugins": plugins}).json()
+
+    def plugin_api(self, plugin_id: str):
+        return self.post("plugin/api", {"id": plugin_id}).json()
+
+    def plugin_api_call(
+        self,
+        plugin_id: str,
+        method: str,
+        endpoint: str,
+        query: Dict[str, Any],
+        jsonBody: Dict[str, Any],
+    ):
+        payload = {
+            "id": plugin_id,
+            "method": method,
+            "endpoint": endpoint,
+            "query": query,
+            "jsonBody": jsonBody,
+        }
+
+        return self.post("plugin/api/call", payload).json()
