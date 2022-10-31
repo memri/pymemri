@@ -227,3 +227,27 @@ class PodAPI:
                 "oauthTokenSecret": oauth_token_secret,
             },
         ).json()
+
+    def plugin_status(self, plugins: List[str]) -> Any:
+        return self.post("plugin/status", {"plugins": plugins}).json()
+
+    def plugin_api(self, plugin_id: str) -> Any:
+        return self.post("plugin/api", {"id": plugin_id}).json()
+
+    def plugin_api_call(
+        self,
+        plugin_id: str,
+        method: str,
+        endpoint: str,
+        query: Dict[str, Any] = None,
+        jsonBody: Dict[str, Any] = None,
+    ) -> Any:
+        payload = {
+            "id": plugin_id,
+            "method": method,
+            "endpoint": endpoint,
+            "query": query,
+            "jsonBody": jsonBody,
+        }
+
+        return self.post("plugin/api/call", payload).json()

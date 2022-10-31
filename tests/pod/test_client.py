@@ -2,7 +2,15 @@ from typing import List
 
 import pytest
 
-from pymemri.data.schema import Account, Edge, EmailMessage, Item, OauthFlow, Person
+from pymemri.data.schema import (
+    Account,
+    Edge,
+    EmailMessage,
+    Item,
+    OauthFlow,
+    Person,
+    PluginRun,
+)
 from pymemri.examples.example_schema import Dog
 from pymemri.pod.client import PodClient
 from pymemri.pod.graphql_utils import GQLQuery
@@ -285,3 +293,9 @@ def test_bulk_update_delete(client: PodClient):
     client.reset_local_db()
     assert client.get(person2.id, include_deleted=True).deleted
     assert client.get(person1.id).firstName == "updated"
+
+
+def test_plugin_status(client: PodClient):
+    run = PluginRun(containerImage="")
+    client.create(run)
+    assert client.plugin_status([run.id])[run.id] == "unreachable"
