@@ -51,7 +51,15 @@ class Photo(Photo):
         exif_data = cls.extract_exif(image)
         _bytes = cls.PIL_to_bytes(image, encoding)
 
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode, exifData=exif_data)
+        res = cls(
+            data=_bytes,
+            height=h,
+            width=w,
+            channels=c,
+            encoding=encoding,
+            mode=mode,
+            exifData=exif_data,
+        )
         file = File(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
@@ -69,7 +77,7 @@ class Photo(Photo):
         exif_data = pil_image.getexif()
         for k, v in exif_data.items():
             if k in ExifTags.TAGS:
-                exif_dict[ExifTags.TAGS[k]] = str(v) # may include bytes
+                exif_dict[ExifTags.TAGS[k]] = str(v)  # may include bytes
         if len(exif_dict.keys()) == 0:
             exif_dict = None
         return json.dumps(exif_dict)
