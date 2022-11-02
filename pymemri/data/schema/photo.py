@@ -27,14 +27,14 @@ class Photo(Photo):
         pil_image = Image.open(path)
         if size is not None:
             pil_image = pil_image.resize(size)
-        return cls.from_pil(pil_image)
+        return cls.from_PIL(pil_image)
 
     @classmethod
     def from_np(cls, data: np.array, size: Optional[Tuple[int]] = None):
         pil_image = Image.fromarray(data)
         if size is not None:
             pil_image = pil_image.resize(size)
-        return cls.from_pil(pil_image)
+        return cls.from_PIL(pil_image)
 
     @classmethod
     def from_bytes(cls, _bytes, size: Optional[Tuple[int]] = None):
@@ -42,10 +42,10 @@ class Photo(Photo):
         pil_image = Image.open(image_stream)
         if size is not None:
             pil_image = pil_image.resize(size)
-        return cls.from_pil(pil_image)
+        return cls.from_PIL(pil_image)
 
     @classmethod
-    def from_pil(cls, image: Image.Image):
+    def from_PIL(cls, image: Image.Image):
         encoding, mode, shape = cls.infer_PIL_metadata(image)
         w, h, c = shape
         exif_data = cls.extract_exif(image)
