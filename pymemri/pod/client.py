@@ -37,6 +37,7 @@ class PodClient:
         register_base_schema=True,
         verbose=False,
         default_priority=Priority.local,
+        create_account=False,
     ):
         self.verbose = verbose
         self.database_key = database_key if database_key is not None else self.generate_random_key()
@@ -51,6 +52,12 @@ class PodClient:
         )
 
         self.default_priority = Priority(default_priority)
+
+        if owner_key is None or create_account:
+            # owner_key not provided by the caller, create account for newly generated one
+            # or enforced to do so by the flag
+            self.api.create_account()
+
         self.api.test_connection()
         self.local_db = DB()
         self.registered_classes = dict()

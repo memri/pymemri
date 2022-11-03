@@ -91,7 +91,7 @@ def test_graphql_1(api: PodAPI):
 @pytest.mark.skip(reason="TODO /graphQL should error on out-of-schema values")
 def test_graphql_2(api: PodAPI):
     query = """
-        query { 
+        query {
             Message {
                 id
                 subject
@@ -115,7 +115,7 @@ def test_graphql_2(api: PodAPI):
 def test_graphql_3(api: PodAPI):
 
     query = """
-        query { 
+        query {
             count
             total
         }
