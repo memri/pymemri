@@ -48,6 +48,16 @@ class PodAPI:
         else:
             return {"type": "ClientAuth", "databaseKey": self.database_key}
 
+    def create_account(self):
+        response = requests.post(
+            f"{self._url}/{self.version}/account",
+            json={"ownerKey": self.owner_key, "databaseKey": self.database_key},
+        )
+
+        if response.status_code != 200:
+            logger.error(f"Failed to register the account {response.text}")
+            raise PodError(response.status_code, response.text)
+
     def test_connection(self) -> bool:
         try:
             res = requests.get(self._url)

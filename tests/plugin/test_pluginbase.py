@@ -21,7 +21,7 @@ def example_metadata_path():
 @pytest.fixture
 def client():
     subprocess.run(["store_keys", "--replace", "False"])
-    return PodClient.from_local_keys()
+    return PodClient.from_local_keys(create_account=True)
 
 
 def test_plugin_schema():
