@@ -56,7 +56,6 @@ class PodAPI:
 
         if response.status_code != 200:
             logger.error(f"Failed to register the account {response.text}")
-            raise PodError(response.status_code, response.text)
 
     def test_connection(self) -> bool:
         try:

@@ -37,7 +37,7 @@ class PodClient:
         register_base_schema=True,
         verbose=False,
         default_priority=Priority.local,
-        create_account=False,
+        create_account=True,
     ):
         self.verbose = verbose
         self.database_key = database_key if database_key is not None else self.generate_random_key()
