@@ -2,17 +2,9 @@ from typing import List
 
 import pytest
 
-from pymemri.data.schema import (
-    Account,
-    Edge,
-    EmailMessage,
-    Item,
-    OauthFlow,
-    Person,
-    PluginRun,
-)
+from pymemri.data.schema import Account, Edge, EmailMessage, Item, Person, PluginRun
 from pymemri.examples.example_schema import Dog
-from pymemri.pod.client import PodClient
+from pymemri.pod.client import PodClient, PodError
 from pymemri.pod.graphql_utils import GQLQuery
 
 
@@ -299,3 +291,22 @@ def test_plugin_status(client: PodClient):
     run = PluginRun(containerImage="")
     client.create(run)
     assert client.plugin_status([run.id])[run.id] == "unreachable"
+
+
+def test_create_account():
+    # Create client with new account
+    client = PodClient()
+    owner_key = client.owner_key
+    database_key = client.database_key
+
+    # Create another client with same keys
+    client = PodClient(owner_key=owner_key, database_key=database_key, create_account=False)
+    assert len(client.search({"type": "ItemPropertySchema"}))
+
+    # Create new client + account with same keys only raises warning
+    client = PodClient(owner_key=owner_key, database_key=database_key, create_account=True)
+    assert len(client.search({"type": "ItemPropertySchema"}))
+
+    # New pod without create_account throws error
+    with pytest.raises(PodError):
+        _ = PodClient(create_account=False, owner_key=PodClient.generate_random_key())
