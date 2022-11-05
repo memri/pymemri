@@ -563,16 +563,22 @@ class Country(Location):
     location: List["Location"] = []
 
 
-class Photo(MediaObject):
+class Photo(Item):
     # Properties
+    name: Optional[str] = None
     caption: Optional[str] = None
     exifData: Optional[str] = None
-    name: Optional[str] = None
+    height: Optional[int] = None
+    width: Optional[int] = None
+    channels: Optional[int] = None
+    encoding: Optional[str] = None
+    mode: Optional[str] = None
 
     # Edges
     changelog: List["AuditItem"] = []
     label: List["Label"] = []
     thumbnail: List["File"] = []
+    file: List["File"] = []
 
 
 class Tweet(Post):

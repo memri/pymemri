@@ -1,10 +1,11 @@
 import io
+import json
 from hashlib import sha256
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
 import numpy as np
-from PIL import Image
+from PIL import ExifTags, Image
 
 from ._central_schema import File, Photo
 
@@ -13,11 +14,6 @@ DEFAULT_ENCODING = "PNG"
 
 class Photo(Photo):
     data: Optional[bytes] = None
-    height: Optional[int] = None
-    width: Optional[int] = None
-    channels: Optional[int] = None
-    encoding: Optional[str] = None
-    mode: Optional[str] = None
 
     def show(self):
         raise NotImplementedError()
@@ -29,37 +25,41 @@ class Photo(Photo):
     @classmethod
     def from_path(cls, path: Path, size: Optional[Tuple[int]] = None):
         pil_image = Image.open(path)
-        encoding, mode, shape = cls.infer_PIL_metadata(pil_image)
-        w, h, c = shape
-        _bytes = cls.PIL_to_bytes(pil_image, encoding)
-
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
-        file = File(sha256=sha256(_bytes).hexdigest())
-        res.add_edge("file", file)
-        return res
+        if size is not None:
+            pil_image = pil_image.resize(size)
+        return cls.from_PIL(pil_image)
 
     @classmethod
     def from_np(cls, data: np.array, size: Optional[Tuple[int]] = None):
         pil_image = Image.fromarray(data)
         if size is not None:
             pil_image = pil_image.resize(size)
-        encoding, mode, shape = cls.infer_PIL_metadata(pil_image)
-        w, h, c = shape
-        _bytes = cls.PIL_to_bytes(pil_image, encoding)
-
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
-        file = File(sha256=sha256(_bytes).hexdigest())
-        res.add_edge("file", file)
-        return res
+        return cls.from_PIL(pil_image)
 
     @classmethod
-    def from_bytes(cls, _bytes):
+    def from_bytes(cls, _bytes, size: Optional[Tuple[int]] = None):
         image_stream = io.BytesIO(_bytes)
         pil_image = Image.open(image_stream)
-        encoding, mode, shape = cls.infer_PIL_metadata(pil_image)
-        w, h, c = shape
+        if size is not None:
+            pil_image = pil_image.resize(size)
+        return cls.from_PIL(pil_image)
 
-        res = cls(data=_bytes, height=h, width=w, channels=c, encoding=encoding, mode=mode)
+    @classmethod
+    def from_PIL(cls, image: Image.Image):
+        encoding, mode, shape = cls.infer_PIL_metadata(image)
+        w, h, c = shape
+        exif_data = cls.extract_exif(image)
+        _bytes = cls.PIL_to_bytes(image, encoding)
+
+        res = cls(
+            data=_bytes,
+            height=h,
+            width=w,
+            channels=c,
+            encoding=encoding,
+            mode=mode,
+            exifData=exif_data,
+        )
         file = File(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         return res
@@ -69,6 +69,18 @@ class Photo(Photo):
         byte_io = io.BytesIO()
         pil_image.save(byte_io, encoding)
         return byte_io.getvalue()
+
+    @staticmethod
+    def extract_exif(pil_image: Image.Image) -> Optional[str]:
+        # extract exif
+        exif_dict = {}
+        exif_data = pil_image.getexif()
+        for k, v in exif_data.items():
+            if k in ExifTags.TAGS:
+                exif_dict[ExifTags.TAGS[k]] = str(v)  # may include bytes
+        if len(exif_dict.keys()) == 0:
+            exif_dict = None
+        return json.dumps(exif_dict)
 
     @staticmethod
     def infer_PIL_metadata(pil_image: Image.Image):
