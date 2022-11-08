@@ -53,10 +53,8 @@ class PodClient:
 
         self.default_priority = Priority(default_priority)
 
-        if owner_key is None or create_account:
-            # owner_key not provided by the caller, create account for newly generated one
-            # or enforced to do so by the flag
-            self.api.create_account()
+        if create_account:
+            self.create_account()
 
         self.api.test_connection()
         self.local_db = DB()
@@ -74,6 +72,12 @@ class PodClient:
     @staticmethod
     def generate_random_key():
         return "".join([str(random.randint(0, 9)) for i in range(64)])
+
+    def create_account(self):
+        try:
+            self.api.create_account()
+        except PodError as e:
+            logger.warning(e)
 
     def register_base_schemas(self):
         result = self.add_to_schema(PluginRun, Account)
