@@ -59,9 +59,11 @@ class Photo(Photo):
             encoding=encoding,
             mode=mode,
             exifData=exif_data,
+            id=cls.create_id(),
         )
         file = File(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
+        file.id = file.create_id()
         return res
 
     @staticmethod
