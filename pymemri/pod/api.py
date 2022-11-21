@@ -41,6 +41,7 @@ class PodAPI:
         self._url = url
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
+        self.session = requests.Session()
 
     def _create_auth(self, auth_json: dict = None) -> dict:
         if auth_json is not None:
@@ -49,7 +50,7 @@ class PodAPI:
             return {"type": "ClientAuth", "databaseKey": self.database_key}
 
     def create_account(self):
-        response = requests.post(
+        response = self.session.post(
             f"{self._url}/{self.version}/account",
             json={"ownerKey": self.owner_key, "databaseKey": self.database_key},
         )
@@ -58,7 +59,7 @@ class PodAPI:
 
     def test_connection(self) -> bool:
         try:
-            res = requests.get(self._url)
+            res = self.session.get(self._url)
             if self.verbose:
                 logger.info("Succesfully connected to pod")
             return True
@@ -68,14 +69,14 @@ class PodAPI:
 
     @property
     def pod_version(self) -> dict:
-        response = requests.get(f"{self._url}/version")
+        response = self.session.get(f"{self._url}/version")
         if response.status_code != 200:
             raise PodError(response.status_code, response.text)
         return response.json()
 
     def post(self, endpoint: str, payload: Any) -> Any:
         body = {"auth": self.auth_json, "payload": payload}
-        response = requests.post(f"{self.base_url}/{endpoint}", json=body)
+        response = self.session.post(f"{self.base_url}/{endpoint}", json=body)
         if response.status_code != 200:
             raise PodError(response.status_code, response.text)
         return response
@@ -192,7 +193,9 @@ class PodAPI:
             return self.upload_file_b(file)
 
         sha = sha256(file).hexdigest()
-        result = requests.post(f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file)
+        result = self.session.post(
+            f"{self.base_url}/upload_file/{self.database_key}/{sha}", data=file
+        )
         if result.status_code != 200:
             raise PodError(result.status_code, result.text)
 
@@ -201,7 +204,7 @@ class PodAPI:
     def upload_file_b(self, file: bytes) -> Any:
         sha = sha256(file).hexdigest()
         auth = urllib.parse.quote(json.dumps(self.auth_json))
-        result = requests.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
+        result = self.session.post(f"{self.base_url}/upload_file_b/{auth}/{sha}", data=file)
         if result.status_code != 200:
             raise PodError(result.status_code, result.text)
 

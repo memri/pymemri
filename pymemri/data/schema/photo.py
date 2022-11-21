@@ -42,14 +42,14 @@ class Photo(Photo):
         pil_image = Image.open(image_stream)
         if size is not None:
             pil_image = pil_image.resize(size)
-        return cls.from_PIL(pil_image)
+        return cls.from_PIL(pil_image, _bytes)
 
     @classmethod
-    def from_PIL(cls, image: Image.Image):
+    def from_PIL(cls, image: Image.Image, bytes_: Optional[bytes] = None):
         encoding, mode, shape = cls.infer_PIL_metadata(image)
         w, h, c = shape
         exif_data = cls.extract_exif(image)
-        _bytes = cls.PIL_to_bytes(image, encoding)
+        _bytes = bytes_ or cls.PIL_to_bytes(image, encoding)
 
         res = cls(
             data=_bytes,
