@@ -71,7 +71,7 @@ def store_keys(
     if owner_key is None:
         owner_key = PodClient.generate_random_key()
 
-    obj = {"database_key": database_key, "owner_key": owner_key}
+    obj = {"owner_key": owner_key, "database_key": database_key}
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         timestr = time.strftime("%Y%m%d-%H%M%S")
