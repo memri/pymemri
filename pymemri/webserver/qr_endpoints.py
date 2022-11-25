@@ -24,6 +24,7 @@ router = APIRouter()
 QR_CODE_KEY = "qr_code"
 QR_STRING_KEY = "qr_string"
 AUTHENTICATED = "authenticated"
+REQUIRES2FACTOR = "requires2factor"
 
 
 @router.get("/qr", response_class=HTMLResponse)
@@ -32,9 +33,11 @@ def qr(request: Request):
     global qr_code_dict
     qr_code_data = qr_code_dict.get(QR_CODE_KEY, None)
     done = qr_code_dict.get(AUTHENTICATED, False)
+    requires2factor = (qr_code_dict.get(REQUIRES2FACTOR, False),)
 
     the_path = os.path.join(get_root_path(__name__), "template")
 
+    # TODO - add a template for 2FA
     if done:
         return templates.TemplateResponse("success.html", {"request": request})
     else:
@@ -51,6 +54,7 @@ def qr_svg():
     content = {
         "qr": qr_code_dict.get(QR_CODE_KEY, None),
         "authenticated": qr_code_dict.get(AUTHENTICATED, False),
+        "requires2factor": qr_code_dict.get(REQUIRES2FACTOR, False),
     }
 
     return JSONResponse(content=content, headers={"Access-Control-Allow-Origin": "*"})
@@ -64,6 +68,7 @@ def qr_string():
     content = {
         "qr": qr_code_dict.get(QR_STRING_KEY, None).decode("utf-8"),
         "authenticated": qr_code_dict.get(AUTHENTICATED, False),
+        "requires2factor": qr_code_dict.get(REQUIRES2FACTOR, False),
     }
 
     return JSONResponse(content=content, headers={"Access-Control-Allow-Origin": "*"})
