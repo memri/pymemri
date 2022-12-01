@@ -43,7 +43,7 @@ def get_request_handler(
                     userId=response["user_id"],
                 )
                 try:
-                    client.create_oauth_item(item)
+                    client.create(item)
                 except ValueError as e:
                     self.send_response(400)
                     self.send_header("Content-type", "text/html")
