@@ -40,7 +40,6 @@ def get_request_handler(
                     service="twitter",
                     accessToken=access_token,
                     accessTokenSecret=access_token_secret,
-                    userId=response["user_id"],
                 )
                 try:
                     client.create(item)
