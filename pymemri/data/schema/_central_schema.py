@@ -38,6 +38,7 @@ class Account(Item):
     service: Optional[str] = None
     accessToken: Optional[str] = None
     refreshToken: Optional[str] = None
+    description: Optional[str] = None
 
     # Edges
     changelog: List["AuditItem"] = []
@@ -200,6 +201,10 @@ class File(Item):
     nonce: Optional[str] = None
     sha256: Optional[str] = None
     starred: Optional[bool] = None
+    externalId: Optional[str] = None
+
+    def __hash__(self):
+        return hash(self.sha256)
 
 
 class Integrator(Item):
@@ -581,12 +586,25 @@ class Photo(Item):
     file: List["File"] = []
 
 
-class Tweet(Post):
-    # Properties
+class Tweet(Item):
+    message: Optional[str] = None
     service: Optional[str] = None
+    postDate: Optional[datetime] = None
+    tweetType: Optional[str] = None
+    conversationId: Optional[str] = None
+    retweetCount: Optional[int] = None
+    replyCount: Optional[int] = None
+    likeCount: Optional[int] = None
 
-    # Edges
-    mention: List["Account"] = []
+    referenceTweet: List["Tweet"] = []
+    replies: List["Tweet"] = []
+    mention: List[Account] = []
+    author: List[Account] = []
+    photo: List[Photo] = []
+
+
+class Hashtag(Item):
+    pass
 
 
 class Message(WrittenWork):
