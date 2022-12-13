@@ -76,7 +76,7 @@ class PodClient:
     def create_account(self):
         try:
             self.api.create_account()
-        except PodError as e:
+        except Exception as e:
             logger.warning(e)
 
     def register_base_schemas(self):

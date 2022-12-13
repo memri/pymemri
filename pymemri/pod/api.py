@@ -50,12 +50,15 @@ class PodAPI:
             return {"type": "ClientAuth", "databaseKey": self.database_key}
 
     def create_account(self):
-        response = self.session.post(
-            f"{self._url}/{self.version}/account",
-            json={"ownerKey": self.owner_key, "databaseKey": self.database_key},
-        )
-        if response.status_code != 200:
-            raise PodError(response.status_code, response.text)
+        if self.database_key is not None and self.owner_key is not None:
+            response = self.session.post(
+                f"{self._url}/{self.version}/account",
+                json={"ownerKey": self.owner_key, "databaseKey": self.database_key},
+            )
+            if response.status_code != 200:
+                raise PodError(response.status_code, response.text)
+        else:
+            raise ValueError("Cannot create the account without database and owner keys")
 
     def test_connection(self) -> bool:
         try:
