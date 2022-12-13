@@ -39,9 +39,20 @@ class PodClient:
         default_priority=Priority.local,
         create_account=True,
     ):
+        if auth_json is not None and owner_key is not None:
+            raise ValueError("Cannot create a pod client containing both auth_json, and owner keys")
+
         self.verbose = verbose
-        self.database_key = database_key if database_key is not None else self.generate_random_key()
-        self.owner_key = owner_key if owner_key is not None else self.generate_random_key()
+
+        if auth_json is None:
+            logger.debug("Using keys for authentication")
+            self.database_key = (
+                database_key if database_key is not None else self.generate_random_key()
+            )
+            self.owner_key = owner_key if owner_key is not None else self.generate_random_key()
+        else:
+            logger.debug("Using auth_json for authentication")
+
         self.api = PodAPI(
             database_key=self.database_key,
             owner_key=self.owner_key,
