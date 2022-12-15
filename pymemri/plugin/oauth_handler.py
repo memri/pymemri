@@ -1,7 +1,6 @@
 import http.server
 import socketserver
 import urllib
-import webbrowser
 from urllib.parse import parse_qs, urlsplit
 
 from pymemri.data.schema import OauthFlow
@@ -41,14 +40,7 @@ def get_request_handler(
                     accessToken=access_token,
                     accessTokenSecret=access_token_secret,
                 )
-                try:
-                    client.create(item)
-                except ValueError as e:
-                    self.send_response(400)
-                    self.send_header("Content-type", "text/html")
-                    self.end_headers()
-                    self.wfile.write(bytes("Error: " + str(e), "utf8"))
-                    return
+                client.create(item)
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -61,7 +53,7 @@ def get_request_handler(
 def run_twitter_oauth_flow(
     *,
     client: PodClient,
-    callback_url: str = None,
+    callback_url: str,
     host: str = "localhost",
     port: int = 3667,
 ) -> None:
@@ -71,9 +63,7 @@ def run_twitter_oauth_flow(
     oauth_token_secret = response["oauth_token_secret"]
     queryParameters = {"oauth_token": response["oauth_token"]}
     encoded = urllib.parse.urlencode(queryParameters)
-    url = f"https://api.twitter.com/oauth/authorize?{encoded}"
-    print(f"***\n\nGo to {url} \n\n***\n\n")
-    webbrowser.open(url)
+    print(f"*** \n\nGo to https://api.twitter.com/oauth/authorize?{encoded} \n\n***\n\n")
 
     socketserver.TCPServer.allow_reuse_address = True
     my_server = socketserver.TCPServer(
