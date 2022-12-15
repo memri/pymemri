@@ -1,1 +1,3 @@
-__version__ = "0.0.35"
+from pymemri.pod.client import PodClient
+
+__version__ = "0.0.36"

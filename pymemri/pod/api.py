@@ -221,8 +221,30 @@ class PodAPI:
         payload = {"item_ids": item_ids, "trigger_id": trigger_id, "status": status}
         return self.post("trigger/status", payload)
 
-    def oauth2get_access_token(self, platform: str) -> Any:
-        return self.post("oauth2/access_token", {"platform": platform}).json()
+    def oauth2get_access_token(
+        self,
+        platform: str,
+    ) -> Any:
+        return self.post(
+            "oauth2/access_token",
+            {"platform": platform},
+        ).json()
+
+    def oauth2authorize(self, *, platform: str, code: str, redirect_uri: str) -> Any:
+        return self.post(
+            "oauth2/authorize",
+            {"platform": platform, "authCode": code, "redirectUri": redirect_uri},
+        ).json()
+
+    def oauth2get_authorization_url(self, platform: str, scopes: str, redirect_uri: str) -> Any:
+        return self.post(
+            "oauth2/auth_url",
+            {
+                "platform": platform,
+                "scopes": scopes,
+                "redirectUri": redirect_uri,
+            },
+        ).json()
 
     def oauth1_request_token(self, platform: str, callback_url: str) -> Any:
         return self.post(
