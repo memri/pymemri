@@ -1,7 +1,5 @@
 from typing import TYPE_CHECKING, Any, List
 
-import pandas as pd
-
 if TYPE_CHECKING:
     from ..data.schema import Item
     from ..pod.client import PodClient
@@ -69,6 +67,12 @@ class Query:
         elif dtype == "list":
             return [result[prop] for prop in self.properties]
         elif dtype in {"pandas", "pd", "df"}:
+            try:
+                import pandas as pd
+            except ImportError:
+                raise ImportError(
+                    "Pandas is not installed." "Please install pandas to use this feature."
+                )
             return pd.DataFrame.from_dict(result)
         else:
             raise ValueError(f"Unknown dtype: {dtype}")
