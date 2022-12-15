@@ -615,3 +615,19 @@ class PodClient:
             oauth_verifier=oauth_verifier,
             oauth_token_secret=oauth_token_secret,
         )
+
+    def oauth2_authorize(self, *, platform, code, redirect_uri):
+        try:
+            return self.api.oauth2authorize(
+                code=code, platform=platform, redirect_uri=redirect_uri
+            )["accessToken"]
+        except PodError as e:
+            logger.error(e)
+            return None
+
+    def get_oauth2_authorization_url(self, platform, scopes, redirect_uri):
+        try:
+            return self.api.oauth2get_authorization_url(platform, scopes, redirect_uri)
+        except PodError as e:
+            logger.error(e)
+            return None

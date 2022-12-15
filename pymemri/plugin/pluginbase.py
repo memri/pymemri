@@ -7,6 +7,7 @@ from abc import ABCMeta
 
 from loguru import logger
 
+from pymemri import PodClient
 from pymemri.data.basic import read_json
 from pymemri.webserver.public_api import ENDPOINT_METADATA, register_endpoint
 
@@ -23,7 +24,7 @@ class PluginBase(metaclass=ABCMeta):
 
     schema_classes = []
 
-    def __init__(self, pluginRun=None, client=None, **kwargs):
+    def __init__(self, pluginRun: PluginRun = None, *, client: PodClient, **kwargs):
         super().__init__()
         if pluginRun is None:
             warnings.warn(
