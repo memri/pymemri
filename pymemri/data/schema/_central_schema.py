@@ -596,6 +596,7 @@ class Tweet(Item):
     replyCount: Optional[int] = None
     likeCount: Optional[int] = None
 
+    reference: List["Tweet"] = []
     replies: List["Tweet"] = []
     mention: List[Account] = []
     author: List[Account] = []
