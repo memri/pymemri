@@ -2,7 +2,7 @@ import random
 import warnings
 from datetime import datetime
 from threading import Thread
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Type, TypeVar, Union
 
 import numpy as np
 from loguru import logger
@@ -425,6 +425,18 @@ class PodClient:
                 yield self.filter_deleted(result)
         except PodError as e:
             logger.error(e)
+
+    T = TypeVar("T", bound=ItemBase)
+
+    def search_typed(
+        self,
+        item_type: Type[T],
+        fields_data: Optional[Dict[str, Any]] = None,
+        *args,
+        **kwargs,
+    ) -> List[T]:
+        fields_data = fields_data or {}
+        return self.search({**fields_data, "type": item_type.__qualname__}, *args, **kwargs)
 
     def search(
         self,
