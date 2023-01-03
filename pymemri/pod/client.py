@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional, Type, TypeVar, Union
 
 import numpy as np
 from loguru import logger
+from typing_extensions import Unpack
 
 from pymemri.data.schema.itembase import ItemBase
 
@@ -117,7 +118,7 @@ class PodClient:
 
         return self._upload_image(photo.data, asyncFlag=asyncFlag)
 
-    def add_to_schema(self, *items: List[Union[object, type]]):
+    def add_to_schema(self, *items: Unpack[Union[Type[ItemBase], ItemBase]]):
         create_items = []
         for item in items:
             if not (isinstance(item, ItemBase) or issubclass(item, ItemBase)):
@@ -628,7 +629,7 @@ class PodClient:
             oauth_token_secret=oauth_token_secret,
         )
 
-    def oauth2_authorize(self, *, platform, code, redirect_uri):
+    def oauth2_authorize(self, *, platform, code, redirect_uri) -> str:
         try:
             return self.api.oauth2authorize(
                 code=code, platform=platform, redirect_uri=redirect_uri
@@ -637,7 +638,7 @@ class PodClient:
             logger.error(e)
             return None
 
-    def get_oauth2_authorization_url(self, platform, scopes, redirect_uri):
+    def get_oauth2_authorization_url(self, platform, scopes, redirect_uri) -> str:
         try:
             return self.api.oauth2get_authorization_url(platform, scopes, redirect_uri)
         except PodError as e:

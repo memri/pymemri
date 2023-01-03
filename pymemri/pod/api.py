@@ -224,19 +224,19 @@ class PodAPI:
     def oauth2get_access_token(
         self,
         platform: str,
-    ) -> Any:
+    ) -> Dict:
         return self.post(
             "oauth2/access_token",
             {"platform": platform},
         ).json()
 
-    def oauth2authorize(self, *, platform: str, code: str, redirect_uri: str) -> Any:
+    def oauth2authorize(self, *, platform: str, code: str, redirect_uri: str) -> Dict[str, str]:
         return self.post(
             "oauth2/authorize",
             {"platform": platform, "authCode": code, "redirectUri": redirect_uri},
         ).json()
 
-    def oauth2get_authorization_url(self, platform: str, scopes: str, redirect_uri: str) -> Any:
+    def oauth2get_authorization_url(self, platform: str, scopes: str, redirect_uri: str) -> Dict:
         return self.post(
             "oauth2/auth_url",
             {
