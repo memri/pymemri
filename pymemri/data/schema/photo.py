@@ -7,12 +7,12 @@ from typing import Any, List, Optional, Tuple
 import numpy as np
 from PIL import ExifTags, Image
 
-from ._central_schema import File, Photo
+from . import _central_schema as cs
 
 DEFAULT_ENCODING = "PNG"
 
 
-class Photo(Photo):
+class Photo(cs.Photo):
     data: Optional[bytes] = None
 
     def show(self):
@@ -61,7 +61,7 @@ class Photo(Photo):
             exifData=exif_data,
             id=cls.create_id(),
         )
-        file = File(sha256=sha256(_bytes).hexdigest())
+        file = cs.File(sha256=sha256(_bytes).hexdigest())
         res.add_edge("file", file)
         file.id = file.create_id()
         return res
