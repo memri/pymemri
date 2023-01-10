@@ -49,6 +49,8 @@ class Account(Item):
     owner: List["Person"] = []
     trust: List["Account"] = []
     profilePicture: List["Photo"] = []
+    following: List["Account"] = []
+    follower: List["Account"] = []
 
 
 class AuditItem(Item):
@@ -578,6 +580,7 @@ class Photo(Item):
     channels: Optional[int] = None
     encoding: Optional[str] = None
     mode: Optional[str] = None
+    ocrText: Optional[str] = None
 
     # Edges
     changelog: List["AuditItem"] = []
