@@ -584,7 +584,6 @@ class Photo(Item):
 
     # Edges
     changelog: List["AuditItem"] = []
-    label: List["Label"] = []
     thumbnail: List["File"] = []
     file: List["File"] = []
 
