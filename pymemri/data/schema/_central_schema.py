@@ -20,6 +20,7 @@ class Item(ItemBase):
 
     # Edges
     language: List["Language"] = []
+    translation: List["Translation"] = []
     label: List["CategoricalPrediction"] = []
 
 
@@ -646,3 +647,10 @@ class EmailMessage(Message):
     cc: List["Account"] = []
     message: List["EmailMessage"] = []
     replyTo: List["Account"] = []
+
+
+class Translation(Item):
+    value: Optional[str] = None
+    translatedProperty: Optional[str] = None
+    srcLang: Optional[str] = None
+    tgtLang: Optional[str] = None
