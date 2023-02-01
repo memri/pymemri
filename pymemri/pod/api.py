@@ -1,3 +1,4 @@
+import fnmatch
 import json
 import os
 import urllib
@@ -12,6 +13,7 @@ from .graphql_utils import GQLQuery
 
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
 POD_VERSION = "v4"
+POD_ALLOWED_ORIGINS = os.environ.get("POD_ALLOWED_ORIGINS", "*").split(",")
 
 
 class PodError(Exception):
@@ -34,6 +36,8 @@ class PodAPI:
         auth_json: dict = None,
         verbose: bool = True,
     ) -> None:
+        self._check_origin(url)
+
         self.verbose = verbose
         self.database_key = database_key
         self.owner_key = owner_key
@@ -42,6 +46,16 @@ class PodAPI:
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
         self.session = requests.Session()
+
+    def _check_origin(self, url):
+        for origin in POD_ALLOWED_ORIGINS:
+            if fnmatch.fnmatch(url, origin):
+                return
+
+        raise PodError(
+            403,
+            f"Trying to create POD API client with callback url {url} that is outside allowed origins {POD_ALLOWED_ORIGINS}",
+        )
 
     def _create_auth(self, auth_json: dict = None) -> dict:
         if auth_json is not None:
@@ -61,7 +75,7 @@ class PodAPI:
         try:
             res = self.session.get(self._url)
             if self.verbose:
-                logger.info("Succesfully connected to pod")
+                logger.info("Successfully connected to pod")
             return True
         except requests.exceptions.RequestException as e:
             logger.error("Could no connect to backend")
