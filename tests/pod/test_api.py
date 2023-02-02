@@ -126,35 +126,43 @@ def test_default_origin_allow_list_accepts_all():
 
 
 def test_changing_allowed_origins():
-    pymemri.pod.api.POD_ALLOWED_ORIGINS = ["https://*.pod.memri.io", "https://*.ngrok.io"]
+    try:
+        pymemri.pod.api.POD_ALLOWED_ORIGINS = ["https://*.pod.memri.io", "https://*.ngrok.io"]
 
-    assert pymemri.pod.api.POD_ALLOWED_ORIGINS == ["https://*.pod.memri.io", "https://*.ngrok.io"]
+        assert pymemri.pod.api.POD_ALLOWED_ORIGINS == [
+            "https://*.pod.memri.io",
+            "https://*.ngrok.io",
+        ]
 
-    # Ok schema, wrong origin
-    with pytest.raises(PodError) as e:
-        PodAPI(database_key="", owner_key="", url="https://example.com")
-    assert e.value.status == 403
+        # Ok schema, wrong origin
+        with pytest.raises(PodError) as e:
+            PodAPI(database_key="", owner_key="", url="https://example.com")
+        assert e.value.status == 403
 
-    # Wrong schema wrong origin
-    with pytest.raises(PodError) as e:
-        PodAPI(database_key="", owner_key="", url="http://localhost:3030")
-    assert e.value.status == 403
+        # Wrong schema wrong origin
+        with pytest.raises(PodError) as e:
+            PodAPI(database_key="", owner_key="", url="http://localhost:3030")
+        assert e.value.status == 403
 
-    # No schema provided
-    with pytest.raises(PodError) as e:
-        PodAPI(database_key="", owner_key="", url="dev.pod.memri.io")
-    assert e.value.status == 403
+        # No schema provided
+        with pytest.raises(PodError) as e:
+            PodAPI(database_key="", owner_key="", url="dev.pod.memri.io")
+        assert e.value.status == 403
 
-    # Wrong schema provided
-    with pytest.raises(PodError) as e:
-        PodAPI(database_key="", owner_key="", url="http://dev.pod.memri.io")
-    assert e.value.status == 403
+        # Wrong schema provided
+        with pytest.raises(PodError) as e:
+            PodAPI(database_key="", owner_key="", url="http://dev.pod.memri.io")
+        assert e.value.status == 403
 
-    # All good
-    PodAPI(database_key="", owner_key="", url="https://dev.pod.memri.io")
-    PodAPI(database_key="", owner_key="", url="https://uat.pod.memri.io")
-    PodAPI(database_key="", owner_key="", url="https://prod.pod.memri.io")
+        # All good
+        PodAPI(database_key="", owner_key="", url="https://dev.pod.memri.io")
+        PodAPI(database_key="", owner_key="", url="https://uat.pod.memri.io")
+        PodAPI(database_key="", owner_key="", url="https://prod.pod.memri.io")
 
-    PodAPI(database_key="", owner_key="", url="https://abc-def.eu.ngrok.io")
-    PodAPI(database_key="", owner_key="", url="https://abc-def.us.ngrok.io")
-    PodAPI(database_key="", owner_key="", url="https://abc-def.xyz.ngrok.io")
+        PodAPI(database_key="", owner_key="", url="https://abc-def.eu.ngrok.io")
+        PodAPI(database_key="", owner_key="", url="https://abc-def.us.ngrok.io")
+        PodAPI(database_key="", owner_key="", url="https://abc-def.xyz.ngrok.io")
+
+    finally:
+        # Set back to default
+        pymemri.pod.api.POD_ALLOWED_ORIGINS = ["*"]
