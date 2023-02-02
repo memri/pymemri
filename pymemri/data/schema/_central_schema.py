@@ -599,6 +599,7 @@ class Tweet(Item):
     replyCount: Optional[int] = None
     likeCount: Optional[int] = None
     liked: Optional[bool] = None
+    retweeted: Optional[bool] = None
 
     reference: List["Tweet"] = []
     replies: List["Tweet"] = []
