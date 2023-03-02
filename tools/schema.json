@@ -1,0 +1,5894 @@
+[
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "avatarUrl",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "authEmail",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "code",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "displayName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "handle",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "identifier",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "isMe",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "secret",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "service",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "accessToken",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "refreshToken",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Account",
+    "propertyName": "description",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Account",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Account",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Account",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "changelog",
+    "sourceType": "Account",
+    "targetType": "AuditItem"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "cryptoTransaction",
+    "sourceType": "Account",
+    "targetType": "CryptoTransaction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "location",
+    "sourceType": "Account",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "network",
+    "sourceType": "Account",
+    "targetType": "Network"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "ownCurrency",
+    "sourceType": "Account",
+    "targetType": "CryptoCurrency"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "owner",
+    "sourceType": "Account",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "trust",
+    "sourceType": "Account",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "profilePicture",
+    "sourceType": "Account",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "following",
+    "sourceType": "Account",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "follower",
+    "sourceType": "Account",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "latitude",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "longitude",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "city",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "locationAutoLookupHash",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "postalCode",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "state",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Address",
+    "propertyName": "street",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Address",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Address",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Address",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "changelog",
+    "sourceType": "Address",
+    "targetType": "AuditItem"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "country",
+    "sourceType": "Address",
+    "targetType": "Country"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "location",
+    "sourceType": "Address",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "actionname",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "AuditItem",
+    "propertyName": "date",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "AuditItem",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "AuditItem",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "AuditItem",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "definition",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "domain",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "queryStr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "renderer",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "selector",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CVUStoredDefinition",
+    "propertyName": "definitionType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CVUStoredDefinition",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CVUStoredDefinition",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CVUStoredDefinition",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "allowSharing",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "isSubmitted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalLabel",
+    "propertyName": "labelValue",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CategoricalLabel",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CategoricalLabel",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CategoricalLabel",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "source",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "value",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CategoricalPrediction",
+    "propertyName": "probs",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CategoricalPrediction",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CategoricalPrediction",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CategoricalPrediction",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "model",
+    "sourceType": "CategoricalPrediction",
+    "targetType": "Model"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "latitude",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "longitude",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Country",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Country",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Country",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Country",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "flag",
+    "sourceType": "Country",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "location",
+    "sourceType": "Country",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "abstract",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "datePublished",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "keyword",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "textContent",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CreativeWork",
+    "propertyName": "transcript",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CreativeWork",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CreativeWork",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CreativeWork",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "contentLocation",
+    "sourceType": "CreativeWork",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "CreativeWork",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "locationCreated",
+    "sourceType": "CreativeWork",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "writtenBy",
+    "sourceType": "CreativeWork",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "myToken",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoCurrency",
+    "propertyName": "topic",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CryptoCurrency",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CryptoCurrency",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CryptoCurrency",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "currencySetting",
+    "sourceType": "CryptoCurrency",
+    "targetType": "CurrencySetting"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "picture",
+    "sourceType": "CryptoCurrency",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "active",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "keystr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "role",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoKey",
+    "propertyName": "starred",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CryptoKey",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CryptoKey",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CryptoKey",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "owner",
+    "sourceType": "CryptoKey",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "outward",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CryptoTransaction",
+    "propertyName": "quantity",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CryptoTransaction",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CryptoTransaction",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CryptoTransaction",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "cryptoCurrency",
+    "sourceType": "CryptoTransaction",
+    "targetType": "CryptoCurrency"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "relateToOther",
+    "sourceType": "CryptoTransaction",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "relateToOwner",
+    "sourceType": "CryptoTransaction",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "deviceAddress",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "profileAddress",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "seedPhrase",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "CurrencySetting",
+    "propertyName": "tokenAddress",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "CurrencySetting",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "CurrencySetting",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "CurrencySetting",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "wallet",
+    "sourceType": "CurrencySetting",
+    "targetType": "Wallet"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Dataset",
+    "propertyName": "queryStr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Dataset",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Dataset",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Dataset",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "entry",
+    "sourceType": "Dataset",
+    "targetType": "DatasetEntry"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "feature",
+    "sourceType": "Dataset",
+    "targetType": "ItemPropertySchema"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "labellingTask",
+    "sourceType": "Dataset",
+    "targetType": "LabellingTask"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "datasetType",
+    "sourceType": "Dataset",
+    "targetType": "DatasetType"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetEntry",
+    "propertyName": "skippedByLabeller",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "DatasetEntry",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "DatasetEntry",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "DatasetEntry",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "data",
+    "sourceType": "DatasetEntry",
+    "targetType": "Message"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "data",
+    "sourceType": "DatasetEntry",
+    "targetType": "Tweet"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "data",
+    "sourceType": "DatasetEntry",
+    "targetType": "EmailMessage"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "annotation",
+    "sourceType": "DatasetEntry",
+    "targetType": "CategoricalLabel"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "DatasetType",
+    "propertyName": "queryStr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "DatasetType",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "DatasetType",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "DatasetType",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "datasetPlugin",
+    "sourceType": "DatasetType",
+    "targetType": "Plugin"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "abstract",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "datePublished",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "duration",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "keyword",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "textContent",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Diet",
+    "propertyName": "transcript",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Diet",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Diet",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Diet",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "contentLocation",
+    "sourceType": "Diet",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "Diet",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "locationCreated",
+    "sourceType": "Diet",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "writtenBy",
+    "sourceType": "Diet",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "abstract",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "datePublished",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "keyword",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "textContent",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "transcript",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "dateReceived",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "dateSent",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "service",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "subject",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "sourceProject",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "EmailMessage",
+    "propertyName": "starred",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "EmailMessage",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "EmailMessage",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "EmailMessage",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "contentLocation",
+    "sourceType": "EmailMessage",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "EmailMessage",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "locationCreated",
+    "sourceType": "EmailMessage",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "writtenBy",
+    "sourceType": "EmailMessage",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "message",
+    "sourceType": "EmailMessage",
+    "targetType": "EmailMessage"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "messageChannel",
+    "sourceType": "EmailMessage",
+    "targetType": "MessageChannel"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "photo",
+    "sourceType": "EmailMessage",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "receiver",
+    "sourceType": "EmailMessage",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "sender",
+    "sourceType": "EmailMessage",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "bcc",
+    "sourceType": "EmailMessage",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "cc",
+    "sourceType": "EmailMessage",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "replyTo",
+    "sourceType": "EmailMessage",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "filename",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "keystr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "nonce",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "sha256",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "File",
+    "propertyName": "starred",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "File",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "File",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "File",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Hashtag",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Hashtag",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Hashtag",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Hashtag",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "repository",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "bundleImage",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "icon",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "indexerClass",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "itemDescription",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "queryStr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Indexer",
+    "propertyName": "runDestination",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Indexer",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Indexer",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Indexer",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "indexerRun",
+    "sourceType": "Indexer",
+    "targetType": "IndexerRun"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "repository",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "errorMessage",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "progress",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "progressMessage",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "queryStr",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "runStatus",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "IndexerRun",
+    "propertyName": "targetDataType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "IndexerRun",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "IndexerRun",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "IndexerRun",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "indexer",
+    "sourceType": "IndexerRun",
+    "targetType": "Indexer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Integrator",
+    "propertyName": "repository",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Integrator",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Integrator",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Integrator",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Item",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Item",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Item",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Item",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "edgeName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "sourceType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemEdgeSchema",
+    "propertyName": "targetType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "ItemEdgeSchema",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "ItemEdgeSchema",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "ItemEdgeSchema",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "propertyName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "ItemPropertySchema",
+    "propertyName": "valueType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "ItemPropertySchema",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "ItemPropertySchema",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "ItemPropertySchema",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "color",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Label",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Label",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Label",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Label",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "allowSharing",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelAnnotation",
+    "propertyName": "isSubmitted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "LabelAnnotation",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "LabelAnnotation",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "LabelAnnotation",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "color",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabelOption",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "LabelOption",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "LabelOption",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "LabelOption",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingDataType",
+    "propertyName": "labelType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "LabellingDataType",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "LabellingDataType",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "LabellingDataType",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "LabellingTask",
+    "propertyName": "currentLabelOption",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "LabellingTask",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "LabellingTask",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "LabellingTask",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "taskType",
+    "sourceType": "LabellingTask",
+    "targetType": "TextClassification"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "labelOption",
+    "sourceType": "LabellingTask",
+    "targetType": "LabelOption"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "view",
+    "sourceType": "LabellingTask",
+    "targetType": "CVUStoredDefinition"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "languageCode",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Language",
+    "propertyName": "languageName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Language",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Language",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Language",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "latitude",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Location",
+    "propertyName": "longitude",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Location",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Location",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Location",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "bitrate",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "duration",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "endTime",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "fileLocation",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MediaObject",
+    "propertyName": "startTime",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "MediaObject",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "MediaObject",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "MediaObject",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "MediaObject",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "includes",
+    "sourceType": "MediaObject",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "conditiontype",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MedicalCondition",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "MedicalCondition",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "MedicalCondition",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "MedicalCondition",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "abstract",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "datePublished",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "keyword",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "textContent",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "transcript",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "dateReceived",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "dateSent",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "service",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "subject",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Message",
+    "propertyName": "sourceProject",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Message",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Message",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Message",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "contentLocation",
+    "sourceType": "Message",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "Message",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "locationCreated",
+    "sourceType": "Message",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "writtenBy",
+    "sourceType": "Message",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "message",
+    "sourceType": "Message",
+    "targetType": "Message"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "messageChannel",
+    "sourceType": "Message",
+    "targetType": "MessageChannel"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "photo",
+    "sourceType": "Message",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "receiver",
+    "sourceType": "Message",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "sender",
+    "sourceType": "Message",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "encrypted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "topic",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "service",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "MessageChannel",
+    "propertyName": "sourceProject",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "MessageChannel",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "MessageChannel",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "MessageChannel",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "photo",
+    "sourceType": "MessageChannel",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "receiver",
+    "sourceType": "MessageChannel",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Model",
+    "propertyName": "version",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Model",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Model",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Model",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "icon",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "sequence",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "sessionName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "NavigationItem",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "NavigationItem",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "NavigationItem",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "NavigationItem",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Network",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Network",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Network",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Network",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "website",
+    "sourceType": "Network",
+    "targetType": "Website"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "abstract",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "datePublished",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "keyword",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "textContent",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "transcript",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Note",
+    "propertyName": "starred",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Note",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Note",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Note",
+    "targetType": "Label"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "contentLocation",
+    "sourceType": "Note",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "Note",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "locationCreated",
+    "sourceType": "Note",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "writtenBy",
+    "sourceType": "Note",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "accessToken",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "accessTokenSecret",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "refreshToken",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "OauthFlow",
+    "propertyName": "service",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "OauthFlow",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "OauthFlow",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "OauthFlow",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "addressBookId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "birthDate",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "deathDate",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "displayName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "email",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "firstName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "gender",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "lastName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "role",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "sexualOrientation",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Person",
+    "propertyName": "starred",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Person",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Person",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Person",
+    "targetType": "Label"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "account",
+    "sourceType": "Person",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "address",
+    "sourceType": "Person",
+    "targetType": "Address"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "birthPlace",
+    "sourceType": "Person",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "cryptoKey",
+    "sourceType": "Person",
+    "targetType": "CryptoKey"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "deathPlace",
+    "sourceType": "Person",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "diet",
+    "sourceType": "Person",
+    "targetType": "Diet"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "hasPhoneNumber",
+    "sourceType": "Person",
+    "targetType": "PhoneNumber"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "me",
+    "sourceType": "Person",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "medicalCondition",
+    "sourceType": "Person",
+    "targetType": "MedicalCondition"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "mergedFrom",
+    "sourceType": "Person",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "profilePicture",
+    "sourceType": "Person",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "relationship",
+    "sourceType": "Person",
+    "targetType": "Relationship"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "website",
+    "sourceType": "Person",
+    "targetType": "Website"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PhoneNumber",
+    "propertyName": "phoneNumber",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "PhoneNumber",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "PhoneNumber",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "PhoneNumber",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "caption",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "exifData",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "height",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "width",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "channels",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "encoding",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "mode",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Photo",
+    "propertyName": "ocrText",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Photo",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Photo",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Photo",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "changelog",
+    "sourceType": "Photo",
+    "targetType": "AuditItem"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "thumbnail",
+    "sourceType": "Photo",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "Photo",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "bundleImage",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "containerImage",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "configJson",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "config",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "dataType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "icon",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "pluginDescription",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "pluginModule",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "pluginName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "pluginType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Plugin",
+    "propertyName": "gitProjectId",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Plugin",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Plugin",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Plugin",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "view",
+    "sourceType": "Plugin",
+    "targetType": "CVUStoredDefinition"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "templateSettings",
+    "sourceType": "Plugin",
+    "targetType": "TemplateSettings"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "project",
+    "sourceType": "Plugin",
+    "targetType": "Project"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "run",
+    "sourceType": "Plugin",
+    "targetType": "PluginRun"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "authUrl",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "containerImage",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "config",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "pluginModule",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "pluginName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "progress",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "status",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "targetItemId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "error",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "containerId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "PluginRun",
+    "propertyName": "webserverPort",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "PluginRun",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "PluginRun",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "PluginRun",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "plugin",
+    "sourceType": "PluginRun",
+    "targetType": "Plugin"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "view",
+    "sourceType": "PluginRun",
+    "targetType": "CVUStoredDefinition"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "account",
+    "sourceType": "PluginRun",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "trigger",
+    "sourceType": "PluginRun",
+    "targetType": "Trigger"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "message",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "postDate",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "postType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Post",
+    "propertyName": "sourceProject",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Post",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Post",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Post",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "author",
+    "sourceType": "Post",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "comment",
+    "sourceType": "Post",
+    "targetType": "Post"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "parent",
+    "sourceType": "Post",
+    "targetType": "Post"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "photo",
+    "sourceType": "Post",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "gitlabUrl",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Project",
+    "propertyName": "dataSource",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Project",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Project",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Project",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "dataset",
+    "sourceType": "Project",
+    "targetType": "Dataset"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "labellingPlugin",
+    "sourceType": "Project",
+    "targetType": "Plugin"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "label",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Relationship",
+    "propertyName": "proximityValue",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Relationship",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Relationship",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "relationship",
+    "sourceType": "Relationship",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "score",
+    "valueType": "Real"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "SuggestedMerge",
+    "propertyName": "task",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "SuggestedMerge",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "SuggestedMerge",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "SuggestedMerge",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "mergeFrom",
+    "sourceType": "SuggestedMerge",
+    "targetType": "Person"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "templateName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "templateId",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TemplateSettings",
+    "propertyName": "dataSource",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "TemplateSettings",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "TemplateSettings",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "TemplateSettings",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "labelOption",
+    "sourceType": "TemplateSettings",
+    "targetType": "LabelOption"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "TextClassification",
+    "propertyName": "labelType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "TextClassification",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "TextClassification",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "TextClassification",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "value",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "translatedProperty",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "srcLang",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Translation",
+    "propertyName": "tgtLang",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Translation",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Translation",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Translation",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "action",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "filterCreatedAfter",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "filterCreatedAfterPropertyName",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "pluginRunId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Trigger",
+    "propertyName": "triggerOn",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Trigger",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Trigger",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Trigger",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "trigger",
+    "sourceType": "Trigger",
+    "targetType": "PluginRun"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "message",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "service",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "postDate",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "tweetType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "conversationId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "retweetCount",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "replyCount",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "likeCount",
+    "valueType": "Integer"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "liked",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Tweet",
+    "propertyName": "retweeted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Tweet",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Tweet",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Tweet",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "reference",
+    "sourceType": "Tweet",
+    "targetType": "Tweet"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "replies",
+    "sourceType": "Tweet",
+    "targetType": "Tweet"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "mention",
+    "sourceType": "Tweet",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "author",
+    "sourceType": "Tweet",
+    "targetType": "Account"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "photo",
+    "sourceType": "Tweet",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "VoteAction",
+    "propertyName": "dateExecuted",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "VoteAction",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "VoteAction",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "VoteAction",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Wallet",
+    "propertyName": "name",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Wallet",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Wallet",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Wallet",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "picture",
+    "sourceType": "Wallet",
+    "targetType": "Photo"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "Website",
+    "propertyName": "url",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "Website",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "Website",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "Website",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "id",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "dateCreated",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "dateModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "dateServerModified",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "deleted",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "externalId",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "isMock",
+    "valueType": "Bool"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "abstract",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "content",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "datePublished",
+    "valueType": "DateTime"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "itemType",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "keyword",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "textContent",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "title",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemPropertySchema",
+    "itemType": "WrittenWork",
+    "propertyName": "transcript",
+    "valueType": "Text"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "language",
+    "sourceType": "WrittenWork",
+    "targetType": "Language"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "translation",
+    "sourceType": "WrittenWork",
+    "targetType": "Translation"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "label",
+    "sourceType": "WrittenWork",
+    "targetType": "CategoricalPrediction"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "contentLocation",
+    "sourceType": "WrittenWork",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "file",
+    "sourceType": "WrittenWork",
+    "targetType": "File"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "locationCreated",
+    "sourceType": "WrittenWork",
+    "targetType": "Location"
+  },
+  {
+    "type": "ItemEdgeSchema",
+    "edgeName": "writtenBy",
+    "sourceType": "WrittenWork",
+    "targetType": "Person"
+  }
+]
