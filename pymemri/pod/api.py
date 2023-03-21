@@ -46,6 +46,7 @@ class PodAPI:
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
         self.session = requests.Session()
+        self.session.verify = False
 
     def _check_origin(self, url):
         for origin in POD_ALLOWED_ORIGINS:
