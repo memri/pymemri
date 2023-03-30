@@ -8,6 +8,7 @@ from typing import Any, Deque, Dict, Generator, List, Optional, Union
 
 import requests
 from loguru import logger
+from requests.adapters import HTTPAdapter, Retry
 
 from .graphql_utils import GQLQuery
 
@@ -45,7 +46,19 @@ class PodAPI:
         self._url = url
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
-        self.session = requests.Session()
+
+        session = requests.Session()
+        retries = Retry(
+            total=10,
+            backoff_factor=0.1,
+            allowed_methods={"DELETE", "GET", "HEAD", "OPTIONS", "PUT", "TRACE", "POST"},
+        )
+        session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=5))
+        session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=5))
+
+        logger.info("created  session with CUSTOM retries")
+        self.session = session
+
         self.session.verify = False
 
     def _check_origin(self, url):
