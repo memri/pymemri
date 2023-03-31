@@ -48,15 +48,15 @@ class PodAPI:
         self.auth_json = self._create_auth(auth_json)
 
         session = requests.Session()
-        retries = Retry(
-            total=10,
-            backoff_factor=0.1,
-            allowed_methods={"DELETE", "GET", "HEAD", "OPTIONS", "PUT", "TRACE", "POST"},
-        )
-        session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=5))
-        session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=5))
+        # retries = Retry(
+        #     total=10,
+        #     backoff_factor=0.1,
+        #     allowed_methods={"DELETE", "GET", "HEAD", "OPTIONS", "PUT", "TRACE", "POST"},
+        # )
+        # session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=5))
+        # session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=5))
 
-        logger.info("created  session with CUSTOM retries")
+        logger.info("created  session with NO retries")
         self.session = session
 
         self.session.verify = False
