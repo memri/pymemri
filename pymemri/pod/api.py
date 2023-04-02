@@ -1,6 +1,7 @@
 import fnmatch
 import json
 import os
+import socket
 import urllib
 from collections import deque
 from hashlib import sha256
@@ -9,12 +10,29 @@ from typing import Any, Deque, Dict, Generator, List, Optional, Union
 import requests
 from loguru import logger
 from requests.adapters import HTTPAdapter, Retry
+from urllib3.connection import HTTPConnection
 
 from .graphql_utils import GQLQuery
 
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
 POD_VERSION = "v4"
 POD_ALLOWED_ORIGINS = os.environ.get("POD_ALLOWED_ORIGINS", "*").split(",")
+
+
+print(f"SOCKET configuration before: {HTTPConnection.default_socket_options}")
+
+HTTPConnection.default_socket_options = HTTPConnection.default_socket_options + [
+    # Enable TCP keepalive packet transmission
+    (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
+    # Start sending after 1 sec of idleness
+    (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 1),
+    # Send keep-alive at 1 sec interval
+    (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 1),
+    # close connection after 5 failed keep-alive pings
+    (socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 5),
+]
+
+print(f"SOCKET configuration after: {HTTPConnection.default_socket_options}")
 
 
 class PodError(Exception):
@@ -56,7 +74,7 @@ class PodAPI:
         # session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=10))
         # session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=10))
 
-        logger.info("created  session with NO RETRIES")
+        logger.info("created  session with NO RETRIES, with TCP KA enabled")
         self.session = session
 
         self.session.verify = False
