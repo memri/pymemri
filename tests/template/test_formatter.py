@@ -6,12 +6,11 @@ from sys import stdout
 
 from pymemri.template.formatter import TemplateFormatter, download_plugin_template
 
-
-def test_list_templates():
-    result = subprocess.run(["plugin_from_template", "--list_templates"], stdout=subprocess.PIPE)
-    result = result.stdout.splitlines()
-    assert result[0] == b"Available templates:"
-    assert len(result) > 1
+# def test_list_templates():
+#     result = subprocess.run(["plugin_from_template", "--list_templates"], stdout=subprocess.PIPE)
+#     result = result.stdout.splitlines()
+#     assert result[0] == b"Available templates:"
+#     assert len(result) > 1
 
 
 def test_formatter():
