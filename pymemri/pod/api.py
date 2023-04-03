@@ -19,22 +19,6 @@ POD_VERSION = "v4"
 POD_ALLOWED_ORIGINS = os.environ.get("POD_ALLOWED_ORIGINS", "*").split(",")
 
 
-print(f"SOCKET configuration before: {HTTPConnection.default_socket_options}")
-
-HTTPConnection.default_socket_options = HTTPConnection.default_socket_options + [
-    # Enable TCP keepalive packet transmission
-    (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
-    # Start sending after 1 sec of idleness
-    (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 1),
-    # Send keep-alive at 1 sec interval
-    (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 1),
-    # close connection after 5 failed keep-alive pings
-    (socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 5),
-]
-
-print(f"SOCKET configuration after: {HTTPConnection.default_socket_options}")
-
-
 class PodError(Exception):
     def __init__(self, status=None, message=None, **kwargs) -> None:
         super().__init__(status, message, **kwargs)
@@ -65,6 +49,21 @@ class PodAPI:
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
 
+        print(f"SOCKET configuration before: {HTTPConnection.default_socket_options}")
+
+        HTTPConnection.default_socket_options = HTTPConnection.default_socket_options + [
+            # Enable TCP keepalive packet transmission
+            (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
+            # Start sending after 1 sec of idleness
+            (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60),
+            # Send keep-alive at 1 sec interval
+            (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60),
+            # close connection after 5 failed keep-alive pings (5 minutes)
+            (socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 5),
+        ]
+
+        print(f"SOCKET configuration after: {HTTPConnection.default_socket_options}")
+
         session = requests.Session()
         # retries = Retry(
         #     total=10,
@@ -74,7 +73,7 @@ class PodAPI:
         # session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=10))
         # session.mount("https://", HTTPAdapter(max_retries=retries, pool_maxsize=10))
 
-        logger.info("created  session with NO RETRIES, with TCP KA enabled")
+        logger.info("created  session with NO RETRIES, with TCP KA enabled for 60 secs")
         self.session = session
 
         self.session.verify = False
