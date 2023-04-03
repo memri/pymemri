@@ -1,6 +1,7 @@
 import fnmatch
 import json
 import os
+import socket
 import urllib
 from collections import deque
 from hashlib import sha256
@@ -8,6 +9,7 @@ from typing import Any, Deque, Dict, Generator, List, Optional, Union
 
 import requests
 from loguru import logger
+from urllib3.connection import HTTPConnection
 
 from .graphql_utils import GQLQuery
 
@@ -45,6 +47,27 @@ class PodAPI:
         self._url = url
         self.base_url = f"{url}/{version}/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
+
+        # Class uses requests Session to communicate with the POD.
+        # That creates a pool of TCP connections, over which HTTP requests
+        # with Keep-Alive header are sent. While idle, there is no traffic
+        # on those connections, that gets detected by the network balancer
+        # of the AWS infrastructure and makes those connection dropped,
+        # resulting with "connection reset by peer", or similar errors
+        # visible on the client side.
+        # Enabling TCP keep-alive packets resets the network balancer idle timer
+        # resulting in persistent connection as it was originally intended.
+        HTTPConnection.default_socket_options = HTTPConnection.default_socket_options + [
+            # Enable TCP keepalive packet transmission
+            (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
+            # Start sending after 60 sec of idleness
+            (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60),
+            # Send keep-alive at 60 sec interval
+            (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60),
+            # Close connection after 5 failed keep-alive pings (5 minutes)
+            (socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 5),
+        ]
+
         self.session = requests.Session()
 
     def _check_origin(self, url):
