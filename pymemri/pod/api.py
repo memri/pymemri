@@ -1,6 +1,7 @@
 import fnmatch
 import json
 import os
+import platform
 import socket
 import urllib
 from collections import deque
@@ -26,6 +27,13 @@ class PodError(Exception):
 
     def __str__(self) -> str:
         return " ".join([str(a) for a in self.args if a])
+
+
+def get_platform_specific_keepalive_option():
+    if platform.system() == "Darwin":
+        return (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+    else:
+        return (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60)
 
 
 class PodAPI:
@@ -61,7 +69,7 @@ class PodAPI:
             # Enable TCP keepalive packet transmission
             (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
             # Start sending after 60 sec of idleness
-            (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60),
+            get_platform_specific_keepalive_option(),
             # Send keep-alive at 60 sec interval
             (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 60),
             # Close connection after 5 failed keep-alive pings (5 minutes)
