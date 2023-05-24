@@ -1,5 +1,6 @@
 import fnmatch
 import json
+import logging
 import os
 import platform
 import socket
@@ -13,6 +14,15 @@ from loguru import logger
 from urllib3.connection import HTTPConnection
 
 from .graphql_utils import GQLQuery
+
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("urllib").setLevel(logging.WARNING)
+logging.basicConfig(
+    format="%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
+    datefmt="%Y-%m-%d:%H:%M:%S",
+    level=logging.DEBUG,
+)
 
 DEFAULT_POD_ADDRESS = os.environ.get("POD_ADDRESS") or "http://localhost:3030"
 POD_VERSION = "v4"
@@ -99,8 +109,8 @@ class PodAPI:
             f"{self._url}/{self.version}/account",
             json={"ownerKey": self.owner_key, "databaseKey": self.database_key},
         )
-        if response.status_code != 200:
-            raise PodError(response.status_code, response.text)
+        # if response.status_code != 200:
+        #     raise PodError(response.status_code, response.text)
 
     def test_connection(self) -> bool:
         try:
@@ -209,7 +219,6 @@ class PodAPI:
         delete_items: List[str] = None,
         search: List[dict] = None,
     ) -> Dict[str, Any]:
-
         payload = {
             "createItems": create_items,
             "updateItems": update_items,

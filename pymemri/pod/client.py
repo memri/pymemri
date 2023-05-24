@@ -99,7 +99,14 @@ class PodClient:
             result = self.api.create_item(item.to_json())
             item.id = result
             item.reset_local_sync_state()
-            if getattr(item, "requires_client_ref", False):
+            # try:
+            #     res= getattr(item, "requires_client_ref", False)
+            # except Exception:
+            #     pass
+            # finally:
+            #     res = False
+
+            if hasattr(item, "requires_client_ref") and item.requires_client_ref:
                 item._client = self
             return True
         except Exception as e:
@@ -235,7 +242,13 @@ class PodClient:
         # we need to add to local_db to not lose reference.
         if create_items is not None:
             for c in create_items:
-                if getattr(c, "requires_client_ref", False):
+                try:
+                    res = getattr(c, "requires_client_ref", False)
+                except Exception:
+                    pass
+                finally:
+                    res = False
+                if res:
                     c._client = self
                 if not self.local_db.contains(c):
                     self.add_to_store(c, priority=priority)
@@ -339,6 +352,8 @@ class PodClient:
     def _get_item_expanded(self, id):
         item = self._get_item_with_properties(id)
         edges = self.get_edges(id)
+        if item is None or edges is None:
+            return None
         for e in edges:
             if e["name"] in item.edges:
                 item.add_edge(e["name"], e["item"])
@@ -632,7 +647,10 @@ class PodClient:
     def oauth2_authorize(self, *, platform, code, redirect_uri, pkce_verifier) -> str:
         try:
             return self.api.oauth2authorize(
-                code=code, platform=platform, redirect_uri=redirect_uri, pkce_verifier=pkce_verifier
+                code=code,
+                platform=platform,
+                redirect_uri=redirect_uri,
+                pkce_verifier=pkce_verifier,
             )["accessToken"]
         except PodError as e:
             logger.error(e)
