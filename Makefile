@@ -15,3 +15,7 @@ clean:
 
 make test_install:
 	pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pymemri
+
+pre-commit-init:
+	pip install pre-commit
+	pre-commit install
