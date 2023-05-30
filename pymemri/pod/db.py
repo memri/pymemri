@@ -50,8 +50,8 @@ class DB:
         "error": throw a `ValueError` on conflict
         """
         if not isinstance(remote_item, type(local_item)):
-            raise ValueError(
-                f"Attempted to merge two items with different schema: {type(remote_item)}, {type(local_item)}"
+            logger.warning(
+                f"Trying to merge items of different types: {type(local_item)} and {type(remote_item)}"
             )
 
         for prop in local_item.properties:

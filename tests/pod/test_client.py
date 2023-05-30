@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import pytest
 
@@ -310,3 +310,43 @@ def test_create_account():
     # New pod without create_account throws error
     with pytest.raises(PodError):
         _ = PodClient(create_account=False, owner_key=PodClient.generate_random_key())
+
+
+def test_update_schema():
+    client = PodClient()
+
+    class TestItem(Item):
+        field1: str
+
+    client.add_to_schema(TestItem)
+
+    client.bulk_action(
+        create_items=[
+            TestItem(field1="test1"),
+        ]
+    )
+
+    items = client.search_typed(TestItem)
+    assert len(items) == 1
+
+    client = PodClient(
+        owner_key=client.owner_key,
+        database_key=client.database_key,
+    )
+
+    class TestItem(Item):
+        field1: str
+        field2: Optional[str]
+
+    client.add_to_schema(TestItem)
+
+    # Create data for search
+    client.bulk_action(
+        create_items=[
+            TestItem(field1="test2", field2="test2"),
+        ]
+    )
+
+    items = client.search_typed(TestItem)
+    assert len(items) == 2
+    assert items[1].field2 == "test2"
