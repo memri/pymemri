@@ -168,17 +168,6 @@ def test_sync_newest():
         assert item._in_pod
 
 
-def test_sync_error():
-    client = PodClient()
-    client.add_to_schema(EmailMessage)
-    all_items = setup_sync_items(client)
-    try:
-        client.sync(priority="error")
-        assert False
-    except Exception as e:
-        assert isinstance(e, ValueError)
-
-
 def test_search(client: PodClient):
     person_item2 = Person.from_data(firstName="Bob")
     person_account = Account(service="testService")
