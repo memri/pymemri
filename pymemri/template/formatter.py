@@ -7,7 +7,7 @@ from typing import Dict, List, Union
 
 import giturlparse
 import requests
-from fastcore.script import Param, call_parse, store_true
+from fastscript import Param, call_parse
 from loguru import logger
 
 import pymemri
@@ -296,7 +296,7 @@ def _plugin_from_template(
 
 @call_parse
 def plugin_from_template(
-    list_templates: Param("List available plugin templates", store_true) = False,
+    list_templates: Param("List available plugin templates", bool) = None,
     user: Param("Your Gitlab username", str) = None,
     repo_url: Param("The url of your empty Gitlab plugin repository", str) = None,
     plugin_name: Param("Display name of your plugin", str) = None,

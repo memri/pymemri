@@ -4,7 +4,7 @@ import time
 import traceback
 from pathlib import Path
 
-from fastcore.script import Param, call_parse
+from fastscript import Param, call_parse
 from loguru import logger
 
 from pymemri import __version__ as pymemri_version
@@ -56,7 +56,6 @@ def store_keys(
     owner_key: Param("Owner key of the pod", str) = None,
     replace: Param("Replace existing stored keys", str) = True,
 ):
-
     if not replace:
         try:
             read_pod_key("database_key")
@@ -91,7 +90,6 @@ def run_plugin(
         "A plugin configuration, overwrites the configuration of the PluginRun", str
     ) = None,
 ):
-
     if read_args_from_env:
         pod_full_address, plugin_run_id, pod_auth_json, owner_key = _parse_env()
         database_key = None
