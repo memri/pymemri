@@ -110,7 +110,10 @@ class _ItemMeta(ModelMetaclass):
         cls.edges = list(cls.__edge_fields__.keys())
 
         # Add private instance attributes from _itembase_private_attrs
-        cls.__private_attributes__ = {**cls.__private_attributes__, **mcs._itembase_private_attrs}
+        cls.__private_attributes__ = {
+            **cls.__private_attributes__,
+            **mcs._itembase_private_attrs,
+        }
         cls.__slots__ = cls.__slots__ | mcs._itembase_private_attrs.keys()
         return cls
 
@@ -202,7 +205,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         # Edges are added after super().__init__
         edge_data = {}
         for edge_name in self.__edge_fields__:
-            edge_data[edge_name] = data.pop(edge_name, None)
+            edge_data[edge_name] = data.get(edge_name, None)
 
         super().__init__(**data)
         self._init_edges(**edge_data)
@@ -370,10 +373,7 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         exclude_defaults: bool = False,
         exclude_none: bool = False,
     ) -> Dict[str, Any]:
-        if exclude is None:
-            exclude = set(type(self)._itembase_private_attrs)
-        else:
-            exclude = exclude + set(type(self)._itembase_private_attrs)
+        exclude = (exclude or set()) | set(type(self)._itembase_private_attrs)
         return super()._iter(
             to_dict=to_dict,
             include=include,

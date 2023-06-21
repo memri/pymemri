@@ -76,7 +76,7 @@ class CategoricalPrediction(Item):
     # Properties
     source: Optional[str] = None
     value: Optional[str] = None
-    probs: Optional[str] = None
+    score: Optional[float] = None
 
     # Edges
     model: List["Model"] = []
