@@ -452,7 +452,15 @@ class PodClient:
         **kwargs,
     ) -> List[T]:
         fields_data = fields_data or {}
-        return self.search({**fields_data, "type": item_type.__qualname__}, *args, **kwargs)
+
+        item_type_name = item_type.__qualname__
+        if "." in item_type_name:
+            item_type_name = item_type.__qualname__.split(".")[-1]
+            logger.warning(
+                f"Item type {item_type_name} is not a top-level type."
+                f"Searching for {item_type_name} instead"
+            )
+        return self.search({**fields_data, "type": item_type_name}, *args, **kwargs)
 
     def search(
         self,
@@ -533,8 +541,12 @@ class PodClient:
 
         new_item = item_class.from_json(json)
         if add_to_local_db:
-            new_item = self.add_to_store(new_item, priority=priority)
-        if getattr(new_item, "requires_client_ref", False):
+            try:
+                new_item = self.add_to_store(new_item, priority=priority)
+            except Exception as e:
+                logger.error(f"Could not add {new_item} to local db, {e}")
+
+        if hasattr(new_item, "requires_client_ref") and new_item.requires_client_ref:
             new_item._client = self
         return new_item
 

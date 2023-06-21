@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import List
 
-from fastcore.script import Param, call_parse
+from fastscript import Param, call_parse
 from loguru import logger
 
 from ..plugin.pluginbase import get_plugin_cls

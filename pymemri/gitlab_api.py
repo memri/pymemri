@@ -6,7 +6,6 @@ from getpass import getpass
 from pathlib import Path
 
 import requests
-from fastprogress.fastprogress import progress_bar
 from git import Repo
 from loguru import logger
 
@@ -315,11 +314,8 @@ class upload_in_chunks(object):
 
     def __iter__(self):
         n = 100
-        pb = progress_bar(range(n))
-        pb_iter = iter(pb)
         i = 1
         delta = 1 / n
-        next(pb_iter, None)
 
         with open(self.filename, "rb") as file:
             while True:
@@ -330,10 +326,8 @@ class upload_in_chunks(object):
                 self.readsofar += len(data)
                 percent = self.readsofar * 1e2 / self.totalsize
                 while (percent / 100) > i * delta:
-                    next(pb_iter, None)
                     i += 1
                 yield data
-        pb.update_bar(n)
 
     def __len__(self):
         return self.totalsize

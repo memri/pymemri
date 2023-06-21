@@ -4,7 +4,15 @@ from typing import List, Optional, Union
 import pytest
 from pydantic import ValidationError
 
-from pymemri.data.schema import Account, Edge, Item, Person, get_schema
+from pymemri.data.schema import (
+    Account,
+    CategoricalPrediction,
+    Edge,
+    Item,
+    Person,
+    RSSEntry,
+    get_schema,
+)
 from pymemri.pod.client import PodClient
 
 
@@ -152,3 +160,13 @@ def test_create_and_read_item():
     assert item_2.account_edge[0].handle == "friend"
     assert item_2.str_property == "test"
     assert item_2.int_property == 1
+
+
+def test_item_json():
+    item = RSSEntry(
+        title="test",
+    )
+    edge = item.add_edge("label", CategoricalPrediction(value="test"))
+
+    item_dict = item.dict()
+    assert item_dict["label"] != None

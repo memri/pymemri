@@ -8,7 +8,9 @@ from pymemri.template.formatter import TemplateFormatter, download_plugin_templa
 
 
 def test_list_templates():
-    result = subprocess.run(["plugin_from_template", "--list_templates"], stdout=subprocess.PIPE)
+    result = subprocess.run(
+        ["plugin_from_template", "--list_templates", "1"], stdout=subprocess.PIPE
+    )
     result = result.stdout.splitlines()
     assert result[0] == b"Available templates:"
     assert len(result) > 1

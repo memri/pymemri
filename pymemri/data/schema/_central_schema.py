@@ -20,8 +20,8 @@ class Item(ItemBase):
 
     # Edges
     language: List["Language"] = []
-    translation: List["Translation"] = []
     label: List["CategoricalPrediction"] = []
+    translation: List["Translation"] = []
 
 
 class Account(Item):
@@ -39,7 +39,6 @@ class Account(Item):
     service: Optional[str] = None
     accessToken: Optional[str] = None
     refreshToken: Optional[str] = None
-    description: Optional[str] = None
 
     # Edges
     changelog: List["AuditItem"] = []
@@ -51,7 +50,7 @@ class Account(Item):
     trust: List["Account"] = []
     profilePicture: List["Photo"] = []
     following: List["Account"] = []
-    follower: List["Account"] = []
+    followers: List["Account"] = []
 
 
 class AuditItem(Item):
@@ -77,7 +76,7 @@ class CategoricalPrediction(Item):
     # Properties
     source: Optional[str] = None
     value: Optional[str] = None
-    probs: Optional[str] = None
+    score: Optional[float] = None
 
     # Edges
     model: List["Model"] = []
@@ -205,9 +204,6 @@ class File(Item):
     sha256: Optional[str] = None
     starred: Optional[bool] = None
     externalId: Optional[str] = None
-
-    def __hash__(self):
-        return hash(self.sha256)
 
 
 class Integrator(Item):
@@ -379,6 +375,23 @@ class PhoneNumber(Item):
     phoneNumber: Optional[str] = None
 
 
+class Photo(Item):
+    # Properties
+    name: Optional[str] = None
+    caption: Optional[str] = None
+    exifData: Optional[str] = None
+    height: Optional[int] = None
+    width: Optional[int] = None
+    channels: Optional[int] = None
+    encoding: Optional[str] = None
+    mode: Optional[str] = None
+
+    # Edges
+    changelog: List["AuditItem"] = []
+    thumbnail: List["File"] = []
+    file: List["File"] = []
+
+
 class Plugin(Item):
     # Properties
     bundleImage: Optional[str] = None
@@ -449,6 +462,37 @@ class Project(Item):
     labellingPlugin: List["Plugin"] = []
 
 
+class RSSEntry(Item):
+    # Properties
+    title: Optional[str] = None
+    link: Optional[str] = None
+    thumbnail: Optional[str] = None
+    published: Optional[datetime] = None
+    updated: Optional[datetime] = None
+    summary: Optional[str] = None
+    summarySource: Optional[str] = None
+    fullText: Optional[str] = None
+    author: Optional[str] = None
+    coarseLabel: Optional[str] = None
+    fineLabel: Optional[str] = None
+    relevance: Optional[float] = None
+
+
+class RSSFeed(Item):
+    # Properties
+    link: Optional[str] = None
+    href: Optional[str] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    published: Optional[datetime] = None
+    updated: Optional[datetime] = None
+    importIsActive: Optional[bool] = None
+    thumbnail: Optional[str] = None
+
+    # Edges
+    entry: List["RSSEntry"] = []
+
+
 class Relationship(Item):
     # Properties
     label: Optional[str] = None
@@ -477,6 +521,14 @@ class TemplateSettings(Item):
     labelOption: List["LabelOption"] = []
 
 
+class Translation(Item):
+    # Properties
+    value: Optional[str] = None
+    translatedProperty: Optional[str] = None
+    srcLang: Optional[str] = None
+    tgtLang: Optional[str] = None
+
+
 class Trigger(Item):
     # Properties
     action: Optional[str] = None
@@ -487,6 +539,27 @@ class Trigger(Item):
 
     # Edges
     trigger: List["PluginRun"] = []
+
+
+class Tweet(Item):
+    # Properties
+    message: Optional[str] = None
+    service: Optional[str] = None
+    postDate: Optional[datetime] = None
+    tweetType: Optional[str] = None
+    conversationId: Optional[str] = None
+    retweetCount: Optional[int] = None
+    replyCount: Optional[int] = None
+    likeCount: Optional[int] = None
+    liked: Optional[bool] = None
+    retweeted: Optional[bool] = None
+
+    # Edges
+    reference: List["Tweet"] = []
+    replies: List["Tweet"] = []
+    mention: List["Account"] = []
+    author: List["Account"] = []
+    photo: List["Photo"] = []
 
 
 class VoteAction(Item):
@@ -571,47 +644,6 @@ class Country(Location):
     location: List["Location"] = []
 
 
-class Photo(Item):
-    # Properties
-    name: Optional[str] = None
-    caption: Optional[str] = None
-    exifData: Optional[str] = None
-    height: Optional[int] = None
-    width: Optional[int] = None
-    channels: Optional[int] = None
-    encoding: Optional[str] = None
-    mode: Optional[str] = None
-    ocrText: Optional[str] = None
-
-    # Edges
-    changelog: List["AuditItem"] = []
-    thumbnail: List["File"] = []
-    file: List["File"] = []
-
-
-class Tweet(Item):
-    message: Optional[str] = None
-    service: Optional[str] = None
-    postDate: Optional[datetime] = None
-    tweetType: Optional[str] = None
-    conversationId: Optional[str] = None
-    retweetCount: Optional[int] = None
-    replyCount: Optional[int] = None
-    likeCount: Optional[int] = None
-    liked: Optional[bool] = None
-    retweeted: Optional[bool] = None
-
-    reference: List["Tweet"] = []
-    replies: List["Tweet"] = []
-    mention: List[Account] = []
-    author: List[Account] = []
-    photo: List[Photo] = []
-
-
-class Hashtag(Item):
-    pass
-
-
 class Message(WrittenWork):
     # Properties
     dateReceived: Optional[datetime] = None
@@ -648,10 +680,3 @@ class EmailMessage(Message):
     cc: List["Account"] = []
     message: List["EmailMessage"] = []
     replyTo: List["Account"] = []
-
-
-class Translation(Item):
-    value: Optional[str] = None
-    translatedProperty: Optional[str] = None
-    srcLang: Optional[str] = None
-    tgtLang: Optional[str] = None

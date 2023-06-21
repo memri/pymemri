@@ -107,3 +107,8 @@ class Photo(cs.Photo):
     def to_np(self) -> np.array:
         pil_img = self.to_PIL()
         return np.asarray(pil_img)
+
+
+class File(cs.File):
+    def __hash__(self):
+        return hash(self.sha256)
