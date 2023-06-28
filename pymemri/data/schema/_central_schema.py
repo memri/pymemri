@@ -50,7 +50,7 @@ class Account(Item):
     trust: List["Account"] = []
     profilePicture: List["Photo"] = []
     following: List["Account"] = []
-    followers: List["Account"] = []
+    follower: List["Account"] = []
 
 
 class AuditItem(Item):
