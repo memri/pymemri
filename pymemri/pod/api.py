@@ -157,6 +157,9 @@ class PodAPI:
     def delete_item(self, uid) -> list:
         return self.post("delete_item", uid).json()
 
+    def delete_edge(self, edge: dict) -> str:
+        return self.post("delete_edge_by_source_target", edge).json()
+
     def search(self, query: dict) -> List[dict]:
         return self.post("search", query).json()
 

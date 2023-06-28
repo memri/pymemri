@@ -203,6 +203,15 @@ class PodClient:
     def delete_items(self, items):
         return self.bulk_action(delete_items=items)
 
+    def delete_edge(self, edge):
+        edge = self.get_delete_edge_dict(edge)
+        try:
+            self.api.delete_edge(edge)
+            return True
+        except PodError as e:
+            logger.warning(e)
+            return False
+
     @staticmethod
     def gather_batch(items, start_idx, start_size=0, max_size=5000000):
         idx = start_idx
@@ -262,6 +271,7 @@ class PodClient:
         create_edges = (
             [self.get_create_edge_dict(i) for i in create_edges] if create_edges is not None else []
         )
+
         # Note: skip delete_items without id, as items that are not in pod cannot be deleted
         delete_items = (
             [item.id for item in delete_items if item.id is not None]
@@ -322,6 +332,12 @@ class PodClient:
             "_source": edge.source.id,
             "_target": edge.target.id,
             "_name": edge.name,
+        }
+
+    def get_delete_edge_dict(self, edge):
+        return {
+            "_source": edge.source.id,
+            "_target": edge.target.id,
         }
 
     def create_edge(self, edge):

@@ -78,6 +78,21 @@ def test_create_edge(client: PodClient):
     client.get_edges(email.id)
     assert len(client.get_edges(email.id))
 
+def test_delete_edge(client: PodClient):
+    # setup 
+    account = Account(handle="Alice")
+    email = EmailMessage(content="test content")
+    email.add_edge("sender", account)
+    client.bulk_action(create_items=[account, email], create_edges=[email.get_edges("sender")[0]])
+
+    senderEdges = email.get_edges('sender')
+    assert len(senderEdges) == 1
+    # delete the edge
+    assert client.delete_edge(senderEdges[0])
+    # check if deleted in Pod
+    senderEdges = client.get_edges(email.id)
+    assert len(senderEdges) == 0
+
 
 def test_get_item(client: PodClient):
     person = Person(firstName="Alice")
