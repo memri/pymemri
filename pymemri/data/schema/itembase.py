@@ -259,6 +259,18 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         else:
             raise ValueError(f"{edge_name} is not an edge on {type(self).__name__}")
 
+    def remove_edge(self, edge_name: str, target: "ItemBase"):
+        field = self.__edge_fields__.get(edge_name, None)
+        if field is not None:
+            edge = Edge[field.type_](name=edge_name, source=self, target=target)
+            existing_edges = self.__edges__[field.name]
+            if edge in existing_edges:
+                existing_edges.remove(edge)
+                self._new_edges.remove(edge)
+            return True
+        else:
+            raise ValueError(f"{edge_name} is not an edge on {type(self).__name__}")
+
     @classmethod
     def pod_schema(cls) -> List[Dict[str, str]]:
         """Generates the schema as required by the Pod.
