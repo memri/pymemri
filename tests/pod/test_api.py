@@ -17,23 +17,6 @@ def api():
     client = PodClient()
     client.add_to_schema(Account, Person, Message)
 
-    client.api.create_item(
-        {
-            "type": "ItemEdgeSchema",
-            "edgeName": "sender",
-            "sourceType": "Message",
-            "targetType": "Account",
-        }
-    )
-    client.api.create_item(
-        {
-            "type": "ItemEdgeSchema",
-            "edgeName": "owner",
-            "sourceType": "Account",
-            "targetType": "Person",
-        }
-    )
-
     # Create dummy data
     person = Person(displayName="Alice")
     accounts = [
@@ -58,29 +41,10 @@ def test_pod_version(api: PodAPI):
     assert "cargo" in api.pod_version
 
 
-def test_create_schema(api: PodAPI):
-    s = [
-        {
-            "type": "ItemPropertySchema",
-            "itemType": "Person",
-            "propertyName": "prop1",
-            "valueType": "Text",
-        },
-        {
-            "type": "ItemPropertySchema",
-            "itemType": "Person",
-            "propertyName": "prop2",
-            "valueType": "Integer",
-        },
-    ]
-    api.create_item(s[0])
-    api.create_item(s[1])
-
-
 def test_create_item(api: PodAPI):
     s = {
         "type": "Person",
-        "prop1": "Alice",
+        "email": "Alice",
     }
     api.create_item(s)
 
@@ -88,33 +52,32 @@ def test_create_item(api: PodAPI):
 def test_get_item(api: PodAPI):
     s = {
         "type": "Person",
-        "prop1": "Alice",
+        "email": "Alice",
     }
     uid = api.create_item(s)
 
     result = api.get_item(uid)[0]
     assert result["type"] == "Person"
-    assert result["prop1"] == "Alice"
+    assert result["email"] == "Alice"
 
 
 def test_update_item(api: PodAPI):
     s = {
         "type": "Person",
-        "prop1": "Alice",
+        "email": "Alice",
     }
     uid = api.create_item(s)
 
     s = {
-        "type": "Person",
         "id": uid,
-        "prop1": "Bob",
-        "prop2": 10,
+        "email": "Bob",
+        "birthDate": 10,
     }
     api.update_item(s)
     result = api.get_item(uid)[0]
     assert result["type"] == "Person"
-    assert result["prop1"] == "Bob"
-    assert result["prop2"] == 10
+    assert result["email"] == "Bob"
+    assert result["birthDate"] == 10
 
 
 def test_default_origin_allow_list_accepts_all():

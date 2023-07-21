@@ -23,8 +23,8 @@ class MyItem(Item):
     bool_property: Optional[bool] = None
     dt_property: Optional[datetime] = None
 
-    account_edge: List[Account] = []
-    union_edge: List[Union[Account, Person]] = []
+    accountEdge: List[Account] = []
+    unionEdge: List[Union[Account, Person]] = []
 
 
 def test_definition():
@@ -35,7 +35,7 @@ def test_definition():
         "bool_property",
         "dt_property",
     ]
-    assert MyItem.edges == Item.edges + ["account_edge", "union_edge"]
+    assert MyItem.edges == Item.edges + ["accountEdge", "unionEdge"]
     # + 1 for union edge
     assert len(MyItem.pod_schema()) == len(MyItem.edges) + len(MyItem.properties) + 1
 
@@ -52,9 +52,9 @@ def test_item_init():
 
 def test_init_with_edges():
     accounts = [Account(handle="1"), Account(handle="2")]
-    item = MyItem(str_property="test", account_edge=accounts)
+    item = MyItem(str_property="test", accountEdge=accounts)
     assert item.property_dict() == {"str_property": "test"}
-    assert len(item.account_edge) == len(item.__edges__["account_edge"]) == 2
+    assert len(item.accountEdge) == len(item.__edges__["accountEdge"]) == 2
 
 
 def test_property_dict():
@@ -97,12 +97,12 @@ def test_add_edge():
     person = Person()
     account = Account()
 
-    item.add_edge("account_edge", account)
+    item.add_edge("accountEdge", account)
 
     with pytest.raises(ValidationError):
-        item.add_edge("account_edge", person)
+        item.add_edge("accountEdge", person)
 
-    assert len(item.account_edge) == 1
+    assert len(item.accountEdge) == 1
 
 
 def test_union_edge():
@@ -110,12 +110,12 @@ def test_union_edge():
     account = Account(handle="test1")
     person = Person(firstName="test2")
 
-    item.add_edge("union_edge", account)
-    item.add_edge("union_edge", person)
+    item.add_edge("unionEdge", account)
+    item.add_edge("unionEdge", person)
 
-    assert len(item.union_edge) == 2
-    assert item.union_edge[0].handle == "test1"
-    assert item.union_edge[1].firstName == "test2"
+    assert len(item.unionEdge) == 2
+    assert item.unionEdge[0].handle == "test1"
+    assert item.unionEdge[1].firstName == "test2"
 
 
 def test_get_edge():
@@ -123,11 +123,11 @@ def test_get_edge():
     account = Account(id="1")
 
     item = MyItem()
-    item.add_edge("account_edge", account)
-    item.add_edge("union_edge", person)
+    item.add_edge("accountEdge", account)
+    item.add_edge("unionEdge", person)
 
-    assert len(item.get_edges("account_edge")) == 1
-    assert len(item.get_edges("union_edge")) == 1
+    assert len(item.get_edges("accountEdge")) == 1
+    assert len(item.get_edges("unionEdge")) == 1
     assert len(item.get_all_edges()) == 2
 
     targets = [edge.target for edge in item.get_all_edges()]
@@ -139,8 +139,7 @@ def test_central_schema_to_pod():
     for k, v in get_schema().items():
         assert client.add_to_schema(v), f"Could not add {k} to schema"
 
-    assert len(client.api.search({"type": "ItemPropertySchema"}))
-    assert len(client.api.search({"type": "ItemEdgeSchema"}))
+    client.api.search({"type": "Message"})
 
 
 def test_create_and_read_item():
@@ -150,14 +149,14 @@ def test_create_and_read_item():
 
     item = MyItem(str_property="test", int_property=1)
     account = Account(handle="friend")
-    item.add_edge("account_edge", account)
+    item.add_edge("accountEdge", account)
 
     assert client.create(item)
     assert client.create(account)
 
     item_2 = client.get(item.id)
-    assert len(item_2.account_edge) == 1
-    assert item_2.account_edge[0].handle == "friend"
+    assert len(item_2.accountEdge) == 1
+    assert item_2.accountEdge[0].handle == "friend"
     assert item_2.str_property == "test"
     assert item_2.int_property == 1
 

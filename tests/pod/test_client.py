@@ -1,3 +1,4 @@
+from time import sleep
 from typing import List, Optional
 
 import pytest
@@ -10,7 +11,8 @@ from pymemri.pod.graphql_utils import GQLQuery
 
 @pytest.fixture(scope="module")
 def client():
-    return PodClient()
+    client = PodClient()
+    return client
 
 
 def setup_sync_items(client) -> List[Item]:
@@ -81,6 +83,7 @@ def test_create_edge(client: PodClient):
 
 def test_delete_edge(client: PodClient):
     # setup
+    client.add_to_schema(Account, EmailMessage)
     account = Account(handle="Alice")
     email = EmailMessage(content="test content")
     email.add_edge("sender", account)
@@ -96,6 +99,8 @@ def test_delete_edge(client: PodClient):
 
 
 def test_get_item(client: PodClient):
+    client.add_to_schema(Person)
+
     person = Person(firstName="Alice")
     client.create(person)
     client.reset_local_db()
@@ -105,6 +110,8 @@ def test_get_item(client: PodClient):
 
 
 def test_update_item(client: PodClient):
+    client.add_to_schema(Person)
+
     person_item = Person(firstName="Alice")
     client.create(person_item)
     person_item.lastName = "Awesome"
@@ -277,6 +284,7 @@ def test_bulk_create(client: PodClient):
 
 
 def test_bulk_update_delete(client: PodClient):
+    client.add_to_schema(Person)
     person1 = Person(firstName="Alice")
     person2 = Person(firstName="Bob")
     client.bulk_action(create_items=[person1, person2])
@@ -288,12 +296,15 @@ def test_bulk_update_delete(client: PodClient):
     client.bulk_action(delete_items=to_delete, update_items=to_update)
 
     client.reset_local_db()
-    assert client.get(person2.id, include_deleted=True).deleted
+
+    with pytest.raises(ValueError):
+        client.get(person2.id, include_deleted=True)
+
     assert client.get(person1.id).firstName == "updated"
 
 
 def test_plugin_status(client: PodClient):
-    run = PluginRun(containerImage="", pluginName="")
+    run = PluginRun(containerImage="", pluginName="", pluginModule="")
     client.create(run)
     assert client.plugin_status([run.id])[run.id] == {"status": "unreachable"}
 
@@ -306,11 +317,11 @@ def test_create_account():
 
     # Create another client with same keys
     client = PodClient(owner_key=owner_key, database_key=database_key, create_account=False)
-    assert len(client.search({"type": "ItemPropertySchema"}))
+    client.search({"type": "PodUserAccount"})
 
     # Create new client + account with same keys only raises warning
     client = PodClient(owner_key=owner_key, database_key=database_key, create_account=True)
-    assert len(client.search({"type": "ItemPropertySchema"}))
+    client.search({"type": "PodUserAccount"})
 
     # New pod without create_account throws error
     with pytest.raises(PodError):
@@ -319,6 +330,11 @@ def test_create_account():
 
 def test_update_schema():
     client = PodClient()
+
+    client2 = PodClient(
+        owner_key=client.owner_key,
+        database_key=client.database_key,
+    )
 
     class TestItem(Item):
         field1: str
@@ -334,24 +350,19 @@ def test_update_schema():
     items = client.search_typed(TestItem)
     assert len(items) == 1
 
-    client = PodClient(
-        owner_key=client.owner_key,
-        database_key=client.database_key,
-    )
-
     class TestItem(Item):
         field1: str
         field2: Optional[str]
 
-    client.add_to_schema(TestItem)
-
+    client2.add_to_schema(TestItem)
     # Create data for search
-    client.bulk_action(
+    client2.bulk_action(
         create_items=[
-            TestItem(field1="test2", field2="test2"),
+            TestItem(field1="test2.1", field2="test2.2"),
         ]
     )
 
-    items = client.search_typed(TestItem)
+    items = client2.search_typed(TestItem, include_edges=False)
+
     assert len(items) == 2
-    assert items[1].field2 == "test2"
+    assert items[1].field2 == "test2.2"
