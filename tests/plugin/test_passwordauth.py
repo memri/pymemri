@@ -37,7 +37,7 @@ class MyAuthenticatedPlugin(PluginBase):
 
 def test_password_plugin(client):
     # Create Plugin
-    run = PluginRun(containerImage="")
+    run = PluginRun(containerImage="", pluginModule="test", pluginName="test")
     account = Account(service="myAccount")
     run.add_edge("account", account)
     client.create(run)

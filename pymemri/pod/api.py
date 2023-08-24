@@ -204,14 +204,17 @@ class PodAPI:
             return
             yield
 
-        next_date = 0
+        offset = 0
+        query = {**query, "_limit": limit}
+
         while True:
-            query["dateServerModified>="] = next_date
+            query["_offset"] = offset
+
             response = self.search(query)
             if not len(response):
                 break
 
-            next_date = response[-1]["dateServerModified"] + 1
+            offset += limit
             yield response
 
     def bulk(

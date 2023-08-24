@@ -1,4 +1,4 @@
-default: 
+default:
   image: python:3.9
   before_script:
   - pip install -e .[dev]
@@ -16,7 +16,7 @@ run tests:
   - curl http://pod:3030/version
   - export POD_ADDRESS='http://pod:3030'
   - pre-commit run --all-files
-  - pytest --cov=pymemri tests 
+  - pytest --cov=pymemri tests
 
 
 memri-docs:

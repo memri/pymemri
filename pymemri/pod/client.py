@@ -335,10 +335,7 @@ class PodClient:
         }
 
     def get_delete_edge_dict(self, edge):
-        return {
-            "_source": edge.source.id,
-            "_target": edge.target.id,
-        }
+        return {"_source": edge.source.id, "_target": edge.target.id, "_name": edge.name}
 
     def create_edge(self, edge):
         edge_dict = self.get_create_edge_dict(edge)

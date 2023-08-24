@@ -46,15 +46,15 @@ def create_dummy_dataset(client, num_items):
         msg.add_edge("sender", account)
         account.add_edge("owner", person)
 
-        edges = list(
-            itertools.chain(
-                edges,
-                dataset.get_all_edges(),
-                entry.get_all_edges(),
-                msg.get_all_edges(),
-                account.get_all_edges(),
-            )
+    edges = list(
+        itertools.chain(
+            dataset.get_all_edges(),
+            entry.get_all_edges(),
+            msg.get_all_edges(),
+            account.get_all_edges(),
         )
+    )
+
     client.bulk_action(create_items=items, create_edges=edges)
 
 
