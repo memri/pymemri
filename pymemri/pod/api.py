@@ -160,8 +160,8 @@ class PodAPI:
     def delete_edge(self, edge: dict) -> str:
         return self.post("delete_edge_by_source_target", edge).json()
 
-    def delete_file(self, sha: str) -> str:
-        return self.post("delete_file", {"sha256": sha}).json()
+    def delete_file(self, id: str) -> str:
+        return self.post("delete_file", {"id": id}).json()
 
     def search(self, query: dict) -> List[dict]:
         return self.post("search", query).json()
