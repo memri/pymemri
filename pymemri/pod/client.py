@@ -212,12 +212,12 @@ class PodClient:
             logger.warning(e)
             return False
 
-    def delete_file(self, sha256):
+    def delete_file(self, id):
         try:
-            self.api.delete_file(sha256)
+            self.api.delete_file(id)
             return True
         except PodError as e:
-            logger.warning(f"Could not delete file {sha256}: {e}")
+            logger.warning(f"Could not delete file {id}: {e}")
             return False
 
     @staticmethod
