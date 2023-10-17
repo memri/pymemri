@@ -38,3 +38,31 @@ def test_create_photo(client: PodClient, photo: Photo):
     client.reset_local_db()
     photo_from_db = client.get_photo(photo.id)
     assert photo_from_db.data == photo.data
+
+
+def test_delete_file(client: PodClient):
+    # setup
+    client.add_to_schema(File)
+    files = client.search_typed(File)
+    sha256 = files[-1].sha256
+
+    # check file data exists
+    file_data = client.get_file(sha256)
+    assert file_data
+
+    client.get(files[-1].id)
+
+    client.delete_file(files[-1].id)
+
+    client.reset_local_db()
+    try:
+        client.get(files[-1].id)
+        assert False  # should not be able to get the file item
+    except Exception as e:
+        pass
+
+    try:
+        client.get_file(sha256)
+        assert False  # should not be able to get the file
+    except Exception as e:
+        pass

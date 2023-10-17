@@ -212,6 +212,14 @@ class PodClient:
             logger.warning(e)
             return False
 
+    def delete_file(self, sha256):
+        try:
+            self.api.delete_file(sha256)
+            return True
+        except PodError as e:
+            logger.warning(f"Could not delete file {sha256}: {e}")
+            return False
+
     @staticmethod
     def gather_batch(items, start_idx, start_size=0, max_size=5000000):
         idx = start_idx
