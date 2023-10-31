@@ -35,7 +35,6 @@ class PodClient:
         database_key=None,
         owner_key=None,
         auth_json=None,
-        register_base_schema=True,
         verbose=False,
         default_priority=Priority.local,
         create_account=True,
@@ -60,7 +59,6 @@ class PodClient:
         self.api.test_connection()
         self.local_db = DB()
         self.registered_classes = dict()
-        self.register_base_schemas()
 
     @classmethod
     def from_local_keys(cls, path=DEFAULT_POD_KEY_PATH, **kwargs):
@@ -79,11 +77,6 @@ class PodClient:
             self.api.create_account()
         except PodError as e:
             logger.warning(e)
-
-    def register_base_schemas(self):
-        result = self.add_to_schema(PluginRun, Account)
-        if not result:
-            raise ValueError("Could not register base schemas")
 
     def add_to_store(self, item: ItemBase, priority: Priority = None) -> ItemBase:
         item.create_id_if_not_exists()
@@ -125,14 +118,16 @@ class PodClient:
 
         return self._upload_image(photo.data, asyncFlag=asyncFlag)
 
-    def add_to_schema(self, *items: Unpack[Union[Type[ItemBase], ItemBase]]):
-        create_items = []
+    def add_to_schema(self, meta: Dict[str, str], *items: Unpack[Union[Type[ItemBase], ItemBase]]):
+        nodes = {}
         for item in items:
             if not (isinstance(item, ItemBase) or issubclass(item, ItemBase)):
                 raise ValueError(f"{item} is not an instance or subclass of Item")
-            create_items.extend(item.pod_schema())
+            nodes.update(item.pod_schema())
 
-        self.api.bulk(create_items=create_items)
+        self.api.create_schema({"nodes": nodes, "meta": meta})
+        # TODO: edges
+
         for item in items:
             item_cls = type(item) if isinstance(item, ItemBase) else item
             self.registered_classes[item.__name__] = item_cls

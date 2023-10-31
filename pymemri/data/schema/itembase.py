@@ -185,6 +185,14 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_va
 ItemType = TypeVar("ItemType")
 
 
+class ItemSchema:
+    name: str
+    # prop name -> type
+    properties: Dict[str, str]
+    # edge name -> [{source -> target}]
+    edges: Dict[str, List[Dict[str, str]]]
+
+
 class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
     if TYPE_CHECKING:
         # class variables populated by the metaclass, defined here to help IDEs only
@@ -272,73 +280,27 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
             raise ValueError(f"{edge_name} is not an edge on {type(self).__name__}")
 
     @classmethod
-    def pod_schema(cls) -> List[Dict[str, str]]:
+    def pod_schema(cls) -> ItemSchema:
         """Generates the schema as required by the Pod.
 
         Returns:
-            List[Dict[str, str]]: List of schema definitions.
+            ItemSchema: Item properties and edges.
         """
-        schema = []
+        properties = {}
         for field in cls.__property_fields__.values():
-            property_schema = {
-                "type": "ItemPropertySchema",
-                "itemType": cls.__name__,
-                "propertyName": field.name,
-                "valueType": POD_TYPES[field.type_],
-            }
-            schema.append(property_schema)
+            properties[field.name] = POD_TYPES[field.type_]
 
-        for field in cls.__edge_fields__.values():
-            for target_type in type_or_union_to_tuple(field.type_):
-                edge_schema = {
-                    "type": "ItemEdgeSchema",
-                    "edgeName": field.name,
-                    "sourceType": cls.__name__,
-                    "targetType": type_to_str(target_type),
-                }
-                schema.append(edge_schema)
-        return schema
+        # for field in cls.__edge_fields__.values():
+        #     for target_type in type_or_union_to_tuple(field.type_):
+        #         edge_schema = {
+        #             "type": "ItemEdgeSchema",
+        #             "edgeName": field.name,
+        #             "sourceType": cls.__name__,
+        #             "targetType": type_to_str(target_type),
+        #         }
+        #         schema.append(edge_schema)
 
-    @classmethod
-    def central_schema_definition(cls) -> Dict[str, Any]:
-        """Experimental feature, not covered by tests yet.
-
-        Returns schema definition like in the central schema repository
-
-        Returns:
-            Dict[str, Any]: Central schema definition
-        """
-        schema = {}
-        schema["description"] = getattr(cls, "description", None) or ""
-        base = cls.__bases__[0]
-        if base != "Item":
-            schema["base_schema"] = base.__name__
-        schema["properties"] = []
-        for field in cls.__property_fields__.values():
-            if (
-                field.name not in base.properties
-                or base.__property_fields__[field.name].type_ != field.type_
-            ):
-                property_schema = {
-                    "name": field.name,
-                    "type": POD_TYPES[field.type_],
-                }
-                schema["properties"].append(property_schema)
-
-        schema["edges"] = []
-        for field in cls.__edge_fields__.values():
-            if (
-                field.name not in base.edges
-                or base.__edge_fields__[field.name].type_ != field.type_
-            ):
-                target_types = type_or_union_to_tuple(field.type_)
-                ttype_json = [type_to_str(t) for t in target_types]
-                if len(ttype_json) == 1:
-                    ttype_json = ttype_json[0]
-                    edge_schema = {"name": field.name, "target": ttype_json}
-                    schema["edges"].append(edge_schema)
-
-        return schema
+        return {cls.__name__: {"properties": properties}}
 
     @property
     def _updated_properties(self):

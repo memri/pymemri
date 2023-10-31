@@ -63,7 +63,9 @@ class PodAPI:
         self.owner_key = owner_key
         self.version = version
         self._url = url
+
         self.base_url = f"{url}/{version}/{self.owner_key}"
+        self.base_url_v5 = f"{url}/v5/{self.owner_key}"
         self.auth_json = self._create_auth(auth_json)
 
         # Class uses requests Session to communicate with the POD.
@@ -135,6 +137,16 @@ class PodAPI:
         if response.status_code != 200:
             raise PodError(response.status_code, response.text)
         return response
+
+    def post_v5(self, endpoint: str, payload: Any) -> Any:
+        body = {"auth": self.auth_json, "payload": payload}
+        response = self.session.post(f"{self.base_url_v5}/{endpoint}", json=body)
+        if response.status_code != 200:
+            raise PodError(response.status_code, response.text)
+        return response
+
+    def create_schema(self, item: dict) -> str:
+        return self.post_v5("schema", item).json()
 
     def get_item(self, uid: str) -> dict:
         return self.post("get_item", uid).json()

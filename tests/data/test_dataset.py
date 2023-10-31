@@ -19,9 +19,20 @@ from pymemri.pod.client import PodClient
 def client():
     client = PodClient()
     client.add_to_schema(
-        Account, Person, Message, EmailMessage, Dataset, DatasetEntry, CategoricalLabel
+        {"name": "test_dataset", "url": "example.com", "version": "0.1"},
+        Account,
+        Person,
+        Message,
+        EmailMessage,
+        Dataset,
+        DatasetEntry,
+        CategoricalLabel,
     )
     return client
+
+
+def test_new_schema(client):
+    pass
 
 
 def create_dummy_dataset(client, num_items):
