@@ -32,10 +32,6 @@ def client():
     return client
 
 
-def test_new_schema(client):
-    pass
-
-
 def create_dummy_dataset(client, num_items):
     dataset = Dataset(name="example-dataset")
 
