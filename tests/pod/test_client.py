@@ -4,6 +4,7 @@ from typing import List, Optional
 import pytest
 
 from pymemri.data.schema import Account, Edge, EmailMessage, Item, Person, PluginRun
+from pymemri.data.schema.schema import SchemaMeta
 from pymemri.examples.example_schema import Dog
 from pymemri.pod.client import PodClient, PodError
 from pymemri.pod.graphql_utils import GQLQuery
@@ -51,7 +52,12 @@ def test_connection(client: PodClient):
 
 
 def test_add_to_schema(client: PodClient):
-    assert client.add_to_schema(EmailMessage, Person, Account)
+    assert client.add_to_schema(
+        SchemaMeta(name="test_add_to_schema", url="example.com", version="0.1"),
+        EmailMessage,
+        Person,
+        Account,
+    )
 
 
 def test_create(client: PodClient):
@@ -59,7 +65,7 @@ def test_create(client: PodClient):
 
 
 def test_custom_item(client: PodClient):
-    client.add_to_schema(Dog)
+    client.add_to_schema(SchemaMeta(name="test_custom_item", url="example.com", version="0.1"), Dog)
     dog = Dog(name="bob", age=3, weight=33.2)
     client.create(dog)
 
@@ -83,7 +89,6 @@ def test_create_edge(client: PodClient):
 
 def test_delete_edge(client: PodClient):
     # setup
-    client.add_to_schema(Account, EmailMessage)
     account = Account(handle="Alice")
     email = EmailMessage(content="test content")
     email.add_edge("sender", account)
@@ -99,8 +104,6 @@ def test_delete_edge(client: PodClient):
 
 
 def test_get_item(client: PodClient):
-    client.add_to_schema(Person)
-
     person = Person(firstName="Alice")
     client.create(person)
     client.reset_local_db()
@@ -110,8 +113,6 @@ def test_get_item(client: PodClient):
 
 
 def test_update_item(client: PodClient):
-    client.add_to_schema(Person)
-
     person_item = Person(firstName="Alice")
     client.create(person_item)
     person_item.lastName = "Awesome"
@@ -145,7 +146,6 @@ def test_partial_update(client: PodClient):
 
 def test_sync_local():
     client = PodClient()
-    client.add_to_schema(EmailMessage)
     all_items = setup_sync_items(client)
     client.sync(priority="local")
     for i, item in enumerate(all_items):
@@ -161,7 +161,6 @@ def test_sync_local():
 
 def test_sync_remote():
     client = PodClient()
-    client.add_to_schema(EmailMessage)
     all_items = setup_sync_items(client)
     client.sync(priority="remote")
     for i, item in enumerate(all_items):
@@ -177,7 +176,6 @@ def test_sync_remote():
 
 def test_sync_newest():
     client = PodClient()
-    client.add_to_schema(EmailMessage)
     all_items = setup_sync_items(client)
     client.sync(priority="newest")
     for i, item in enumerate(all_items):
@@ -267,6 +265,8 @@ def test_search_gql(client: PodClient):
 
 
 def test_bulk_create(client: PodClient):
+    client.add_to_schema(SchemaMeta(name="test_bulk_create", url="example.com", version="0.1"), Dog)
+
     dogs = [Dog(name=f"dog number {i}") for i in range(100)]
     person = Person(firstName="Alice")
     edge1 = Edge(dogs[0], person, "owner")
@@ -284,7 +284,6 @@ def test_bulk_create(client: PodClient):
 
 
 def test_bulk_update_delete(client: PodClient):
-    client.add_to_schema(Person)
     person1 = Person(firstName="Alice")
     person2 = Person(firstName="Bob")
     client.bulk_action(create_items=[person1, person2])
@@ -323,9 +322,10 @@ def test_create_account():
     client = PodClient(owner_key=owner_key, database_key=database_key, create_account=True)
     client.search({"type": "PodUserAccount"})
 
-    # New pod without create_account throws error
+    # New pod without create_account throws error, upon usage
+    client = PodClient(create_account=False, owner_key=PodClient.generate_random_key())
     with pytest.raises(PodError):
-        _ = PodClient(create_account=False, owner_key=PodClient.generate_random_key())
+        client.add_to_schema(SchemaMeta(name="test", url="example.com", version="0.1"), Person)
 
 
 def test_update_schema():
@@ -339,7 +339,9 @@ def test_update_schema():
     class TestItem(Item):
         field1: str
 
-    client.add_to_schema(TestItem)
+    client.add_to_schema(
+        SchemaMeta(name="test_update_schema", url="example.com", version="0.1"), TestItem
+    )
 
     client.bulk_action(
         create_items=[
@@ -354,7 +356,9 @@ def test_update_schema():
         field1: str
         field2: Optional[str]
 
-    client2.add_to_schema(TestItem)
+    client2.add_to_schema(
+        SchemaMeta(name="test_update_schema", url="example.com", version="0.2"), TestItem
+    )
     # Create data for search
     client2.bulk_action(
         create_items=[

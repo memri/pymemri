@@ -15,7 +15,6 @@ def api():
     TODO copied from test_api, clean this up for graphQL
     """
     client = PodClient()
-    client.add_to_schema(Account, Person, Message)
 
     # Create dummy data
     person = Person(displayName="Alice")

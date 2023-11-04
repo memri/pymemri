@@ -22,8 +22,6 @@ from .states import RUN_COMPLETED, RUN_DAEMON, RUN_INITIALIZED, RUN_STARTED
 class PluginBase(metaclass=ABCMeta):
     """Base class for plugins"""
 
-    schema_classes = []
-
     def __init__(self, pluginRun: PluginRun = None, *, client: PodClient, **kwargs):
         super().__init__()
         if pluginRun is None:
@@ -92,20 +90,6 @@ class PluginBase(metaclass=ABCMeta):
     @abc.abstractmethod
     def run(self):
         raise NotImplementedError()
-
-    def add_to_schema(self):
-        """
-        Add all schema classes required by the plugin to self.client here.
-        """
-        if len(self.schema_classes):
-            self.client.add_to_schema(*self.schema_classes)
-
-    @classmethod
-    def get_schema(cls):
-        schema = []
-        for schema_cls in cls.schema_classes:
-            schema.extend(schema_cls.pod_schema())
-        return schema
 
     def _register_api_endpoints(self):
         """Collect decorated methods and add them to the webserver routes"""
@@ -219,7 +203,6 @@ def run_plugin_from_run_id(run_id, client, **kwargs):
 
     plugin_cls = get_plugin_cls(run.pluginModule, run.pluginName)
     plugin = plugin_cls(pluginRun=run, client=client, **kwargs)
-    plugin.add_to_schema()
 
     plugin._run()
 

@@ -494,6 +494,7 @@ class PodClient:
 
         extra_fields = {"[[edges]]": {}} if include_edges else {}
         query = {**fields_data, **extra_fields}
+        result = []
 
         # Special key "ids" for searching a list of ids.
         # Requires /bulk search instead of /search.

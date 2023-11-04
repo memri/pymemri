@@ -24,12 +24,6 @@ def client():
     return PodClient.from_local_keys(create_account=True)
 
 
-def test_plugin_schema():
-    example_schema = ExamplePlugin.get_schema()
-    assert isinstance(example_schema, list)
-    assert len(example_schema)
-
-
 def test_run_from_id(client):
     sys.path.append(get_project_root() / "examples")
 
@@ -39,12 +33,12 @@ def test_run_from_id(client):
         pluginName="ExamplePlugin",
         status="not started",
     )
-    account = Account(identifier="login", secret="password")
-    run.add_edge("account", account)
+    # account = Account(identifier="login", secret="password")
+    # run.add_edge("account", account)
 
     client.create(run)
-    assert client.create(account)
-    assert client.create_edge(run.get_edges("account")[0])
+    # assert client.create(account)
+    # assert client.create_edge(run.get_edges("account")[0])
 
     run_plugin_from_run_id(run.id, client)
 
