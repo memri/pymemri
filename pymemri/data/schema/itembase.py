@@ -1,5 +1,6 @@
 import sys
 import uuid
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import (
     TYPE_CHECKING,
@@ -185,6 +186,7 @@ class Edge(GenericModel, Generic[TargetType], smart_union=True, copy_on_model_va
 ItemType = TypeVar("ItemType")
 
 
+@dataclass
 class ItemSchema:
     name: str
     # prop name -> type
@@ -290,17 +292,14 @@ class ItemBase(BaseModel, metaclass=_ItemMeta, extra=Extra.forbid):
         for field in cls.__property_fields__.values():
             properties[field.name] = POD_TYPES[field.type_]
 
-        # for field in cls.__edge_fields__.values():
-        #     for target_type in type_or_union_to_tuple(field.type_):
-        #         edge_schema = {
-        #             "type": "ItemEdgeSchema",
-        #             "edgeName": field.name,
-        #             "sourceType": cls.__name__,
-        #             "targetType": type_to_str(target_type),
-        #         }
-        #         schema.append(edge_schema)
+        edges = {}
+        for field in cls.__edge_fields__.values():
+            for target_type in type_or_union_to_tuple(field.type_):
+                edges.setdefault(field.name, []).append(
+                    {"source": cls.__name__, "target": type_to_str(target_type)}
+                )
 
-        return {cls.__name__: {"properties": properties}}
+        return ItemSchema(cls.__name__, properties, edges)
 
     @property
     def _updated_properties(self):
