@@ -14,6 +14,8 @@ class Item(ItemBase):
     dateCreated: Optional[datetime] = None
     dateModified: Optional[datetime] = None
     dateServerModified: Optional[datetime] = None
+    # TODO: the hell is that
+    externalId: Optional[str] = None
 
     # TODO: label on every item? Seriously?
     # Edges
