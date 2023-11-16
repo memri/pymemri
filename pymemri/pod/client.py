@@ -355,20 +355,14 @@ class PodClient:
             logger.error(e)
             return False
 
-    def get(self, id, expanded=True, include_deleted=False):
+    def get(self, id, expanded=True):
         if not expanded:
             res = self._get_item_with_properties(id)
         else:
             res = self._get_item_expanded(id)
         if res is None:
             raise ValueError(f"Item with id {id} does not exist")
-        elif res.deleted and not include_deleted:
-            logger.info(f"Item with id {id} has been deleted")
-            return
         return res
-
-    def filter_deleted(self, items):
-        return [i for i in items if not i.deleted == True]
 
     def _get_item_expanded(self, id):
         item = self._get_item_with_properties(id)
@@ -408,7 +402,6 @@ class PodClient:
 
     def get_update_dict(self, item: ItemBase, partial_update: bool = True):
         properties = item.property_dict()
-        properties.pop("deleted", None)
         if partial_update:
             properties = {
                 k: v for k, v in properties.items() if k == "id" or k in item._updated_properties
@@ -459,7 +452,7 @@ class PodClient:
                     self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority)
                     for item in page
                 ]
-                yield self.filter_deleted(result)
+                yield result
         except PodError as e:
             logger.error(e)
 
@@ -517,7 +510,7 @@ class PodClient:
             self._item_from_search(item, add_to_local_db=add_to_local_db, priority=priority)
             for item in result
         ]
-        return self.filter_deleted(result)
+        return result
 
     def _item_from_search(self, item_json: dict, add_to_local_db: bool = True, priority=None):
         # search returns different fields w.r.t. edges compared to `get` api,

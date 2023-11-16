@@ -14,10 +14,8 @@ class Item(ItemBase):
     dateCreated: Optional[datetime] = None
     dateModified: Optional[datetime] = None
     dateServerModified: Optional[datetime] = None
-    deleted: Optional[bool] = None
-    externalId: Optional[str] = None
-    isMock: Optional[bool] = None
 
+    # TODO: label on every item? Seriously?
     # Edges
     language: List["Language"] = []
     label: List["CategoricalPrediction"] = []
@@ -76,7 +74,7 @@ class CategoricalPrediction(Item):
     # Properties
     source: Optional[str] = None
     value: Optional[str] = None
-    score: Optional[float] = None
+    probs: Optional[str] = None
 
     # Edges
     model: List["Model"] = []
@@ -153,7 +151,6 @@ class Dataset(Item):
 
     # Edges
     entry: List["DatasetEntry"] = []
-    feature: List["ItemPropertySchema"] = []
     labellingTask: List["LabellingTask"] = []
     datasetType: List["DatasetType"] = []
 
@@ -163,7 +160,7 @@ class DatasetEntry(Item):
     skippedByLabeller: Optional[bool] = None
 
     # Edges
-    data: List[Union["Message", "Tweet", "EmailMessage"]] = []
+    data: List[Union["Message", "EmailMessage"]] = []
     annotation: List["CategoricalLabel"] = []
 
 
@@ -171,9 +168,6 @@ class DatasetType(Item):
     # Properties
     name: Optional[str] = None
     queryStr: Optional[str] = None
-
-    # Edges
-    datasetPlugin: List["Plugin"] = []
 
 
 class Diet(Item):
@@ -196,6 +190,7 @@ class Diet(Item):
     writtenBy: List["Person"] = []
 
 
+# TODO: separate _pod_schema
 class File(Item):
     # Properties
     filename: Optional[str] = None
@@ -210,20 +205,6 @@ class Integrator(Item):
     # Properties
     name: Optional[str] = None
     repository: Optional[str] = None
-
-
-class ItemEdgeSchema(Item):
-    # Properties
-    edgeName: Optional[str] = None
-    sourceType: Optional[str] = None
-    targetType: Optional[str] = None
-
-
-class ItemPropertySchema(Item):
-    # Properties
-    itemType: Optional[str] = None
-    propertyName: Optional[str] = None
-    valueType: Optional[str] = None
 
 
 class Label(Item):
@@ -331,6 +312,7 @@ class Network(Item):
     website: List["Website"] = []
 
 
+# TODO: to be removed
 class OauthFlow(Item):
     # Properties
     accessToken: Optional[str] = None
@@ -385,6 +367,7 @@ class Photo(Item):
     channels: Optional[int] = None
     encoding: Optional[str] = None
     mode: Optional[str] = None
+    ocrText: Optional[str] = None
 
     # Edges
     changelog: List["AuditItem"] = []
@@ -392,6 +375,7 @@ class Photo(Item):
     file: List["File"] = []
 
 
+# TODO: separate _pod_schema
 class Plugin(Item):
     # Properties
     bundleImage: Optional[str] = None
@@ -414,6 +398,7 @@ class Plugin(Item):
     run: List["PluginRun"] = []
 
 
+# TODO: separate _pod_schema
 class PluginRun(Item):
     # Properties
     authUrl: Optional[str] = None
@@ -459,7 +444,6 @@ class Project(Item):
 
     # Edges
     dataset: List["Dataset"] = []
-    labellingPlugin: List["Plugin"] = []
 
 
 class RSSEntry(Item):
@@ -476,6 +460,8 @@ class RSSEntry(Item):
     coarseLabel: Optional[str] = None
     fineLabel: Optional[str] = None
     relevance: Optional[float] = None
+    rssFeedId: Optional[str] = None
+    isIndexed: Optional[bool] = None
 
 
 class RSSFeed(Item):
@@ -491,6 +477,13 @@ class RSSFeed(Item):
 
     # Edges
     entry: List["RSSEntry"] = []
+    photo: List["RSSEntry"] = []
+
+
+class RSSFeedSummary(Item):
+    # Properties
+    category: Optional[str] = None
+    content: Optional[str] = None
 
 
 class Relationship(Item):
@@ -529,6 +522,7 @@ class Translation(Item):
     tgtLang: Optional[str] = None
 
 
+# TODO: separate _pod_schema
 class Trigger(Item):
     # Properties
     action: Optional[str] = None
@@ -539,27 +533,6 @@ class Trigger(Item):
 
     # Edges
     trigger: List["PluginRun"] = []
-
-
-class Tweet(Item):
-    # Properties
-    message: Optional[str] = None
-    service: Optional[str] = None
-    postDate: Optional[datetime] = None
-    tweetType: Optional[str] = None
-    conversationId: Optional[str] = None
-    retweetCount: Optional[int] = None
-    replyCount: Optional[int] = None
-    likeCount: Optional[int] = None
-    liked: Optional[bool] = None
-    retweeted: Optional[bool] = None
-
-    # Edges
-    reference: List["Tweet"] = []
-    replies: List["Tweet"] = []
-    mention: List["Account"] = []
-    author: List["Account"] = []
-    photo: List["Photo"] = []
 
 
 class VoteAction(Item):

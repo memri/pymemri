@@ -18,7 +18,7 @@ from typing import List, Optional, Union
 
 from pydantic import PrivateAttr
 
-from pymemri.data.schema import Item, Message, Person, Tweet
+from pymemri.data.schema import Item, Message, Person, Photo
 
 
 class Dog(Item):
@@ -33,14 +33,14 @@ class Dog(Item):
 
     # Edges
     owner: List[Person] = []
-    referencedBy: List[Union[Message, Tweet]] = []
+    referencedBy: List[Union[Message, Photo]] = []
 ```
 
 This Item has 5 properties: name, age, bites, weight, and dateOfBirth. Additionally, the annotated types of these properties are all the types the Pod currently supports: `str`, `int`, `bool`, `float`, and `datetime`. At the moment, the Pod does not support mandatory properties, so all properties are annotated as `Optional` with `None` as default value.
 
-Along with these five properties, Dog also has the base properties defined on the `Item` class. These base properties contain fields like `id: str` or `deleted: bool`, and are not important for general use. Every schema definition needs to inherit from \`Item\`.
+Along with these five properties, Dog also has the base properties defined on the `Item` class. These base properties contain fields like `id: str`, and are not important for general use. Every schema definition needs to inherit from \`Item\`.
 
-Edges are annotated as a lists of `Item`s. The possible target types of an edge have to be annotated explicitly in the schema definition, and can only be a subclass of `Item`. For example in the above schema, the `Dog.owner` edge can only point to `Person` items, and the `Dog.referencedBy` edge can point to both `Message` and `Tweet` Items through the use of a Union type.
+Edges are annotated as a lists of `Item`s. The possible target types of an edge have to be annotated explicitly in the schema definition, and can only be a subclass of `Item`. For example in the above schema, the `Dog.owner` edge can only point to `Person` items, and the `Dog.referencedBy` edge can point to both `Message` and `Photo` Items through the use of a Union type.
 
 The `Dog` item has a private attribute `_hasBeenFed`. These attributes have to start with an `_`, and have a `PrivateAttr` as default value. It will be ignored in the `Dog` schema, and not exported when calling methods like `Dog.to_json()`. You can read more about private attributes in the [pydantic documentation](https://pydantic-docs.helpmanual.io/usage/models/#private-model-attributes).
 
