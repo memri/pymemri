@@ -14,14 +14,6 @@ class Item(ItemBase):
     dateCreated: Optional[datetime] = None
     dateModified: Optional[datetime] = None
     dateServerModified: Optional[datetime] = None
-    deleted: Optional[bool] = None
-    externalId: Optional[str] = None
-    isMock: Optional[bool] = None
-
-    # Edges
-    language: List["Language"] = []
-    label: List["CategoricalPrediction"] = []
-    translation: List["Translation"] = []
 
 
 class Account(Item):
@@ -76,7 +68,7 @@ class CategoricalPrediction(Item):
     # Properties
     source: Optional[str] = None
     value: Optional[str] = None
-    score: Optional[float] = None
+    probs: Optional[str] = None
 
     # Edges
     model: List["Model"] = []
@@ -153,7 +145,6 @@ class Dataset(Item):
 
     # Edges
     entry: List["DatasetEntry"] = []
-    feature: List["ItemPropertySchema"] = []
     labellingTask: List["LabellingTask"] = []
     datasetType: List["DatasetType"] = []
 
@@ -163,7 +154,7 @@ class DatasetEntry(Item):
     skippedByLabeller: Optional[bool] = None
 
     # Edges
-    data: List[Union["Message", "Tweet", "EmailMessage"]] = []
+    data: List[Union["Message", "EmailMessage"]] = []
     annotation: List["CategoricalLabel"] = []
 
 
@@ -171,9 +162,6 @@ class DatasetType(Item):
     # Properties
     name: Optional[str] = None
     queryStr: Optional[str] = None
-
-    # Edges
-    datasetPlugin: List["Plugin"] = []
 
 
 class Diet(Item):
@@ -196,34 +184,10 @@ class Diet(Item):
     writtenBy: List["Person"] = []
 
 
-class File(Item):
-    # Properties
-    filename: Optional[str] = None
-    keystr: Optional[str] = None
-    nonce: Optional[str] = None
-    sha256: Optional[str] = None
-    starred: Optional[bool] = None
-    externalId: Optional[str] = None
-
-
 class Integrator(Item):
     # Properties
     name: Optional[str] = None
     repository: Optional[str] = None
-
-
-class ItemEdgeSchema(Item):
-    # Properties
-    edgeName: Optional[str] = None
-    sourceType: Optional[str] = None
-    targetType: Optional[str] = None
-
-
-class ItemPropertySchema(Item):
-    # Properties
-    itemType: Optional[str] = None
-    propertyName: Optional[str] = None
-    valueType: Optional[str] = None
 
 
 class Label(Item):
@@ -331,14 +295,6 @@ class Network(Item):
     website: List["Website"] = []
 
 
-class OauthFlow(Item):
-    # Properties
-    accessToken: Optional[str] = None
-    accessTokenSecret: Optional[str] = None
-    refreshToken: Optional[str] = None
-    service: Optional[str] = None
-
-
 class Person(Item):
     # Properties
     addressBookId: Optional[str] = None
@@ -385,54 +341,12 @@ class Photo(Item):
     channels: Optional[int] = None
     encoding: Optional[str] = None
     mode: Optional[str] = None
+    ocrText: Optional[str] = None
 
     # Edges
     changelog: List["AuditItem"] = []
     thumbnail: List["File"] = []
     file: List["File"] = []
-
-
-class Plugin(Item):
-    # Properties
-    bundleImage: Optional[str] = None
-    containerImage: Optional[str] = None
-    configJson: Optional[str] = None
-    config: Optional[str] = None
-    dataType: Optional[str] = None
-    icon: Optional[str] = None
-    pluginDescription: Optional[str] = None
-    name: Optional[str] = None
-    pluginModule: Optional[str] = None
-    pluginName: Optional[str] = None
-    pluginType: Optional[str] = None
-    gitProjectId: Optional[int] = None
-
-    # Edges
-    view: List["CVUStoredDefinition"] = []
-    templateSettings: List["TemplateSettings"] = []
-    project: List["Project"] = []
-    run: List["PluginRun"] = []
-
-
-class PluginRun(Item):
-    # Properties
-    authUrl: Optional[str] = None
-    containerImage: Optional[str] = None
-    config: Optional[str] = None
-    pluginModule: Optional[str] = None
-    pluginName: Optional[str] = None
-    progress: Optional[float] = None
-    status: Optional[str] = None
-    targetItemId: Optional[str] = None
-    error: Optional[str] = None
-    containerId: Optional[str] = None
-    webserverPort: Optional[int] = None
-
-    # Edges
-    plugin: List["Plugin"] = []
-    view: List["CVUStoredDefinition"] = []
-    account: List["Account"] = []
-    trigger: List["Trigger"] = []
 
 
 class Post(Item):
@@ -459,7 +373,6 @@ class Project(Item):
 
     # Edges
     dataset: List["Dataset"] = []
-    labellingPlugin: List["Plugin"] = []
 
 
 class RSSEntry(Item):
@@ -476,6 +389,8 @@ class RSSEntry(Item):
     coarseLabel: Optional[str] = None
     fineLabel: Optional[str] = None
     relevance: Optional[float] = None
+    rssFeedId: Optional[str] = None
+    isIndexed: Optional[bool] = None
 
 
 class RSSFeed(Item):
@@ -491,6 +406,13 @@ class RSSFeed(Item):
 
     # Edges
     entry: List["RSSEntry"] = []
+    photo: List["RSSEntry"] = []
+
+
+class RSSFeedSummary(Item):
+    # Properties
+    category: Optional[str] = None
+    content: Optional[str] = None
 
 
 class Relationship(Item):
@@ -527,39 +449,6 @@ class Translation(Item):
     translatedProperty: Optional[str] = None
     srcLang: Optional[str] = None
     tgtLang: Optional[str] = None
-
-
-class Trigger(Item):
-    # Properties
-    action: Optional[str] = None
-    filterCreatedAfter: Optional[datetime] = None
-    filterCreatedAfterPropertyName: Optional[str] = None
-    pluginRunId: Optional[str] = None
-    triggerOn: Optional[str] = None
-
-    # Edges
-    trigger: List["PluginRun"] = []
-
-
-class Tweet(Item):
-    # Properties
-    message: Optional[str] = None
-    service: Optional[str] = None
-    postDate: Optional[datetime] = None
-    tweetType: Optional[str] = None
-    conversationId: Optional[str] = None
-    retweetCount: Optional[int] = None
-    replyCount: Optional[int] = None
-    likeCount: Optional[int] = None
-    liked: Optional[bool] = None
-    retweeted: Optional[bool] = None
-
-    # Edges
-    reference: List["Tweet"] = []
-    replies: List["Tweet"] = []
-    mention: List["Account"] = []
-    author: List["Account"] = []
-    photo: List["Photo"] = []
 
 
 class VoteAction(Item):
