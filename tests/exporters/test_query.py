@@ -4,6 +4,7 @@ import pandas as pd
 import pytest
 
 from pymemri.data.schema import Account, CategoricalPrediction, Edge, Message, Person
+from pymemri.data.schema.schema import SchemaMeta
 from pymemri.exporters.exporters import Query
 from pymemri.pod.client import PodClient
 
@@ -11,7 +12,13 @@ from pymemri.pod.client import PodClient
 @pytest.fixture
 def client():
     client = PodClient()
-    client.add_to_schema(Account, Person, Message, CategoricalPrediction)
+    client.add_to_schema(
+        SchemaMeta(name="test_dataset", url="example.com", version="0.1"),
+        Account,
+        Person,
+        Message,
+        CategoricalPrediction,
+    )
     return client
 
 

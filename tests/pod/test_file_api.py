@@ -20,7 +20,6 @@ def photo():
 
 
 def test_create_file(client: PodClient, photo: Photo):
-    client.add_to_schema(File, Photo)
     file = photo.file[0]
     assert client.create(file)
     assert client.upload_file(photo.data)
@@ -31,7 +30,6 @@ def test_create_file(client: PodClient, photo: Photo):
 
 
 def test_create_photo(client: PodClient, photo: Photo):
-    client.add_to_schema(Photo)
     client.create_photo(photo)
     sleep(1)
 
@@ -42,7 +40,6 @@ def test_create_photo(client: PodClient, photo: Photo):
 
 def test_delete_file(client: PodClient):
     # setup
-    client.add_to_schema(File)
     files = client.search_typed(File)
     sha256 = files[-1].sha256
 

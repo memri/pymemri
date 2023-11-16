@@ -1,4 +1,5 @@
 import inspect
+from dataclasses import asdict, dataclass
 from typing import Any, Dict
 
 from pydantic import validator
@@ -38,6 +39,16 @@ def get_schema_cls(cls_name: str, extra: Optional[Dict[str, type]] = None) -> ty
         return pymemri_schema[cls_name]
     else:
         raise TypeError(f"{cls_name} is not a known schema model")
+
+
+@dataclass
+class SchemaMeta:
+    name: str
+    url: str
+    version: str
+
+    def to_json(self):
+        return asdict(self)
 
 
 class PluginRun(PluginRun):
