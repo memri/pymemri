@@ -13,6 +13,7 @@ from pymemri.data.schema import (
     RSSEntry,
     get_schema,
 )
+from pymemri.data.schema.schema import SchemaMeta
 from pymemri.pod.client import PodClient
 
 
@@ -37,7 +38,10 @@ def test_definition():
     ]
     assert MyItem.edges == Item.edges + ["accountEdge", "unionEdge"]
     # + 1 for union edge
-    assert len(MyItem.pod_schema()) == len(MyItem.edges) + len(MyItem.properties) + 1
+    pod_schema = MyItem.pod_schema()
+
+    assert len(pod_schema.edges.keys()) == len(MyItem.edges)
+    assert len(pod_schema.properties) == len(MyItem.properties)
 
 
 def test_item_init():
@@ -135,17 +139,19 @@ def test_get_edge():
 
 
 def test_central_schema_to_pod():
+    # Central Schema is already set by POD
     client = PodClient()
-    for k, v in get_schema().items():
-        assert client.add_to_schema(v), f"Could not add {k} to schema"
-
     client.api.search({"type": "Message"})
 
 
 def test_create_and_read_item():
     # TODO clean up this test
     client = PodClient()
-    assert client.add_to_schema(Account, MyItem)
+    assert client.add_to_schema(
+        SchemaMeta(name="test_dataset", url="example.com", version="0.1"),
+        Account,
+        MyItem,
+    )
 
     item = MyItem(str_property="test", int_property=1)
     account = Account(handle="friend")

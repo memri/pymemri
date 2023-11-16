@@ -15,7 +15,6 @@ def api():
     Setup pod account with some dummy data, return API with account keys.
     """
     client = PodClient()
-    client.add_to_schema(Account, Person, Message)
 
     # Create dummy data
     person = Person(displayName="Alice")

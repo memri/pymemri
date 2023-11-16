@@ -4,6 +4,7 @@ from PIL import Image
 
 from pymemri.data.schema import Photo
 from pymemri.data.schema.photo import DEFAULT_ENCODING
+from pymemri.data.schema.schema import SchemaMeta
 from pymemri.pod.client import PodClient
 from pymemri.test_utils import get_project_root
 
@@ -43,7 +44,7 @@ def test_create_get_photo(photo_path):
     photo = Photo.from_path(photo_path)
 
     client = PodClient()
-    client.add_to_schema(Photo)
+    client.add_to_schema(SchemaMeta(name="test_dataset", url="example.com", version="0.1"), Photo)
     client.create_photo(photo, asyncFlag=False)
 
     client.reset_local_db()
