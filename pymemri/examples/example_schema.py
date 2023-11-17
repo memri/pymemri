@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pydantic import PrivateAttr
 
-from pymemri.data.schema import Item, Message, Person, Tweet
+from pymemri.data.schema import Item, Message, Person, Photo
 
 
 class Dog(Item):
@@ -18,4 +18,4 @@ class Dog(Item):
 
     # Edges
     owner: List[Person] = []
-    referencedBy: List[Union[Message, Tweet]] = []
+    referencedBy: List[Union[Message, Photo]] = []
