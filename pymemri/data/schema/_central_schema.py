@@ -464,6 +464,7 @@ class RSSEntry(Item):
     relevance: Optional[float] = None
     rssFeedId: Optional[str] = None
     isIndexed: Optional[bool] = None
+    externalId: Optional[str] = None
 
 
 class RSSFeed(Item):
@@ -476,6 +477,7 @@ class RSSFeed(Item):
     updated: Optional[datetime] = None
     importIsActive: Optional[bool] = None
     thumbnail: Optional[str] = None
+    externalId: Optional[str] = None
 
     # Edges
     entry: List["RSSEntry"] = []
