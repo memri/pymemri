@@ -53,7 +53,7 @@ def test_connection(client: PodClient):
 
 def test_add_to_schema(client: PodClient):
     assert client.add_to_schema(
-        SchemaMeta(name="test_add_to_schema", url="example.com", version="0.1"),
+        SchemaMeta(name="testAddToSchema", url="example.com", version="0.1"),
         EmailMessage,
         Person,
         Account,
@@ -65,7 +65,7 @@ def test_create(client: PodClient):
 
 
 def test_custom_item(client: PodClient):
-    client.add_to_schema(SchemaMeta(name="test_custom_item", url="example.com", version="0.1"), Dog)
+    client.add_to_schema(SchemaMeta(name="testCustomItem", url="example.com", version="0.1"), Dog)
     dog = Dog(name="bob", age=3, weight=33.2)
     client.create(dog)
 
@@ -265,7 +265,7 @@ def test_search_gql(client: PodClient):
 
 
 def test_bulk_create(client: PodClient):
-    client.add_to_schema(SchemaMeta(name="test_bulk_create", url="example.com", version="0.1"), Dog)
+    client.add_to_schema(SchemaMeta(name="testBulkCreate", url="example.com", version="0.1"), Dog)
 
     dogs = [Dog(name=f"dog number {i}") for i in range(100)]
     person = Person(firstName="Alice")
@@ -297,7 +297,7 @@ def test_bulk_update_delete(client: PodClient):
     client.reset_local_db()
 
     with pytest.raises(ValueError):
-        client.get(person2.id, include_deleted=True)
+        client.get(person2.id)
 
     assert client.get(person1.id).firstName == "updated"
 
@@ -340,7 +340,7 @@ def test_update_schema():
         field1: str
 
     client.add_to_schema(
-        SchemaMeta(name="test_update_schema", url="example.com", version="0.1"), TestItem
+        SchemaMeta(name="testUpdateSchema", url="example.com", version="0.1"), TestItem
     )
 
     client.bulk_action(
@@ -357,7 +357,7 @@ def test_update_schema():
         field2: Optional[str]
 
     client2.add_to_schema(
-        SchemaMeta(name="test_update_schema", url="example.com", version="0.2"), TestItem
+        SchemaMeta(name="testUpdateSchema", url="example.com", version="0.2"), TestItem
     )
     # Create data for search
     client2.bulk_action(

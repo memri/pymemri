@@ -44,7 +44,7 @@ def test_create_get_photo(photo_path):
     photo = Photo.from_path(photo_path)
 
     client = PodClient()
-    client.add_to_schema(SchemaMeta(name="test_dataset", url="example.com", version="0.1"), Photo)
+    client.add_to_schema(SchemaMeta(name="testDataset", url="example.com", version="0.1"), Photo)
     client.create_photo(photo, asyncFlag=False)
 
     client.reset_local_db()

@@ -13,7 +13,7 @@ from pymemri.pod.client import PodClient
 def client():
     client = PodClient()
     client.add_to_schema(
-        SchemaMeta(name="test_dataset", url="example.com", version="0.1"),
+        SchemaMeta(name="testDataset", url="example.com", version="0.1"),
         Account,
         Person,
         Message,
