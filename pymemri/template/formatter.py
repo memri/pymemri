@@ -7,7 +7,7 @@ from typing import Dict, List, Union
 
 import giturlparse
 import requests
-from fastscript import Param, call_parse
+from fastcore.script import Param, call_parse
 from loguru import logger
 
 import pymemri

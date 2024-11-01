@@ -4,7 +4,7 @@ import time
 import traceback
 from pathlib import Path
 
-from fastscript import Param, call_parse
+from fastcore.script import Param, call_parse
 from loguru import logger
 
 from pymemri import __version__ as pymemri_version

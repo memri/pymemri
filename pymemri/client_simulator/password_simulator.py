@@ -1,6 +1,6 @@
 import time
 
-from fastscript import Param, call_parse
+from fastcore.script import Param, call_parse
 from loguru import logger
 
 from pymemri.plugin.states import (
